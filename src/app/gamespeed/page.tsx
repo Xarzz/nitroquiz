@@ -185,12 +185,7 @@ export default function GameSpeedPage() {
         }
     }, []);
 
-    // Sync minigame (quiz) status for Host Monitor
-    useEffect(() => {
-        if (mounted && assetsLoaded) {
-            updateParticipantStatus({ minigame: showQuiz });
-        }
-    }, [showQuiz, mounted, assetsLoaded, updateParticipantStatus]);
+
 
     // Auto-start game logic - skip preparation screen after loading
     useEffect(() => {
@@ -199,7 +194,7 @@ export default function GameSpeedPage() {
             if (!isMobile || mobileOrientationChoice) {
                 // Short delay for visual transition
                 const timer = setTimeout(() => {
-                    countdownRef.current = 3;
+                    countdownRef.current = 5;
                     setGameState('countdown');
                 }, 800);
                 return () => clearTimeout(timer);
