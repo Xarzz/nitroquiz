@@ -202,7 +202,7 @@ export default function LeaderboardPage() {
                                             <img 
                                                 src={logoImageMap[(secondPlace.car_character || "white").replace("-bot", "")] || "/assets/characters/scloski/logo/logo1.png"} 
                                                 alt="Logo" 
-                                                className="w-full h-full object-cover p-0 scale-150" 
+                                                className="w-full h-full object-contain p-0 scale-115" 
                                             />
                                         )}
                                     </div>
@@ -233,7 +233,7 @@ export default function LeaderboardPage() {
                                             <img 
                                                 src={logoImageMap[(firstPlace.car_character || "purple").replace("-bot", "")] || "/assets/characters/scloski/logo/logo1.png"} 
                                                 alt="Logo" 
-                                                className="w-full h-full object-cover p-0 scale-150" 
+                                                className="w-full h-full object-contain p-0 scale-115" 
                                             />
                                         )}
                                     </div>
@@ -259,7 +259,7 @@ export default function LeaderboardPage() {
                                             <img 
                                                 src={logoImageMap[(thirdPlace.car_character || "black").replace("-bot", "")] || "/assets/characters/scloski/logo/logo1.png"} 
                                                 alt="Logo" 
-                                                className="w-full h-full object-cover p-0 scale-150" 
+                                                className="w-full h-full object-contain p-0 scale-115" 
                                             />
                                         )}
                                     </div>
@@ -322,7 +322,7 @@ export default function LeaderboardPage() {
                                                                     }
                                                                     const baseCar = (player.car_character || "purple").replace('-bot', '');
                                                                     const logoSrc = logoImageMap[baseCar] || "/assets/logo/logo1.png";
-                                                                    return <img src={logoSrc} alt="car" className="w-full h-full object-cover p-0 scale-125" />;
+                                                                    return <img src={logoSrc} alt="car" className="w-full h-full object-contain p-0 scale-110" />;
                                                                 })()}
                                                             </div>
                                                             <p className={`font-display tracking-wider uppercase text-xs sm:text-sm truncate ${isTop3 ? "text-white" : "text-gray-300"} ${index === 0 && 'text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]'}`}>
