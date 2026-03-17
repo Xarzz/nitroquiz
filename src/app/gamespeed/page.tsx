@@ -189,6 +189,21 @@ export default function GameSpeedPage() {
         }
     }, [showQuiz, mounted, assetsLoaded, updateParticipantStatus]);
 
+    // Auto-start game logic - skip preparation screen after loading
+    useEffect(() => {
+        if (mounted && assetsLoaded && gameState === 'preparation') {
+            // Wait for orientation choice on mobile
+            if (!isMobile || mobileOrientationChoice) {
+                // Short delay for visual transition
+                const timer = setTimeout(() => {
+                    countdownRef.current = 3;
+                    setGameState('countdown');
+                }, 800);
+                return () => clearTimeout(timer);
+            }
+        }
+    }, [mounted, assetsLoaded, gameState, isMobile, mobileOrientationChoice]);
+
     // Refs for game loop
     const state = useRef({
         segments: [] as Segment[],
@@ -1934,6 +1949,11 @@ export default function GameSpeedPage() {
                     });
                     console.log('[GameSpeed] Loaded quiz questions:', normalized.length, 'Sample:', normalized[0]);
                     setAllQuizQuestions(normalized);
+                    
+                    // Update total laps based on questions (3 questions per lap/round)
+                    const laps = Math.max(1, Math.ceil(normalized.length / QUESTIONS_PER_ROUND));
+                    state.current.totalLaps = laps;
+                    setStats(prev => ({ ...prev, totalLaps: laps }));
                 }
             }
         } catch (e) {
@@ -1992,7 +2012,21 @@ export default function GameSpeedPage() {
             <canvas ref={canvasRef} style={{ display: 'block', width: '100%', height: '100%' }} />
 
             {/* Loading Overlay */}
-            {/* Loading Overlay Removed */}
+            {mounted && !assetsLoaded && (
+                <div style={{
+                    position: 'fixed', inset: 0, zIndex: 3000,
+                    backgroundColor: '#020617', display: 'flex', flexDirection: 'column',
+                    alignItems: 'center', justifyContent: 'center', color: 'white',
+                    fontFamily: 'var(--font-rajdhani)'
+                }}>
+                    <div style={{ position: 'relative', marginBottom: '2rem' }}>
+                        <div style={{ width: '80px', height: '80px', borderRadius: '50%', border: '3px solid rgba(59, 130, 246, 0.2)', borderTopColor: '#3b82f6', animation: 'spin 1s linear infinite' }} />
+                        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem' }}>🏎️</div>
+                    </div>
+                    <div style={{ fontSize: '1.2rem', fontWeight: 900, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#3b82f6' }}>Initializing Systems...</div>
+                    <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+                </div>
+            )}
 
             {/* Mobile Orientation Choice Overlay - Premium UI */}
             {mounted && isMobile && assetsLoaded && !mobileOrientationChoice && (
