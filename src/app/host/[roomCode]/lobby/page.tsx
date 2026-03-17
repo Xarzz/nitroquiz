@@ -453,7 +453,7 @@ export default function HostRoomPage() {
 
   return (
     <div
-      className="min-h-screen bg-[#0a0a0f] relative overflow-hidden font-body text-white flex flex-col"
+      className="h-screen bg-[#0a0a0f] relative overflow-hidden font-body text-white flex flex-col"
       onClick={() => setHasInteracted(true)}
     >
       {/* Background Layers */}
@@ -463,42 +463,34 @@ export default function HostRoomPage() {
       <div className="fixed bottom-0 w-full h-1/2 bg-[linear-gradient(transparent_0%,rgba(45,106,242,0.1)_1px,transparent_1px),linear-gradient(90deg,transparent_0%,rgba(45,106,242,0.1)_1px,transparent_1px)] bg-[length:60px_60px] [transform:perspective(500px)_rotateX(60deg)] origin-bottom z-0 pointer-events-none opacity-20"></div>
       <div className="scanlines"></div>
 
-      {/* Main Content */}
-      <div className="relative z-20 flex flex-col h-full w-full mx-auto p-4 md:p-8">
-        {/* Header */}
-        <div className="w-full px-4 md:px-6 pt-4 pb-2 flex items-center justify-between mb-6">
-          <div className="flex flex-col items-center justify-center">
-            <img
-              src="/assets/logo/logo1.png"
-              alt="NitroQuiz Logo"
-              width={140}
-              height={40}
-              className="object-contain"
-            />
-          </div>
+      {/* Main Content Wrapper - Fixed to viewport */}
+      <div className="relative z-20 flex flex-col h-full w-full mx-auto px-6 md:px-12 pb-6">
+        {/* Header - Logos in corners with equal spacing (Top:Logo == Logo:Content) */}
+        <div className="w-full flex items-center justify-between pt-10 mb-10">
+          <img
+            src="/assets/logo/logo1.png"
+            alt="NitroQuiz Logo"
+            width={130}
+            height={36}
+            className="object-contain"
+          />
           <img
             src="/assets/logo/logo2.png"
             alt="GameForSmart.com"
-            width={240}
-            height={60}
+            width={200}
+            height={50}
             className="object-contain opacity-70 hover:opacity-100 transition-opacity duration-300 drop-shadow-[0_0_10px_rgba(45,106,242,0.3)]"
           />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start relative">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch relative flex-1 min-h-0 overflow-hidden">
           {/* Left Column: Room Details (4 cols) */}
           <div className="lg:col-span-4 space-y-6">
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 30 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{
-                duration: 0.6,
-                delay: 0.1,
-                type: "spring",
-                stiffness: 100,
-                damping: 12,
-              }}
-              className="flex flex-col gap-4 bg-black/60 backdrop-blur-md rounded-[2rem] p-8 shadow-[0_0_30px_rgba(45,106,242,0.15)] border border-[#2d6af2]/50 relative overflow-hidden group"
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="flex flex-col gap-4 bg-black/60 backdrop-blur-md rounded-[2rem] p-6 shadow-[0_0_30px_rgba(45,106,242,0.15)] border border-[#2d6af2]/50 relative overflow-y-auto custom-scrollbar group max-h-full"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#2d6af2]/20 to-transparent rounded-bl-full pointer-events-none"></div>
 
@@ -524,12 +516,12 @@ export default function HostRoomPage() {
               </div>
 
               <div
-                className="flex justify-center bg-white p-4 rounded-2xl w-[220px] sm:w-[260px] md:w-[300px] lg:w-[20vw] xl:w-[22vw] mx-auto shadow-[0_0_20px_rgba(45,106,242,0.3)] relative group/qr cursor-pointer"
+                className="flex justify-center bg-white p-3 rounded-2xl w-[160px] md:w-[200px] lg:w-full mx-auto shadow-[0_0_20px_rgba(45,106,242,0.3)] relative group/qr cursor-pointer max-h-[25vh] aspect-square"
                 onClick={() => setOpen(true)}
               >
                 <QRCode
                   value={joinLink}
-                  style={{ width: "100%", height: "auto" }}
+                  style={{ width: "100%", height: "100%" }}
                 />
               </div>
 
@@ -585,7 +577,7 @@ export default function HostRoomPage() {
           </div>
 
           {/* Right Column: Players (8 cols) */}
-          <div className="lg:col-span-8 h-full min-h-[500px]">
+          <div className="lg:col-span-8 flex flex-col min-h-0 overflow-hidden">
             <motion.div
               initial={{ opacity: 0, scale: 0.95, x: 30 }}
               animate={{ opacity: 1, scale: 1, x: 0 }}
