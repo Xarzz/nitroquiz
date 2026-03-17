@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Trophy, Crown, Medal, Users, Clock, Star, ChevronRight, LayoutDashboard, House, RotateCcw } from "lucide-react";
+import { Trophy, Crown, Medal, Users, Clock, Star, ChevronRight, LayoutDashboard, House, RotateCcw, BarChart2 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/lib/supabase";
@@ -44,6 +44,7 @@ export default function LeaderboardPage() {
     const [participants, setParticipants] = useState<Participant[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [showResults, setShowResults] = useState(false);
+    const [sessionId, setSessionId] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchResults = async () => {
@@ -58,6 +59,8 @@ export default function LeaderboardPage() {
                     console.error("Session not found", sessionError);
                     return;
                 }
+
+                setSessionId(sessionData.id);
 
                 const { data: pData, error: pError } = await supabase
                     .from("participants")
@@ -172,11 +175,11 @@ export default function LeaderboardPage() {
 
                 <div className="fixed right-3 md:right-6 top-1/2 -translate-y-1/2 flex flex-col gap-4 z-50">
                     <Button
-                        onClick={() => window.open('https://ubig.co.id', '_blank')}
-                        className="w-12 h-12 rounded-full p-0 bg-black/60 backdrop-blur-md border border-yellow-500/50 hover:bg-yellow-500/20 hover:scale-110 flex items-center justify-center text-yellow-500 shadow-[0_0_15px_rgba(250,204,21,0.4)] transition-all"
-                        title="Analytics"
+                        onClick={() => sessionId && window.open(`https://gameforsmartnewui.vercel.app/stat/${sessionId}`, '_blank')}
+                        className="w-12 h-12 rounded-full p-0 bg-black/60 backdrop-blur-md border border-[#f59e0b]/50 hover:bg-[#f59e0b]/20 hover:scale-110 flex items-center justify-center text-[#f59e0b] shadow-[0_0_15px_rgba(245,158,11,0.4)] transition-all"
+                        title="Statistik"
                     >
-                        <LayoutDashboard size={20} />
+                        <BarChart2 size={20} />
                     </Button>
                 </div>
 
