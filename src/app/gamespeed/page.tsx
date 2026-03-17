@@ -1876,7 +1876,7 @@ export default function GameSpeedPage() {
         localStorage.removeItem('nitroquiz_game_quizId');
         
         if (roomCode) {
-            window.location.href = `/player/${roomCode}/leaderboard`;
+            window.location.href = `/player/${roomCode}/result`;
         } else {
             window.location.href = '/';
         }
