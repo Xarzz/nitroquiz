@@ -71,7 +71,7 @@ export default function PlayerWaitingPage() {
 
                 const channel = supabase.channel(`player-session-${sessionData.id}`)
                     .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'sessions', filter: `id=eq.${sessionData.id}` },
-                        (payload) => { if (payload.new.status === "active") { setStatus("countdown"); preloadQuizData(sessionData.id); } })
+                        (payload) => { if (payload.new.status === "active") { preloadQuizData(sessionData.id); router.push('/gamespeed'); } })
                     .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'participants', filter: `session_id=eq.${sessionData.id}` },
                         async () => {
                             const { data: pList, count } = await supabase.from("participants")
@@ -86,7 +86,8 @@ export default function PlayerWaitingPage() {
                     try {
                         const { data } = await supabase.from("sessions").select("status").eq("id", sessId).single();
                         if (data?.status === "active") {
-                            setStatus(prev => { if (prev === "waiting") { preloadQuizData(sessId); return "countdown"; } return prev; });
+                            preloadQuizData(sessId);
+                            router.push('/gamespeed');
                             clearInterval(pollInterval);
                         }
                     } catch (e) { console.error("Poll session error:", e); }
@@ -112,13 +113,13 @@ export default function PlayerWaitingPage() {
                 localStorage.setItem('nitroquiz_game_sessionId', sessId);
                 if (data.quiz_id) localStorage.setItem('nitroquiz_game_quizId', data.quiz_id);
             }
-            const link = document.createElement('link'); link.rel = 'prefetch'; link.href = '/quiz'; document.head.appendChild(link);
+            const link = document.createElement('link'); link.rel = 'prefetch'; link.href = '/gamespeed'; document.head.appendChild(link);
         } catch (err) { console.error('Failed to preload quiz:', err); }
     };
 
     useEffect(() => {
         if (status !== "countdown") return;
-        if (countdownValue <= 0) { setStatus("go"); setTimeout(() => router.push('/quiz'), 1500); return; }
+        if (countdownValue <= 0) { setStatus("go"); setTimeout(() => router.push('/gamespeed'), 1500); return; }
         const timer = setTimeout(() => setCountdownValue(prev => prev - 1), 1000);
         return () => clearTimeout(timer);
     }, [status, countdownValue, router]);

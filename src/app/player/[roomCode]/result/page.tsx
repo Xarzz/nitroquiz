@@ -51,7 +51,7 @@ interface Participant {
   avatar_url?: string | null;
 }
 
-export default function PlayerLeaderboardPage() {
+export default function PlayerResultPage() {
   const params = useParams();
   const router = useRouter();
   const roomCode = params.roomCode as string;
