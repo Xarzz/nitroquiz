@@ -31,6 +31,14 @@ const carImageMap: Record<string, string> = {
   blue: "/assets/car/car5_v2.webp",
 };
 
+const logoImageMap: Record<string, string> = {
+  purple: "/assets/characters/scloski/logo/logo1.png",
+  white: "/assets/characters/scloski/logo/logo1.png",
+  black: "/assets/characters/scloski/logo/logo1.png",
+  aqua: "/assets/characters/scloski/logo/logo1.png",
+  blue: "/assets/characters/scloski/logo/logo1.png",
+};
+
 interface Participant {
   id: string;
   nickname: string;
@@ -40,6 +48,7 @@ interface Participant {
   finished_at: string | null;
   duration: number;
   eliminated: boolean;
+  avatar_url?: string | null;
 }
 
 export default function PlayerLeaderboardPage() {
@@ -125,6 +134,15 @@ export default function PlayerLeaderboardPage() {
       "",
     );
     return carImageMap[base] || carImageMap["purple"];
+  })();
+  const currentPlayerAvatar = (() => {
+    if (!currentPlayerData) return logoImageMap["purple"];
+    if (currentPlayerData.avatar_url) return currentPlayerData.avatar_url;
+    const base = (currentPlayerData.car_character || "purple").replace(
+      "-bot",
+      "",
+    );
+    return logoImageMap[base] || logoImageMap["purple"];
   })();
   const getRankSuffix = (rank: number) => {
     if (rank === 1) return "st";
@@ -487,17 +505,30 @@ export default function PlayerLeaderboardPage() {
               <div className="absolute top-8 right-5 w-1.5 h-1.5 rounded-full bg-white/15" />
               <div className="absolute bottom-14 left-1/2 -translate-x-1/2 w-32 h-16 bg-[#2d6af2]/15 blur-2xl rounded-full" />
               <div className="flex justify-center pt-10 pb-4">
-                <motion.img
-                  src={currentPlayerCarSrc}
-                  alt="Your car"
-                  className="w-36 h-36 object-contain drop-shadow-[0_0_28px_rgba(45,106,242,0.45)]"
-                  animate={{ y: [0, -9, 0] }}
-                  transition={{
-                    repeat: Infinity,
-                    duration: 3.2,
-                    ease: "easeInOut",
-                  }}
-                />
+                <div className="relative">
+                  <motion.div
+                    className="w-32 h-32 rounded-full border-4 border-[#2d6af2]/50 bg-black/40 overflow-hidden flex items-center justify-center p-0 shadow-[0_0_30px_rgba(45,106,242,0.3)] relative z-10"
+                    animate={{ y: [0, -8, 0] }}
+                    transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+                  >
+                    {currentPlayerData?.avatar_url ? (
+                      <img src={currentPlayerData.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
+                    ) : (
+                      <img 
+                        src={currentPlayerAvatar} 
+                        alt="Logo" 
+                        className="w-full h-full object-contain p-0 scale-[2.1]" 
+                      />
+                    )}
+                  </motion.div>
+                  <motion.div
+                    className="absolute -right-4 -bottom-2 w-16 h-16 bg-black/80 rounded-full border-2 border-white/20 p-2 flex items-center justify-center z-20 shadow-2xl"
+                    animate={{ y: [0, -4, 0] }}
+                    transition={{ repeat: Infinity, duration: 3, ease: "easeInOut", delay: 0.2 }}
+                  >
+                    <img src={currentPlayerCarSrc} alt="Car" className="w-full h-full object-contain" />
+                  </motion.div>
+                </div>
               </div>
               <div className="text-center pb-8">
                 <p
@@ -626,7 +657,26 @@ export default function PlayerLeaderboardPage() {
                       </p>
                     </div>
                   </div>
-                  <p className="text-2xl mb-0.5">🥈</p>
+                  <div className="relative mb-2">
+                    <div className="w-16 h-16 rounded-full border-2 border-slate-400/50 bg-black/40 overflow-hidden flex items-center justify-center p-0 shadow-lg relative z-10">
+                      {secondPlace.avatar_url ? (
+                        <img src={secondPlace.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
+                      ) : (
+                        <img 
+                          src={logoImageMap[(secondPlace.car_character || "white").replace("-bot", "")] || logoImageMap["purple"]} 
+                          alt="Logo" 
+                          className="w-full h-full object-contain p-0 scale-[2.1]" 
+                        />
+                      )}
+                    </div>
+                    <div className="absolute -right-2 -bottom-1 w-10 h-10 bg-black/60 rounded-full border border-white/20 p-1 flex items-center justify-center z-20 shadow-xl">
+                      <img 
+                        src={carImageMap[(secondPlace.car_character || "white").replace("-bot", "")] || carImageMap["white"]} 
+                        alt="Car" 
+                        className="w-full h-full object-contain" 
+                      />
+                    </div>
+                  </div>
                   <div className="w-[62px] h-[95px] bg-gradient-to-b from-[#1a2235] to-[#0a0f1a] border-t-2 border-l border-r border-[#64748b] rounded-t-xl flex items-end justify-center pb-2">
                     <span className="font-display text-2xl text-slate-600/40 font-bold">
                       2
@@ -663,7 +713,26 @@ export default function PlayerLeaderboardPage() {
                       </p>
                     </div>
                   </div>
-                  <p className="text-3xl mb-0.5">🚀</p>
+                  <div className="relative mb-2">
+                    <div className="w-20 h-20 rounded-full border-2 border-yellow-500/50 bg-black/40 overflow-hidden flex items-center justify-center p-0 shadow-[0_0_20px_rgba(250,204,21,0.3)] relative z-10">
+                      {firstPlace.avatar_url ? (
+                        <img src={firstPlace.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
+                      ) : (
+                        <img 
+                          src={logoImageMap[(firstPlace.car_character || "purple").replace("-bot", "")] || logoImageMap["purple"]} 
+                          alt="Logo" 
+                          className="w-full h-full object-contain p-0 scale-[2.1]" 
+                        />
+                      )}
+                    </div>
+                    <div className="absolute -right-3 -bottom-1 w-12 h-12 bg-black/60 rounded-full border border-yellow-500/40 p-1.5 flex items-center justify-center z-20 shadow-xl">
+                      <img 
+                        src={carImageMap[(firstPlace.car_character || "purple").replace("-bot", "")] || carImageMap["purple"]} 
+                        alt="Car" 
+                        className="w-full h-full object-contain" 
+                      />
+                    </div>
+                  </div>
                   <div className="w-[76px] h-[140px] bg-gradient-to-b from-[#2a1f0a] to-[#0a0f1a] border-t-4 border-l-2 border-r-2 border-[#eab308] rounded-t-xl relative overflow-hidden flex items-end justify-center pb-4">
                     <div className="absolute top-0 w-full h-0.5 bg-gradient-to-r from-transparent via-[#eab308] to-transparent" />
                     <span className="font-display text-4xl text-yellow-600/40 font-bold">
@@ -694,7 +763,26 @@ export default function PlayerLeaderboardPage() {
                       </p>
                     </div>
                   </div>
-                  <p className="text-xl mb-0.5">🥉</p>
+                  <div className="relative mb-2">
+                    <div className="w-14 h-14 rounded-full border-2 border-orange-700/50 bg-black/40 overflow-hidden flex items-center justify-center p-0 shadow-lg relative z-10">
+                      {thirdPlace.avatar_url ? (
+                        <img src={thirdPlace.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
+                      ) : (
+                        <img 
+                          src={logoImageMap[(thirdPlace.car_character || "black").replace("-bot", "")] || logoImageMap["purple"]} 
+                          alt="Logo" 
+                          className="w-full h-full object-contain p-0 scale-[2.1]" 
+                        />
+                      )}
+                    </div>
+                    <div className="absolute -right-2 -bottom-1 w-9 h-9 bg-black/60 rounded-full border border-white/20 p-1 flex items-center justify-center z-20 shadow-xl">
+                      <img 
+                        src={carImageMap[(thirdPlace.car_character || "black").replace("-bot", "")] || carImageMap["black"]} 
+                        alt="Car" 
+                        className="w-full h-full object-contain" 
+                      />
+                    </div>
+                  </div>
                   <div className="w-[52px] h-[75px] bg-gradient-to-b from-[#25140b] to-[#0a0f1a] border-t-2 border-l border-r border-[#c2410c] rounded-t-xl flex items-end justify-center pb-1.5">
                     <span className="font-display text-2xl text-orange-700/40 font-bold">
                       3
@@ -722,21 +810,18 @@ export default function PlayerLeaderboardPage() {
                       >
                         {index + 1}
                       </div>
-                      <div className="w-7 h-7 rounded-lg bg-black/40 border border-white/10 flex items-center justify-center overflow-hidden flex-shrink-0">
+                      <div className="w-8 h-8 rounded-full bg-black/40 border border-white/20 flex items-center justify-center overflow-hidden flex-shrink-0">
                         {player.eliminated
                           ? "💀"
-                          : (() => {
-                              const b = (
-                                player.car_character || "purple"
-                              ).replace("-bot", "");
-                              return (
-                                <img
-                                  src={carImageMap[b] || carImageMap["purple"]}
-                                  alt="car"
-                                  className="w-full h-full object-contain p-0.5"
-                                />
-                              );
-                            })()}
+                          : player.avatar_url ? (
+                            <img src={player.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
+                          ) : (
+                            <img 
+                              src={logoImageMap[(player.car_character || "white").replace("-bot", "")] || logoImageMap["purple"]} 
+                              alt="Logo" 
+                              className="w-full h-full object-contain p-0 scale-[2.1]" 
+                            />
+                          )}
                       </div>
                       <div className="flex-1 min-w-0">
                         <p
@@ -875,24 +960,30 @@ export default function PlayerLeaderboardPage() {
                 >
                   <div className="relative mb-4">
                     <div
-                      className="w-28 h-28 rounded-full flex items-center justify-center relative z-10"
+                      className="w-28 h-28 rounded-full flex items-center justify-center relative z-10 overflow-hidden"
                       style={{
                         background: "rgba(45,106,242,0.15)",
                         border: "2.5px solid rgba(45,106,242,0.5)",
                         boxShadow: "0 0 30px rgba(45,106,242,0.25)",
                       }}
                     >
-                      <motion.img
-                        src={currentPlayerCarSrc}
-                        alt="Profile"
-                        className="w-20 h-20 object-contain drop-shadow-[0_0_15px_rgba(45,106,242,0.5)]"
-                        animate={{ y: [0, -5, 0] }}
-                        transition={{
-                          repeat: Infinity,
-                          duration: 4,
-                          ease: "easeInOut",
-                        }}
-                      />
+                      {currentPlayerData?.avatar_url ? (
+                        <img 
+                          src={currentPlayerData.avatar_url} 
+                          alt="Avatar" 
+                          className="w-full h-full object-cover" 
+                        />
+                      ) : (
+                        <img
+                          src={currentPlayerAvatar}
+                          alt="Logo"
+                          className="w-full h-full object-contain p-0 scale-[2.1]"
+                        />
+                      )}
+                      {/* Smaller car overlay */}
+                      <div className="absolute -bottom-1 -right-1 w-12 h-12 bg-black/60 rounded-full border border-white/20 p-1.5 flex items-center justify-center shadow-xl">
+                        <img src={currentPlayerCarSrc} alt="Car" className="w-full h-full object-contain" />
+                      </div>
                     </div>
                     <div className="absolute inset-[-8px] rounded-full border border-[#2d6af2]/20 animate-pulse" />
                   </div>
