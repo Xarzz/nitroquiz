@@ -114,11 +114,11 @@ export default function GameSpeedPage() {
 
     // Game State
     const [gameState, setGameState] = useState<'preparation' | 'countdown' | 'playing' | 'finished' | 'gameover'>('preparation');
-    const [countdown, setCountdown] = useState(5); // Countdown dari 5
+    const [countdown, setCountdown] = useState(3); // Countdown dari 3
     const [stats, setStats] = useState({ speed: 0, nos: 100, lap: 1, totalLaps: 1 });
 
     // Countdown timer effect — uses setInterval, only triggers on gameState change
-    const countdownRef = useRef<number>(5);
+    const countdownRef = useRef<number>(3);
     useEffect(() => {
         if (gameState !== 'countdown') return;
 
@@ -2529,7 +2529,7 @@ export default function GameSpeedPage() {
 
                         <button
                             onClick={() => {
-                                countdownRef.current = 5;
+                                countdownRef.current = 3;
                                 setGameState('countdown');
                             }}
                             style={{
@@ -2563,9 +2563,11 @@ export default function GameSpeedPage() {
                 }}>
                     {/* Racing lights */}
                     <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '2rem' }}>
-                        {[0, 1, 2, 3, 4].map((i) => {
-                            const isLit = countdown <= (5 - i);
+                        {[0, 1, 2].map((i) => {
+                            const val = 3 - i;
+                            const isLit = countdown <= val;
                             const isGo = countdown <= 0;
+                            const color = val === 3 ? '#ef4444' : val === 2 ? '#fbbf24' : '#00ff9d';
                             return (
                                 <div
                                     key={i}
@@ -2573,9 +2575,9 @@ export default function GameSpeedPage() {
                                         width: usePCLayout ? '2.5rem' : '1.75rem',
                                         height: usePCLayout ? '2.5rem' : '1.75rem',
                                         borderRadius: '50%',
-                                        border: `2px solid ${isGo ? '#00ff9d' : isLit ? '#ef4444' : '#374151'}`,
-                                        backgroundColor: isGo ? '#00ff9d' : isLit ? '#ef4444' : 'rgba(55, 65, 81, 0.3)',
-                                        boxShadow: isGo ? '0 0 25px rgba(0,255,157,0.7)' : isLit ? '0 0 20px rgba(239,68,68,0.6)' : 'none',
+                                        border: `2px solid ${isGo ? '#00ff9d' : isLit ? color : '#374151'}`,
+                                        backgroundColor: isGo ? '#00ff9d' : isLit ? color : 'rgba(55, 65, 81, 0.3)',
+                                        boxShadow: isGo ? '0 0 25px rgba(0,255,157,0.7)' : isLit ? `0 0 20px ${color}` : 'none',
                                         transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                                         transform: isLit ? 'scale(1.15)' : 'scale(1)',
                                     }}
@@ -2591,7 +2593,7 @@ export default function GameSpeedPage() {
                             fontSize: usePCLayout ? '8rem' : '5rem',
                             fontWeight: 900,
                             lineHeight: 1,
-                            color: countdown > 3 ? '#2d6af2' : countdown > 1 ? '#fbbf24' : '#00ff9d',
+                            color: countdown === 3 ? '#ef4444' : countdown === 2 ? '#fbbf24' : '#00ff9d',
                             textShadow: `0 0 60px currentColor`,
                             animation: 'countdown-pop 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)',
                             willChange: 'transform, opacity',

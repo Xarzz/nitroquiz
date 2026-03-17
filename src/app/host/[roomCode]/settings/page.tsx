@@ -100,13 +100,52 @@ export default function SettingsPage() {
         try {
             const limit = parseInt(questionCount);
             const selectedQuestions = shuffleArray(quizDetail.questions).slice(0, limit);
-            const { data: sessionData, error } = await supabase.from('sessions').insert({
-                game_pin: roomCode, quiz_id: quizId, status: 'waiting', question_limit: limit,
-                total_time_minutes: parseInt(duration) / 60, difficulty: selectedDifficulty, current_questions: selectedQuestions,
-            }).select().single();
-            if (error) { console.error("Error creating session in Supabase:", error); }
+            
+            // 1. Clean up any existing session with the same game_pin (Idempotency)
+            // This prevents unique constraint violations if the host re-enters this flow.
+            console.log(`[handleCreateRoom] Cleaning up existing sessions for pin: ${roomCode}`);
+            await supabase.from('sessions').delete().eq('game_pin', roomCode);
+
+            const sessionPayload = {
+                game_pin: roomCode,
+                quiz_id: quizId,
+                status: 'waiting',
+                question_limit: limit,
+                total_time_minutes: parseInt(duration) / 60,
+                difficulty: selectedDifficulty,
+                current_questions: selectedQuestions,
+            };
+
+            console.log("[handleCreateRoom] Inserting session payload:", sessionPayload);
+
+            const { data: sessionData, error } = await supabase
+                .from('sessions')
+                .insert(sessionPayload)
+                .select()
+                .single();
+
+            if (error) { 
+                console.error("Error creating session in Supabase:", {
+                    message: error.message,
+                    details: error.details,
+                    hint: error.hint,
+                    code: error.code,
+                    entireError: error
+                });
+                setSaving(false);
+                return;
+            }
+
+            if (!sessionData) {
+                console.error("Session created but no data returned.");
+                setSaving(false);
+                return;
+            }
+
+            console.log("[handleCreateRoom] Session created successfully:", sessionData.id);
+
             const settings = {
-                sessionId: sessionData?.id, gamePin: roomCode, quizId: quizId, quizTitle: quizDetail.title,
+                sessionId: sessionData.id, gamePin: roomCode, quizId: quizId, quizTitle: quizDetail.title,
                 totalTimeMinutes: parseInt(duration) / 60, questionLimit: limit, difficulty: selectedDifficulty,
                 questions: selectedQuestions, status: 'waiting', players: []
             };
@@ -114,7 +153,10 @@ export default function SettingsPage() {
             localStorage.setItem("hostroomCode", roomCode as string);
             localStorage.setItem("settings_muted", isMuted.toString());
             router.push(`/host/${roomCode}/lobby`);
-        } catch (err) { console.error("Unexpected error creating session:", err); setSaving(false); }
+        } catch (err) { 
+            console.error("Unexpected error creating session:", err); 
+            setSaving(false); 
+        }
     };
 
     const handleCancelSession = async () => {

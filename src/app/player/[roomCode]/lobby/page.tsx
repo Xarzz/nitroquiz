@@ -124,11 +124,15 @@ export default function PlayerLobbyPage() {
     }, [status, countdownValue, router]);
 
     const getCountdownLabel = (val: number) => {
-        if (val > 7) return "ENGINES ON"; if (val > 4) return "REV IT UP";
-        if (val > 2) return "GET SET"; if (val > 0) return "READY"; return "GO!";
+        if (val > 6) return "GET SET"; 
+        if (val > 3) return "READY"; 
+        if (val > 0) return "STEADY"; 
+        return "GO!";
     };
     const getCountdownColor = (val: number) => {
-        if (val > 6) return "text-[#2d6af2]"; if (val > 3) return "text-yellow-400"; return "text-[#00ff9d]";
+        if (val > 6) return "text-[#2d6af2]"; 
+        if (val > 3) return "text-yellow-400"; 
+        return "text-[#00ff9d]";
     };
 
     const carImageMap: Record<string, string> = {
@@ -411,11 +415,14 @@ export default function PlayerLobbyPage() {
                         style={{ animation: 'fadeIn 0.3s ease-out' }}>
                         <div className="flex gap-4 mb-10">
                             {[0, 1, 2, 3, 4].map((i) => {
-                                const isLit = countdownValue <= (10 - i * 2); const isGo = countdownValue <= 0;
+                                const val = 10 - i * 2; // Map 10s to 5 dots
+                                const isLit = countdownValue <= val; 
+                                const isGo = countdownValue <= 0;
+                                const color = isGo ? '#00ff9d' : '#ef4444';
                                 return <div key={i} className="w-8 h-8 rounded-full border-2" style={{
-                                    borderColor: isGo ? '#00ff9d' : isLit ? '#ef4444' : '#4b5563',
-                                    backgroundColor: isGo ? '#00ff9d' : isLit ? '#ef4444' : '#1f2937',
-                                    boxShadow: isGo ? '0 0 25px rgba(0,255,157,0.8)' : isLit ? '0 0 20px rgba(239,68,68,0.8)' : 'none',
+                                    borderColor: isGo ? '#00ff9d' : isLit ? color : '#4b5563',
+                                    backgroundColor: isGo ? '#00ff9d' : isLit ? color : '#1f2937',
+                                    boxShadow: isGo ? '0 0 25px rgba(0,255,157,0.8)' : isLit ? `0 0 20px ${color}` : 'none',
                                     transform: isLit ? 'scale(1.2)' : 'scale(1)',
                                     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                                 }} />;

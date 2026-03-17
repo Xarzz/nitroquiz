@@ -801,16 +801,18 @@ export default function HostRoomPage() {
                     {/* Racing lights */}
                     <div className="flex gap-4 mb-10">
                         {[0, 1, 2, 3, 4].map((i) => {
-                            const isLit = countdown <= (10 - i * 2);
+                            const val = 10 - i * 2; // Map 10s to 5 dots
+                            const isLit = countdown <= val;
                             const isGo = countdown <= 0;
+                            const color = isGo ? '#00ff9d' : '#ef4444';
                             return (
                                 <div
                                     key={i}
                                     className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2"
                                     style={{
-                                        borderColor: isGo ? '#00ff9d' : isLit ? '#ef4444' : '#374151',
-                                        backgroundColor: isGo ? '#00ff9d' : isLit ? '#ef4444' : 'rgba(55, 65, 81, 0.3)',
-                                        boxShadow: isGo ? '0 0 30px rgba(0,255,157,0.8)' : isLit ? '0 0 25px rgba(239,68,68,0.7)' : 'none',
+                                        borderColor: isGo ? '#00ff9d' : isLit ? color : '#374151',
+                                        backgroundColor: isGo ? '#00ff9d' : isLit ? color : 'rgba(55, 65, 81, 0.3)',
+                                        boxShadow: isGo ? '0 0 30px rgba(0,255,157,0.8)' : isLit ? `0 0 25px ${color}` : 'none',
                                         transform: isLit ? 'scale(1.1)' : 'scale(1)',
                                         transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                                     }}
