@@ -316,7 +316,7 @@ export default function HostRoomPage() {
       }
     }
     // 2. Start host-side countdown
-    setCountdown(3);
+    setCountdown(5);
   };
 
   useEffect(() => {
@@ -927,11 +927,15 @@ export default function HostRoomPage() {
         >
           {/* Racing lights */}
           <div className="flex gap-4 mb-10">
-            {[0, 1, 2].map((i) => {
-              const val = 3 - i; // Map 3s to 3 dots
+            {[0, 1, 2, 3, 4].map((i) => {
+              const val = 5 - i; // Map 5s to 5 dots
               const isLit = countdown <= val;
               const isGo = countdown <= 0;
-              const color = isGo ? "#00ff9d" : val === 3 ? "#ef4444" : val === 2 ? "#facc15" : "#00ff9d";
+              let color = "#3b82f6"; // Default Blue for 5, 4
+              if (val === 3) color = "#ef4444";
+              if (val === 2) color = "#facc15";
+              if (val === 1 || isGo) color = "#00ff9d";
+              
               return (
                 <div
                   key={i}
@@ -960,7 +964,9 @@ export default function HostRoomPage() {
           <span
             key={countdown}
             className={`font-display text-[150px] md:text-[220px] font-black leading-none tracking-tighter ${
-              countdown === 3
+              countdown >= 4
+                ? "text-blue-500"
+                : countdown === 3
                 ? "text-red-500"
                 : countdown === 2
                   ? "text-yellow-400"
@@ -976,7 +982,7 @@ export default function HostRoomPage() {
 
           {countdown > 0 && (
             <p className="font-display text-xl md:text-2xl tracking-[0.3em] uppercase text-gray-500 mt-6 animate-pulse">
-              {countdown === 3 ? "READY" : countdown === 2 ? "STEADY" : "GO RACE"}
+              {countdown >= 4 ? "PREPARING" : countdown === 3 ? "READY" : countdown === 2 ? "STEADY" : "GO RACE"}
             </p>
           )}
           {countdown === 0 && (

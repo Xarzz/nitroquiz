@@ -3,7 +3,12 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { ASSET_LIST, TRACK_ASSETS, getAssetOffset } from '@/lib/gameAssets';
-import QuizOverlay, { QuizQuestion } from '@/components/game/QuizOverlay';
+interface QuizQuestion {
+    id: string;
+    question: string;
+    options: string[];
+    correctAnswer: number;
+}
 import { supabase } from '@/lib/supabase';
 import { getUser } from '@/lib/storage';
 
@@ -114,11 +119,12 @@ export default function GameSpeedPage() {
 
     // Game State
     const [gameState, setGameState] = useState<'preparation' | 'countdown' | 'playing' | 'finished' | 'gameover'>('preparation');
-    const [countdown, setCountdown] = useState(3); // Countdown dari 3
+    // Countdown Ref helper
+    const countdownRef = useRef(5);
+    const [countdown, setCountdown] = useState(5); // Countdown dari 3
     const [stats, setStats] = useState({ speed: 0, nos: 100, lap: 1, totalLaps: 1 });
 
     // Countdown timer effect — uses setInterval, only triggers on gameState change
-    const countdownRef = useRef<number>(3);
     useEffect(() => {
         if (gameState !== 'countdown') return;
 
@@ -150,11 +156,8 @@ export default function GameSpeedPage() {
 
     // Quiz Integration State
     const [allQuizQuestions, setAllQuizQuestions] = useState<QuizQuestion[]>([]);
-    const [quizRound, setQuizRound] = useState(0); // Which round of quiz (0 = haven't started)
-    const [quizQuestionIndex, setQuizQuestionIndex] = useState(0); // Index into allQuizQuestions
-    const [showQuiz, setShowQuiz] = useState(false);
+    const [quizQuestionIndex, setQuizQuestionIndex] = useState(0); 
     const [totalQuizScore, setTotalQuizScore] = useState(0);
-    const [allQuizDone, setAllQuizDone] = useState(false);
     const QUESTIONS_PER_ROUND = 3;
 
     const usePCLayout = !isMobile || mobileOrientationChoice === 'landscape';
@@ -222,6 +225,7 @@ export default function GameSpeedPage() {
         nos: 100,
         currentLap: 1,
         totalLaps: 1,
+        countdown: 5,
         cameraDepth: 1 / Math.tan((FIELD_OF_VIEW / 2) * Math.PI / 180),
         viewMode: 'third' as 'first' | 'third',
         bgOffset: 0,
@@ -1252,31 +1256,29 @@ export default function GameSpeedPage() {
         state.current.playerZ = (CAMERA_HEIGHT * state.current.cameraDepth);
         playerZ = state.current.playerZ;
 
+        const currentRound = Math.floor(quizQuestionIndex / QUESTIONS_PER_ROUND) + 1;
+        const totalRounds = Math.max(1, Math.ceil(allQuizQuestions.length / QUESTIONS_PER_ROUND));
+
         // HUD update
         setStats({
             speed: Math.floor(speed / 100),
             nos: Math.floor(state.current.nos),
-            lap: Math.floor(position / trackLength) + 1,
-            totalLaps: state.current.totalLaps
+            lap: currentRound,
+            totalLaps: totalRounds
         });
 
         // Lap & Finish line check
         if (position > trackLength - playerZ && gameState !== 'finished') {
-            if (state.current.currentLap >= state.current.totalLaps) {
-                // Check if we have quiz questions remaining
-                if (allQuizQuestions.length > 0 && quizQuestionIndex < allQuizQuestions.length) {
-                    // Show quiz overlay instead of finishing
-                    state.current.speed = 0;
-                    setShowQuiz(true);
-                    setQuizRound(prev => prev + 1);
-                } else {
-                    setGameState('finished');
-                    state.current.speed = 0;
-                }
+            state.current.speed = 0;
+            // Check if we have quiz questions remaining
+            if (allQuizQuestions.length > 0 && quizQuestionIndex < allQuizQuestions.length) {
+                // Save current state to localStorage before redirect
+                localStorage.setItem('nitroquiz_game_questionIndex', quizQuestionIndex.toString());
+                localStorage.setItem('nitroquiz_game_score', totalQuizScore.toString());
+                router.push('/quiz');
             } else {
-                state.current.currentLap++;
-                state.current.position = 0;
-                position = 0;
+                setGameState('finished');
+                endGame();
             }
         }
     };
@@ -1950,10 +1952,11 @@ export default function GameSpeedPage() {
                     console.log('[GameSpeed] Loaded quiz questions:', normalized.length, 'Sample:', normalized[0]);
                     setAllQuizQuestions(normalized);
                     
-                    // Update total laps based on questions (3 questions per lap/round)
-                    const laps = Math.max(1, Math.ceil(normalized.length / QUESTIONS_PER_ROUND));
-                    state.current.totalLaps = laps;
-                    setStats(prev => ({ ...prev, totalLaps: laps }));
+                    // Sync current progress from localStorage
+                    const storedIndex = localStorage.getItem('nitroquiz_game_questionIndex');
+                    const storedScore = localStorage.getItem('nitroquiz_game_score');
+                    if (storedIndex) setQuizQuestionIndex(parseInt(storedIndex, 10));
+                    if (storedScore) setTotalQuizScore(parseInt(storedScore, 10));
                 }
             }
         } catch (e) {
@@ -1961,49 +1964,22 @@ export default function GameSpeedPage() {
         }
     }, []);
 
-    // Handle quiz completion for current round
-    const handleQuizComplete = useCallback((results: { correct: number; total: number; score: number }) => {
-        const newScore = totalQuizScore + results.score;
-        setTotalQuizScore(newScore);
-        const nextIndex = quizQuestionIndex + QUESTIONS_PER_ROUND;
-        setQuizQuestionIndex(nextIndex);
-
-        // Sync progress to Supabase (host monitor reads this)
-        const isFinishedNow = nextIndex >= allQuizQuestions.length;
-        updateParticipantStatus({
-            score: newScore,
-            current_question: Math.min(nextIndex, allQuizQuestions.length),
-            minigame: false,
-            ...(isFinishedNow ? { finished_at: new Date().toISOString() } : {})
-        });
-
-        if (isFinishedNow) {
-            // All questions done!
-            setAllQuizDone(true);
-            setGameState('finished');
-            endGame(); // Direct jump, leave showQuiz=true so it covers the screen during transition
-        } else {
-            setShowQuiz(false); // Only hide quiz overlay if we still have racing to do
-            // Reset race for the next round
-            state.current.position = 0;
-            state.current.speed = 0;
-            state.current.playerX = 0;
-            state.current.nos = 100;
-            countdownRef.current = 3;
-            setGameState('countdown');
+    // Auto-complete game immediately when finished
+    useEffect(() => {
+        if (gameState === 'finished') {
+            endGame();
         }
-    }, [quizQuestionIndex, allQuizQuestions.length, totalQuizScore, updateParticipantStatus, endGame]);
-
-    // Get current quiz questions for this round
-    const currentRoundQuestions = allQuizQuestions.slice(quizQuestionIndex, quizQuestionIndex + QUESTIONS_PER_ROUND);
+    }, [gameState, endGame]);
 
     return (
         <div style={{
-            position: 'fixed',
-            inset: 0,
-            backgroundColor: '#020617',
+            width: '100%',
+            height: '100%',
+            background: '#020617',
             overflow: 'hidden',
+            fontFamily: 'var(--font-rajdhani)',
             userSelect: 'none',
+            touchAction: 'none',
             WebkitUserSelect: 'none',
             filter: (stats.speed > 150 ? `blur(${((stats.speed - 150) / 60) + (state.current.keyBoost && stats.nos > 0 ? 2 : 0)}px) ` : (state.current.keyBoost && stats.nos > 0 ? 'blur(2px) ' : '')) + 'contrast(1.05) brightness(1) saturate(1.1)', // Milder Lighter Blur
             transition: 'filter 0.4s ease'
@@ -2561,18 +2537,24 @@ export default function GameSpeedPage() {
                     fontFamily: 'var(--font-rajdhani)',
                 }}>
                     {/* Racing lights */}
-                    <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '2rem' }}>
-                        {[0, 1, 2].map((i) => {
-                            const val = 3 - i;
+                    <div style={{ display: 'flex', gap: '0.75rem' }}>
+                        {[0, 1, 2, 3, 4].map((i) => {
+                            const val = 5 - i;
                             const isLit = countdown <= val;
                             const isGo = countdown <= 0;
-                            const color = val === 3 ? '#ef4444' : val === 2 ? '#fbbf24' : '#00ff9d';
+                            let color = "#3b82f6"; // Blue for 5, 4
+                            if (val === 3) color = "#ef4444";
+                            if (val === 2) color = "#fbbf24"; // Wait, check color variable below
+                            
+                            // Re-evaluating color logic for dots
+                            color = isGo ? '#00ff9d' : val >= 4 ? '#3b82f6' : val === 3 ? '#ef4444' : val === 2 ? '#facc15' : '#00ff9d';
+
                             return (
                                 <div
                                     key={i}
                                     style={{
-                                        width: usePCLayout ? '2.5rem' : '1.75rem',
-                                        height: usePCLayout ? '2.5rem' : '1.75rem',
+                                        width: usePCLayout ? '2.5rem' : '1.5rem',
+                                        height: usePCLayout ? '2.5rem' : '1.5rem',
                                         borderRadius: '50%',
                                         border: `2px solid ${isGo ? '#00ff9d' : isLit ? color : '#374151'}`,
                                         backgroundColor: isGo ? '#00ff9d' : isLit ? color : 'rgba(55, 65, 81, 0.3)',
@@ -2592,7 +2574,7 @@ export default function GameSpeedPage() {
                             fontSize: usePCLayout ? '8rem' : '5rem',
                             fontWeight: 900,
                             lineHeight: 1,
-                            color: countdown === 3 ? '#ef4444' : countdown === 2 ? '#fbbf24' : '#00ff9d',
+                            color: countdown >= 4 ? '#3b82f6' : countdown === 3 ? '#ef4444' : countdown === 2 ? '#facc15' : '#00ff9d',
                             textShadow: `0 0 60px currentColor`,
                             animation: 'countdown-pop 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)',
                             willChange: 'transform, opacity',
@@ -2622,16 +2604,7 @@ export default function GameSpeedPage() {
                 </div>
             )}
 
-            {/* Quiz Overlay */}
-            {showQuiz && currentRoundQuestions.length > 0 && (
-                <QuizOverlay
-                    questions={currentRoundQuestions}
-                    roundNumber={quizRound}
-                    onComplete={handleQuizComplete}
-                />
-            )}
-
-            {/* Finished/Transition Overlay */}
+            {/* Transitioning to Quiz or Results Overlay */}
             {gameState === 'finished' && (
                 <div style={{
                     position: 'fixed', inset: 0, zIndex: 9999,
@@ -2643,11 +2616,11 @@ export default function GameSpeedPage() {
                         BALAPAN SELESAI!
                     </div>
                     <div style={{ fontSize: '1rem', color: '#94a3b8', maxWidth: '300px' }}>
-                        Menyiapkan hasil klasemen dan mengarahkan ke podium...
+                        Menyiapkan hasil klasemen dan mengarahkan...
                     </div>
                 </div>
             )}
-
+            <style>{`@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }`}</style>
         </div>
     );
 }

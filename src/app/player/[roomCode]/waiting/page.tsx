@@ -26,7 +26,7 @@ export default function PlayerWaitingPage() {
     const [errorMessage, setErrorMessage] = useState("");
     const [assignedCar, setAssignedCar] = useState<string>("/assets/characters/scloski/showroom/showroom1.png");
     const [assignedCarIndex, setAssignedCarIndex] = useState<number>(0);
-    const [countdownValue, setCountdownValue] = useState(3);
+    const [countdownValue, setCountdownValue] = useState(5);
     const [sessionId, setSessionId] = useState<string | null>(null);
     const [participantCount, setParticipantCount] = useState(1);
     const [username, setUsername] = useState("");
@@ -71,7 +71,7 @@ export default function PlayerWaitingPage() {
 
                 const channel = supabase.channel(`player-session-${sessionData.id}`)
                     .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'sessions', filter: `id=eq.${sessionData.id}` },
-                        (payload) => { if (payload.new.status === "active") { preloadQuizData(sessionData.id); router.push('/gamespeed'); } })
+                        (payload) => { if (payload.new.status === "active") { setStatus("countdown"); preloadQuizData(sessionData.id); } })
                     .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'participants', filter: `session_id=eq.${sessionData.id}` },
                         async () => {
                             const { data: pList, count } = await supabase.from("participants")
@@ -86,8 +86,7 @@ export default function PlayerWaitingPage() {
                     try {
                         const { data } = await supabase.from("sessions").select("status").eq("id", sessId).single();
                         if (data?.status === "active") {
-                            preloadQuizData(sessId);
-                            router.push('/gamespeed');
+                            setStatus(prev => { if (prev === "waiting") { preloadQuizData(sessId); return "countdown"; } return prev; });
                             clearInterval(pollInterval);
                         }
                     } catch (e) { console.error("Poll session error:", e); }
@@ -125,12 +124,14 @@ export default function PlayerWaitingPage() {
     }, [status, countdownValue, router]);
 
     const getCountdownLabel = (val: number) => {
+        if (val >= 4) return "GET READY"; 
         if (val === 3) return "READY"; 
         if (val === 2) return "STEADY"; 
         if (val === 1) return "GO RACE"; 
         return "GO!";
     };
     const getCountdownColor = (val: number) => {
+        if (val >= 4) return "text-blue-500"; 
         if (val === 3) return "text-red-500"; 
         if (val === 2) return "text-yellow-400"; 
         return "text-[#00ff9d]";
@@ -415,11 +416,15 @@ export default function PlayerWaitingPage() {
                     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/80 backdrop-blur-sm"
                         style={{ animation: 'fadeIn 0.3s ease-out' }}>
                         <div className="flex gap-4 mb-10">
-                            {[0, 1, 2].map((i) => {
-                                const val = 3 - i; // Map 3s to 3 dots
+                            {[0, 1, 2, 3, 4].map((i) => {
+                                const val = 5 - i; // Map 5s to 5 dots
                                 const isLit = countdownValue <= val; 
                                 const isGo = countdownValue <= 0;
-                                const color = isGo ? '#00ff9d' : val === 3 ? '#ef4444' : val === 2 ? '#facc15' : '#00ff9d';
+                                let color = "#3b82f6"; // Blue for 5, 4
+                                if (val === 3) color = "#ef4444";
+                                if (val === 2) color = "#facc15";
+                                if (val === 1 || isGo) color = "#00ff9d";
+
                                 return <div key={i} className="w-8 h-8 rounded-full border-2" style={{
                                     borderColor: isGo ? '#00ff9d' : isLit ? color : '#4b5563',
                                     backgroundColor: isGo ? '#00ff9d' : isLit ? color : '#1f2937',
