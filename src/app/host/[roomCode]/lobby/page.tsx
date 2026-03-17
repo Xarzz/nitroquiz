@@ -464,9 +464,9 @@ export default function HostRoomPage() {
       <div className="scanlines"></div>
 
       {/* Main Content Wrapper - Fixed to viewport */}
-      <div className="relative z-20 flex flex-col h-full w-full mx-auto px-6 md:px-12 pb-6">
+      <div className="relative z-20 flex flex-col h-full w-full mx-auto px-6 md:px-10 pb-4">
         {/* Header - Logos in corners with equal spacing (Top:Logo == Logo:Content) */}
-        <div className="w-full flex items-center justify-between pt-4 mb-2">
+        <div className="w-full flex items-center justify-between pt-2 mb-0">
           <img
             src="/assets/logo/logo1.png"
             alt="NitroQuiz Logo"
@@ -483,7 +483,7 @@ export default function HostRoomPage() {
           />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch relative flex-1 min-h-0 overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-2 items-stretch relative flex-1 min-h-0 overflow-hidden">
           {/* Left Column: Room Details (4 cols) */}
           <div className="lg:col-span-4 space-y-4 flex flex-col min-h-0">
             <motion.div
