@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Users, Clock, Flag, Trophy, Skull } from "lucide-react";
+import { Users, Clock, Flag, Trophy, Skull, FileText } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/lib/supabase";
@@ -464,10 +464,10 @@ export default function GameMonitorPage() {
 
                   {/* Progress Detail */}
                   <div className="w-24 flex-shrink-0 flex flex-col items-center justify-center border-l border-white/5">
-                    <span className="text-[10px] text-white/30 uppercase font-black tracking-tighter">LAP</span>
+                    <span className="text-[10px] text-white/30 uppercase font-black tracking-tighter">QUIZ</span>
                     <div className="flex items-center gap-1.5 font-orbitron font-bold">
                         <span className="text-sm text-white/80">{player.current_question}/{totalQuestions}</span>
-                        <Flag size={14} className="text-emerald-400" />
+                        <FileText size={14} className="text-[#2d6af2]" />
                     </div>
                   </div>
 

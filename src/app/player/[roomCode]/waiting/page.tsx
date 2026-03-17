@@ -112,13 +112,13 @@ export default function PlayerWaitingPage() {
                 localStorage.setItem('nitroquiz_game_sessionId', sessId);
                 if (data.quiz_id) localStorage.setItem('nitroquiz_game_quizId', data.quiz_id);
             }
-            const link = document.createElement('link'); link.rel = 'prefetch'; link.href = '/gamespeed'; document.head.appendChild(link);
+            const link = document.createElement('link'); link.rel = 'prefetch'; link.href = '/quiz'; document.head.appendChild(link);
         } catch (err) { console.error('Failed to preload quiz:', err); }
     };
 
     useEffect(() => {
         if (status !== "countdown") return;
-        if (countdownValue <= 0) { setStatus("go"); setTimeout(() => router.push('/gamespeed'), 1500); return; }
+        if (countdownValue <= 0) { setStatus("go"); setTimeout(() => router.push('/quiz'), 1500); return; }
         const timer = setTimeout(() => setCountdownValue(prev => prev - 1), 1000);
         return () => clearTimeout(timer);
     }, [status, countdownValue, router]);

@@ -25,7 +25,7 @@ function CharacterSelectionContent() {
         saveSelectedCharacter(selectedCharacter);
 
         setTimeout(() => {
-            router.push('/gamespeed');
+            router.push('/quiz');
         }, 800);
     };
 
