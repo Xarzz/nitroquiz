@@ -414,13 +414,10 @@ export default function PlayerLeaderboardPage() {
                 <House className="w-5 h-5" /> HOME
               </button>
               <button
-                disabled
-                className="flex-1 h-14 flex items-center justify-center gap-2 rounded-full font-display text-sm font-bold uppercase tracking-widest opacity-40 cursor-not-allowed"
-                style={{
-                  background: "linear-gradient(135deg,#78450a,#4a2c06)",
-                }}
+                onClick={() => sessionId && (window.location.href = `https://gameforsmartnewui.vercel.app/stat/${sessionId}`)}
+                className="flex-1 h-14 flex items-center justify-center gap-2 rounded-full font-display text-sm font-bold uppercase tracking-widest bg-gradient-to-r from-[#f59e0b] to-[#d97706] shadow-[0_0_24px_rgba(245,158,11,0.35)]"
               >
-                <BarChart2 className="w-5 h-5" /> STATISTICS
+                <BarChart2 className="w-5 h-5" /> STATISTIK
               </button>
             </div>
           </div>
@@ -606,14 +603,14 @@ export default function PlayerLeaderboardPage() {
                 <House className="w-5 h-5" /> HOME
               </button>
               <button
-                onClick={() => setMobileView("stats")}
+                onClick={() => sessionId && (window.location.href = `https://gameforsmartnewui.vercel.app/stat/${sessionId}`)}
                 className="flex-1 h-14 flex items-center justify-center gap-2 rounded-full font-display text-sm font-bold uppercase tracking-widest text-white active:scale-95 transition-transform"
                 style={{
                   background: "linear-gradient(135deg,#f59e0b,#d97706)",
                   boxShadow: "0 0 24px rgba(245,158,11,0.38)",
                 }}
               >
-                <BarChart2 className="w-5 h-5" /> STATISTICS
+                <BarChart2 className="w-5 h-5" /> STATISTIK
               </button>
             </motion.div>
           </motion.div>
