@@ -62,6 +62,7 @@ export default function PlayerLeaderboardPage() {
   const [totalQuestions, setTotalQuestions] = useState<number>(0);
   const [sessionStatus, setSessionStatus] = useState<string | null>(null);
   const [mobileView, setMobileView] = useState<"result" | "stats">("result");
+  const [sessionId, setSessionId] = useState<string | null>(null);
 
   const currentUser = getUser();
 
@@ -81,6 +82,7 @@ export default function PlayerLeaderboardPage() {
       if (sessionData.question_limit)
         setTotalQuestions(sessionData.question_limit);
       
+      setSessionId(sessionData.id);
       setSessionStatus(sessionData.status);
 
       const { data: pData, error: pError } = await supabase
@@ -844,10 +846,10 @@ export default function PlayerLeaderboardPage() {
               </div>
             </div>
             <button
-              onClick={() => router.push(`/player/${roomCode}/lobby`)}
-              className="w-full h-12 flex items-center justify-center gap-2 rounded-full border border-[#00ff9d]/50 text-[#00ff9d] font-display text-sm uppercase tracking-widest hover:bg-[#00ff9d]/10 active:scale-95 transition-all flex-shrink-0"
+              onClick={() => sessionId && (window.location.href = `https://gameforsmartnewui.vercel.app/stat/${sessionId}`)}
+              className="w-full h-12 flex items-center justify-center gap-2 rounded-full border border-[#f59e0b]/50 text-[#f59e0b] font-display text-sm uppercase tracking-widest hover:bg-[#f59e0b]/10 active:scale-95 transition-all flex-shrink-0"
             >
-              <RotateCcw className="w-4 h-4" /> Play Again
+              <BarChart2 className="w-4 h-4" /> STATISTIK
             </button>
           </motion.div>
         )}
@@ -1153,20 +1155,20 @@ export default function PlayerLeaderboardPage() {
           </button>
         </div>
 
-        {/* Right floating button — Play Again */}
+        {/* Right floating button — Statistics */}
         <div className="absolute right-6 top-1/2 -translate-y-1/2 z-20 flex flex-col gap-4">
           <button
-            onClick={() => router.push(`/player/${roomCode}/lobby`)}
+            onClick={() => sessionId && (window.location.href = `https://gameforsmartnewui.vercel.app/stat/${sessionId}`)}
             className="w-[52px] h-[52px] flex items-center justify-center rounded-full active:scale-95 transition-all"
             style={{
               background: "rgba(10,18,35,0.85)",
-              border: "2px solid #00ff9d",
-              color: "#00ff9d",
+              border: "2px solid #f59e0b",
+              color: "#f59e0b",
               boxShadow:
-                "0 0 18px rgba(0,255,157,0.6), inset 0 0 10px rgba(0,255,157,0.15)",
+                "0 0 18px rgba(245,158,11,0.6), inset 0 0 10px rgba(245,158,11,0.15)",
             }}
           >
-            <RotateCcwIcon className="w-5 h-5" />
+            <BarChart2 className="w-5 h-5" />
           </button>
         </div>
       </div>
