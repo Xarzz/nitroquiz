@@ -206,7 +206,7 @@ export default function LeaderboardPage() {
                                 <div className="mb-2 text-center">
                                     <div className="bg-black/60 border border-slate-300/40 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-[0_4px_15px_rgba(0,0,0,0.5)]">
                                         <p className="font-display text-slate-200 text-xs sm:text-sm tracking-wider truncate max-w-[100px]">{secondPlace.nickname}</p>
-                                        <p className="font-mono text-slate-400 text-[10px] mt-0.5">{secondPlace.score.toLocaleString()} PTS</p>
+                                        <p className="font-mono text-slate-400 text-[10px] mt-0.5">{secondPlace.score.toLocaleString()}</p>
                                     </div>
                                 </div>
                                 <div className="w-[85px] sm:w-[120px] h-[140px] sm:h-[180px] bg-gradient-to-b from-[#1a2235] to-[#0a0f1a] border-t-4 border-l border-r border-[#64748b] rounded-t-xl flex flex-col items-center justify-between py-4">
@@ -244,7 +244,7 @@ export default function LeaderboardPage() {
                                 <div className="mb-2 text-center">
                                     <div className="bg-[#1a1500]/80 border border-yellow-500/60 backdrop-blur-md px-4 sm:px-5 py-2 rounded-xl shadow-[0_0_25px_rgba(250,204,21,0.3)]">
                                         <p className="font-display text-yellow-500 text-sm sm:text-lg font-bold tracking-widest uppercase truncate max-w-[130px]">{firstPlace.nickname}</p>
-                                        <p className="font-mono text-white text-xs sm:text-sm mt-0.5 font-bold">{firstPlace.score.toLocaleString()} PTS</p>
+                                        <p className="font-mono text-white text-xs sm:text-sm mt-0.5 font-bold">{firstPlace.score.toLocaleString()}</p>
                                     </div>
                                 </div>
                                 <div className="w-[100px] sm:w-[140px] h-[200px] sm:h-[250px] bg-gradient-to-b from-[#2a1f0a] to-[#0a0f1a] border-t-8 border-l-2 border-r-2 border-[#eab308] rounded-t-xl relative overflow-hidden flex flex-col items-center justify-between py-6">
@@ -281,7 +281,7 @@ export default function LeaderboardPage() {
                                 <div className="mb-2 text-center">
                                     <div className="bg-black/60 border border-orange-700/40 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-[0_4px_15px_rgba(0,0,0,0.5)]">
                                         <p className="font-display text-orange-200 text-xs sm:text-sm tracking-wider truncate max-w-[100px]">{thirdPlace.nickname}</p>
-                                        <p className="font-mono text-orange-400 text-[10px] mt-0.5">{thirdPlace.score.toLocaleString()} PTS</p>
+                                        <p className="font-mono text-orange-400 text-[10px] mt-0.5">{thirdPlace.score.toLocaleString()}</p>
                                     </div>
                                 </div>
                                 <div className="w-[75px] sm:w-[110px] h-[110px] sm:h-[150px] bg-gradient-to-b from-[#25140b] to-[#0a0f1a] border-t-4 border-l border-r border-[#c2410c] rounded-t-xl flex flex-col items-center justify-between py-3">
