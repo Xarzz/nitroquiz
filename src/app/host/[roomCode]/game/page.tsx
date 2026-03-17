@@ -373,7 +373,7 @@ export default function GameMonitorPage() {
 
                   {/* Avatar Slot */}
                   <div className="relative mr-6">
-                      <div className="w-16 h-16 rounded-full border-2 border-white/5 bg-black/40 overflow-hidden flex items-center justify-center p-0 shadow-inner">
+                      <div className="w-16 h-16 rounded-full border-2 border-white/20 bg-black/40 overflow-hidden flex items-center justify-center p-0 shadow-[0_0_10px_rgba(255,255,255,0.1)]">
                         {player.avatar_url ? (
                           <img src={player.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
                         ) : (

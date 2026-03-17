@@ -604,14 +604,14 @@ export default function HostRoomPage() {
 
                                                     <div className="relative mb-3 w-full flex justify-center">
                                                         <div className="absolute inset-0 bg-[#2d6af2]/20 blur-xl rounded-full scale-50 group-hover:scale-100 transition-transform duration-500"></div>
-                                                        <div className="w-20 h-20 rounded-full border-2 border-[#2d6af2]/30 bg-black/40 overflow-hidden flex items-center justify-center p-0 shadow-inner relative z-10">
+                                                        <div className="w-20 h-20 rounded-full border-2 border-[#2d6af2]/40 bg-black/40 overflow-hidden flex items-center justify-center p-0 shadow-[0_0_15px_rgba(45,106,242,0.2)] relative z-10 transition-transform group-hover:scale-110">
                                                             {player.avatar_url ? (
                                                                 <img src={player.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
                                                             ) : (
                                                                 <img 
                                                                     src={logoImageMap[player.car.replace("-bot", "")] || "/assets/characters/scloski/logo/logo1.png"} 
                                                                     alt="Logo" 
-                                                                    className="w-full h-full object-contain p-2" 
+                                                                    className="w-full h-full object-contain p-1" 
                                                                 />
                                                             )}
                                                         </div>

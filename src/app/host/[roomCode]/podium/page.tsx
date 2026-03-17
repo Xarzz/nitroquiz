@@ -202,7 +202,7 @@ export default function LeaderboardPage() {
                                             <img 
                                                 src={logoImageMap[(secondPlace.car_character || "white").replace("-bot", "")] || "/assets/characters/scloski/logo/logo1.png"} 
                                                 alt="Logo" 
-                                                className="w-full h-full object-contain p-2" 
+                                                className="w-full h-full object-contain p-1" 
                                             />
                                         )}
                                     </div>
@@ -233,7 +233,7 @@ export default function LeaderboardPage() {
                                             <img 
                                                 src={logoImageMap[(firstPlace.car_character || "purple").replace("-bot", "")] || "/assets/characters/scloski/logo/logo1.png"} 
                                                 alt="Logo" 
-                                                className="w-full h-full object-contain p-2" 
+                                                className="w-full h-full object-contain p-1" 
                                             />
                                         )}
                                     </div>
@@ -259,7 +259,7 @@ export default function LeaderboardPage() {
                                             <img 
                                                 src={logoImageMap[(thirdPlace.car_character || "black").replace("-bot", "")] || "/assets/characters/scloski/logo/logo1.png"} 
                                                 alt="Logo" 
-                                                className="w-full h-full object-contain p-2" 
+                                                className="w-full h-full object-contain p-1" 
                                             />
                                         )}
                                     </div>
