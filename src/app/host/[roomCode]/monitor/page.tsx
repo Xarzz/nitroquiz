@@ -236,7 +236,7 @@ export default function GameMonitorPage() {
         .eq("id", sessionId);
 
       // Navigate to Podium/Leaderboard
-      router.push(`/host/${roomCode}/podium`);
+      router.push(`/host/${roomCode}/leaderboard`);
     } catch (error) {
       console.error("Failed to end race:", error);
       setIsEnding(false);

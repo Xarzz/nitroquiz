@@ -303,7 +303,7 @@ export default function HostRoomPage() {
             }, 1000);
             return () => clearTimeout(timer);
         } else if (countdown === 0) {
-            router.push(`/host/${roomCode}/game`);
+            router.push(`/host/${roomCode}/monitor`);
         }
     }, [countdown, router, roomCode]);
 
