@@ -74,7 +74,7 @@ export default function Home() {
         // Quick check: is user already in localStorage?
         const existingUser = getUser();
         if (existingUser) {
-          router.push(`/player/${code}/lobby`);
+          router.push(`/player/${code}/waiting`);
           return;
         }
 
@@ -97,7 +97,7 @@ export default function Home() {
               createdAt: new Date().toISOString(),
             };
             saveUser(newUser);
-            router.push(`/player/${code}/lobby`);
+            router.push(`/player/${code}/waiting`);
             return;
           }
         } catch (e) {

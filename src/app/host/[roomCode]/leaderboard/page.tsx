@@ -148,9 +148,21 @@ export default function LeaderboardPage() {
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[#2d6af2]/10 blur-[120px] rounded-full mix-blend-screen pointer-events-none" />
 
             {/* Top Bar: Logo1 left, Logo2 right */}
-            <div className="w-full max-w-6xl z-30 px-4 sm:px-6 pt-4 flex items-center justify-between">
-                <img src="/assets/logo/logo1.png" alt="Logo 1" className="h-8 sm:h-10 object-contain" />
-                <img src="/assets/logo/logo2.png" alt="Logo 2" className="h-8 sm:h-10 object-contain" />
+            <div className="w-full max-w-7xl z-30 px-4 sm:px-8 pt-6 flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                    <img 
+                        src="/assets/logo/logo1.png" 
+                        alt="Logo 1" 
+                        style={{ width: '140px', height: '40px' }} 
+                        className="object-contain" 
+                    />
+                </div>
+                <img 
+                    src="/assets/logo/logo2.png" 
+                    alt="Logo 2" 
+                    style={{ width: '240px', height: '60px' }} 
+                    className="object-contain opacity-80" 
+                />
             </div>
 
             <div className="w-full max-w-5xl z-20 px-4 sm:px-6">

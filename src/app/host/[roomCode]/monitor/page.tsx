@@ -283,16 +283,14 @@ export default function GameMonitorPage() {
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative z-20 w-full px-8 py-3 flex items-center justify-between border-b border-white/5 bg-black/60 backdrop-blur-xl"
+        className="relative z-20 w-full px-8 py-4 flex items-center justify-between border-b border-white/5 bg-black/60 backdrop-blur-xl"
       >
-        <div className="flex items-center gap-4">
-          <Image
-            src="/assets/logo/logo2.png"
+        <div className="flex items-center gap-6">
+          <img
+            src="/assets/logo/logo1.png"
             alt="NitroQuiz"
-            width={200}
-            height={50}
+            style={{ width: '140px', height: '40px' }}
             className="object-contain drop-shadow-[0_0_8px_rgba(45,106,242,0.5)]"
-            priority
           />
           
           <div className="flex items-center gap-2 bg-[#1a2235] border border-[#2d6af2]/30 px-3 py-1.5 rounded-lg shadow-[inset_0_0_10px_rgba(45,106,242,0.1)]">
@@ -303,33 +301,49 @@ export default function GameMonitorPage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-6">
-          {/* Digital Timer Box */}
+        {/* Digital Timer Box - Center */}
+        <div className="absolute left-1/2 -translate-x-1/2">
           <div className="relative group">
             <div className="absolute -inset-1 bg-blue-500/20 rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
-            <div className="relative flex items-center gap-3 bg-[#0a0f1e] border-2 border-blue-500/50 px-6 py-2 rounded-xl shadow-[0_0_20px_rgba(45,106,242,0.4)]">
+            <div className="relative flex items-center gap-3 bg-[#0a0f1e] border-2 border-blue-500/50 px-8 py-2 rounded-xl shadow-[0_0_20px_rgba(45,106,242,0.4)]">
               <span className={`font-orbitron text-3xl tracking-[0.15em] ${timeLeft < 60 ? "text-red-500 animate-pulse" : "text-blue-400"}`} style={{ textShadow: '0 0 10px currentColor' }}>
                 {formatTime(timeLeft)}
               </span>
             </div>
           </div>
+        </div>
 
-          <button
-            onClick={handleEndRace}
-            disabled={isEnding}
-            style={{
-                background: 'linear-gradient(135deg, #991b1b 0%, #450a0a 100%)',
-                boxShadow: '0 0 20px rgba(220, 38, 38, 0.4)'
-            }}
-            className={`relative group px-8 py-3 rounded-lg border border-red-500/50 overflow-hidden transition-all active:scale-95 ${isEnding ? 'opacity-50 cursor-not-allowed' : 'hover:border-red-400'}`}
-          >
-            <div className="absolute inset-0 bg-red-600/20 group-hover:bg-red-600/30 transition-colors" />
-            <span className="relative z-10 font-orbitron text-xs font-bold tracking-[0.2em] text-red-100">
-              {isEnding ? "ENDING..." : "END RACE"}
-            </span>
-          </button>
+        <div className="flex items-center gap-6">
+          <img
+            src="/assets/logo/logo2.png"
+            alt="GameForSmart"
+            style={{ width: '240px', height: '60px' }}
+            className="object-contain opacity-80 hover:opacity-100 transition-opacity duration-300 drop-shadow-[0_0_10px_rgba(45,106,242,0.3)]"
+          />
         </div>
       </motion.div>
+
+      {/* Floating End Button - Moved from header */}
+      <div className="fixed bottom-8 right-8 z-50">
+        <motion.button
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={handleEndRace}
+          disabled={isEnding}
+          style={{
+              background: 'linear-gradient(135deg, #991b1b 0%, #450a0a 100%)',
+              boxShadow: '0 0 20px rgba(220, 38, 38, 0.4)'
+          }}
+          className={`relative group px-10 py-4 rounded-2xl border border-red-500/50 overflow-hidden transition-all ${isEnding ? 'opacity-50 cursor-not-allowed' : 'hover:border-red-400'}`}
+        >
+          <div className="absolute inset-0 bg-red-600/20 group-hover:bg-red-600/30 transition-colors" />
+          <span className="relative z-10 font-orbitron text-xs font-bold tracking-[0.2em] text-red-100 uppercase">
+            {isEnding ? "ENDING..." : "END RACE"}
+          </span>
+        </motion.button>
+      </div>
 
       {/* Main Tracks Area */}
       <div className="relative z-20 flex-1 w-full mx-auto p-6 overflow-y-auto custom-scrollbar">

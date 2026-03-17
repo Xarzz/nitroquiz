@@ -33,7 +33,7 @@ export default function PlayerLoginPage() {
     useEffect(() => {
         const user = getUser();
         if (user) {
-            router.push(`/player/${roomCode}/lobby`);
+            router.push(`/player/${roomCode}/waiting`);
         }
     }, [roomCode, router]);
 
@@ -60,7 +60,7 @@ export default function PlayerLoginPage() {
             };
 
             saveUser(user);
-            router.push(`/player/${roomCode}/lobby`);
+            router.push(`/player/${roomCode}/waiting`);
         } catch (error) {
             setServerError("Login failed. Please try again.");
         }

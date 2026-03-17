@@ -17,7 +17,7 @@ const carGifs = [
 const carNames = ["SCHLOSKI RACER", "SCHLOSKI ELITE", "SCHLOSKI RACER", "SCHLOSKI ELITE", "SCHLOSKI RACER"];
 const carMap = ["purple", "white", "black", "aqua", "blue"];
 
-export default function PlayerLobbyPage() {
+export default function PlayerWaitingPage() {
     const router = useRouter();
     const params = useParams();
     const roomCode = params.roomCode as string;
@@ -79,7 +79,7 @@ export default function PlayerLobbyPage() {
                             if (count !== null) setParticipantCount(count);
                             if (pList) setAllParticipants(pList);
                         })
-                    .subscribe((s) => console.log(`[Player Lobby] Realtime: ${s}`));
+                    .subscribe((s) => console.log(`[Player Waiting] Realtime: ${s}`));
 
                 const sessId = sessionData.id;
                 const pollInterval = setInterval(async () => {

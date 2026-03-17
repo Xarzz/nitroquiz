@@ -127,7 +127,7 @@ export default function HostRoomPage() {
     }
 
     if (typeof window !== "undefined") {
-      setJoinLink(`${window.location.origin}/?room=${roomCode}`);
+      setJoinLink(`${window.location.origin}/player/${roomCode}/waiting`);
     }
 
     // Fetch session ID and load initial participants
