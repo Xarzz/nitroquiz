@@ -316,7 +316,7 @@ export default function HostRoomPage() {
       }
     }
     // 2. Start host-side countdown
-    setCountdown(10);
+    setCountdown(3);
   };
 
   useEffect(() => {
@@ -927,11 +927,11 @@ export default function HostRoomPage() {
         >
           {/* Racing lights */}
           <div className="flex gap-4 mb-10">
-            {[0, 1, 2, 3, 4].map((i) => {
-              const val = 10 - i * 2; // Map 10s to 5 dots
+            {[0, 1, 2].map((i) => {
+              const val = 3 - i; // Map 3s to 3 dots
               const isLit = countdown <= val;
               const isGo = countdown <= 0;
-              const color = isGo ? "#00ff9d" : "#ef4444";
+              const color = isGo ? "#00ff9d" : val === 3 ? "#ef4444" : val === 2 ? "#facc15" : "#00ff9d";
               return (
                 <div
                   key={i}
@@ -960,9 +960,9 @@ export default function HostRoomPage() {
           <span
             key={countdown}
             className={`font-display text-[150px] md:text-[220px] font-black leading-none tracking-tighter ${
-              countdown > 6
-                ? "text-[#2d6af2]"
-                : countdown > 3
+              countdown === 3
+                ? "text-red-500"
+                : countdown === 2
                   ? "text-yellow-400"
                   : "text-[#00ff9d]"
             } drop-shadow-[0_0_50px_currentColor]`}
@@ -975,8 +975,13 @@ export default function HostRoomPage() {
           </span>
 
           {countdown > 0 && (
-            <p className="font-display text-xl md:text-2xl tracking-[0.3em] uppercase text-gray-500 mt-6">
-              RACE STARTING
+            <p className="font-display text-xl md:text-2xl tracking-[0.3em] uppercase text-gray-500 mt-6 animate-pulse">
+              {countdown === 3 ? "READY" : countdown === 2 ? "STEADY" : "GO RACE"}
+            </p>
+          )}
+          {countdown === 0 && (
+            <p className="font-display text-xl md:text-2xl tracking-[0.3em] uppercase text-[#00ff9d] mt-6">
+              GO!
             </p>
           )}
 

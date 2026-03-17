@@ -26,7 +26,7 @@ export default function PlayerWaitingPage() {
     const [errorMessage, setErrorMessage] = useState("");
     const [assignedCar, setAssignedCar] = useState<string>("/assets/characters/scloski/showroom/showroom1.png");
     const [assignedCarIndex, setAssignedCarIndex] = useState<number>(0);
-    const [countdownValue, setCountdownValue] = useState(10);
+    const [countdownValue, setCountdownValue] = useState(3);
     const [sessionId, setSessionId] = useState<string | null>(null);
     const [participantCount, setParticipantCount] = useState(1);
     const [username, setUsername] = useState("");
@@ -124,14 +124,14 @@ export default function PlayerWaitingPage() {
     }, [status, countdownValue, router]);
 
     const getCountdownLabel = (val: number) => {
-        if (val > 6) return "GET SET"; 
-        if (val > 3) return "READY"; 
-        if (val > 0) return "STEADY"; 
+        if (val === 3) return "READY"; 
+        if (val === 2) return "STEADY"; 
+        if (val === 1) return "GO RACE"; 
         return "GO!";
     };
     const getCountdownColor = (val: number) => {
-        if (val > 6) return "text-[#2d6af2]"; 
-        if (val > 3) return "text-yellow-400"; 
+        if (val === 3) return "text-red-500"; 
+        if (val === 2) return "text-yellow-400"; 
         return "text-[#00ff9d]";
     };
 
@@ -414,11 +414,11 @@ export default function PlayerWaitingPage() {
                     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/80 backdrop-blur-sm"
                         style={{ animation: 'fadeIn 0.3s ease-out' }}>
                         <div className="flex gap-4 mb-10">
-                            {[0, 1, 2, 3, 4].map((i) => {
-                                const val = 10 - i * 2; // Map 10s to 5 dots
+                            {[0, 1, 2].map((i) => {
+                                const val = 3 - i; // Map 3s to 3 dots
                                 const isLit = countdownValue <= val; 
                                 const isGo = countdownValue <= 0;
-                                const color = isGo ? '#00ff9d' : '#ef4444';
+                                const color = isGo ? '#00ff9d' : val === 3 ? '#ef4444' : val === 2 ? '#facc15' : '#00ff9d';
                                 return <div key={i} className="w-8 h-8 rounded-full border-2" style={{
                                     borderColor: isGo ? '#00ff9d' : isLit ? color : '#4b5563',
                                     backgroundColor: isGo ? '#00ff9d' : isLit ? color : '#1f2937',
