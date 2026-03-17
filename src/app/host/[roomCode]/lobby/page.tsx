@@ -466,7 +466,7 @@ export default function HostRoomPage() {
       {/* Main Content Wrapper - Fixed to viewport */}
       <div className="relative z-20 flex flex-col h-full w-full mx-auto px-6 md:px-10 pb-4">
         {/* Header - Logos in corners with equal spacing (Top:Logo == Logo:Content) */}
-        <div className="w-full flex items-center justify-between pt-2 mb-0">
+        <div className="w-full flex items-center justify-between pt-0 mb-[-20px]">
           <img
             src="/assets/logo/logo1.png"
             alt="NitroQuiz Logo"
