@@ -182,7 +182,7 @@ export default function LeaderboardPage() {
 
                 {/* Compact Podium */}
                 {showResults && rankedPlayers.length > 0 && (
-                    <div className="relative flex items-end justify-center w-full h-[300px] sm:h-[340px] mt-4 mb-4 px-2">
+                    <div className="relative flex items-end justify-center w-full h-[300px] sm:h-[380px] mt-16 mb-8 px-2">
                         <div className="absolute bottom-[-10px] left-1/2 -translate-x-1/2 w-2/3 h-16 bg-[#2d6af2]/20 blur-[30px] rounded-full pointer-events-none" />
 
                         {/* 2nd Place */}
@@ -213,7 +213,7 @@ export default function LeaderboardPage() {
 
                         {/* 1st Place */}
                         {firstPlace && (
-                            <motion.div custom={3} variants={podiumVariants} initial="hidden" animate="visible" className="flex flex-col items-center relative z-20 mx-0 sm:mx-2 -mb-2">
+                            <motion.div custom={3} variants={podiumVariants} initial="hidden" animate="visible" className="flex flex-col items-center relative z-20 mx-0 sm:mx-2">
                                 <motion.div animate={{ y: [0, -8, 0] }} transition={{ repeat: Infinity, duration: 2 }} className="mb-1">
                                     <Crown className="w-8 h-8 sm:w-10 sm:h-10 text-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,0.8)]" />
                                 </motion.div>
@@ -278,7 +278,7 @@ export default function LeaderboardPage() {
                         transition={{ duration: 0.6, delay: 2.2, type: "spring", stiffness: 100, damping: 14 }}
                         className="bg-black/40 backdrop-blur-xl border border-[#2d6af2]/30 rounded-2xl p-4 sm:p-6 shadow-[0_0_40px_rgba(0,0,0,0.5)]"
                     >
-                        <div className="overflow-x-auto w-full custom-scrollbar">
+                        <div className="overflow-x-auto w-full custom-scrollbar max-h-[600px] overflow-y-auto">
                             <table className="w-full text-left border-collapse">
                                 <thead>
                                     <tr className="border-b border-[#2d6af2]/20 text-gray-400 font-display text-[10px] sm:text-xs tracking-wider">
