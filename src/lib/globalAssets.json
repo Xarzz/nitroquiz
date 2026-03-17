@@ -1,0 +1,570 @@
+[
+    {
+        "name": "car",
+        "src": "/assets/characters/scloski/0lurus.png"
+    },
+    {
+        "name": "bg",
+        "src": "/assets/backgorund/citynight.png"
+    },
+    {
+        "name": "bg_mobile",
+        "src": "/assets/backgorund/citynight_mobile.png"
+    },
+    {
+        "name": "npc_car",
+        "src": "/assets/vehicles/car_ai_blue.jpg"
+    },
+    {
+        "name": "car_rival",
+        "src": "/assets/vehicles/foward-opponent.png"
+    },
+    {
+        "name": "truck1",
+        "src": "/assets/vehicles/truck1.png"
+    },
+    {
+        "name": "truck2",
+        "src": "/assets/vehicles/truck2.png"
+    },
+    {
+        "name": "truck_straight_0",
+        "src": "/assets/vehicles/truck/0.webp"
+    },
+    {
+        "name": "truck_straight_1",
+        "src": "/assets/vehicles/truck/1.webp"
+    },
+    {
+        "name": "truck_left_0",
+        "src": "/assets/vehicles/truck/0left.webp"
+    },
+    {
+        "name": "truck_left_1",
+        "src": "/assets/vehicles/truck/1kiri.webp"
+    },
+    {
+        "name": "truck_right_0",
+        "src": "/assets/vehicles/truck/0kanan.webp"
+    },
+    {
+        "name": "truck_right_1",
+        "src": "/assets/vehicles/truck/1kanan.webp"
+    },
+    {
+        "name": "jne_straight_1",
+        "src": "/assets/vehicles/jne/1lurus.webp"
+    },
+    {
+        "name": "jne_straight_2",
+        "src": "/assets/vehicles/jne/2lurus.webp"
+    },
+    {
+        "name": "jne_left_1",
+        "src": "/assets/vehicles/jne/1kiri.webp"
+    },
+    {
+        "name": "jne_left_2",
+        "src": "/assets/vehicles/jne/2kiri.webp"
+    },
+    {
+        "name": "jne_right_1",
+        "src": "/assets/vehicles/jne/1kanan.webp"
+    },
+    {
+        "name": "jne_right_2",
+        "src": "/assets/vehicles/jne/2kanan.webp"
+    },
+    {
+        "name": "car_1st",
+        "src": "/assets/characters/scloski/1pov/1.png"
+    },
+    {
+        "name": "mc_1st_straight_0",
+        "src": "/assets/characters/scloski/1pov/0lurus.png"
+    },
+    {
+        "name": "mc_1st_straight_1",
+        "src": "/assets/characters/scloski/1pov/1lurus.png"
+    },
+    {
+        "name": "mc_1st_straight_3",
+        "src": "/assets/characters/scloski/1pov/3lurus.png"
+    },
+    {
+        "name": "mc_1st_left_0",
+        "src": "/assets/characters/scloski/1pov/0kirinew.png"
+    },
+    {
+        "name": "mc_1st_left_1",
+        "src": "/assets/characters/scloski/1pov/1kirinew.png"
+    },
+    {
+        "name": "mc_1st_right_0",
+        "src": "/assets/characters/scloski/1pov/0kanannew.png"
+    },
+    {
+        "name": "mc_1st_right_1",
+        "src": "/assets/characters/scloski/1pov/1kanannew.png"
+    },
+    {
+        "name": "start_1",
+        "src": "assets/characters/scloski/start/1rem.png"
+    },
+    {
+        "name": "start_2",
+        "src": "assets/characters/scloski/start/2rem.png"
+    },
+    {
+        "name": "start_3",
+        "src": "assets/characters/scloski/start/3rem.png"
+    },
+    {
+        "name": "start_4",
+        "src": "assets/characters/scloski/start/4rem.png"
+    },
+    {
+        "name": "mc_straight_0",
+        "src": "/assets/characters/scloski/0lurus.png"
+    },
+    {
+        "name": "mc_straight_1",
+        "src": "/assets/characters/scloski/1lurus.png"
+    },
+    {
+        "name": "mc_straight_2",
+        "src": "/assets/characters/scloski/2lurus.png"
+    },
+    {
+        "name": "mc_straight_3",
+        "src": "/assets/characters/scloski/3lurus.png"
+    },
+    {
+        "name": "mc_left_0",
+        "src": "/assets/characters/scloski/0kiri.png"
+    },
+    {
+        "name": "mc_left_1",
+        "src": "/assets/characters/scloski/1kiri.png"
+    },
+    {
+        "name": "mc_left_2",
+        "src": "/assets/characters/scloski/2kiri.png"
+    },
+    {
+        "name": "mc_left_3",
+        "src": "/assets/characters/scloski/3kiri.png"
+    },
+    {
+        "name": "mc_right_0",
+        "src": "/assets/characters/scloski/0kanan.png"
+    },
+    {
+        "name": "mc_right_1",
+        "src": "/assets/characters/scloski/1kanan.png"
+    },
+    {
+        "name": "mc_right_2",
+        "src": "/assets/characters/scloski/2kanan.png"
+    },
+    {
+        "name": "mc_right_3",
+        "src": "/assets/characters/scloski/3kanan.png"
+    },
+    {
+        "name": "rem_1",
+        "src": "/assets/characters/scloski/rem/1.png"
+    },
+    {
+        "name": "rem_2",
+        "src": "/assets/characters/scloski/rem/2.png"
+    },
+    {
+        "name": "rem_3",
+        "src": "/assets/characters/scloski/rem/3.png"
+    },
+    {
+        "name": "rem_4",
+        "src": "/assets/characters/scloski/rem/4.png"
+    },
+    {
+        "name": "odong_straight",
+        "src": "/assets/vehicles/odong/odong_straight.webp"
+    },
+    {
+        "name": "odong_left",
+        "src": "/assets/vehicles/odong/odong_left.webp"
+    },
+    {
+        "name": "odong_right",
+        "src": "/assets/vehicles/odong/odong_right.webp"
+    },
+    {
+        "name": "1odong_straight",
+        "src": "/assets/vehicles/odong/1odong_straight.webp"
+    },
+    {
+        "name": "1odong_left",
+        "src": "/assets/vehicles/odong/1odong_left.webp"
+    },
+    {
+        "name": "1odong_right",
+        "src": "/assets/vehicles/odong/1odong_right.webp"
+    },
+    {
+        "name": "taxi_straight",
+        "src": "/assets/vehicles/taxi/taxi_straight.webp"
+    },
+    {
+        "name": "taxi_left",
+        "src": "/assets/vehicles/taxi/taxi_left.webp"
+    },
+    {
+        "name": "taxi_right",
+        "src": "/assets/vehicles/taxi/taxi_right.webp"
+    },
+    {
+        "name": "1taxi_straight",
+        "src": "/assets/vehicles/taxi/1taxi_straight.webp"
+    },
+    {
+        "name": "1taxi_left",
+        "src": "/assets/vehicles/taxi/1taxi_left.webp"
+    },
+    {
+        "name": "1taxi_right",
+        "src": "/assets/vehicles/taxi/1taxi_right.webp"
+    },
+    {
+        "name": "nos_1",
+        "src": "/assets/characters/scloski/nos/1.png"
+    },
+    {
+        "name": "nos_2",
+        "src": "/assets/characters/scloski/nos/2.png"
+    },
+    {
+        "name": "nos_3",
+        "src": "/assets/characters/scloski/nos/3.png"
+    },
+    {
+        "name": "nos_4",
+        "src": "/assets/characters/scloski/nos/4.png"
+    },
+    {
+        "name": "nos_5",
+        "src": "/assets/characters/scloski/nos/5.png"
+    },
+    {
+        "name": "nos_6",
+        "src": "/assets/characters/scloski/nos/6.png"
+    },
+    {
+        "name": "nos_7",
+        "src": "/assets/characters/scloski/nos/7.png"
+    },
+    {
+        "name": "nos_8",
+        "src": "/assets/characters/scloski/nos/8.png"
+    },
+    {
+        "name": "nos_9",
+        "src": "/assets/characters/scloski/nos/9.png"
+    },
+    {
+        "name": "nos_10",
+        "src": "/assets/characters/scloski/nos/10.png"
+    },
+    {
+        "name": "nos_11",
+        "src": "/assets/characters/scloski/nos/11.png"
+    },
+    {
+        "name": "nos_12",
+        "src": "/assets/characters/scloski/nos/12.png"
+    },
+    {
+        "name": "nos_13",
+        "src": "/assets/characters/scloski/nos/13.png"
+    },
+    {
+        "name": "nos_14",
+        "src": "/assets/characters/scloski/nos/14.png"
+    },
+    {
+        "name": "nos_15",
+        "src": "/assets/characters/scloski/nos/15.png"
+    },
+    {
+        "name": "nos_16",
+        "src": "/assets/characters/scloski/nos/16.png"
+    },
+    {
+        "name": "nos_17",
+        "src": "/assets/characters/scloski/nos/17.png"
+    },
+    {
+        "name": "nos_18",
+        "src": "/assets/characters/scloski/nos/18.png"
+    },
+    {
+        "name": "nos_19",
+        "src": "/assets/characters/scloski/nos/19.png"
+    },
+    {
+        "name": "nos_20",
+        "src": "/assets/characters/scloski/nos/20.png"
+    },
+    {
+        "name": "nos_21",
+        "src": "/assets/characters/scloski/nos/21.png"
+    },
+    {
+        "name": "nos_22",
+        "src": "/assets/characters/scloski/nos/22.png"
+    },
+    {
+        "name": "nos_23",
+        "src": "/assets/characters/scloski/nos/23.png"
+    },
+    {
+        "name": "nos_24",
+        "src": "/assets/characters/scloski/nos/24.png"
+    },
+    {
+        "name": "nos_25",
+        "src": "/assets/characters/scloski/nos/25.png"
+    },
+    {
+        "name": "nos_26",
+        "src": "/assets/characters/scloski/nos/26.png"
+    },
+    {
+        "name": "nos_27",
+        "src": "/assets/characters/scloski/nos/27.png"
+    },
+    {
+        "name": "nos_28",
+        "src": "/assets/characters/scloski/nos/28.png"
+    },
+    {
+        "name": "nos_29",
+        "src": "/assets/characters/scloski/nos/29.png"
+    },
+    {
+        "name": "nos_30",
+        "src": "/assets/characters/scloski/nos/30.png"
+    },
+    {
+        "name": "nos_31",
+        "src": "/assets/characters/scloski/nos/31.png"
+    },
+    {
+        "name": "nos_32",
+        "src": "/assets/characters/scloski/nos/32.png"
+    },
+    {
+        "name": "nos_33",
+        "src": "/assets/characters/scloski/nos/33.png"
+    },
+    {
+        "name": "nos_34",
+        "src": "/assets/characters/scloski/nos/34.png"
+    },
+    {
+        "name": "nos_35",
+        "src": "/assets/characters/scloski/nos/35.png"
+    },
+    {
+        "name": "nos_36",
+        "src": "/assets/characters/scloski/nos/36.png"
+    },
+    {
+        "name": "nos_37",
+        "src": "/assets/characters/scloski/nos/37.png"
+    },
+    {
+        "name": "nos_38",
+        "src": "/assets/characters/scloski/nos/38.png"
+    },
+    {
+        "name": "nos_39",
+        "src": "/assets/characters/scloski/nos/39.png"
+    },
+    {
+        "name": "nos_40",
+        "src": "/assets/characters/scloski/nos/40.png"
+    },
+    {
+        "name": "nos_41",
+        "src": "/assets/characters/scloski/nos/41.png"
+    },
+    {
+        "name": "nos_42",
+        "src": "/assets/characters/scloski/nos/42.png"
+    },
+    {
+        "name": "nos_43",
+        "src": "/assets/characters/scloski/nos/43.png"
+    },
+    {
+        "name": "nos_44",
+        "src": "/assets/characters/scloski/nos/44.png"
+    },
+    {
+        "name": "nos_45",
+        "src": "/assets/characters/scloski/nos/45.png"
+    },
+    {
+        "name": "nos_46",
+        "src": "/assets/characters/scloski/nos/46.png"
+    },
+    {
+        "name": "nos_47",
+        "src": "/assets/characters/scloski/nos/47.png"
+    },
+    {
+        "name": "nos_48",
+        "src": "/assets/characters/scloski/nos/48.png"
+    },
+    {
+        "name": "nos_49",
+        "src": "/assets/characters/scloski/nos/49.png"
+    },
+    {
+        "name": "nos_50",
+        "src": "/assets/characters/scloski/nos/50.png"
+    },
+    {
+        "name": "nos_51",
+        "src": "/assets/characters/scloski/nos/51.png"
+    },
+    {
+        "name": "nos_52",
+        "src": "/assets/characters/scloski/nos/52.png"
+    },
+    {
+        "name": "nos_53",
+        "src": "/assets/characters/scloski/nos/53.png"
+    },
+    {
+        "name": "nos_54",
+        "src": "/assets/characters/scloski/nos/54.png"
+    },
+    {
+        "name": "nos_55",
+        "src": "/assets/characters/scloski/nos/55.png"
+    },
+    {
+        "name": "nos_56",
+        "src": "/assets/characters/scloski/nos/56.png"
+    },
+    {
+        "name": "nos_57",
+        "src": "/assets/characters/scloski/nos/57.png"
+    },
+    {
+        "name": "nos_58",
+        "src": "/assets/characters/scloski/nos/58.png"
+    },
+    {
+        "name": "nos_59",
+        "src": "/assets/characters/scloski/nos/59.png"
+    },
+    {
+        "name": "nos_60",
+        "src": "/assets/characters/scloski/nos/60.png"
+    },
+    {
+        "name": "nos_61",
+        "src": "/assets/characters/scloski/nos/61.png"
+    },
+    {
+        "name": "nos_62",
+        "src": "/assets/characters/scloski/nos/62.png"
+    },
+    {
+        "name": "nos_63",
+        "src": "/assets/characters/scloski/nos/63.png"
+    },
+    {
+        "name": "nos_64",
+        "src": "/assets/characters/scloski/nos/64.png"
+    },
+    {
+        "name": "nos_65",
+        "src": "/assets/characters/scloski/nos/65.png"
+    },
+    {
+        "name": "nos_66",
+        "src": "/assets/characters/scloski/nos/66.png"
+    },
+    {
+        "name": "nos_67",
+        "src": "/assets/characters/scloski/nos/67.png"
+    },
+    {
+        "name": "nos_68",
+        "src": "/assets/characters/scloski/nos/68.png"
+    },
+    {
+        "name": "nos_69",
+        "src": "/assets/characters/scloski/nos/69.png"
+    },
+    {
+        "name": "nos_70",
+        "src": "/assets/characters/scloski/nos/70.png"
+    },
+    {
+        "name": "nos_71",
+        "src": "/assets/characters/scloski/nos/71.png"
+    },
+    {
+        "name": "nos_72",
+        "src": "/assets/characters/scloski/nos/72.png"
+    },
+    {
+        "name": "nos_73",
+        "src": "/assets/characters/scloski/nos/73.png"
+    },
+    {
+        "name": "nos_74",
+        "src": "/assets/characters/scloski/nos/74.png"
+    },
+    {
+        "name": "nos_75",
+        "src": "/assets/characters/scloski/nos/75.png"
+    },
+    {
+        "name": "nos_76",
+        "src": "/assets/characters/scloski/nos/76.png"
+    },
+    {
+        "name": "nos_77",
+        "src": "/assets/characters/scloski/nos/77.png"
+    },
+    {
+        "name": "nos_78",
+        "src": "/assets/characters/scloski/nos/78.png"
+    },
+    {
+        "name": "nos_79",
+        "src": "/assets/characters/scloski/nos/79.png"
+    },
+    {
+        "name": "nos_80",
+        "src": "/assets/characters/scloski/nos/80.png"
+    },
+    {
+        "name": "nos_81",
+        "src": "/assets/characters/scloski/nos/81.png"
+    },
+    {
+        "name": "nos_82",
+        "src": "/assets/characters/scloski/nos/82.png"
+    },
+    {
+        "name": "nos_83",
+        "src": "/assets/characters/scloski/nos/83.png"
+    }
+]
