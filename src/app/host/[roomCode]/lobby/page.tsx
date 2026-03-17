@@ -611,7 +611,7 @@ export default function HostRoomPage() {
                                                                 <img 
                                                                     src={logoImageMap[player.car.replace("-bot", "")] || "/assets/characters/scloski/logo/logo1.png"} 
                                                                     alt="Logo" 
-                                                                    className="w-full h-full object-contain p-0 scale-160 group-hover:scale-[1.75] transition-transform" 
+                                                                    className="w-full h-full object-contain p-0 scale-[1.8] group-hover:scale-[2.0] transition-transform" 
                                                                 />
                                                             )}
                                                         </div>
