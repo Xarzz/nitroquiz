@@ -20,19 +20,18 @@ try {
     console.error("Error reading kiri_jalan", e);
 }
 
+// Remove unwanted assets from filenames
+const exclude = ['vending', 'news', 'trash', 'tempat_sampah'];
+kananFiles = kananFiles.filter(f => !exclude.some(ex => f.toLowerCase().includes(ex)));
+kiriFiles = kiriFiles.filter(f => !exclude.some(ex => f.toLowerCase().includes(ex)));
+
 let trackAssets = [];
-let currentZ = 60; // Start at segment 60
-const MAX_Z = 2200; // Finish line is around 2250
-
-const miscLeft = [
-    "/assets/material/bangku/1.png"
-];
-
-const miscRight = [
-    "/assets/material/bangku/1.png"
-];
+let currentZ = 60; 
+const MAX_Z = 2240; 
 
 const pohon = ["/assets/material/pohon/2.webp", "/assets/material/pohon/4.webp"];
+const bangku = ["/assets/material/bangku/1.png"];
+const semak = ["/assets/material/semak/1.webp", "/assets/material/semak/2.webp"];
 
 const randomMisc = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
@@ -53,41 +52,32 @@ while (currentZ <= MAX_Z) {
     // Add Right Building
     if (kananFiles.length > 0) {
         trackAssets.push({
-            z: currentZ + (Math.random() > 0.5 ? 5 : 0), // Slight stagger
+            z: currentZ + (Math.random() > 5 ? 2 : 0), // Very slight stagger
             side: 'right',
             src: `/assets/material/kanan_jalan/${kananFiles[idxKanan]}`
         });
         idxKanan = (idxKanan + 1) % kananFiles.length;
     }
 
-    // Add first wave of decorations (vending machines/benches)
+    // Add Decorations closely between buildings
+    // With currentZ increment of 18, we can fit 2-3 items
+    
+    // 1. Trees or Bushes at +6
+    trackAssets.push({
+        z: currentZ + 6,
+        side: Math.random() > 0.5 ? 'left' : 'right',
+        src: randomMisc(pohon)
+    });
+    
+    // 2. Bench or Bush at +12
     trackAssets.push({
         z: currentZ + 12,
-        side: 'left',
-        src: randomMisc(miscLeft)
-    });
-    
-    trackAssets.push({
-        z: currentZ + 18,
-        side: 'right',
-        src: randomMisc(miscRight)
-    });
-    
-    // Add Trees between buildings
-    trackAssets.push({
-        z: currentZ + 25,
-        side: 'left',
-        src: randomMisc(pohon)
-    });
-    
-    trackAssets.push({
-        z: currentZ + 32,
-        side: 'right',
-        src: randomMisc(pohon)
+        side: Math.random() > 0.5 ? 'left' : 'right',
+        src: Math.random() > 0.7 ? randomMisc(bangku) : randomMisc(semak)
     });
 
-    // Advance Z by 43 segments to make it closely packed like before (was +40 earlier) but distinct
-    currentZ += 43;
+    // Spacing by +18 makes it dense but allows for separation
+    currentZ += 18;
 }
 
 const fileContent = `const trackAssets = ${JSON.stringify(trackAssets, null, 4)};\nexport default trackAssets;\n`;

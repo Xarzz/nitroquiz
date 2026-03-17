@@ -52,13 +52,22 @@ export default function PlayerWaitingPage() {
 
                 const { data: existingP } = await supabase.from("participants").select("id")
                     .eq("session_id", sessionData.id).eq("nickname", user.username).maybeSingle();
+                
+                let currentParticipantId = existingP?.id;
+
                 if (!existingP) {
-                    const { error: insertError } = await supabase.from("participants").insert({
+                    const { data: newP, error: insertError } = await supabase.from("participants").insert({
                         session_id: sessionData.id, user_id: user.id || null,
                         nickname: user.username, car_character: carChoice, score: 0, minigame: false,
                         avatar_url: user.avatar || null
-                    });
+                    }).select('id').single();
+                    
                     if (insertError) { setStatus("error"); setErrorMessage("Failed to enter room. " + insertError.message); return; }
+                    currentParticipantId = newP?.id;
+                }
+
+                if (currentParticipantId) {
+                    localStorage.setItem('nitroquiz_game_participantId', currentParticipantId);
                 }
 
                 const { data: pList, count } = await supabase.from("participants")

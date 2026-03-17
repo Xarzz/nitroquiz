@@ -1093,8 +1093,8 @@ export default function GameSpeedPage() {
             }
         }
 
-        // Limit
-        nextPlayerX = Util.limit(nextPlayerX, -3, 3);
+        // Road Boundary Limit (Acts as invisible barrier)
+        nextPlayerX = Util.limit(nextPlayerX, -1.5, 1.5);
         nextSpeed = Util.limit(nextSpeed, 0, MAX_SPEED);
 
         state.current.playerX = nextPlayerX;
@@ -1863,13 +1863,25 @@ export default function GameSpeedPage() {
     };
 
     const hasEndedRef = useRef(false);
-    const endGame = useCallback(() => {
+    const endGame = useCallback(async () => {
         if (hasEndedRef.current) return;
         hasEndedRef.current = true;
 
         const roomCode = typeof window !== 'undefined' ? localStorage.getItem('nitroquiz_game_roomCode') : null;
+        const participantId = typeof window !== 'undefined' ? localStorage.getItem('nitroquiz_game_participantId') : null;
+
+        // 1. Mark player as finished in Supabase
+        if (participantId) {
+            try {
+                await supabase.from('participants').update({
+                    finished_at: new Date().toISOString()
+                }).eq('id', participantId);
+            } catch (e) {
+                console.error("Failed to update participant finish state:", e);
+            }
+        }
         
-        // Return to standard orientation
+        // 2. Return to standard orientation
         try {
             if (screen.orientation && (screen.orientation as any).unlock) {
                 (screen.orientation as any).unlock();
@@ -1881,14 +1893,15 @@ export default function GameSpeedPage() {
             console.error("Failed to unlock orientation:", e);
         }
 
-        // Clean up quiz data from localStorage
+        // 3. Clean up quiz data from localStorage
         localStorage.removeItem('nitroquiz_game_questions');
         localStorage.removeItem('nitroquiz_game_roomCode');
         localStorage.removeItem('nitroquiz_game_sessionId');
         localStorage.removeItem('nitroquiz_game_quizId');
         
+        // 4. Redirect to Podium (Host's monitor will also see we are finished)
         if (roomCode) {
-            window.location.href = `/player/${roomCode}/result`;
+            window.location.href = `/player/${roomCode}/podium`;
         } else {
             window.location.href = '/';
         }
@@ -1896,10 +1909,10 @@ export default function GameSpeedPage() {
 
     // Auto-complete game immediately when finished
     useEffect(() => {
-        if (gameState === 'finished' && !showQuiz) {
+        if (gameState === 'finished') {
             endGame();
         }
-    }, [gameState, showQuiz, endGame]);
+    }, [gameState, endGame]);
 
     // Load quiz questions from localStorage (preloaded by player lobby)
     useEffect(() => {
