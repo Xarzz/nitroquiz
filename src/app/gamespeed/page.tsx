@@ -1992,43 +1992,7 @@ export default function GameSpeedPage() {
             <canvas ref={canvasRef} style={{ display: 'block', width: '100%', height: '100%' }} />
 
             {/* Loading Overlay */}
-            {!assetsLoaded && (
-                <div style={{
-                    position: 'fixed',
-                    inset: 0,
-                    backgroundColor: '#020617',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    zIndex: 999,
-                    gap: '1.5rem'
-                }}>
-                    <div style={{
-                        width: '40px',
-                        height: '40px',
-                        border: '3px solid rgba(59, 130, 246, 0.2)',
-                        borderTopColor: '#3b82f6',
-                        borderRadius: '50%',
-                        animation: 'spin 1s linear infinite'
-                    }} />
-                    <div style={{
-                        color: '#60a5fa',
-                        fontSize: '0.75rem',
-                        fontWeight: 900,
-                        letterSpacing: '0.4em',
-                        textTransform: 'uppercase',
-                        textShadow: '0 0 10px rgba(59, 130, 246, 0.5)'
-                    }}>
-                        Initializing Engine...
-                    </div>
-                    <style>{`
-                        @keyframes spin {
-                            to { transform: rotate(360deg); }
-                        }
-                    `}</style>
-                </div>
-            )}
+            {/* Loading Overlay Removed */}
 
             {/* Mobile Orientation Choice Overlay - Premium UI */}
             {mounted && isMobile && assetsLoaded && !mobileOrientationChoice && (
@@ -2499,6 +2463,7 @@ export default function GameSpeedPage() {
                 }
             `}</style>
 
+            {/* Preparation Overlay - Citynight Premium Style */}
             {/* Preparation Overlay - Citynight Premium Style */}
             {mounted && assetsLoaded && gameState === 'preparation' && (
                 <div style={{ position: 'fixed', inset: 0, zIndex: 2000, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(2, 6, 23, 0.9)', color: 'white', fontFamily: 'var(--font-rajdhani)', padding: isMobileLandscape ? '0.5rem' : '0' }}>

@@ -922,7 +922,7 @@ export default function HostRoomPage() {
       {/* Countdown Overlay — dark bg, smooth CSS transitions */}
       {countdown !== null && (
         <div
-          className="fixed inset-0 z-[200] bg-black/90 backdrop-blur-md flex flex-col items-center justify-center"
+          className="fixed inset-0 z-[200] bg-black flex flex-col items-center justify-center"
           style={{ willChange: "opacity", animation: "fadeIn 0.3s ease-out" }}
         >
           {/* Racing lights */}
