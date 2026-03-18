@@ -465,21 +465,21 @@ export default function HostRoomPage() {
 
       {/* Main Content Wrapper - Fixed to viewport */}
       <div className="relative z-20 flex flex-col h-full w-full mx-auto px-6 md:px-10 pb-4">
-        {/* Header - Logos in corners with equal spacing (Top:Logo == Logo:Content) */}
-        <div className="w-full flex items-center justify-between pt-0 mb-[-55px]">
+        {/* Header - Logos in corners with improved visibility */}
+        <div className="w-full flex items-center justify-between pt-2 mb-[-30px]">
           <img
             src="/assets/logo/logo1.png"
             alt="NitroQuiz Logo"
-            width={130}
-            height={36}
+            width={150}
+            height={42}
             className="object-contain"
           />
           <img
             src="/assets/logo/logo2.png"
             alt="GameForSmart.com"
-            width={200}
-            height={50}
-            className="object-contain opacity-70 hover:opacity-100 transition-opacity duration-300 drop-shadow-[0_0_10px_rgba(45,106,242,0.3)]"
+            width={240}
+            height={60}
+            className="object-contain opacity-80 hover:opacity-100 transition-opacity duration-300 drop-shadow-[0_0_15px_rgba(45,106,242,0.4)]"
           />
         </div>
 
@@ -490,18 +490,18 @@ export default function HostRoomPage() {
               initial={{ opacity: 0, scale: 0.9, y: 30 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="flex flex-col gap-2 bg-black/60 backdrop-blur-md rounded-[2rem] p-5 shadow-[0_0_30px_rgba(45,106,242,0.15)] border border-[#2d6af2]/50 relative overflow-y-auto custom-scrollbar group max-h-full"
-            >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#2d6af2]/20 to-transparent rounded-bl-full pointer-events-none"></div>
+            className="flex flex-col gap-4 bg-black/65 backdrop-blur-md rounded-[2.5rem] p-7 shadow-[0_0_40px_rgba(45,106,242,0.2)] border border-[#2d6af2]/60 relative overflow-y-auto custom-scrollbar group max-h-full"
+          >
+            <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-[#2d6af2]/25 to-transparent rounded-bl-full pointer-events-none"></div>
 
-              <div className="text-center relative z-10">
-                <div
-                  className="relative group/code cursor-pointer bg-white/5 rounded-2xl p-4 border border-white/10 hover:border-[#2d6af2]/50 transition-all"
-                  onClick={() => copyToClipboard(roomCode, setCopiedRoom)}
-                >
-                  <h1 className="font-display text-4xl sm:text-5xl text-white tracking-widest drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]">
-                    {roomCode}
-                  </h1>
+            <div className="text-center relative z-10">
+              <div
+                className="relative group/code cursor-pointer bg-white/5 rounded-2xl p-5 border border-white/10 hover:border-[#2d6af2]/50 transition-all"
+                onClick={() => copyToClipboard(roomCode, setCopiedRoom)}
+              >
+                <h1 className="font-display text-5xl sm:text-6xl text-white tracking-widest drop-shadow-[0_0_20px_rgba(255,255,255,0.6)]">
+                  {roomCode}
+                </h1>
                   <div className="absolute top-2 right-2">
                     {copiedRoom ? (
                       <Check size={14} className="text-[#00ff9d]" />
@@ -515,15 +515,15 @@ export default function HostRoomPage() {
                 </div>
               </div>
 
-              <div
-                className="flex justify-center bg-white p-2 rounded-2xl w-[140px] md:w-[180px] lg:w-full mx-auto shadow-[0_0_20px_rgba(45,106,242,0.3)] relative group/qr cursor-pointer max-h-[20vh] aspect-square"
-                onClick={() => setOpen(true)}
-              >
-                <QRCode
-                  value={joinLink}
-                  style={{ width: "100%", height: "100%" }}
-                />
-              </div>
+            <div
+              className="flex justify-center bg-white p-3 rounded-2xl w-[160px] md:w-[200px] lg:w-full mx-auto shadow-[0_0_30px_rgba(45,106,242,0.4)] relative group/qr cursor-pointer max-h-[25vh] aspect-square"
+              onClick={() => setOpen(true)}
+            >
+              <QRCode
+                value={joinLink}
+                style={{ width: "100%", height: "100%" }}
+              />
+            </div>
 
               <div
                 className="relative group/link cursor-pointer bg-[#0a101f] p-3 rounded-xl border border-[#2d6af2]/20 hover:border-[#2d6af2] transition-all"
@@ -544,17 +544,17 @@ export default function HostRoomPage() {
                 </div>
               </div>
 
-              <Button
-                onClick={startGame}
-                disabled={participants.length === 0 || countdown !== null}
-                className="w-full bg-gradient-to-r from-[#2d6af2] to-[#00ff9d] hover:from-[#3b7bf5] hover:to-[#33ffb0] text-black font-display text-base py-4 rounded-xl shadow-[0_0_20px_rgba(45,106,242,0.4)] hover:shadow-[0_0_30px_rgba(45,106,242,0.6)] transition-all uppercase tracking-widest transform active:scale-[0.98] disabled:from-gray-800 disabled:to-gray-800 disabled:text-gray-500 disabled:shadow-none border-none relative overflow-hidden"
-              >
-                <div className="absolute inset-0 bg-[#00ff9d]/20 blur-xl opacity-0 hover:opacity-100 transition-opacity"></div>
-                <span className="relative z-10 flex items-center justify-center gap-2">
-                  <Play className="fill-current w-5 h-5" />
-                  {countdown !== null ? "STARTING..." : t("hostroom.start")}
-                </span>
-              </Button>
+            <Button
+              onClick={startGame}
+              disabled={participants.length === 0 || countdown !== null}
+              className="w-full bg-gradient-to-r from-[#2d6af2] to-[#00ff9d] hover:from-[#3b7bf5] hover:to-[#33ffb0] text-black font-display text-xl py-6 rounded-2xl shadow-[0_0_25px_rgba(45,106,242,0.5)] hover:shadow-[0_0_40px_rgba(45,106,242,0.7)] transition-all uppercase tracking-widest transform active:scale-[0.98] disabled:from-gray-800 disabled:to-gray-800 disabled:text-gray-500 disabled:shadow-none border-none relative overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-[#00ff9d]/20 blur-xl opacity-0 hover:opacity-100 transition-opacity"></div>
+              <span className="relative z-10 flex items-center justify-center gap-3">
+                <Play className="fill-current w-6 h-6" />
+                {countdown !== null ? "STARTING..." : t("hostroom.start")}
+              </span>
+            </Button>
 
               <div className="flex gap-4">
                 <Button
@@ -588,16 +588,16 @@ export default function HostRoomPage() {
                 stiffness: 100,
                 damping: 14,
               }}
-              className="bg-black/60 backdrop-blur-md rounded-[2rem] p-4 h-full shadow-[0_0_30px_rgba(0,255,157,0.1)] border border-[#00ff9d]/30 relative overflow-hidden flex flex-col"
-            >
+              className="bg-black/65 backdrop-blur-md rounded-[2.5rem] p-6 h-full shadow-[0_0_40px_rgba(0,255,157,0.15)] border border-[#00ff9d]/40 relative overflow-hidden flex flex-col"
+          >
               <div className="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-[#00ff9d]/10 to-transparent rounded-br-full pointer-events-none"></div>
 
               <div className="flex items-center justify-between gap-1 relative z-10 border-b border-[#00ff9d]/10 pb-2">
-                <div className="flex items-center gap-2">
-                  <div className="p-3">
-                    <Users size={24} />
+                <div className="flex items-center gap-3">
+                  <div className="p-3 bg-[#00ff9d]/5 rounded-xl border border-[#00ff9d]/10">
+                    <Users size={30} className="text-[#00ff9d]" />
                   </div>
-                  <h2 className="font-display text-2xl text-white tracking-wide">
+                  <h2 className="font-display text-3xl text-white tracking-wide">
                     Players: {participants.length}
                   </h2>
                 </div>
@@ -682,7 +682,7 @@ export default function HostRoomPage() {
                           initial={{ opacity: 0, scale: 0.9 }}
                           animate={{ opacity: 1, scale: 1 }}
                           exit={{ opacity: 0, scale: 0.9 }}
-                           className={`group relative bg-[#0a101f] border ${selectedPlayerIds.includes(player.id) ? "border-[#00ff9d] bg-[#00ff9d]/5 shadow-[0_0_15px_rgba(0,255,157,0.3)]" : "border-[#2d6af2]/20 hover:border-[#2d6af2] hover:shadow-[0_0_20px_rgba(45,106,242,0.3)]"} rounded-xl p-3 flex flex-col items-center transition-all hover:-translate-y-1 cursor-pointer overflow-hidden`}
+                          className={`group relative bg-[#0a101f] border ${selectedPlayerIds.includes(player.id) ? "border-[#00ff9d] bg-[#00ff9d]/15 shadow-[0_0_20px_rgba(0,255,157,0.4)]" : "border-[#2d6af2]/25 hover:border-[#2d6af2] hover:shadow-[0_0_25px_rgba(45,106,242,0.4)]"} rounded-2xl p-4 flex flex-col items-center transition-all hover:-translate-y-1.5 cursor-pointer overflow-hidden`}
                           onClick={(e) => toggleSelectPlayer(player.id, e)}
                         >
                           {/* Selection Checkbox — visible on hover or when selected */}
@@ -723,9 +723,9 @@ export default function HostRoomPage() {
                           </div>
 
                           <div className="w-full text-center relative z-10 max-w-full">
-                            <div className="bg-[#2d6af2]/10 border border-[#2d6af2]/20 rounded px-2 py-1 mb-1 max-w-full overflow-hidden">
+                            <div className="bg-[#2d6af2]/10 border border-[#2d6af2]/30 rounded-lg px-3 py-1.5 mb-1 max-w-full overflow-hidden">
                               <p
-                                className="font-display text-white text-xs tracking-wide truncate w-full"
+                                className="font-display text-white text-sm tracking-widest truncate w-full"
                                 title={player.nickname}
                               >
                                 {player.nickname}
