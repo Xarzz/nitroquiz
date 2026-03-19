@@ -465,8 +465,8 @@ export default function HostRoomPage() {
 
       {/* Main Content Wrapper - Fixed to viewport */}
       <div className="relative z-20 flex flex-col h-full w-full mx-auto px-6 md:px-10 pb-4">
-        {/* Header - Logos in corners with improved visibility */}
-        <div className="w-full flex items-center justify-between pt-2 mb-[-30px]">
+        {/* Header - Logos in corners with improved visibility and balanced symmetry */}
+        <div className="w-full flex items-center justify-between pt-8 mb-8">
           <img
             src="/assets/logo/logo1.png"
             alt="NitroQuiz Logo"
