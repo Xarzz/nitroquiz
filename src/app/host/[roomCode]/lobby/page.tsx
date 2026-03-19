@@ -484,8 +484,8 @@ export default function HostRoomPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-2 items-stretch relative flex-1 min-h-0 overflow-hidden">
-          {/* Left Column: Room Details (4 cols) */}
-          <div className="lg:col-span-4 space-y-4 flex flex-col min-h-0">
+          {/* Left Column: Room Details (6 cols for symmetry) */}
+          <div className="lg:col-span-6 space-y-4 flex flex-col min-h-0">
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 30 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -516,12 +516,14 @@ export default function HostRoomPage() {
               </div>
 
             <div
-              className="flex justify-center bg-white p-3 rounded-2xl w-[160px] md:w-[200px] lg:w-full mx-auto shadow-[0_0_30px_rgba(45,106,242,0.4)] relative group/qr cursor-pointer max-h-[25vh] aspect-square"
+              className="flex justify-center bg-transparent p-4 rounded-3xl w-[180px] md:w-[240px] lg:w-full mx-auto shadow-[0_0_40px_rgba(45,106,242,0.5)] relative group/qr cursor-pointer max-h-[30vh] aspect-square border border-white/10 backdrop-blur-sm"
               onClick={() => setOpen(true)}
             >
               <QRCode
                 value={joinLink}
                 style={{ width: "100%", height: "100%" }}
+                bgColor="transparent"
+                fgColor="white"
               />
             </div>
 
@@ -576,8 +578,8 @@ export default function HostRoomPage() {
             </motion.div>
           </div>
 
-          {/* Right Column: Players (8 cols) */}
-          <div className="lg:col-span-8 flex flex-col min-h-0 overflow-hidden">
+          {/* Right Column: Players (6 cols for symmetry) */}
+          <div className="lg:col-span-6 flex flex-col min-h-0 overflow-hidden">
             <motion.div
               initial={{ opacity: 0, scale: 0.95, x: 30 }}
               animate={{ opacity: 1, scale: 1, x: 0 }}
