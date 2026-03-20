@@ -483,15 +483,15 @@ export default function HostRoomPage() {
           />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-2 items-stretch relative flex-1 min-h-0 overflow-hidden">
-          {/* Left Column: Room Details (6 cols for symmetry) */}
-          <div className="lg:col-span-6 space-y-4 flex flex-col min-h-0">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-stretch relative flex-1 min-h-0 overflow-hidden">
+          {/* Left Column: Room Details (4/12 split) */}
+          <div className="md:col-span-4 space-y-4 flex flex-col min-h-0 h-full">
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 30 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-            className="flex flex-col gap-4 bg-black/65 backdrop-blur-md rounded-[2.5rem] p-7 shadow-[0_0_40px_rgba(45,106,242,0.2)] border border-[#2d6af2]/60 relative overflow-y-auto custom-scrollbar group max-h-full"
-          >
+              className="flex flex-col gap-4 bg-black/65 backdrop-blur-md rounded-[2.5rem] p-7 shadow-[0_0_40px_rgba(45,106,242,0.2)] border border-[#2d6af2]/60 relative overflow-y-auto custom-scrollbar group h-full"
+            >
             <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-[#2d6af2]/25 to-transparent rounded-bl-full pointer-events-none"></div>
 
             <div className="text-center relative z-10">
@@ -578,8 +578,8 @@ export default function HostRoomPage() {
             </motion.div>
           </div>
 
-          {/* Right Column: Players (6 cols for symmetry) */}
-          <div className="lg:col-span-6 flex flex-col min-h-0 overflow-hidden">
+          {/* Right Column: Players (8/12 split) */}
+          <div className="md:col-span-8 flex flex-col min-h-0 overflow-hidden h-full">
             <motion.div
               initial={{ opacity: 0, scale: 0.95, x: 30 }}
               animate={{ opacity: 1, scale: 1, x: 0 }}
