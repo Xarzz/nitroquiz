@@ -204,11 +204,11 @@ export default function SelectQuizPage() {
     };
 
     return (
-        <div className="min-h-screen bg-[#0a0a0f] relative overflow-hidden font-body text-white">
+        <div className="min-h-screen bg-[#0d1b3e] relative overflow-hidden font-body text-white">
             <div className="fixed inset-0 z-0 city-silhouette pointer-events-none" />
-            <div className="fixed inset-0 z-0 bg-gradient-to-t from-background-dark via-transparent to-blue-900/10 pointer-events-none" />
-            <div className="fixed bottom-0 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/10 via-background-dark/50 to-background-dark pointer-events-none z-0" />
-            <div className="fixed bottom-0 w-full h-1/2 bg-[linear-gradient(transparent_0%,rgba(45,106,242,0.1)_1px,transparent_1px),linear-gradient(90deg,transparent_0%,rgba(45,106,242,0.1)_1px,transparent_1px)] bg-[length:60px_60px] [transform:perspective(500px)_rotateX(60deg)] origin-bottom z-0 pointer-events-none opacity-20" />
+            <div className="fixed inset-0 z-0 bg-gradient-to-t from-[#0d1b3e] via-[#0d1b3e]/50 to-[#4a3d8f]/10 pointer-events-none" />
+            <div className="fixed bottom-0 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#4a3d8f]/10 via-[#0d1b3e]/50 to-[#0d1b3e] pointer-events-none z-0" />
+            <div className="fixed bottom-0 w-full h-1/2 bg-[linear-gradient(transparent_0%,rgba(74,61,143,0.1)_1px,transparent_1px),linear-gradient(90deg,transparent_0%,rgba(74,61,143,0.1)_1px,transparent_1px)] bg-[length:60px_60px] [transform:perspective(500px)_rotateX(60deg)] origin-bottom z-0 pointer-events-none opacity-20" />
             <div className="scanlines" />
 
             <div className="absolute inset-0 overflow-y-auto z-10">
@@ -217,7 +217,7 @@ export default function SelectQuizPage() {
                     <div className="flex items-center gap-3">
                         <motion.button
                             initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} whileHover={{ scale: 1.05 }}
-                            className="p-3 bg-black/40 border border-[#2d6af2]/50 hover:bg-[#2d6af2]/20 hover:border-[#2d6af2] text-[#2d6af2] rounded-xl transition-all shadow-[0_0_15px_rgba(45,106,242,0.2)] flex items-center justify-center group"
+                            className="p-3 bg-[#0d1b3e]/60 border border-[#4a3d8f]/50 hover:bg-[#4a3d8f]/20 hover:border-[#a98dc5] text-[#a98dc5] rounded-xl transition-all shadow-[0_0_15px_rgba(74,61,143,0.3)] flex items-center justify-center group"
                             aria-label="Back to Home"
                             onClick={() => { setIsReturning(true); router.push('/'); }}
                         >
@@ -226,23 +226,23 @@ export default function SelectQuizPage() {
                         <Logo width={140} height={40} withText={false} animated={false} />
                     </div>
                     <Image src="/assets/logo/logo2.png" alt="GameForSmart.com" width={240} height={60}
-                        className="object-contain opacity-70 hover:opacity-100 transition-opacity duration-300 drop-shadow-[0_0_10px_rgba(45,106,242,0.3)]" />
+                        className="object-contain opacity-70 hover:opacity-100 transition-opacity duration-300 drop-shadow-[0_0_10px_rgba(169,141,197,0.4)]" />
                 </div>
 
                 <div className="relative container mx-auto px-6 pb-4 max-w-6xl pt-2">
                     {/* Search & Filter Bar */}
                     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }}
-                        className="bg-black/40 border border-[#2d6af2]/30 rounded-2xl overflow-hidden mb-8 backdrop-blur-md shadow-[0_0_25px_rgba(45,106,242,0.1)]">
+                        className="bg-[#0d1b3e]/60 border border-[#4a3d8f]/30 rounded-2xl overflow-hidden mb-8 backdrop-blur-md shadow-[0_0_25px_rgba(74,61,143,0.15)]">
                         {/* ── Cyan accent bar ── */}
-                        <div className="h-[4px] w-full" style={{ background: 'linear-gradient(90deg,#005f6b,#0097a7,#00bcd4,#0097a7,#005f6b)' }} />
+                        <div className="h-[4px] w-full" style={{ background: 'linear-gradient(90deg,#4a3d8f,#a98dc5,#d4bc7a,#a98dc5,#4a3d8f)' }} />
                         <div className="p-4 sm:p-6">
                         <div className="flex flex-col sm:flex-row gap-4 mb-6 relative">
                             <div className="flex-1">
                                 <div className="relative group/search">
-                                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#2d6af2] w-5 h-5 group-focus-within/search:text-[#00ff9d] transition-colors" />
+                                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#a98dc5] w-5 h-5 group-focus-within/search:text-[#d4bc7a] transition-colors" />
                                     <Input type="text" placeholder="Search quiz title..." value={searchInput}
                                         onChange={(e) => { setSearchInput(e.target.value); setSearchQuery(e.target.value); setCurrentPage(1); }}
-                                        className="w-full bg-black/50 border border-[#2d6af2]/30 pl-11 h-12 text-white font-display uppercase tracking-widest placeholder:text-gray-500 rounded-xl focus-visible:ring-1 focus-visible:ring-[#00ff9d]/50 focus-visible:border-[#00ff9d]/50 transition-all shadow-[0_4px_20px_rgba(0,0,0,0.4)]" />
+                                        className="w-full bg-[#0d1b3e]/80 border border-[#4a3d8f]/30 pl-11 h-12 text-white font-display uppercase tracking-widest placeholder:text-gray-500 rounded-xl focus-visible:ring-1 focus-visible:ring-[#d4bc7a]/50 focus-visible:border-[#d4bc7a]/50 transition-all shadow-[0_4px_20px_rgba(0,0,0,0.4)]" />
                                     {searchInput && (
                                         <button onClick={() => { setSearchInput(""); setSearchQuery(""); setCurrentPage(1); }}
                                             className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white pb-1">×</button>
@@ -250,12 +250,12 @@ export default function SelectQuizPage() {
                                 </div>
                             </div>
                             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                                <SelectTrigger className="w-full sm:w-52 h-12 bg-black/60 border border-[#2d6af2]/30 text-white focus:border-[#2d6af2] focus:ring-1 focus:ring-[#2d6af2] rounded-xl font-display text-xs tracking-wider uppercase">
+                                <SelectTrigger className="w-full sm:w-52 h-12 bg-[#0d1b3e]/80 border border-[#4a3d8f]/30 text-white focus:border-[#a98dc5] focus:ring-1 focus:ring-[#a98dc5] rounded-xl font-display text-xs tracking-wider uppercase">
                                     <SelectValue placeholder="CATEGORY" />
                                 </SelectTrigger>
-                                <SelectContent className="bg-[#0a0a0f] border border-[#2d6af2]/30 text-white font-display text-xs uppercase tracking-wider">
+                                <SelectContent className="bg-[#0d1b3e] border border-[#4a3d8f]/30 text-white font-display text-xs uppercase tracking-wider">
                                     {categories.map((cat) => (
-                                        <SelectItem key={cat} value={cat} className="focus:bg-[#2d6af2]/20 focus:text-white cursor-pointer py-3">
+                                        <SelectItem key={cat} value={cat} className="focus:bg-[#4a3d8f]/20 focus:text-white cursor-pointer py-3">
                                             {getCategoryDisplayName(cat)}
                                         </SelectItem>
                                     ))}
@@ -264,7 +264,7 @@ export default function SelectQuizPage() {
                         </div>
                         <div className="flex items-center justify-center gap-2">
                             <button onClick={() => setActiveTab('all')}
-                                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-display text-xs tracking-wider uppercase transition-all duration-200 ${activeTab === 'all' ? 'bg-[#2d6af2] text-white shadow-[0_0_15px_rgba(45,106,242,0.4)]' : 'bg-black/40 border border-[#2d6af2]/20 text-gray-400 hover:text-white hover:border-[#2d6af2]/50'}`}>
+                                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-display text-xs tracking-wider uppercase transition-all duration-200 ${activeTab === 'all' ? 'bg-[#4a3d8f] text-white shadow-[0_0_15px_rgba(74,61,143,0.5)]' : 'bg-[#0d1b3e]/60 border border-[#4a3d8f]/20 text-gray-400 hover:text-white hover:border-[#a98dc5]/50'}`}>
                                 <Search size={14} />Quizzes
                             </button>
                             <button onClick={() => setActiveTab('favorites')}
@@ -276,7 +276,7 @@ export default function SelectQuizPage() {
                                 )}
                             </button>
                             <button onClick={() => setActiveTab('myquiz')}
-                                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-display text-xs tracking-wider uppercase transition-all duration-200 ${activeTab === 'myquiz' ? 'bg-gradient-to-r from-[#00ff9d] to-emerald-500 text-black shadow-[0_0_15px_rgba(0,255,157,0.4)]' : 'bg-black/40 border border-[#00ff9d]/20 text-gray-400 hover:text-[#00ff9d] hover:border-[#00ff9d]/50'}`}>
+                                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-display text-xs tracking-wider uppercase transition-all duration-200 ${activeTab === 'myquiz' ? 'bg-gradient-to-r from-[#d4bc7a] to-[#e8d49e] text-[#0d1b3e] font-bold shadow-[0_0_15px_rgba(212,188,122,0.5)]' : 'bg-[#0d1b3e]/60 border border-[#d4bc7a]/20 text-gray-400 hover:text-[#d4bc7a] hover:border-[#d4bc7a]/50'}`}>
                                 <FileText size={14} />My Quiz
                             </button>
                         </div>
@@ -289,9 +289,9 @@ export default function SelectQuizPage() {
                             <motion.div key="skeleton" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {Array.from({ length: 6 }).map((_, i) => (
-                                    <div key={i} className="bg-black/40 border border-[#2d6af2]/10 rounded-2xl overflow-hidden animate-pulse">
-                                        <div className="h-1.5 w-full bg-white/5" />
-                                        <div className="w-full h-40 bg-gradient-to-br from-[#2d6af2]/10 to-[#0a0a0f]" />
+                                    <div key={i} className="bg-[#0d1b3e]/60 border border-[#4a3d8f]/15 rounded-2xl overflow-hidden animate-pulse">
+                                        <div className="h-1.5 w-full bg-[#4a3d8f]/10" />
+                                        <div className="w-full h-40 bg-gradient-to-br from-[#4a3d8f]/10 to-[#0d1b3e]" />
                                         <div className="p-4 space-y-3">
                                             <div className="h-4 bg-white/5 rounded-lg w-3/4" />
                                             <div className="h-3 bg-white/5 rounded-lg w-1/2" />
@@ -317,10 +317,10 @@ export default function SelectQuizPage() {
                                             style={{ willChange: "transform, opacity" }}>
                                             <Card className="h-full flex flex-col bg-black/40 border transition-all duration-200 relative overflow-hidden group"
                                                 style={{
-                                                    borderColor: 'rgba(45,106,242,0.25)',
+                                                    borderColor: 'rgba(74,61,143,0.3)',
                                                 }}
                                                 onMouseEnter={e => (e.currentTarget.style.borderColor = colors.hoverBorder)}
-                                                onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(45,106,242,0.25)')}
+                                                onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(74,61,143,0.3)')}
                                             >
                                                 {/* ── Opsi A: color bar 5px top ── */}
                                                 <div className="absolute top-0 inset-x-0 h-[5px] z-20 pointer-events-none"
@@ -417,20 +417,20 @@ export default function SelectQuizPage() {
                                     </>
                                 ) : activeTab === 'myquiz' ? (
                                     <>
-                                        <FileText className="h-16 w-16 mx-auto text-[#00ff9d]/20 mb-4" />
+                                        <FileText className="h-16 w-16 mx-auto text-[#d4bc7a]/20 mb-4" />
                                         <h3 className="text-xl text-white font-display uppercase tracking-widest mb-2">No Quizzes Created</h3>
-                                        <p className="text-[#00ff9d]/40 text-sm mb-6">Quizzes you create will appear here. Refresh if you just created one.</p>
+                                        <p className="text-[#d4bc7a]/40 text-sm mb-6">Quizzes you create will appear here. Refresh if you just created one.</p>
                                         <div className="flex justify-center gap-4">
-                                            <Button variant="outline" onClick={fetchQuizzes} className="bg-black/40 border border-[#00ff9d]/50 text-[#00ff9d] hover:bg-[#00ff9d]/20 transition-all font-display text-xs uppercase tracking-wider"><RefreshCw className="w-4 h-4 mr-2" />Refresh</Button>
-                                            <Button variant="outline" onClick={() => setActiveTab('all')} className="bg-[#00ff9d]/10 border border-[#00ff9d]/50 text-[#00ff9d] hover:bg-[#00ff9d] hover:text-black transition-all font-display text-xs uppercase tracking-wider">Browse All</Button>
+                                            <Button variant="outline" onClick={fetchQuizzes} className="bg-[#0d1b3e]/60 border border-[#d4bc7a]/50 text-[#d4bc7a] hover:bg-[#d4bc7a]/20 transition-all font-display text-xs uppercase tracking-wider"><RefreshCw className="w-4 h-4 mr-2" />Refresh</Button>
+                                            <Button variant="outline" onClick={() => setActiveTab('all')} className="bg-[#d4bc7a]/10 border border-[#d4bc7a]/50 text-[#d4bc7a] hover:bg-[#d4bc7a] hover:text-[#0d1b3e] transition-all font-display text-xs uppercase tracking-wider">Browse All</Button>
                                         </div>
                                     </>
                                 ) : (
                                     <>
-                                        <Search className="h-16 w-16 mx-auto text-[#2d6af2]/20 mb-4" />
+                                        <Search className="h-16 w-16 mx-auto text-[#a98dc5]/20 mb-4" />
                                         <h3 className="text-xl text-white font-display uppercase tracking-widest mb-2">No Quizzes Found</h3>
-                                        <p className="text-blue-400/40 text-sm mb-6">Try adjusting your filters or search terms</p>
-                                        <Button variant="outline" onClick={() => { setSearchQuery(""); setSearchInput(""); setSelectedCategory("All"); }} className="bg-[#2d6af2]/10 border border-[#2d6af2]/50 text-[#2d6af2] hover:bg-[#2d6af2] hover:text-white transition-all font-display text-xs uppercase tracking-wider">Reset Filters</Button>
+                                        <p className="text-[#a98dc5]/40 text-sm mb-6">Try adjusting your filters or search terms</p>
+                                        <Button variant="outline" onClick={() => { setSearchQuery(""); setSearchInput(""); setSelectedCategory("All"); }} className="bg-[#4a3d8f]/10 border border-[#4a3d8f]/50 text-[#a98dc5] hover:bg-[#4a3d8f] hover:text-white transition-all font-display text-xs uppercase tracking-wider">Reset Filters</Button>
                                     </>
                                 )}
                             </motion.div>
@@ -442,11 +442,11 @@ export default function SelectQuizPage() {
                         <div className="flex justify-center mt-12 gap-2">
                             <Button variant="outline" onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                                 disabled={currentPage === 1 || isFetching || creating || isReturning}
-                                className="h-10 px-4 bg-black/40 border border-[#2d6af2]/30 text-white font-display text-xs disabled:opacity-30 hover:bg-[#2d6af2]/20 hover:border-[#2d6af2] transition-all uppercase tracking-wider">Prev</Button>
-                            <div className="flex items-center px-4 bg-[#2d6af2]/10 border border-[#2d6af2]/30 rounded-md text-[#2d6af2] font-display text-xs">PAGE {currentPage} / {totalPages}</div>
+                                className="h-10 px-4 bg-[#0d1b3e]/60 border border-[#4a3d8f]/30 text-white font-display text-xs disabled:opacity-30 hover:bg-[#4a3d8f]/20 hover:border-[#a98dc5] transition-all uppercase tracking-wider">Prev</Button>
+                            <div className="flex items-center px-4 bg-[#4a3d8f]/15 border border-[#4a3d8f]/30 rounded-md text-[#a98dc5] font-display text-xs">PAGE {currentPage} / {totalPages}</div>
                             <Button variant="outline" onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                                 disabled={currentPage === totalPages || isFetching || creating || isReturning}
-                                className="h-10 px-4 bg-black/40 border border-[#2d6af2]/30 text-white font-display text-xs disabled:opacity-30 hover:bg-[#2d6af2]/20 hover:border-[#2d6af2] transition-all uppercase tracking-wider">Next</Button>
+                                className="h-10 px-4 bg-[#0d1b3e]/60 border border-[#4a3d8f]/30 text-white font-display text-xs disabled:opacity-30 hover:bg-[#4a3d8f]/20 hover:border-[#a98dc5] transition-all uppercase tracking-wider">Next</Button>
                         </div>
                     )}
                 </div>
