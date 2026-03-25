@@ -1,0 +1,44 @@
+{
+  "homepage": {
+    "host": {
+      "title": "HOST",
+      "subtitle": "Create a new room and invite players.",
+      "button": "Create Room"
+    },
+    "join": {
+      "title": "JOIN",
+      "subtitle": "Enter a code to join game.",
+      "placeholder": "ROOM CODE",
+      "button": "Join"
+    },
+    "menu": {
+        "fullscreen": "Fullscreen",
+        "exit_fullscreen": "Exit Fullscreen",
+        "how_to_play": "How to Play",
+        "install_app": "Install App",
+        "language": "Language",
+        "logout": "Logout"
+    },
+    "loading": "Establishing Signal...",
+    "how_to_play": {
+        "title": "How to Play",
+        "button": "Got It!",
+        "step1": {
+            "title": "Host or Join",
+            "desc": "Create a room as Host to select a quiz and invite players, or enter a Room Code to Join as a player."
+        },
+        "step2": {
+            "title": "Select a Quiz",
+            "desc": "As a Host, browse and pick from available quizzes. Configure the number of questions, duration, and difficulty."
+        },
+        "step3": {
+            "title": "Wait for Players",
+            "desc": "Share your Room Code with friends. Once everyone has joined the lobby, the Host starts the game."
+        },
+        "step4": {
+            "title": "Answer & Race!",
+            "desc": "Answer questions as fast as possible! Points are awarded based on speed and accuracy. The fastest correct answer wins!"
+        }
+    }
+  }
+}

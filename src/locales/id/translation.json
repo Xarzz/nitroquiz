@@ -1,0 +1,44 @@
+{
+  "homepage": {
+    "host": {
+      "title": "BUAT GAME",
+      "subtitle": "Buat ruangan baru dan ajak pemain lain.",
+      "button": "Buat Ruangan"
+    },
+    "join": {
+      "title": "GABUNG",
+      "subtitle": "Masukkan kode untuk bergabung.",
+      "placeholder": "KODE RUANGAN",
+      "button": "Gabung"
+    },
+    "menu": {
+        "fullscreen": "Layar Penuh",
+        "exit_fullscreen": "Keluar Layar Penuh",
+        "how_to_play": "Cara Bermain",
+        "install_app": "Instal Aplikasi",
+        "language": "Bahasa",
+        "logout": "Keluar"
+    },
+    "loading": "Memantapkan Sinyal...",
+    "how_to_play": {
+        "title": "Cara Bermain",
+        "button": "Paham!",
+        "step1": {
+            "title": "Buat atau Gabung",
+            "desc": "Buat ruangan sebagai Host untuk memilih kuis dan mengundang pemain, atau masukkan Kode Ruangan untuk bergabung sebagai pemain."
+        },
+        "step2": {
+            "title": "Pilih Kuis",
+            "desc": "Sebagai Host, cari dan pilih dari kuis yang tersedia. Atur jumlah soal, durasi, dan tingkat kesulitan."
+        },
+        "step3": {
+            "title": "Tunggu Pemain",
+            "desc": "Bagikan Kode Ruangan ke teman. Setelah semua masuk lobby, Host dapat memulai permainan."
+        },
+        "step4": {
+            "title": "Jawab & Balapan!",
+            "desc": "Jawab soal secepat mungkin! Poin diberikan berdasarkan kecepatan dan ketepatan. Jawaban benar tercepat yang menang!"
+        }
+    }
+  }
+}

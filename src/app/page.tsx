@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTranslation } from "react-i18next";
 import { getI18nInstance } from "@/lib/i18n";
 import { Logo } from "@/components/ui/logo";
 import Image from "next/image";
@@ -33,6 +34,7 @@ import Image from "next/image";
 export default function Home() {
   const router = useRouter();
   const { profile, loading: authLoading } = useAuth();
+  const { t } = useTranslation();
   const i18n = getI18nInstance();
   const [roomCode, setRoomCode] = useState("");
   const [isHosting, setIsHosting] = useState(false);
@@ -187,7 +189,7 @@ export default function Home() {
         <div className="text-center z-10">
           <div className="w-16 h-16 border-4 border-[#2d6af2]/30 border-t-[#00ff9d] rounded-full animate-spin mx-auto mb-6"></div>
           <p className="mt-4 text-[#00ff9d] text-xl tracking-[0.2em] uppercase animate-pulse">
-            Establishing Signal...
+            {t('homepage.loading')}
           </p>
         </div>
       </div>
@@ -299,7 +301,7 @@ export default function Home() {
                     </div>
 
                     <span className="text-sm font-medium tracking-wide">
-                      {isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+                      {isFullscreen ? t('homepage.menu.exit_fullscreen') : t('homepage.menu.fullscreen')}
                     </span>
                   </button>
 
@@ -314,7 +316,7 @@ export default function Home() {
                       <PlayCircle className="w-4 h-4 text-[#00ff9d]" />
                     </div>
                     <span className="text-sm font-medium tracking-wide">
-                      How to Play
+                      {t('homepage.menu.how_to_play')}
                     </span>
                   </button>
 
@@ -323,7 +325,7 @@ export default function Home() {
                       <DownloadIcon className="w-4 h-4 text-[#00ff9d]" />
                     </div>
                     <span className="text-sm font-medium tracking-wide">
-                      Install App
+                      {t('homepage.menu.install_app')}
                     </span>
                   </button>
 
@@ -336,8 +338,7 @@ export default function Home() {
                         <Globe className="w-4 h-4 text-[#2d6af2]" />
                       </div>
                       <span className="text-sm font-medium tracking-wide flex-1 text-left">
-                        {i18n.language.toUpperCase().startsWith('AR') ? 'العربية' :
-                          i18n.language.toUpperCase().startsWith('ID') ? 'Bahasa Indonesia' : 'English'}
+                        {t('homepage.menu.language')}
                       </span>
                       <ChevronRight className={`w-4 h-4 transition-transform ${isLanguageOpen ? 'rotate-90' : ''}`} />
                     </button>
@@ -392,7 +393,7 @@ export default function Home() {
                       <LogOut className="w-4 h-4" />
                     </div>
                     <span className="text-sm tracking-[0.1em] uppercase">
-                      Logout
+                      {t('homepage.menu.logout')}
                     </span>
                   </button>
                 </div>
@@ -430,7 +431,7 @@ export default function Home() {
                     <PlayCircle className="w-5 h-5 text-[#2d6af2]" />
                   </div>
                   <h2 className="text-xl font-display uppercase tracking-wider text-white drop-shadow-[0_0_10px_rgba(45,106,242,0.5)]">
-                    How to Play
+                    {t('homepage.how_to_play.title')}
                   </h2>
                 </div>
                 <button
@@ -446,29 +447,29 @@ export default function Home() {
                 {[
                   {
                     icon: <Zap className="w-5 h-5" />,
-                    title: "Host or Join",
-                    desc: "Create a room as Host to select a quiz and invite players, or enter a Room Code to Join as a player.",
+                    title: t('homepage.how_to_play.step1.title'),
+                    desc: t('homepage.how_to_play.step1.desc'),
                     color: "text-[#00ff9d]",
                     bg: "bg-[#00ff9d]/10 border-[#00ff9d]/20",
                   },
                   {
                     icon: <Target className="w-5 h-5" />,
-                    title: "Select a Quiz",
-                    desc: "As a Host, browse and pick from available quizzes. Configure the number of questions, duration, and difficulty.",
+                    title: t('homepage.how_to_play.step2.title'),
+                    desc: t('homepage.how_to_play.step2.desc'),
                     color: "text-[#2d6af2]",
                     bg: "bg-[#2d6af2]/10 border-[#2d6af2]/20",
                   },
                   {
                     icon: <Users className="w-5 h-5" />,
-                    title: "Wait for Players",
-                    desc: "Share your Room Code with friends. Once everyone has joined the lobby, the Host starts the game.",
+                    title: t('homepage.how_to_play.step3.title'),
+                    desc: t('homepage.how_to_play.step3.desc'),
                     color: "text-purple-400",
                     bg: "bg-purple-400/10 border-purple-400/20",
                   },
                   {
                     icon: <Trophy className="w-5 h-5" />,
-                    title: "Answer & Race!",
-                    desc: "Answer questions as fast as possible! Points are awarded based on speed and accuracy. The fastest correct answer wins!",
+                    title: t('homepage.how_to_play.step4.title'),
+                    desc: t('homepage.how_to_play.step4.desc'),
                     color: "text-yellow-400",
                     bg: "bg-yellow-400/10 border-yellow-400/20",
                   },
@@ -510,7 +511,7 @@ export default function Home() {
                   onClick={() => setShowHowToPlay(false)}
                   className="w-full py-3.5 bg-gradient-to-r from-[#2d6af2] to-[#4da6ff] text-white font-display text-xs tracking-widest uppercase rounded-xl hover:shadow-[0_0_20px_rgba(45,106,242,0.5)] transition-all active:scale-[0.98]"
                 >
-                  Got It!
+                  {t('homepage.how_to_play.button')}
                 </button>
               </div>
             </motion.div>
@@ -539,10 +540,10 @@ export default function Home() {
                 <Gamepad2 className="w-8 h-8 text-[#00ff9d]" />
               </div>
               <h2 className="font-body font-bold text-4xl text-white mb-2 tracking-wide glow-text uppercase">
-                HOST
+                {t('homepage.host.title')}
               </h2>
               <p className="text-gray-400 text-sm font-light tracking-wider">
-                Create a new room and invite players.
+                {t('homepage.host.subtitle')}
               </p>
             </div>
             <div className="w-full">
@@ -550,7 +551,7 @@ export default function Home() {
                 onClick={handleHost}
                 className="w-full bg-gradient-to-r from-[#1a45c4] via-[#2d6af2] to-[#1a45c4] hover:shadow-[0_0_20px_rgba(45,106,242,0.6)] text-white font-display text-sm py-4 px-6 rounded-xl transition-all duration-300 uppercase tracking-wider transform active:scale-[0.98] font-bold"
               >
-                Create Room
+                  {t('homepage.host.button')}
               </button>
             </div>
           </div>
@@ -563,10 +564,10 @@ export default function Home() {
                 <LogIn className="w-8 h-8 text-[#2d6af2]" />
               </div>
               <h2 className="font-body font-bold text-4xl text-white mb-2 tracking-wide glow-text uppercase">
-                JOIN
+                {t('homepage.join.title')}
               </h2>
               <p className="text-gray-400 text-sm font-light tracking-wider">
-                Enter a code to join game.
+                {t('homepage.join.subtitle')}
               </p>
             </div>
             <div className="w-full space-y-3">
@@ -574,7 +575,7 @@ export default function Home() {
                 <input
                   className="w-full bg-white/[0.03] border border-white/[0.07] text-white font-display text-center text-sm py-4 px-4 rounded-xl focus:outline-none focus:border-[#00ff9d]/60 focus:bg-white/[0.05] focus:shadow-[0_0_0_3px_rgba(0,255,157,0.1)] transition-all placeholder:font-display placeholder:text-xs uppercase tracking-widest placeholder:text-gray-600"
                   maxLength={6}
-                  placeholder="ROOM CODE"
+                  placeholder={t('homepage.join.placeholder')}
                   type="text"
                   value={roomCode}
                   onChange={(e) => setRoomCode(e.target.value.toUpperCase())}
@@ -585,7 +586,7 @@ export default function Home() {
                 onClick={handleJoin}
                 className="w-full bg-gradient-to-r from-teal-500 via-[#00ff9d] to-teal-500 hover:shadow-[0_0_20px_rgba(0,255,157,0.5)] text-[#04060f] font-display text-sm py-4 px-6 rounded-xl transition-all duration-300 uppercase tracking-wider transform active:scale-[0.98] font-bold"
               >
-                Join
+                  {t('homepage.join.button')}
               </button>
             </div>
           </div>

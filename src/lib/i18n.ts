@@ -3,14 +3,14 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
-// import enTranslation from "../locales/en/translation.json";
-// import idTranslation from "../locales/id/translation.json";
-// import arTranslation from "../locales/ar/translation.json";
+import enTranslation from "../locales/en/translation.json";
+import idTranslation from "../locales/id/translation.json";
+import arTranslation from "../locales/ar/translation.json";
 
 const resources = {
-//   en: { translation: enTranslation },
-//   id: { translation: idTranslation },
-//   ar: { translation: arTranslation },
+  en: { translation: enTranslation },
+  id: { translation: idTranslation },
+  ar: { translation: arTranslation },
 };
 
 let initialized = false;
@@ -29,6 +29,7 @@ export const getI18nInstance = () => {
           order: ["cookie", "localStorage", "navigator"],
           caches: ["cookie"],
           cookieMinutes: 525600, // 1 year
+          lookupCookie: 'i18next',
         },
       });
     initialized = true;
