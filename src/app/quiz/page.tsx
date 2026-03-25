@@ -24,12 +24,12 @@ export default function QuizPage() {
     const [selectedOption, setSelectedOption] = useState<number | null>(null);
     const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
     const [isAnswered, setIsAnswered] = useState(false);
-    const [timeLeft, setTimeLeft] = useState(15);
+    // const [timeLeft, setTimeLeft] = useState(15);
     const [roomCode, setRoomCode] = useState<string | null>(null);
     const [sessionId, setSessionId] = useState<string | null>(null);
     const [statusText, setStatusText] = useState("ROUND COMPLETE!");
 
-    const timerRef = useRef<NodeJS.Timeout | null>(null);
+    // const timerRef = useRef<NodeJS.Timeout | null>(null);
     const QUESTIONS_PER_ROUND = 3;
 
     useEffect(() => {
@@ -79,7 +79,7 @@ export default function QuizPage() {
         setSessionId(storedSession);
     }, [router]);
 
-    const startTimer = useCallback(() => {
+    /* const startTimer = useCallback(() => {
         if (timerRef.current) clearInterval(timerRef.current);
         setTimeLeft(15);
         timerRef.current = setInterval(() => {
@@ -92,18 +92,18 @@ export default function QuizPage() {
                 return prev - 1;
             });
         }, 1000);
-    }, []);
+    }, []); */
 
-    useEffect(() => {
+    /* useEffect(() => {
         if (questions.length > 0 && !isAnswered && questionsAnsweredInRound < QUESTIONS_PER_ROUND && currentIndex < questions.length) {
             startTimer();
         }
         return () => { if (timerRef.current) clearInterval(timerRef.current); };
-    }, [questions.length, currentIndex, isAnswered, questionsAnsweredInRound, startTimer]);
+    }, [questions.length, currentIndex, isAnswered, questionsAnsweredInRound, startTimer]); */
 
     const handleAnswer = async (optionIndex: number) => {
         if (isAnswered) return;
-        if (timerRef.current) clearInterval(timerRef.current);
+        // if (timerRef.current) clearInterval(timerRef.current);
 
         const currentQ = questions[currentIndex];
         const correct = optionIndex === currentQ.correctAnswer;
@@ -238,14 +238,14 @@ export default function QuizPage() {
                 </motion.div>
 
                 {/* Timer Bar */}
-                <div className="w-full h-1.5 bg-gray-800 rounded-full mb-8 overflow-hidden">
+                {/* <div className="w-full h-1.5 bg-gray-800 rounded-full mb-8 overflow-hidden">
                     <motion.div 
                         className={`h-full ${timeLeft <= 5 ? 'bg-red-500' : 'bg-blue-500'}`}
                         initial={{ width: '100%' }}
                         animate={{ width: `${(timeLeft / 15) * 100}%` }}
                         transition={{ duration: 1, ease: "linear" }}
                     />
-                </div>
+                </div> */}
 
                 {/* Options */}
                 <div className="grid grid-cols-1 gap-4">
