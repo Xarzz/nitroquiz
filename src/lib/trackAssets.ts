@@ -37,7 +37,7 @@ const trackAssets = [
     {
         "z": 90,
         "side": "left",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 96,
@@ -57,7 +57,7 @@ const trackAssets = [
     {
         "z": 108,
         "side": "right",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 114,
@@ -77,7 +77,7 @@ const trackAssets = [
     {
         "z": 126,
         "side": "right",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 132,
@@ -97,7 +97,7 @@ const trackAssets = [
     {
         "z": 144,
         "side": "right",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 150,
@@ -157,7 +157,7 @@ const trackAssets = [
     {
         "z": 198,
         "side": "left",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 204,
@@ -177,7 +177,7 @@ const trackAssets = [
     {
         "z": 216,
         "side": "right",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 222,
@@ -217,7 +217,7 @@ const trackAssets = [
     {
         "z": 252,
         "side": "right",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 258,
@@ -257,7 +257,7 @@ const trackAssets = [
     {
         "z": 288,
         "side": "left",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 294,
@@ -277,7 +277,7 @@ const trackAssets = [
     {
         "z": 306,
         "side": "right",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 312,
@@ -297,7 +297,7 @@ const trackAssets = [
     {
         "z": 324,
         "side": "right",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 330,
@@ -337,7 +337,7 @@ const trackAssets = [
     {
         "z": 360,
         "side": "right",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 366,
@@ -357,7 +357,7 @@ const trackAssets = [
     {
         "z": 378,
         "side": "right",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 384,
@@ -377,7 +377,7 @@ const trackAssets = [
     {
         "z": 396,
         "side": "left",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 402,
@@ -397,7 +397,7 @@ const trackAssets = [
     {
         "z": 414,
         "side": "right",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 420,
@@ -417,7 +417,7 @@ const trackAssets = [
     {
         "z": 432,
         "side": "left",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 438,
@@ -437,7 +437,7 @@ const trackAssets = [
     {
         "z": 450,
         "side": "left",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 456,
@@ -457,7 +457,7 @@ const trackAssets = [
     {
         "z": 468,
         "side": "left",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 474,
@@ -477,7 +477,7 @@ const trackAssets = [
     {
         "z": 486,
         "side": "left",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 492,
@@ -497,7 +497,7 @@ const trackAssets = [
     {
         "z": 504,
         "side": "left",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 510,
@@ -517,7 +517,7 @@ const trackAssets = [
     {
         "z": 522,
         "side": "right",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 528,
@@ -597,7 +597,7 @@ const trackAssets = [
     {
         "z": 594,
         "side": "left",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 600,
@@ -637,7 +637,7 @@ const trackAssets = [
     {
         "z": 630,
         "side": "left",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 636,
@@ -677,7 +677,7 @@ const trackAssets = [
     {
         "z": 666,
         "side": "left",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 672,
@@ -697,7 +697,7 @@ const trackAssets = [
     {
         "z": 684,
         "side": "left",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 690,
@@ -777,7 +777,7 @@ const trackAssets = [
     {
         "z": 756,
         "side": "left",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 762,
@@ -817,7 +817,7 @@ const trackAssets = [
     {
         "z": 792,
         "side": "right",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 798,
@@ -877,7 +877,7 @@ const trackAssets = [
     {
         "z": 846,
         "side": "left",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 852,
@@ -897,7 +897,7 @@ const trackAssets = [
     {
         "z": 864,
         "side": "left",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 870,
@@ -937,7 +937,7 @@ const trackAssets = [
     {
         "z": 900,
         "side": "left",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 906,
@@ -957,7 +957,7 @@ const trackAssets = [
     {
         "z": 918,
         "side": "left",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 924,
@@ -977,7 +977,7 @@ const trackAssets = [
     {
         "z": 936,
         "side": "right",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 942,
@@ -1017,7 +1017,7 @@ const trackAssets = [
     {
         "z": 972,
         "side": "right",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 978,
@@ -1057,7 +1057,7 @@ const trackAssets = [
     {
         "z": 1008,
         "side": "right",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 1014,
@@ -1077,7 +1077,7 @@ const trackAssets = [
     {
         "z": 1026,
         "side": "right",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 1032,
@@ -1097,7 +1097,7 @@ const trackAssets = [
     {
         "z": 1044,
         "side": "left",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 1050,
@@ -1137,7 +1137,7 @@ const trackAssets = [
     {
         "z": 1080,
         "side": "left",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 1086,
@@ -1197,7 +1197,7 @@ const trackAssets = [
     {
         "z": 1134,
         "side": "right",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 1140,
@@ -1217,7 +1217,7 @@ const trackAssets = [
     {
         "z": 1152,
         "side": "left",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 1158,
@@ -1237,7 +1237,7 @@ const trackAssets = [
     {
         "z": 1170,
         "side": "right",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 1176,
@@ -1257,7 +1257,7 @@ const trackAssets = [
     {
         "z": 1188,
         "side": "right",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 1194,
@@ -1277,7 +1277,7 @@ const trackAssets = [
     {
         "z": 1206,
         "side": "right",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 1212,
@@ -1297,7 +1297,7 @@ const trackAssets = [
     {
         "z": 1224,
         "side": "right",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 1230,
@@ -1317,7 +1317,7 @@ const trackAssets = [
     {
         "z": 1242,
         "side": "left",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 1248,
@@ -1357,7 +1357,7 @@ const trackAssets = [
     {
         "z": 1278,
         "side": "right",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 1284,
@@ -1377,7 +1377,7 @@ const trackAssets = [
     {
         "z": 1296,
         "side": "right",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 1302,
@@ -1397,7 +1397,7 @@ const trackAssets = [
     {
         "z": 1314,
         "side": "right",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 1320,
@@ -1437,7 +1437,7 @@ const trackAssets = [
     {
         "z": 1350,
         "side": "right",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 1356,
@@ -1457,7 +1457,7 @@ const trackAssets = [
     {
         "z": 1368,
         "side": "right",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 1374,
@@ -1477,7 +1477,7 @@ const trackAssets = [
     {
         "z": 1386,
         "side": "left",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 1392,
@@ -1497,7 +1497,7 @@ const trackAssets = [
     {
         "z": 1404,
         "side": "left",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 1410,
@@ -1517,7 +1517,7 @@ const trackAssets = [
     {
         "z": 1422,
         "side": "left",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 1428,
@@ -1537,7 +1537,7 @@ const trackAssets = [
     {
         "z": 1440,
         "side": "left",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 1446,
@@ -1577,7 +1577,7 @@ const trackAssets = [
     {
         "z": 1476,
         "side": "left",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 1482,
@@ -1637,7 +1637,7 @@ const trackAssets = [
     {
         "z": 1530,
         "side": "right",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 1536,
@@ -1657,7 +1657,7 @@ const trackAssets = [
     {
         "z": 1548,
         "side": "right",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 1554,
@@ -1677,7 +1677,7 @@ const trackAssets = [
     {
         "z": 1566,
         "side": "right",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 1572,
@@ -1697,7 +1697,7 @@ const trackAssets = [
     {
         "z": 1584,
         "side": "left",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 1590,
@@ -1737,7 +1737,7 @@ const trackAssets = [
     {
         "z": 1620,
         "side": "right",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 1626,
@@ -1777,7 +1777,7 @@ const trackAssets = [
     {
         "z": 1656,
         "side": "left",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 1662,
@@ -1797,7 +1797,7 @@ const trackAssets = [
     {
         "z": 1674,
         "side": "right",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 1680,
@@ -1817,7 +1817,7 @@ const trackAssets = [
     {
         "z": 1692,
         "side": "left",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 1698,
@@ -1837,7 +1837,7 @@ const trackAssets = [
     {
         "z": 1710,
         "side": "left",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 1716,
@@ -1857,7 +1857,7 @@ const trackAssets = [
     {
         "z": 1728,
         "side": "right",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 1734,
@@ -1877,7 +1877,7 @@ const trackAssets = [
     {
         "z": 1746,
         "side": "left",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 1752,
@@ -1917,7 +1917,7 @@ const trackAssets = [
     {
         "z": 1782,
         "side": "right",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 1788,
@@ -1957,7 +1957,7 @@ const trackAssets = [
     {
         "z": 1818,
         "side": "right",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 1824,
@@ -1977,7 +1977,7 @@ const trackAssets = [
     {
         "z": 1836,
         "side": "left",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 1842,
@@ -1997,7 +1997,7 @@ const trackAssets = [
     {
         "z": 1854,
         "side": "left",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 1860,
@@ -2017,7 +2017,7 @@ const trackAssets = [
     {
         "z": 1872,
         "side": "right",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 1878,
@@ -2037,7 +2037,7 @@ const trackAssets = [
     {
         "z": 1890,
         "side": "left",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 1896,
@@ -2057,7 +2057,7 @@ const trackAssets = [
     {
         "z": 1908,
         "side": "left",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 1914,
@@ -2077,7 +2077,7 @@ const trackAssets = [
     {
         "z": 1926,
         "side": "right",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 1932,
@@ -2097,7 +2097,7 @@ const trackAssets = [
     {
         "z": 1944,
         "side": "left",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 1950,
@@ -2117,7 +2117,7 @@ const trackAssets = [
     {
         "z": 1962,
         "side": "right",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 1968,
@@ -2137,7 +2137,7 @@ const trackAssets = [
     {
         "z": 1980,
         "side": "right",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 1986,
@@ -2157,7 +2157,7 @@ const trackAssets = [
     {
         "z": 1998,
         "side": "left",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 2004,
@@ -2197,7 +2197,7 @@ const trackAssets = [
     {
         "z": 2034,
         "side": "left",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 2040,
@@ -2237,7 +2237,7 @@ const trackAssets = [
     {
         "z": 2070,
         "side": "left",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 2076,
@@ -2257,7 +2257,7 @@ const trackAssets = [
     {
         "z": 2088,
         "side": "left",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 2094,
@@ -2277,7 +2277,7 @@ const trackAssets = [
     {
         "z": 2106,
         "side": "right",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 2112,
@@ -2317,7 +2317,7 @@ const trackAssets = [
     {
         "z": 2142,
         "side": "right",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 2148,
@@ -2337,7 +2337,7 @@ const trackAssets = [
     {
         "z": 2160,
         "side": "left",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 2166,
@@ -2357,7 +2357,7 @@ const trackAssets = [
     {
         "z": 2178,
         "side": "right",
-        "src": "/assets/material/semak/2.webp"
+        "src": "/assets/material/semak/2.png"
     },
     {
         "z": 2184,
@@ -2377,7 +2377,7 @@ const trackAssets = [
     {
         "z": 2196,
         "side": "right",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 2202,
@@ -2397,7 +2397,7 @@ const trackAssets = [
     {
         "z": 2214,
         "side": "right",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 2220,
@@ -2417,7 +2417,7 @@ const trackAssets = [
     {
         "z": 2232,
         "side": "right",
-        "src": "/assets/material/semak/1.webp"
+        "src": "/assets/material/semak/1.png"
     },
     {
         "z": 2238,

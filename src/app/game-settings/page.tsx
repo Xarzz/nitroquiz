@@ -51,6 +51,9 @@ function GameSettingsContent() {
         };
         saveGameSettings(settings);
 
+        // Save difficulty to localStorage for quiz return flow
+        localStorage.setItem('nitroquiz_game_difficulty', selectedDifficulty);
+
         // Generate quiz session
         const questions = getRandomQuestions(category, 5);
         const session: QuizSession = {
@@ -65,6 +68,11 @@ function GameSettingsContent() {
         };
         saveQuizSession(session);
 
+        // Save questions to localStorage for gamespeed → quiz flow
+        localStorage.setItem('nitroquiz_game_questions', JSON.stringify(questions));
+        localStorage.setItem('nitroquiz_game_questionIndex', '0');
+        localStorage.setItem('nitroquiz_game_score', '0');
+
         // Countdown animation
         const countdownInterval = setInterval(() => {
             setCountdown((prev) => {
@@ -77,12 +85,13 @@ function GameSettingsContent() {
         }, 1000);
     };
 
-    // Handle navigation when countdown reaches 0
+    // Handle navigation when countdown reaches 0 — go to game, not quiz
     useEffect(() => {
         if (countdown === 0) {
-            router.push('/quiz');
+            const route = selectedDifficulty === 'medium' ? '/gamespeed-medium' : '/gamespeed';
+            router.push(route);
         }
-    }, [countdown, router]);
+    }, [countdown, router, selectedDifficulty]);
 
     if (countdown !== null) {
         return (

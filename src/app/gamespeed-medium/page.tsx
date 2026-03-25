@@ -120,8 +120,8 @@ export default function GameSpeedPage() {
     // Game State
     const [gameState, setGameState] = useState<'preparation' | 'countdown' | 'playing' | 'finished' | 'gameover'>('preparation');
     // Countdown Ref helper
-    const countdownRef = useRef(5);
-    const [countdown, setCountdown] = useState(5); // Countdown dari 3
+    const countdownRef = useRef(3);
+    const [countdown, setCountdown] = useState(3);
     const [stats, setStats] = useState({ speed: 0, nos: 100, lap: 1, totalLaps: 1 });
 
     // Countdown timer effect — uses setInterval, only triggers on gameState change
@@ -194,7 +194,7 @@ export default function GameSpeedPage() {
             if (!isMobile || mobileOrientationChoice) {
                 // Short delay for visual transition
                 const timer = setTimeout(() => {
-                    countdownRef.current = 5;
+                    countdownRef.current = 3;
                     setGameState('countdown');
                 }, 800);
                 return () => clearTimeout(timer);
@@ -245,6 +245,12 @@ export default function GameSpeedPage() {
 
     // --- Loading Assets ---
     useEffect(() => {
+        // Ensure difficulty is stored for quiz return flow
+        localStorage.setItem('nitroquiz_game_difficulty', 'medium');
+        
+        // Pre-fetch quiz page in background so transition is instant
+        router.prefetch('/quiz');
+
         // Reset sprites to force reload on mount/remount
         state.current.sprites = { ...state.current.sprites };
 
@@ -304,31 +310,31 @@ export default function GameSpeedPage() {
             // Only load unique sources that aren't already covered (though re-loading is safe-ish, better to check)
 
             // To properly support the new direct 'src' usage in TRACK_ASSETS without re-defining them in ASSET_LIST:
-            TRACK_ASSETS.forEach(item => {
-                if (item.src) {
-                    promises.push(new Promise<void>((resolve) => {
-                        const img = new Image();
-                        img.onload = () => {
-                            (img as any).assetName = item.src; // Use src as name for these
-                            // Simpan dengan key 'src' 
-                            state.current.sprites[item.src] = img;
-                            resolve();
-                        };
-                        img.onerror = () => {
-                            // Fallback
-                            const cvs = document.createElement('canvas');
-                            cvs.width = 128; cvs.height = 128;
-                            const ctx = cvs.getContext('2d');
-                            if (ctx) {
-                                ctx.fillStyle = '#f0f'; // Pink for error
-                                ctx.fillRect(0, 0, 128, 128);
-                                state.current.sprites[item.src] = cvs;
-                            }
-                            resolve();
-                        };
-                        img.src = item.src;
-                    }));
-                }
+            const uniqueSources = Array.from(new Set(TRACK_ASSETS.map(item => item.src))).filter(Boolean);
+            
+            uniqueSources.forEach(src => {
+                promises.push(new Promise<void>((resolve) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        (img as any).assetName = src; // Use src as name for these
+                        // Simpan dengan key 'src' 
+                        state.current.sprites[src] = img;
+                        resolve();
+                    };
+                    img.onerror = () => {
+                        // Fallback
+                        const cvs = document.createElement('canvas');
+                        cvs.width = 128; cvs.height = 128;
+                        const ctx = cvs.getContext('2d');
+                        if (ctx) {
+                            ctx.fillStyle = '#f0f'; // Pink for error
+                            ctx.fillRect(0, 0, 128, 128);
+                            state.current.sprites[src] = cvs;
+                        }
+                        resolve();
+                    };
+                    img.src = src;
+                }));
             });
 
             await Promise.all(promises);
@@ -434,28 +440,32 @@ export default function GameSpeedPage() {
     const resetRoad = () => {
         state.current.segments = [];
         
-        // --- MEDIUM DIFFICULTY TRACK LAYOUT ---
-        // A much more twisty track with more curves, s-curves, and hills
-        addStraight(ROAD_CONF.LENGTH.SHORT);
+        // --- MEDIUM DIFFICULTY TRACK LAYOUT (EXTENDED) ---
+        // A much longer circuit to spread out assets (approx 5000+ segments)
+        addStraight(ROAD_CONF.LENGTH.LONG * 2);
         addCurve(ROAD_CONF.LENGTH.MEDIUM, ROAD_CONF.CURVE.EASY, ROAD_CONF.HILL.NONE);
-        addStraight(ROAD_CONF.LENGTH.SHORT);
+        addStraight(ROAD_CONF.LENGTH.LONG);
         
         // Start difficult part
         addSCurves();
         addBumps();
         
-        addCurve(ROAD_CONF.LENGTH.LONG, -ROAD_CONF.CURVE.MEDIUM, ROAD_CONF.HILL.MEDIUM);
-        addStraight(ROAD_CONF.LENGTH.MEDIUM);
+        addCurve(ROAD_CONF.LENGTH.LONG * 2, -ROAD_CONF.CURVE.MEDIUM, ROAD_CONF.HILL.MEDIUM);
+        addStraight(ROAD_CONF.LENGTH.LONG);
         
         addSCurves();
+        addStraight(ROAD_CONF.LENGTH.LONG);
+        addSCurves();
         
-        addCurve(ROAD_CONF.LENGTH.LONG, ROAD_CONF.CURVE.HARD, -ROAD_CONF.HILL.MEDIUM);
-        addCurve(ROAD_CONF.LENGTH.LONG, -ROAD_CONF.CURVE.HARD, ROAD_CONF.HILL.HIGH);
+        addCurve(ROAD_CONF.LENGTH.LONG * 2, ROAD_CONF.CURVE.HARD, -ROAD_CONF.HILL.MEDIUM);
+        addCurve(ROAD_CONF.LENGTH.LONG * 2, -ROAD_CONF.CURVE.HARD, ROAD_CONF.HILL.HIGH);
         addBumps();
         
+        addStraight(ROAD_CONF.LENGTH.LONG);
+        addSCurves();
         addStraight(ROAD_CONF.LENGTH.MEDIUM);
         
-        addDownhillToEnd(250);
+        addDownhillToEnd(800);
 
         const len = state.current.segments.length;
 
@@ -720,44 +730,30 @@ export default function GameSpeedPage() {
         const name = (sprite as any).assetName;
 
         // Menghitung worldWidth secara dinamis berdasarkan ukuran sprite mobil pemain
-        // Rasio 1.5625 memastikan NPC mobil berukuran sama dengan mobil pemain pada jarak yang sama
+        // Diubah rasionya menjadi 1.0 agar ukuran NPC pas dengan karakter pemain ketika didekati
         const baseCar = state.current.sprites.car;
         const playerRefWidth = baseCar ? baseCar.width : 300;
-        const carWorldWidth = playerRefWidth * 1.5625;
+        const carWorldWidth = playerRefWidth * 1.0;
 
-        let worldWidth = carWorldWidth * 0.9; // NPC mobil standar diperkecil
-        if (name?.includes('lampulalulintas') || name === 'traffic_light') worldWidth = carWorldWidth * 3.0; // Dilabuhkan ke 3.0 agar terlihat besar dan jelas
-        else if (name?.includes('truck')) worldWidth = carWorldWidth * 1.5; // Truk diperkecil lagi
-        else if (name?.includes('car_rival') || name === 'foward-opponent') worldWidth = carWorldWidth * 0.9; // Rival diperkecil sama dengan NPC
-        else if (name?.includes('odong') || name?.includes('taxi')) worldWidth = carWorldWidth * 0.95; // NPC diperkecil lagi
-        else if (name?.includes('kiri_') || name?.includes('kanan_')) worldWidth = carWorldWidth * 12; // Bangunan sangat besar
-        else if (name?.includes('pohon')) worldWidth = carWorldWidth * 8.0; // Pohon dibuat jauh lebih rimbun dan tinggi
-        else if (name?.includes('bush') || name?.includes('semak')) worldWidth = carWorldWidth * 1.5; // Semak sedikit lebar
-        else if (name?.includes('bench') || name?.includes('bangku')) worldWidth = carWorldWidth * 1.8; // Bangku cukup panjang
-        else if (name?.includes('barrier') || name?.includes('pembatas_jalan')) worldWidth = carWorldWidth * 1.8; // Pembatas jalan lebar
-        else if (name?.includes('cone') || name?.includes('penghalang')) worldWidth = carWorldWidth * 0.6; // Kerucut kecil
-        else if (name?.includes('obstacle') || name?.includes('construction')) worldWidth = carWorldWidth * 0.7; // Objek jalanan kecil
+        let worldWidth = carWorldWidth * 0.75; // NPC mobil disesuaikan (jangan terlalu besar)
+        if (name?.includes('lampulalulintas') || name === 'traffic_light') worldWidth = carWorldWidth * 4.7;
+        else if (name?.includes('truck')) worldWidth = carWorldWidth * 1.1; // Truk sedikit lebih besar dari mobil
+        else if (name?.includes('car_rival') || name === 'foward-opponent') worldWidth = carWorldWidth * 0.75; // Rival sama dengan NPC
+        else if (name?.includes('odong') || name?.includes('taxi')) worldWidth = carWorldWidth * 0.8; 
+        else if (name?.includes('kiri_') || name?.includes('kanan_')) worldWidth = carWorldWidth * 25.0; // Bangunan dikembalikan ke ukuran besar
+        else if (name?.includes('pohon')) worldWidth = carWorldWidth * 15.0; // Pohon dikembalikan besar
+        else if (name?.includes('bush') || name?.includes('semak')) worldWidth = carWorldWidth * 2.35;
+        else if (name?.includes('bench') || name?.includes('bangku')) worldWidth = carWorldWidth * 2.8;
+        else if (name?.includes('barrier') || name?.includes('pembatas_jalan')) worldWidth = carWorldWidth * 2.8;
+        else if (name?.includes('cone') || name?.includes('penghalang')) worldWidth = carWorldWidth * 0.95;
+        else if (name?.includes('obstacle') || name?.includes('construction')) worldWidth = carWorldWidth * 1.1;
 
         const destW = scale * worldWidth * (width / 2);
         const destH = destW * (sprite.height / sprite.width);
 
-        // Clamp sprite dimensions to prevent extreme sizes but PRESERVE aspect ratio
-        const maxSpriteW = width * 0.8;
-        const maxSpriteH = height * 0.6;
+        // Allow objects to grow naturally as they get closer (no clamping limits)
         let clampedW = destW;
         let clampedH = destH;
-
-        if (clampedW > maxSpriteW) {
-            const ratio = maxSpriteW / clampedW;
-            clampedW = maxSpriteW;
-            clampedH = clampedH * ratio;
-        }
-
-        if (clampedH > maxSpriteH) {
-            const ratio = maxSpriteH / clampedH;
-            clampedH = maxSpriteH;
-            clampedW = clampedW * ratio;
-        }
 
         destX = destX + (clampedW * (offsetX || 0));
         // Improved vertical positioning - sprites sit on the road
@@ -1136,8 +1132,8 @@ export default function GameSpeedPage() {
 
         // Road Boundary Limit (Acts as invisible barrier)
         nextPlayerX = Util.limit(nextPlayerX, -1.5, 1.5);
-        // Allow slightly negative speed for bounce-back physics
-        nextSpeed = Util.limit(nextSpeed, -MAX_SPEED / 2, MAX_SPEED);
+        // Speed cannot go below 0 — no reverse driving allowed
+        nextSpeed = Util.limit(nextSpeed, 0, MAX_SPEED);
 
         state.current.playerX = nextPlayerX;
         state.current.speed = nextSpeed;
@@ -1160,19 +1156,13 @@ export default function GameSpeedPage() {
                 if (Util.overlap(nextPlayerX, 0.4, car.offset, 0.4)) {
                     if (nextSpeed > car.speed) {
                         const impact = nextSpeed - car.speed;
-                        // "Mental ke belakang" effect lebih pendek/halus
-                        // Pengali dikecilkan dari 0.8 menjadi 0.15 agar mentalannya tidak jauh as per request
-                        nextSpeed = car.speed - (impact * 0.15);
+                        // "Mental ke belakang" — kurangi kecepatan tapi jangan 0, biar bisa langsung gas lagi
+                        nextSpeed = nextSpeed * 0.3;
+                        position = Util.increase(position, -200, trackLength); // "duk" mundur sedikit
                         
-                        // Mild horizontal push physically shifting out of object bounds
+                        // Mild horizontal push
                         const dir = nextPlayerX > car.offset ? 1 : -1;
-                        nextPlayerX += dir * 0.1;
-                        
-                        // Disable throttle smoothly so the player gets thrown back without jittering
-                        state.current.keyFaster = false;
-                        
-                        // Do NOT use Util.increase to abruptly teleport position.
-                        // Integration physics will automatically move player backwards via negative nextSpeed!
+                        nextPlayerX += dir * 0.15;
                     }
                 }
             }
@@ -1319,8 +1309,23 @@ export default function GameSpeedPage() {
         // Lap & Finish line check
         if (position > trackLength - playerZ && gameState !== 'finished') {
             state.current.speed = 0;
-            // Check if we have quiz questions remaining
-            if (allQuizQuestions.length > 0 && quizQuestionIndex < allQuizQuestions.length) {
+            // Check if we have quiz questions remaining (from state or localStorage)
+            let hasQuizRemaining = allQuizQuestions.length > 0 && quizQuestionIndex < allQuizQuestions.length;
+            if (!hasQuizRemaining) {
+                // Fallback: check localStorage directly
+                try {
+                    const storedQ = localStorage.getItem('nitroquiz_game_questions');
+                    const storedIdx = parseInt(localStorage.getItem('nitroquiz_game_questionIndex') || '0', 10);
+                    if (storedQ) {
+                        const parsed = JSON.parse(storedQ);
+                        if (Array.isArray(parsed) && storedIdx < parsed.length) {
+                            hasQuizRemaining = true;
+                        }
+                    }
+                } catch(e) {}
+            }
+            
+            if (hasQuizRemaining) {
                 // Save current state to localStorage before redirect
                 localStorage.setItem('nitroquiz_game_questionIndex', quizQuestionIndex.toString());
                 localStorage.setItem('nitroquiz_game_score', totalQuizScore.toString());
@@ -1947,11 +1952,14 @@ export default function GameSpeedPage() {
             console.error("Failed to unlock orientation:", e);
         }
 
-        // 3. Clean up quiz data from localStorage
+        // 3. Clean up session data from localStorage
         localStorage.removeItem('nitroquiz_game_questions');
+        localStorage.removeItem('nitroquiz_game_questionIndex');
+        localStorage.removeItem('nitroquiz_game_score');
         localStorage.removeItem('nitroquiz_game_roomCode');
         localStorage.removeItem('nitroquiz_game_sessionId');
         localStorage.removeItem('nitroquiz_game_quizId');
+        localStorage.removeItem('nitroquiz_game_difficulty');
         
         // 4. Redirect to Podium (Host's monitor will also see we are finished)
         if (roomCode) {
@@ -2049,20 +2057,39 @@ export default function GameSpeedPage() {
             {/* Main Game Canvas */}
             <canvas ref={canvasRef} style={{ display: 'block', width: '100%', height: '100%' }} />
 
-            {/* Loading Overlay */}
+            {/* Loading Overlay - Unified Establishing Signal Style */}
             {mounted && !assetsLoaded && (
                 <div style={{
                     position: 'fixed', inset: 0, zIndex: 3000,
-                    backgroundColor: '#020617', display: 'flex', flexDirection: 'column',
+                    backgroundColor: '#0a0a0f', display: 'flex', flexDirection: 'column',
                     alignItems: 'center', justifyContent: 'center', color: 'white',
                     fontFamily: 'var(--font-rajdhani)'
                 }}>
-                    <div style={{ position: 'relative', marginBottom: '2rem' }}>
-                        <div style={{ width: '80px', height: '80px', borderRadius: '50%', border: '3px solid rgba(59, 130, 246, 0.2)', borderTopColor: '#3b82f6', animation: 'spin 1s linear infinite' }} />
-                        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem' }}>🏎️</div>
+                    <div style={{ textAlign: 'center' }}>
+                        <div style={{ 
+                            width: '64px', height: '64px', 
+                            border: '4px solid rgba(45, 106, 242, 0.3)', 
+                            borderTopColor: '#2d6af2', 
+                            borderRadius: '50%', 
+                            margin: '0 auto 1.5rem auto',
+                            animation: 'spin 1s linear infinite' 
+                        }} />
+                        <p style={{ 
+                            marginTop: '1rem', 
+                            color: '#2d6af2', 
+                            fontSize: '1.25rem', 
+                            letterSpacing: '0.2em', 
+                            textTransform: 'uppercase', 
+                            fontWeight: 700,
+                            animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+                        }}>
+                            Establishing Signal...
+                        </p>
                     </div>
-                    <div style={{ fontSize: '1.2rem', fontWeight: 900, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#3b82f6' }}>Initializing Systems...</div>
-                    <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+                    <style>{`
+                        @keyframes spin { to { transform: rotate(360deg); } }
+                        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+                    `}</style>
                 </div>
             )}
 
@@ -2588,7 +2615,7 @@ export default function GameSpeedPage() {
                 </div>
             )}
 
-            {/* Countdown Overlay - Dark bg, racing lights, consistent with host lobby */}
+            {/* Countdown Overlay - 3 traffic lights (red, yellow, green) */}
             {mounted && assetsLoaded && gameState === 'countdown' && (
                 <div style={{
                     position: 'fixed', inset: 0, zIndex: 1000,
@@ -2597,30 +2624,29 @@ export default function GameSpeedPage() {
                     backgroundColor: 'rgba(0, 0, 0, 0.88)',
                     backdropFilter: 'blur(8px)',
                     fontFamily: 'var(--font-rajdhani)',
+                    gap: usePCLayout ? '2rem' : '1.25rem',
                 }}>
-                    {/* Racing lights */}
-                    <div style={{ display: 'flex', gap: '0.75rem' }}>
-                        {[0, 1, 2, 3, 4].map((i) => {
-                            const val = 5 - i;
-                            const isLit = countdown <= val;
+                    {/* Racing lights - 3 circles: Red, Yellow, Green */}
+                    <div style={{ display: 'flex', gap: usePCLayout ? '1.25rem' : '0.75rem' }}>
+                        {[
+                            { color: '#ef4444', activeAt: 3 },
+                            { color: '#facc15', activeAt: 2 },
+                            { color: '#00ff9d', activeAt: 1 },
+                        ].map((light, i) => {
                             const isGo = countdown <= 0;
-                            let color = "#3b82f6"; // Blue for 5, 4
-                            if (val === 3) color = "#ef4444";
-                            if (val === 2) color = "#fbbf24"; // Wait, check color variable below
-                            
-                            // Re-evaluating color logic for dots
-                            color = isGo ? '#00ff9d' : val >= 4 ? '#3b82f6' : val === 3 ? '#ef4444' : val === 2 ? '#facc15' : '#00ff9d';
+                            const isLit = isGo || countdown <= light.activeAt;
+                            const displayColor = isGo ? '#00ff9d' : light.color;
 
                             return (
                                 <div
                                     key={i}
                                     style={{
-                                        width: usePCLayout ? '2.5rem' : '1.5rem',
-                                        height: usePCLayout ? '2.5rem' : '1.5rem',
+                                        width: usePCLayout ? '3rem' : '2rem',
+                                        height: usePCLayout ? '3rem' : '2rem',
                                         borderRadius: '50%',
-                                        border: `2px solid ${isGo ? '#00ff9d' : isLit ? color : '#374151'}`,
-                                        backgroundColor: isGo ? '#00ff9d' : isLit ? color : 'rgba(55, 65, 81, 0.3)',
-                                        boxShadow: isGo ? '0 0 25px rgba(0,255,157,0.7)' : isLit ? `0 0 20px ${color}` : 'none',
+                                        border: `2px solid ${isLit ? displayColor : '#374151'}`,
+                                        backgroundColor: isLit ? displayColor : 'rgba(55, 65, 81, 0.3)',
+                                        boxShadow: isLit ? `0 0 25px ${displayColor}` : 'none',
                                         transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                                         transform: isLit ? 'scale(1.15)' : 'scale(1)',
                                     }}
@@ -2636,7 +2662,7 @@ export default function GameSpeedPage() {
                             fontSize: usePCLayout ? '8rem' : '5rem',
                             fontWeight: 900,
                             lineHeight: 1,
-                            color: countdown >= 4 ? '#3b82f6' : countdown === 3 ? '#ef4444' : countdown === 2 ? '#facc15' : '#00ff9d',
+                            color: countdown === 3 ? '#ef4444' : countdown === 2 ? '#facc15' : '#00ff9d',
                             textShadow: `0 0 60px currentColor`,
                             animation: 'countdown-pop 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)',
                             willChange: 'transform, opacity',
@@ -2650,7 +2676,7 @@ export default function GameSpeedPage() {
                         <div style={{
                             fontSize: usePCLayout ? '1rem' : '0.7rem',
                             letterSpacing: '0.3em', textTransform: 'uppercase',
-                            color: '#64748b', fontWeight: 900, marginTop: '1.5rem',
+                            color: '#64748b', fontWeight: 900,
                         }}>
                             RACE STARTING
                         </div>

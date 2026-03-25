@@ -77,6 +77,11 @@ export default function QuizPage() {
         if (storedScore) setScore(parseInt(storedScore, 10));
         setRoomCode(storedRoom);
         setSessionId(storedSession);
+
+        // Preload the game route so going back is instant
+        const customDiff = localStorage.getItem('nitroquiz_game_difficulty') || 'easy';
+        const route = (customDiff === 'normal' || customDiff === 'medium') ? '/gamespeed-medium' : '/gamespeed';
+        router.prefetch(route);
     }, [router]);
 
     /* const startTimer = useCallback(() => {
@@ -184,12 +189,10 @@ export default function QuizPage() {
         if (currentIndex >= questions.length && questions.length > 0) {
             // Handled by the check below
         } else {
-            return (
-                <div className="min-h-screen bg-[#020617] flex flex-col items-center justify-center text-white font-rajdhani">
-                    <Loader2 className="w-12 h-12 text-blue-500 animate-spin mb-4" />
-                    <p className="text-xl tracking-widest uppercase">Initializing Quiz Round...</p>
-                </div>
-            );
+            // Render a simple blank dark background instead of a spinning loader.
+            // This prevents a jarring "loading" flash during the split-second Next.js hydration, 
+            // making the transition from the racing screen feel instant.
+            return <div className="min-h-screen bg-[#020617]" />;
         }
     }
 
