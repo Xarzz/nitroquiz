@@ -54,11 +54,20 @@ export default function LoginPage() {
     const handleGoogleLogin = async () => {
         setIsGoogleLoading(true);
         try {
-            const { error } = await supabase.auth.signInWithOAuth({
-                provider: 'google',
-                options: { redirectTo: `${typeof window !== 'undefined' ? window.location.origin : ''}/` },
-            });
-            if (error) throw error;
+            // Simulasi proses login OAuth Google untuk lokal / percobaan
+            await new Promise(r => setTimeout(r, 1200));
+            
+            const user: User = {
+                id: `google-${Date.now()}`,
+                username: `Racer_${Math.floor(Math.random() * 9000) + 1000}`,
+                email: `racer${Date.now()}@gmail.com`,
+                totalPoints: 1500, // Memberikan sedikit point sbg bonus
+                gamesPlayed: 5,
+                createdAt: new Date().toISOString(),
+            };
+            
+            saveUser(user);
+            router.push('/');
         } catch (err: any) {
             setServerError("Google sign-in failed. Please try again.");
             setIsGoogleLoading(false);
