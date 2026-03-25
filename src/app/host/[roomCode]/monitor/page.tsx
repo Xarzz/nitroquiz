@@ -145,60 +145,74 @@ function PlayerCard({
       {/* Avatar */}
       <div
         style={{
-          position: "relative",
-          width: "90px",
-          flexShrink: 0,
-          overflow: "hidden",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "10px",
           marginLeft: "3px",
         }}
       >
-        {isNew && (
-          <div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              zIndex: 10,
-              textAlign: "center",
-              padding: "2px 0",
-              background: "rgba(37,99,235,0.75)",
-              fontFamily: "Orbitron, monospace",
-              fontSize: "7px",
-              letterSpacing: "0.1em",
-              color: "#bfdbfe",
-              textTransform: "uppercase",
-            }}
-          >
-            A new driver:
-          </div>
-        )}
-        {player.eliminated ? (
-          <div
-            style={{
-              width: "100%",
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              background: "rgba(239,68,68,0.1)",
-            }}
-          >
-            <Skull size={32} color="#f87171" />
-          </div>
-        ) : (
-          <img
-            src={avatarSrc}
-            alt={player.nickname}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              objectPosition: "top center",
-              minHeight: "88px",
-            }}
-          />
-        )}
+        <div
+          style={{
+            position: "relative",
+            width: "64px",
+            height: "64px",
+            borderRadius: "50%",
+            flexShrink: 0,
+            overflow: "hidden",
+            border: `2px solid ${rankColor}`,
+            boxShadow: `0 0 10px ${rankColor}40`,
+            background: "rgba(0,0,0,0.2)",
+          }}
+        >
+          {isNew && (
+            <div
+              style={{
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                right: 0,
+                zIndex: 10,
+                textAlign: "center",
+                padding: "2px 0",
+                background: "rgba(37,99,235,0.85)",
+                fontFamily: "Orbitron, monospace",
+                fontSize: "7px",
+                fontWeight: 700,
+                letterSpacing: "0.05em",
+                color: "#bfdbfe",
+                textTransform: "uppercase",
+              }}
+            >
+              NEW
+            </div>
+          )}
+          {player.eliminated ? (
+            <div
+              style={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                background: "rgba(239,68,68,0.15)",
+              }}
+            >
+              <Skull size={28} color="#f87171" />
+            </div>
+          ) : (
+            <img
+              src={avatarSrc}
+              alt={player.nickname}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                objectPosition: "top center",
+              }}
+            />
+          )}
+        </div>
       </div>
 
       {/* Info */}
@@ -247,7 +261,7 @@ function PlayerCard({
 
         {/* Score */}
         <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-          <span style={{ fontSize: "14px" }}>⭐</span>
+          {/* <span style={{ fontSize: "14px" }}>⭐</span> */}
           <span
             style={{
               fontFamily: "monospace",
