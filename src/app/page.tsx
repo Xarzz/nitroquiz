@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { getUser, saveUser, removeUser } from "@/lib/storage";
-import { supabase } from "@/lib/supabase";
+import { supabase, supabaseCentral } from "@/lib/supabase";
 import { User } from "@/types";
 import {
   Menu,
@@ -25,16 +25,22 @@ import {
   LogIn,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "@/contexts/AuthContext";
+import { useTranslation } from "react-i18next";
+import { getI18nInstance } from "@/lib/i18n";
 import { Logo } from "@/components/ui/logo";
 import Image from "next/image";
 
 export default function Home() {
   const router = useRouter();
+  const { profile, loading: authLoading } = useAuth();
+  const { t } = useTranslation();
+  const i18n = getI18nInstance();
   const [roomCode, setRoomCode] = useState("");
-  const [nickname, setNickname] = useState("");
   const [isHosting, setIsHosting] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isLanguageOpen, setIsLanguageOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showHowToPlay, setShowHowToPlay] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
@@ -62,27 +68,59 @@ export default function Home() {
     setIsDropdownOpen(false);
   };
   useEffect(() => {
+    if (profile) {
+      const u = getUser();
+      const newUser: User = {
+        id: profile.auth_user_id,
+        username: profile.nickname || profile.fullname || profile.username || "Racer",
+        email: profile.email,
+        avatar: profile.avatar_url || "",
+        totalPoints: u?.totalPoints || 0,
+        gamesPlayed: u?.gamesPlayed || 0,
+        createdAt: u?.createdAt || new Date().toISOString(),
+      };
+
+      // Only update if data changed to prevent infinite loops
+      if (!u || u.id !== newUser.id || u.username !== newUser.username || u.avatar !== newUser.avatar) {
+        saveUser(newUser);
+        setUser(newUser);
+      } else {
+        setUser(u);
+      }
+    } else if (!authLoading) {
+      const currentUser = getUser();
+      if (!currentUser) {
+        // Double check session in case AuthContext is still initializing
+        supabaseCentral.auth.getSession().then(({ data: { session } }) => {
+          if (!session) {
+            router.push("/login");
+          }
+        });
+      } else {
+        setUser(currentUser);
+      }
+    }
+  }, [profile, authLoading, router]);
+
+  useEffect(() => {
     async function init() {
       // PRIORITY: Check if this is a QR scan redirect (?room=XXX)
-      // If so, show loading, check login, redirect immediately — never show homepage
       const params = new URLSearchParams(window.location.search);
       const roomParam = params.get("room");
       if (roomParam) {
         const code = roomParam.toUpperCase();
         setIsRedirecting(true);
 
-        // Quick check: is user already in localStorage?
         const existingUser = getUser();
         if (existingUser) {
           router.push(`/player/${code}/waiting`);
           return;
         }
 
-        // Also check Supabase session (OAuth users)
         try {
           const {
             data: { session },
-          } = await supabase.auth.getSession();
+          } = await supabaseCentral.auth.getSession();
           if (session?.user) {
             const newUser: User = {
               id: session.user.id,
@@ -104,55 +142,7 @@ export default function Home() {
           console.error("Session check failed:", e);
         }
 
-        // Not logged in → redirect to player login with room code
         router.push(`/player/${code}/login`);
-        return;
-      }
-
-      // Normal homepage flow (no ?room= param)
-      try {
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
-
-        if (session?.user) {
-          const u = getUser();
-          const sessionAvatar = session.user.user_metadata.avatar_url || session.user.user_metadata.picture || "";
-          
-          if (!u || u.id !== session.user.id || u.avatar !== sessionAvatar) {
-            const newUser: User = {
-              id: session.user.id,
-              username:
-                session.user.user_metadata.full_name ||
-                session.user.email?.split("@")[0] ||
-                "Racer",
-              email: session.user.email || "",
-              avatar: sessionAvatar,
-              totalPoints: u?.totalPoints || 0,
-              gamesPlayed: u?.gamesPlayed || 0,
-              createdAt: u?.createdAt || new Date().toISOString(),
-            };
-            saveUser(newUser);
-            setUser(newUser);
-          } else {
-            setUser(u);
-          }
-        } else {
-          const currentUser = getUser();
-          if (!currentUser) {
-            router.push("/login");
-            return;
-          }
-          setUser(currentUser);
-        }
-      } catch (error) {
-        console.error("Failed to get Supabase session:", error);
-        const currentUser = getUser();
-        if (!currentUser) {
-          router.push("/login");
-          return;
-        }
-        setUser(currentUser);
       }
     }
 
@@ -173,7 +163,7 @@ export default function Home() {
   }, []);
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    await supabaseCentral.auth.signOut();
     removeUser();
     router.push("/login");
   };
@@ -186,10 +176,9 @@ export default function Home() {
   };
 
   const handleJoin = () => {
-    if (roomCode.trim()) {
-      const nick = nickname.trim() || user?.username || "Racer";
+    if (roomCode.trim() && user) {
       router.push(
-        `/player/${roomCode.trim()}/login?nickname=${encodeURIComponent(nick)}`,
+        `/player/${roomCode.trim()}/login?nickname=${encodeURIComponent(user.username)}`,
       );
     }
   };
@@ -200,7 +189,7 @@ export default function Home() {
         <div className="text-center z-10">
           <div className="w-16 h-16 border-4 border-[#2d6af2]/30 border-t-[#00ff9d] rounded-full animate-spin mx-auto mb-6"></div>
           <p className="mt-4 text-[#00ff9d] text-xl tracking-[0.2em] uppercase animate-pulse">
-            Establishing Signal...
+            {t('homepage.loading')}
           </p>
         </div>
       </div>
@@ -210,10 +199,14 @@ export default function Home() {
   return (
     <div className="bg-[#04060f] text-white min-h-screen relative overflow-hidden font-body selection:bg-[#2d6af2] selection:text-white flex flex-col">
       {/* Main Background Image */}
-      <div className="absolute inset-0 z-0 bg-[linear-gradient(rgba(0,255,157,0.022)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,157,0.022)_1px,transparent_1px)] bg-[length:80px_80px]" />
-      <div className="absolute bottom-0 left-0 right-0 h-52 z-0 bg-[linear-gradient(transparent_0%,rgba(45,106,242,0.06)_1px,transparent_1px),linear-gradient(90deg,transparent_0%,rgba(45,106,242,0.06)_1px,transparent_1px)] bg-[length:80px_40px] [transform:perspective(400px)_rotateX(60deg)] origin-bottom pointer-events-none opacity-60" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_50%_50%,rgba(45,106,242,0.07),transparent)] z-0" />
-      
+      <div
+        className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat pointer-events-none"
+        style={{
+          backgroundImage: 'url("/assets/backgorund/homepage_bg.png")',
+          backgroundAttachment: 'fixed'
+        }}
+      ></div>
+
       {/* Overlays to ensure readability and mood */}
       <div className="fixed inset-0 z-0 bg-gradient-to-t from-[#04060f] via-[#04060f]/60 to-[#2d6af2]/10 pointer-events-none"></div>
       <div className="scanlines"></div>
@@ -248,11 +241,10 @@ export default function Home() {
         >
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className={`w-11 h-11 flex items-center justify-center rounded-2xl transition-all duration-300 border ${
-              isDropdownOpen
-                ? "bg-[#2d6af2]/20 border-[#00ff9d] text-white shadow-[0_0_20px_rgba(0,255,157,0.4)]"
-                : "bg-[#080d1a]/60 backdrop-blur-md border-white/10 text-gray-400 hover:text-white hover:border-[#00ff9d]/50"
-            }`}
+            className={`w-11 h-11 flex items-center justify-center rounded-2xl transition-all duration-300 border ${isDropdownOpen
+              ? "bg-[#2d6af2] border-[#2d6af2] text-white shadow-[0_0_20px_rgba(45,106,242,0.5)]"
+              : "bg-black/40 backdrop-blur-md border-white/10 text-gray-400 hover:text-white hover:border-white/20"
+              }`}
           >
             {isDropdownOpen ? (
               <X className="w-5 h-5" />
@@ -273,8 +265,18 @@ export default function Home() {
                 {/* User Header */}
                 <div className="p-6 bg-gradient-to-br from-white/[0.05] to-transparent border-b border-white/5">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-[#2d6af2]/20 flex items-center justify-center border border-[#2d6af2]/30">
-                      <UserIcon className="w-6 h-6 text-[#00ff9d]" />
+                    <div className="w-12 h-12 rounded-2xl bg-[#2d6af2]/20 flex items-center justify-center border border-[#2d6af2]/30 overflow-hidden">
+                      {user.avatar ? (
+                        <Image
+                          src={user.avatar}
+                          alt={user.username}
+                          width={48}
+                          height={48}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <UserIcon className="w-6 h-6 text-[#2d6af2]" />
+                      )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-white text-lg font-bold truncate tracking-tight">
@@ -299,7 +301,7 @@ export default function Home() {
                     </div>
 
                     <span className="text-sm font-medium tracking-wide">
-                      {isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+                      {isFullscreen ? t('homepage.menu.exit_fullscreen') : t('homepage.menu.fullscreen')}
                     </span>
                   </button>
 
@@ -314,7 +316,7 @@ export default function Home() {
                       <PlayCircle className="w-4 h-4 text-[#00ff9d]" />
                     </div>
                     <span className="text-sm font-medium tracking-wide">
-                      How to Play
+                      {t('homepage.menu.how_to_play')}
                     </span>
                   </button>
 
@@ -323,18 +325,62 @@ export default function Home() {
                       <DownloadIcon className="w-4 h-4 text-[#00ff9d]" />
                     </div>
                     <span className="text-sm font-medium tracking-wide">
-                      Install App
+                      {t('homepage.menu.install_app')}
                     </span>
                   </button>
 
-                  <button className="flex items-center gap-4 w-full px-4 py-3.5 rounded-2xl hover:bg-white/5 text-gray-400 hover:text-white transition-all group">
-                    <div className="p-2 rounded-xl bg-gray-500/10 group-hover:bg-[#2d6af2]/20 transition-colors">
-                      <Globe className="w-4 h-4 text-[#00ff9d]" />
-                    </div>
-                    <span className="text-sm font-medium tracking-wide">
-                      Language (EN)
-                    </span>
-                  </button>
+                  <div className="relative">
+                    <button
+                      onClick={() => setIsLanguageOpen(!isLanguageOpen)}
+                      className="flex items-center gap-4 w-full px-4 py-3.5 rounded-2xl hover:bg-white/5 text-gray-400 hover:text-white transition-all group"
+                    >
+                      <div className="p-2 rounded-xl bg-gray-500/10 group-hover:bg-[#2d6af2]/20 transition-colors">
+                        <Globe className="w-4 h-4 text-[#2d6af2]" />
+                      </div>
+                      <span className="text-sm font-medium tracking-wide flex-1 text-left">
+                        {t('homepage.menu.language')}
+                      </span>
+                      <ChevronRight className={`w-4 h-4 transition-transform ${isLanguageOpen ? 'rotate-90' : ''}`} />
+                    </button>
+
+                    <AnimatePresence>
+                      {isLanguageOpen && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="px-3 pb-2 space-y-1 overflow-hidden"
+                        >
+                          {[
+                            { code: "en", label: "English", sub: "Global" },
+                            { code: "id", label: "Indonesia", sub: "Bahasa" },
+                            { code: "ar", label: "العربية", sub: "Arabic" },
+                          ].map((lang) => (
+                            <button
+                              key={lang.code}
+                              onClick={() => {
+                                i18n.changeLanguage(lang.code);
+                                setIsLanguageOpen(false);
+                                setIsDropdownOpen(false);
+                              }}
+                              className={`flex items-center justify-between w-full px-4 py-3 rounded-xl transition-all ${i18n.language.startsWith(lang.code)
+                                ? "bg-[#2d6af2]/10 text-[#2d6af2] border border-[#2d6af2]/20 shadow-[0_4px_12px_rgba(45,106,242,0.1)]"
+                                : "hover:bg-white/5 text-gray-500 hover:text-gray-300"
+                                }`}
+                            >
+                              <div className="flex flex-col items-start translate-x-1">
+                                <span className="text-xs font-bold uppercase tracking-widest">{lang.label}</span>
+                              </div>
+                              {i18n.language.startsWith(lang.code) && (
+                                <div className="w-1.5 h-1.5 rounded-full bg-[#2d6af2] shadow-[0_0_8px_#2d6af2]" />
+                              )}
+                            </button>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
                 </div>
 
                 {/* Footer Action */}
@@ -347,7 +393,7 @@ export default function Home() {
                       <LogOut className="w-4 h-4" />
                     </div>
                     <span className="text-sm tracking-[0.1em] uppercase">
-                      Logout
+                      {t('homepage.menu.logout')}
                     </span>
                   </button>
                 </div>
@@ -385,7 +431,7 @@ export default function Home() {
                     <PlayCircle className="w-5 h-5 text-[#2d6af2]" />
                   </div>
                   <h2 className="text-xl font-display uppercase tracking-wider text-white drop-shadow-[0_0_10px_rgba(45,106,242,0.5)]">
-                    How to Play
+                    {t('homepage.how_to_play.title')}
                   </h2>
                 </div>
                 <button
@@ -401,29 +447,29 @@ export default function Home() {
                 {[
                   {
                     icon: <Zap className="w-5 h-5" />,
-                    title: "Host or Join",
-                    desc: "Create a room as Host to select a quiz and invite players, or enter a Room Code to Join as a player.",
+                    title: t('homepage.how_to_play.step1.title'),
+                    desc: t('homepage.how_to_play.step1.desc'),
                     color: "text-[#00ff9d]",
                     bg: "bg-[#00ff9d]/10 border-[#00ff9d]/20",
                   },
                   {
                     icon: <Target className="w-5 h-5" />,
-                    title: "Select a Quiz",
-                    desc: "As a Host, browse and pick from available quizzes. Configure the number of questions, duration, and difficulty.",
+                    title: t('homepage.how_to_play.step2.title'),
+                    desc: t('homepage.how_to_play.step2.desc'),
                     color: "text-[#2d6af2]",
                     bg: "bg-[#2d6af2]/10 border-[#2d6af2]/20",
                   },
                   {
                     icon: <Users className="w-5 h-5" />,
-                    title: "Wait for Players",
-                    desc: "Share your Room Code with friends. Once everyone has joined the lobby, the Host starts the game.",
+                    title: t('homepage.how_to_play.step3.title'),
+                    desc: t('homepage.how_to_play.step3.desc'),
                     color: "text-purple-400",
                     bg: "bg-purple-400/10 border-purple-400/20",
                   },
                   {
                     icon: <Trophy className="w-5 h-5" />,
-                    title: "Answer & Race!",
-                    desc: "Answer questions as fast as possible! Points are awarded based on speed and accuracy. The fastest correct answer wins!",
+                    title: t('homepage.how_to_play.step4.title'),
+                    desc: t('homepage.how_to_play.step4.desc'),
                     color: "text-yellow-400",
                     bg: "bg-yellow-400/10 border-yellow-400/20",
                   },
@@ -465,7 +511,7 @@ export default function Home() {
                   onClick={() => setShowHowToPlay(false)}
                   className="w-full py-3.5 bg-gradient-to-r from-[#2d6af2] to-[#4da6ff] text-white font-display text-xs tracking-widest uppercase rounded-xl hover:shadow-[0_0_20px_rgba(45,106,242,0.5)] transition-all active:scale-[0.98]"
                 >
-                  Got It!
+                  {t('homepage.how_to_play.button')}
                 </button>
               </div>
             </motion.div>
@@ -487,63 +533,52 @@ export default function Home() {
 
         <div className="flex flex-col md:flex-row gap-8 lg:gap-16 w-full justify-center items-stretch max-w-5xl">
           {/* Host Card */}
-          <div className="bg-[#080d1a]/95 backdrop-blur-2xl border border-[#2d6af2]/30 rounded-[2rem] shadow-[0_0_50px_rgba(45,106,242,0.12),inset_0_1px_0_rgba(255,255,255,0.06)] p-8 md:p-10 flex-1 flex flex-col items-center justify-between relative overflow-hidden group transition-all duration-300">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-[#2d6af2]/20 to-transparent rounded-bl-full pointer-events-none"></div>
-            <div className="w-full text-center mb-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#2d6af2]/20 border border-[#2d6af2]/30 mb-6 shadow-[0_4px_20px_rgba(45,106,242,0.4)]">
+          <div className="host-card rounded-[2rem] p-8 md:p-10 flex-1 flex flex-col items-center justify-between gap-12 relative overflow-hidden group transition-all duration-300">
+            <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-[#00ff9d]/20 to-transparent rounded-bl-full pointer-events-none"></div>
+            <div className="w-full text-center">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#000000]/50 border border-white/10 mb-6 shadow-[0_4px_15px_rgba(0,0,0,0.5)]">
                 <Gamepad2 className="w-8 h-8 text-[#00ff9d]" />
               </div>
               <h2 className="font-body font-bold text-4xl text-white mb-2 tracking-wide glow-text uppercase">
-                HOST
+                {t('homepage.host.title')}
               </h2>
               <p className="text-gray-400 text-sm font-light tracking-wider">
-                Create a new room and invite players.
+                {t('homepage.host.subtitle')}
               </p>
             </div>
-            <div className="w-full mb-28">
+            <div className="w-full">
               <button
                 onClick={handleHost}
                 className="w-full bg-gradient-to-r from-[#1a45c4] via-[#2d6af2] to-[#1a45c4] hover:shadow-[0_0_20px_rgba(45,106,242,0.6)] text-white font-display text-sm py-4 px-6 rounded-xl transition-all duration-300 uppercase tracking-wider transform active:scale-[0.98] font-bold"
               >
-                Create Room
+                  {t('homepage.host.button')}
               </button>
             </div>
           </div>
 
           {/* Join Card */}
-          <div className="bg-[#080d1a]/95 backdrop-blur-2xl border border-[#00ff9d]/30 rounded-[2rem] shadow-[0_0_50px_rgba(0,255,157,0.12),inset_0_1px_0_rgba(255,255,255,0.06)] p-8 md:p-10 flex-1 flex flex-col items-center justify-between relative overflow-hidden group transition-all duration-300">
-            <div className="absolute top-0 left-0 w-24 h-24 bg-gradient-to-br from-[#00ff9d]/20 to-transparent rounded-br-full pointer-events-none"></div>
-            <div className="w-full text-center mb-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#00ff9d]/20 border border-[#00ff9d]/30 mb-6 shadow-[0_4px_20px_rgba(0,255,157,0.3)]">
-                <LogIn className="w-8 h-8 text-[#00ff9d]" />
+          <div className="join-card rounded-[2rem] p-8 md:p-10 flex-1 flex flex-col items-center justify-center gap-12 relative overflow-hidden group transition-all duration-300">
+            <div className="absolute top-0 left-0 w-24 h-24 bg-gradient-to-br from-[#2d6af2]/20 to-transparent rounded-br-full pointer-events-none"></div>
+            <div className="w-full text-center">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#000000]/50 border border-white/10 mb-6 shadow-[0_4px_15px_rgba(0,0,0,0.5)]">
+                <LogIn className="w-8 h-8 text-[#2d6af2]" />
               </div>
               <h2 className="font-body font-bold text-4xl text-white mb-2 tracking-wide glow-text uppercase">
-                JOIN
+                {t('homepage.join.title')}
               </h2>
               <p className="text-gray-400 text-sm font-light tracking-wider">
-                Enter a code to join game.
+                {t('homepage.join.subtitle')}
               </p>
             </div>
-            <div className="w-full mt-auto space-y-3">
+            <div className="w-full space-y-3">
               <div className="relative group/input">
                 <input
                   className="w-full bg-white/[0.03] border border-white/[0.07] text-white font-display text-center text-sm py-4 px-4 rounded-xl focus:outline-none focus:border-[#00ff9d]/60 focus:bg-white/[0.05] focus:shadow-[0_0_0_3px_rgba(0,255,157,0.1)] transition-all placeholder:font-display placeholder:text-xs uppercase tracking-widest placeholder:text-gray-600"
                   maxLength={6}
-                  placeholder="ROOM CODE"
+                  placeholder={t('homepage.join.placeholder')}
                   type="text"
                   value={roomCode}
                   onChange={(e) => setRoomCode(e.target.value.toUpperCase())}
-                  onKeyDown={(e) => e.key === "Enter" && handleJoin()}
-                />
-              </div>
-              <div className="relative group/input">
-                <input
-                  className="w-full bg-white/[0.03] border border-white/[0.07] text-white font-body text-center text-sm py-3 px-4 rounded-xl focus:outline-none focus:border-[#00ff9d]/60 focus:bg-white/[0.05] focus:shadow-[0_0_0_3px_rgba(0,255,157,0.1)] transition-all placeholder:text-xs placeholder:text-gray-600"
-                  maxLength={20}
-                  placeholder="Your Nickname"
-                  type="text"
-                  value={nickname}
-                  onChange={(e) => setNickname(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleJoin()}
                 />
               </div>
@@ -551,7 +586,7 @@ export default function Home() {
                 onClick={handleJoin}
                 className="w-full bg-gradient-to-r from-teal-500 via-[#00ff9d] to-teal-500 hover:shadow-[0_0_20px_rgba(0,255,157,0.5)] text-[#04060f] font-display text-sm py-4 px-6 rounded-xl transition-all duration-300 uppercase tracking-wider transform active:scale-[0.98] font-bold"
               >
-                Join
+                  {t('homepage.join.button')}
               </button>
             </div>
           </div>

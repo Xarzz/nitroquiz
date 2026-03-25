@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Orbitron, Rajdhani, Press_Start_2P } from "next/font/google";
 import NextTopLoader from 'nextjs-toploader';
 import "./globals.css";
+import ClientLayout from "./ClientLayout";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -52,6 +53,7 @@ export default function RootLayout({
         {/* Fonts are loaded via next/font/google - no CDN links needed */}
       </head>
       <body className={`${inter.variable} ${orbitron.variable} ${rajdhani.variable} ${pressStart2P.variable}`}>
+        <ClientLayout>
         <NextTopLoader
           color="#2d6af2"
           initialPosition={0.08}
@@ -64,6 +66,7 @@ export default function RootLayout({
           shadow="0 0 10px #2d6af2,0 0 5px #2d6af2"
         />
         {children}
+        </ClientLayout>
       </body>
     </html>
   );
