@@ -433,17 +433,29 @@ export default function GameSpeedPage() {
 
     const resetRoad = () => {
         state.current.segments = [];
-        // A cleaner, less "messy" track layout (Simplified Circuit)
+        
+        // --- MEDIUM DIFFICULTY TRACK LAYOUT ---
+        // A much more twisty track with more curves, s-curves, and hills
         addStraight(ROAD_CONF.LENGTH.SHORT);
-        addCurve(ROAD_CONF.LENGTH.MEDIUM, ROAD_CONF.CURVE.MEDIUM, ROAD_CONF.HILL.LOW);
-        addStraight(ROAD_CONF.LENGTH.LONG);
-        addCurve(ROAD_CONF.LENGTH.MEDIUM, -ROAD_CONF.CURVE.MEDIUM, ROAD_CONF.HILL.NONE);
+        addCurve(ROAD_CONF.LENGTH.MEDIUM, ROAD_CONF.CURVE.EASY, ROAD_CONF.HILL.NONE);
+        addStraight(ROAD_CONF.LENGTH.SHORT);
+        
+        // Start difficult part
+        addSCurves();
+        addBumps();
+        
+        addCurve(ROAD_CONF.LENGTH.LONG, -ROAD_CONF.CURVE.MEDIUM, ROAD_CONF.HILL.MEDIUM);
         addStraight(ROAD_CONF.LENGTH.MEDIUM);
-        addCurve(ROAD_CONF.LENGTH.LONG, ROAD_CONF.CURVE.EASY, ROAD_CONF.HILL.MEDIUM);
-        addStraight(ROAD_CONF.LENGTH.LONG);
-        addCurve(ROAD_CONF.LENGTH.MEDIUM, ROAD_CONF.CURVE.MEDIUM, -ROAD_CONF.HILL.LOW);
-        addStraight(ROAD_CONF.LENGTH.SHORT);
-        addDownhillToEnd(200);
+        
+        addSCurves();
+        
+        addCurve(ROAD_CONF.LENGTH.LONG, ROAD_CONF.CURVE.HARD, -ROAD_CONF.HILL.MEDIUM);
+        addCurve(ROAD_CONF.LENGTH.LONG, -ROAD_CONF.CURVE.HARD, ROAD_CONF.HILL.HIGH);
+        addBumps();
+        
+        addStraight(ROAD_CONF.LENGTH.MEDIUM);
+        
+        addDownhillToEnd(250);
 
         const len = state.current.segments.length;
 
@@ -1124,7 +1136,8 @@ export default function GameSpeedPage() {
 
         // Road Boundary Limit (Acts as invisible barrier)
         nextPlayerX = Util.limit(nextPlayerX, -1.5, 1.5);
-        nextSpeed = Util.limit(nextSpeed, 0, MAX_SPEED);
+        // Allow slightly negative speed for bounce-back physics
+        nextSpeed = Util.limit(nextSpeed, -MAX_SPEED / 2, MAX_SPEED);
 
         state.current.playerX = nextPlayerX;
         state.current.speed = nextSpeed;
@@ -1146,8 +1159,19 @@ export default function GameSpeedPage() {
             if (newSeg.index === playerSegment.index) {
                 if (Util.overlap(nextPlayerX, 0.4, car.offset, 0.4)) {
                     if (nextSpeed > car.speed) {
-                        nextSpeed = car.speed;
-                        position = Util.increase(car.z, -playerZ, trackLength);
+                        const impact = nextSpeed - car.speed;
+                        // "Mental ke belakang" effect: drastical slow down + momentum reversal
+                        nextSpeed = car.speed - (impact * 0.8);
+                        
+                        // Mild horizontal push physically shifting out of object bounds
+                        const dir = nextPlayerX > car.offset ? 1 : -1;
+                        nextPlayerX += dir * 0.1;
+                        
+                        // Disable throttle smoothly so the player gets thrown back without jittering
+                        state.current.keyFaster = false;
+                        
+                        // Do NOT use Util.increase to abruptly teleport position.
+                        // Integration physics will automatically move player backwards via negative nextSpeed!
                     }
                 }
             }
