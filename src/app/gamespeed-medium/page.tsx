@@ -1160,8 +1160,9 @@ export default function GameSpeedPage() {
                 if (Util.overlap(nextPlayerX, 0.4, car.offset, 0.4)) {
                     if (nextSpeed > car.speed) {
                         const impact = nextSpeed - car.speed;
-                        // "Mental ke belakang" effect: drastical slow down + momentum reversal
-                        nextSpeed = car.speed - (impact * 0.8);
+                        // "Mental ke belakang" effect lebih pendek/halus
+                        // Pengali dikecilkan dari 0.8 menjadi 0.15 agar mentalannya tidak jauh as per request
+                        nextSpeed = car.speed - (impact * 0.15);
                         
                         // Mild horizontal push physically shifting out of object bounds
                         const dir = nextPlayerX > car.offset ? 1 : -1;

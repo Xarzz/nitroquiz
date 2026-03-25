@@ -1114,8 +1114,16 @@ export default function GameSpeedPage() {
             if (newSeg.index === playerSegment.index) {
                 if (Util.overlap(nextPlayerX, 0.4, car.offset, 0.4)) {
                     if (nextSpeed > car.speed) {
-                        nextSpeed = car.speed;
-                        position = Util.increase(car.z, -playerZ, trackLength);
+                        const impact = nextSpeed - car.speed;
+                        // "Mental ke belakang" effect lebih pendek/halus
+                        nextSpeed = car.speed - (impact * 0.15);
+                        
+                        // Mild horizontal push physically shifting out of object bounds
+                        const dir = nextPlayerX > car.offset ? 1 : -1;
+                        nextPlayerX += dir * 0.1;
+                        
+                        // Disable throttle smoothly so the player gets thrown back without jittering
+                        state.current.keyFaster = false;
                     }
                 }
             }
