@@ -247,6 +247,9 @@ export default function GameSpeedPage() {
     useEffect(() => {
         // Ensure difficulty is stored for quiz return flow
         localStorage.setItem('nitroquiz_game_difficulty', 'medium');
+        
+        // Pre-fetch quiz page in background so transition is instant
+        router.prefetch('/quiz');
 
         // Reset sprites to force reload on mount/remount
         state.current.sprites = { ...state.current.sprites };
@@ -2603,7 +2606,7 @@ export default function GameSpeedPage() {
                 </div>
             )}
 
-            {/* Countdown Overlay - Dark bg, racing lights, consistent with host lobby */}
+            {/* Countdown Overlay - 3 traffic lights (red, yellow, green) */}
             {mounted && assetsLoaded && gameState === 'countdown' && (
                 <div style={{
                     position: 'fixed', inset: 0, zIndex: 1000,
@@ -2612,30 +2615,29 @@ export default function GameSpeedPage() {
                     backgroundColor: 'rgba(0, 0, 0, 0.88)',
                     backdropFilter: 'blur(8px)',
                     fontFamily: 'var(--font-rajdhani)',
+                    gap: usePCLayout ? '2rem' : '1.25rem',
                 }}>
-                    {/* Racing lights */}
-                    <div style={{ display: 'flex', gap: '0.75rem' }}>
-                        {[0, 1, 2, 3, 4].map((i) => {
-                            const val = 5 - i;
-                            const isLit = countdown <= val;
+                    {/* Racing lights - 3 circles: Red, Yellow, Green */}
+                    <div style={{ display: 'flex', gap: usePCLayout ? '1.25rem' : '0.75rem' }}>
+                        {[
+                            { color: '#ef4444', activeAt: 3 },
+                            { color: '#facc15', activeAt: 2 },
+                            { color: '#00ff9d', activeAt: 1 },
+                        ].map((light, i) => {
                             const isGo = countdown <= 0;
-                            let color = "#3b82f6"; // Blue for 5, 4
-                            if (val === 3) color = "#ef4444";
-                            if (val === 2) color = "#fbbf24"; // Wait, check color variable below
-                            
-                            // Re-evaluating color logic for dots
-                            color = isGo ? '#00ff9d' : val >= 4 ? '#3b82f6' : val === 3 ? '#ef4444' : val === 2 ? '#facc15' : '#00ff9d';
+                            const isLit = isGo || countdown <= light.activeAt;
+                            const displayColor = isGo ? '#00ff9d' : light.color;
 
                             return (
                                 <div
                                     key={i}
                                     style={{
-                                        width: usePCLayout ? '2.5rem' : '1.5rem',
-                                        height: usePCLayout ? '2.5rem' : '1.5rem',
+                                        width: usePCLayout ? '3rem' : '2rem',
+                                        height: usePCLayout ? '3rem' : '2rem',
                                         borderRadius: '50%',
-                                        border: `2px solid ${isGo ? '#00ff9d' : isLit ? color : '#374151'}`,
-                                        backgroundColor: isGo ? '#00ff9d' : isLit ? color : 'rgba(55, 65, 81, 0.3)',
-                                        boxShadow: isGo ? '0 0 25px rgba(0,255,157,0.7)' : isLit ? `0 0 20px ${color}` : 'none',
+                                        border: `2px solid ${isLit ? displayColor : '#374151'}`,
+                                        backgroundColor: isLit ? displayColor : 'rgba(55, 65, 81, 0.3)',
+                                        boxShadow: isLit ? `0 0 25px ${displayColor}` : 'none',
                                         transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                                         transform: isLit ? 'scale(1.15)' : 'scale(1)',
                                     }}
@@ -2651,7 +2653,7 @@ export default function GameSpeedPage() {
                             fontSize: usePCLayout ? '8rem' : '5rem',
                             fontWeight: 900,
                             lineHeight: 1,
-                            color: countdown >= 4 ? '#3b82f6' : countdown === 3 ? '#ef4444' : countdown === 2 ? '#facc15' : '#00ff9d',
+                            color: countdown === 3 ? '#ef4444' : countdown === 2 ? '#facc15' : '#00ff9d',
                             textShadow: `0 0 60px currentColor`,
                             animation: 'countdown-pop 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)',
                             willChange: 'transform, opacity',
@@ -2665,7 +2667,7 @@ export default function GameSpeedPage() {
                         <div style={{
                             fontSize: usePCLayout ? '1rem' : '0.7rem',
                             letterSpacing: '0.3em', textTransform: 'uppercase',
-                            color: '#64748b', fontWeight: 900, marginTop: '1.5rem',
+                            color: '#64748b', fontWeight: 900,
                         }}>
                             RACE STARTING
                         </div>
