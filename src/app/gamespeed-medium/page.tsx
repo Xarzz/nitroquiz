@@ -732,17 +732,17 @@ export default function GameSpeedPage() {
         const carWorldWidth = playerRefWidth * 1.0;
 
         let worldWidth = carWorldWidth * 0.75; // NPC mobil disesuaikan (jangan terlalu besar)
-        if (name?.includes('lampulalulintas') || name === 'traffic_light') worldWidth = carWorldWidth * 2.5;
+        if (name?.includes('lampulalulintas') || name === 'traffic_light') worldWidth = carWorldWidth * 4.7;
         else if (name?.includes('truck')) worldWidth = carWorldWidth * 1.1; // Truk sedikit lebih besar dari mobil
         else if (name?.includes('car_rival') || name === 'foward-opponent') worldWidth = carWorldWidth * 0.75; // Rival sama dengan NPC
         else if (name?.includes('odong') || name?.includes('taxi')) worldWidth = carWorldWidth * 0.8; 
-        else if (name?.includes('kiri_') || name?.includes('kanan_')) worldWidth = carWorldWidth * 10; // Bangunan
-        else if (name?.includes('pohon')) worldWidth = carWorldWidth * 6.0; // Pohon
-        else if (name?.includes('bush') || name?.includes('semak')) worldWidth = carWorldWidth * 1.2;
-        else if (name?.includes('bench') || name?.includes('bangku')) worldWidth = carWorldWidth * 1.5;
-        else if (name?.includes('barrier') || name?.includes('pembatas_jalan')) worldWidth = carWorldWidth * 1.5;
-        else if (name?.includes('cone') || name?.includes('penghalang')) worldWidth = carWorldWidth * 0.5;
-        else if (name?.includes('obstacle') || name?.includes('construction')) worldWidth = carWorldWidth * 0.55;
+        else if (name?.includes('kiri_') || name?.includes('kanan_')) worldWidth = carWorldWidth * 25.0; // Bangunan dikembalikan ke ukuran besar
+        else if (name?.includes('pohon')) worldWidth = carWorldWidth * 15.0; // Pohon dikembalikan besar
+        else if (name?.includes('bush') || name?.includes('semak')) worldWidth = carWorldWidth * 2.35;
+        else if (name?.includes('bench') || name?.includes('bangku')) worldWidth = carWorldWidth * 2.8;
+        else if (name?.includes('barrier') || name?.includes('pembatas_jalan')) worldWidth = carWorldWidth * 2.8;
+        else if (name?.includes('cone') || name?.includes('penghalang')) worldWidth = carWorldWidth * 0.95;
+        else if (name?.includes('obstacle') || name?.includes('construction')) worldWidth = carWorldWidth * 1.1;
 
         const destW = scale * worldWidth * (width / 2);
         const destH = destW * (sprite.height / sprite.width);
@@ -2053,20 +2053,39 @@ export default function GameSpeedPage() {
             {/* Main Game Canvas */}
             <canvas ref={canvasRef} style={{ display: 'block', width: '100%', height: '100%' }} />
 
-            {/* Loading Overlay */}
+            {/* Loading Overlay - Unified Establishing Signal Style */}
             {mounted && !assetsLoaded && (
                 <div style={{
                     position: 'fixed', inset: 0, zIndex: 3000,
-                    backgroundColor: '#020617', display: 'flex', flexDirection: 'column',
+                    backgroundColor: '#0a0a0f', display: 'flex', flexDirection: 'column',
                     alignItems: 'center', justifyContent: 'center', color: 'white',
                     fontFamily: 'var(--font-rajdhani)'
                 }}>
-                    <div style={{ position: 'relative', marginBottom: '2rem' }}>
-                        <div style={{ width: '80px', height: '80px', borderRadius: '50%', border: '3px solid rgba(59, 130, 246, 0.2)', borderTopColor: '#3b82f6', animation: 'spin 1s linear infinite' }} />
-                        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem' }}>🏎️</div>
+                    <div style={{ textAlign: 'center' }}>
+                        <div style={{ 
+                            width: '64px', height: '64px', 
+                            border: '4px solid rgba(45, 106, 242, 0.3)', 
+                            borderTopColor: '#2d6af2', 
+                            borderRadius: '50%', 
+                            margin: '0 auto 1.5rem auto',
+                            animation: 'spin 1s linear infinite' 
+                        }} />
+                        <p style={{ 
+                            marginTop: '1rem', 
+                            color: '#2d6af2', 
+                            fontSize: '1.25rem', 
+                            letterSpacing: '0.2em', 
+                            textTransform: 'uppercase', 
+                            fontWeight: 700,
+                            animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+                        }}>
+                            Establishing Signal...
+                        </p>
                     </div>
-                    <div style={{ fontSize: '1.2rem', fontWeight: 900, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#3b82f6' }}>Initializing Systems...</div>
-                    <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+                    <style>{`
+                        @keyframes spin { to { transform: rotate(360deg); } }
+                        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+                    `}</style>
                 </div>
             )}
 
