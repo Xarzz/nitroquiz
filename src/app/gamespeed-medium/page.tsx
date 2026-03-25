@@ -440,28 +440,32 @@ export default function GameSpeedPage() {
     const resetRoad = () => {
         state.current.segments = [];
         
-        // --- MEDIUM DIFFICULTY TRACK LAYOUT ---
-        // A much more twisty track with more curves, s-curves, and hills
-        addStraight(ROAD_CONF.LENGTH.SHORT);
+        // --- MEDIUM DIFFICULTY TRACK LAYOUT (EXTENDED) ---
+        // A much longer circuit to spread out assets (approx 5000+ segments)
+        addStraight(ROAD_CONF.LENGTH.LONG * 2);
         addCurve(ROAD_CONF.LENGTH.MEDIUM, ROAD_CONF.CURVE.EASY, ROAD_CONF.HILL.NONE);
-        addStraight(ROAD_CONF.LENGTH.SHORT);
+        addStraight(ROAD_CONF.LENGTH.LONG);
         
         // Start difficult part
         addSCurves();
         addBumps();
         
-        addCurve(ROAD_CONF.LENGTH.LONG, -ROAD_CONF.CURVE.MEDIUM, ROAD_CONF.HILL.MEDIUM);
-        addStraight(ROAD_CONF.LENGTH.MEDIUM);
+        addCurve(ROAD_CONF.LENGTH.LONG * 2, -ROAD_CONF.CURVE.MEDIUM, ROAD_CONF.HILL.MEDIUM);
+        addStraight(ROAD_CONF.LENGTH.LONG);
         
         addSCurves();
+        addStraight(ROAD_CONF.LENGTH.LONG);
+        addSCurves();
         
-        addCurve(ROAD_CONF.LENGTH.LONG, ROAD_CONF.CURVE.HARD, -ROAD_CONF.HILL.MEDIUM);
-        addCurve(ROAD_CONF.LENGTH.LONG, -ROAD_CONF.CURVE.HARD, ROAD_CONF.HILL.HIGH);
+        addCurve(ROAD_CONF.LENGTH.LONG * 2, ROAD_CONF.CURVE.HARD, -ROAD_CONF.HILL.MEDIUM);
+        addCurve(ROAD_CONF.LENGTH.LONG * 2, -ROAD_CONF.CURVE.HARD, ROAD_CONF.HILL.HIGH);
         addBumps();
         
+        addStraight(ROAD_CONF.LENGTH.LONG);
+        addSCurves();
         addStraight(ROAD_CONF.LENGTH.MEDIUM);
         
-        addDownhillToEnd(250);
+        addDownhillToEnd(800);
 
         const len = state.current.segments.length;
 

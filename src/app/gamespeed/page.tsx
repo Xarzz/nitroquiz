@@ -433,17 +433,19 @@ export default function GameSpeedPage() {
 
     const resetRoad = () => {
         state.current.segments = [];
-        // A cleaner, less "messy" track layout (Simplified Circuit)
-        addStraight(ROAD_CONF.LENGTH.SHORT);
-        addCurve(ROAD_CONF.LENGTH.MEDIUM, ROAD_CONF.CURVE.MEDIUM, ROAD_CONF.HILL.LOW);
+        // A much longer and cleaner track to give assets space (approx 5000+ segments)
+        addStraight(ROAD_CONF.LENGTH.LONG * 2);
+        addCurve(ROAD_CONF.LENGTH.LONG, ROAD_CONF.CURVE.MEDIUM, ROAD_CONF.HILL.LOW);
+        addStraight(ROAD_CONF.LENGTH.LONG * 2);
+        addCurve(ROAD_CONF.LENGTH.MEDIUM, -ROAD_CONF.CURVE.MEDIUM, ROAD_CONF.HILL.NONE);
+        addStraight(ROAD_CONF.LENGTH.LONG);
+        addCurve(ROAD_CONF.LENGTH.LONG, ROAD_CONF.CURVE.EASY, ROAD_CONF.HILL.MEDIUM);
+        addStraight(ROAD_CONF.LENGTH.LONG * 2);
+        addCurve(ROAD_CONF.LENGTH.MEDIUM, ROAD_CONF.CURVE.MEDIUM, -ROAD_CONF.HILL.LOW);
         addStraight(ROAD_CONF.LENGTH.LONG);
         addCurve(ROAD_CONF.LENGTH.MEDIUM, -ROAD_CONF.CURVE.MEDIUM, ROAD_CONF.HILL.NONE);
         addStraight(ROAD_CONF.LENGTH.MEDIUM);
-        addCurve(ROAD_CONF.LENGTH.LONG, ROAD_CONF.CURVE.EASY, ROAD_CONF.HILL.MEDIUM);
-        addStraight(ROAD_CONF.LENGTH.LONG);
-        addCurve(ROAD_CONF.LENGTH.MEDIUM, ROAD_CONF.CURVE.MEDIUM, -ROAD_CONF.HILL.LOW);
-        addStraight(ROAD_CONF.LENGTH.SHORT);
-        addDownhillToEnd(200);
+        addDownhillToEnd(600);
 
         const len = state.current.segments.length;
 
