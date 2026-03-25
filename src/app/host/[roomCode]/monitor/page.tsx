@@ -200,9 +200,9 @@ function PlayerCard({
             >
               <Skull size={28} color="#f87171" />
             </div>
-          ) : (
+          ) : player.avatar_url ? (
             <img
-              src={avatarSrc}
+              src={player.avatar_url}
               alt={player.nickname}
               style={{
                 width: "100%",
@@ -211,6 +211,28 @@ function PlayerCard({
                 objectPosition: "top center",
               }}
             />
+          ) : (
+            <div
+              style={{
+                width: "100%",
+                height: "100%",
+                background: "rgba(0,0,0,0.4)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <img
+                src={logoImageMap[baseCar] || "/assets/characters/scloski/logo/logo1.png"}
+                alt={player.nickname}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "contain",
+                  transform: "scale(2.1)",
+                }}
+              />
+            </div>
           )}
         </div>
       </div>
@@ -477,14 +499,6 @@ export default function GameMonitorPage() {
     });
   }, [participants]);
 
-  // Pair into rows of 2
-  const pairedRows = useMemo(() => {
-    const rows: Participant[][] = [];
-    for (let i = 0; i < rankedParticipants.length; i += 2) {
-      rows.push(rankedParticipants.slice(i, i + 2));
-    }
-    return rows;
-  }, [rankedParticipants]);
 
   return (
     <div
@@ -677,29 +691,19 @@ export default function GameMonitorPage() {
           </span>
         </div>
 
-        <div style={{ maxWidth: "1280px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "10px" }}>
-          {pairedRows.map((row, rowIndex) => (
-            <div
-              key={rowIndex}
-              style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}
-            >
-              {row.map((player) => {
-                const globalRank = rankedParticipants.findIndex((p) => p.id === player.id);
-                return (
-                  <PlayerCard
-                    key={player.id}
-                    player={player}
-                    rank={globalRank}
-                    totalQuestions={totalQuestions}
-                  />
-                );
-              })}
-              {row.length === 1 && <div />}
-            </div>
+        <div className="leaderboard-grid" style={{ maxWidth: "1280px", margin: "0 auto", width: "100%" }}>
+          {rankedParticipants.map((player, index) => (
+            <PlayerCard
+              key={player.id}
+              player={player}
+              rank={index}
+              totalQuestions={totalQuestions}
+            />
           ))}
 
           {participants.length === 0 && (
             <div
+              className="empty-grid-msg"
               style={{
                 height: "240px",
                 display: "flex",
@@ -721,6 +725,24 @@ export default function GameMonitorPage() {
       </div>
 
       <style>{`
+        .leaderboard-grid {
+          display: grid;
+          gap: 10px;
+          grid-template-columns: 1fr;
+        }
+        @media (min-width: 768px) {
+          .leaderboard-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+        @media (min-width: 1280px) {
+          .leaderboard-grid {
+            grid-template-columns: repeat(3, 1fr);
+          }
+        }
+        .empty-grid-msg {
+          grid-column: 1 / -1;
+        }
         @keyframes pulse {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.4; }
