@@ -1320,8 +1320,23 @@ export default function GameSpeedPage() {
         // Lap & Finish line check
         if (position > trackLength - playerZ && gameState !== 'finished') {
             state.current.speed = 0;
-            // Check if we have quiz questions remaining
-            if (allQuizQuestions.length > 0 && quizQuestionIndex < allQuizQuestions.length) {
+            // Check if we have quiz questions remaining (from state or localStorage)
+            let hasQuizRemaining = allQuizQuestions.length > 0 && quizQuestionIndex < allQuizQuestions.length;
+            if (!hasQuizRemaining) {
+                // Fallback: check localStorage directly
+                try {
+                    const storedQ = localStorage.getItem('nitroquiz_game_questions');
+                    const storedIdx = parseInt(localStorage.getItem('nitroquiz_game_questionIndex') || '0', 10);
+                    if (storedQ) {
+                        const parsed = JSON.parse(storedQ);
+                        if (Array.isArray(parsed) && storedIdx < parsed.length) {
+                            hasQuizRemaining = true;
+                        }
+                    }
+                } catch(e) {}
+            }
+            
+            if (hasQuizRemaining) {
                 // Save current state to localStorage before redirect
                 localStorage.setItem('nitroquiz_game_questionIndex', quizQuestionIndex.toString());
                 localStorage.setItem('nitroquiz_game_score', totalQuizScore.toString());
@@ -1948,11 +1963,14 @@ export default function GameSpeedPage() {
             console.error("Failed to unlock orientation:", e);
         }
 
-        // 3. Clean up quiz data from localStorage
+        // 3. Clean up session data from localStorage
         localStorage.removeItem('nitroquiz_game_questions');
+        localStorage.removeItem('nitroquiz_game_questionIndex');
+        localStorage.removeItem('nitroquiz_game_score');
         localStorage.removeItem('nitroquiz_game_roomCode');
         localStorage.removeItem('nitroquiz_game_sessionId');
         localStorage.removeItem('nitroquiz_game_quizId');
+        localStorage.removeItem('nitroquiz_game_difficulty');
         
         // 4. Redirect to Podium (Host's monitor will also see we are finished)
         if (roomCode) {
