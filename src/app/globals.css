@@ -468,38 +468,48 @@ h6 {
   aspect-ratio: 1 / 1;
 }
 
-/* Homepage Custom Styles */
+/* Homepage Custom Styles — Navy / Purple / Lavender / Gold Theme */
 @layer components {
   .host-card {
-    border: 1px solid #578ea8;
-    box-shadow: 0 0 25px rgba(87, 142, 168, 0.2);
-    backdrop-filter: blur(12px);
-    background: linear-gradient(160deg, rgba(87, 142, 168, 0.1) 0%, rgba(1, 42, 74, 0.9) 100%);
+    border: 1px solid rgba(169, 141, 197, 0.4);
+    box-shadow: 0 0 30px rgba(74, 61, 143, 0.25), inset 0 1px 0 rgba(169, 141, 197, 0.1);
+    backdrop-filter: blur(16px);
+    background: linear-gradient(160deg, rgba(74, 61, 143, 0.15) 0%, rgba(13, 27, 62, 0.95) 100%);
+  }
+
+  .host-card:hover {
+    border-color: rgba(169, 141, 197, 0.6);
+    box-shadow: 0 0 40px rgba(74, 61, 143, 0.4), inset 0 1px 0 rgba(169, 141, 197, 0.2);
   }
 
   .join-card {
-    border: 1px solid #16668e;
-    box-shadow: 0 0 25px rgba(22, 102, 142, 0.2);
-    backdrop-filter: blur(12px);
-    background: linear-gradient(160deg, rgba(22, 102, 142, 0.1) 0%, rgba(1, 42, 74, 0.9) 100%);
+    border: 1px solid rgba(212, 188, 122, 0.35);
+    box-shadow: 0 0 30px rgba(212, 188, 122, 0.15), inset 0 1px 0 rgba(212, 188, 122, 0.1);
+    backdrop-filter: blur(16px);
+    background: linear-gradient(160deg, rgba(212, 188, 122, 0.08) 0%, rgba(13, 27, 62, 0.95) 100%);
+  }
+
+  .join-card:hover {
+    border-color: rgba(212, 188, 122, 0.55);
+    box-shadow: 0 0 40px rgba(212, 188, 122, 0.3), inset 0 1px 0 rgba(212, 188, 122, 0.15);
   }
 
   .glow-text {
-    text-shadow: 0 0 10px rgba(232, 235, 236, 0.5);
+    text-shadow: 0 0 15px rgba(169, 141, 197, 0.6), 0 0 30px rgba(74, 61, 143, 0.3);
   }
 
   .text-neon-blue-glow {
-    color: #578ea8;
-    text-shadow: 0 0 8px rgba(87, 142, 168, 0.6);
+    color: #a98dc5;
+    text-shadow: 0 0 10px rgba(169, 141, 197, 0.7);
   }
 
   .text-neon-green-glow {
-    color: #16668e;
-    text-shadow: 0 0 8px rgba(22, 102, 142, 0.6);
+    color: #d4bc7a;
+    text-shadow: 0 0 10px rgba(212, 188, 122, 0.7);
   }
 
   .scanlines {
-    background: linear-gradient(to bottom, rgba(232, 235, 236, 0), rgba(232, 235, 236, 0) 50%, rgba(1, 42, 74, 0.15) 50%, rgba(1, 42, 74, 0.15));
+    background: linear-gradient(to bottom, rgba(169, 141, 197, 0), rgba(169, 141, 197, 0) 50%, rgba(13, 27, 62, 0.12) 50%, rgba(13, 27, 62, 0.12));
     background-size: 100% 4px;
     position: absolute;
     top: 0;
@@ -514,15 +524,15 @@ h6 {
 
   .city-silhouette {
     background-image:
-      linear-gradient(to bottom, transparent 60%, rgba(1, 42, 74, 0.9) 100%),
+      linear-gradient(to bottom, transparent 60%, rgba(13, 27, 62, 0.95) 100%),
       linear-gradient(to bottom, transparent 70%,
-        rgba(45, 106, 242, 0.08) 70%, rgba(45, 106, 242, 0.08) 70.5%, transparent 70.5%,
-        transparent 72%, rgba(45, 106, 242, 0.06) 72%, rgba(45, 106, 242, 0.06) 73%, transparent 73%,
-        transparent 68%, rgba(45, 106, 242, 0.1) 68%, rgba(45, 106, 242, 0.1) 69%, transparent 69%,
-        transparent 75%, rgba(45, 106, 242, 0.05) 75%, rgba(45, 106, 242, 0.05) 78%, transparent 78%,
-        transparent 65%, rgba(45, 106, 242, 0.07) 65%, rgba(45, 106, 242, 0.07) 66%, transparent 66%
+        rgba(74, 61, 143, 0.08) 70%, rgba(74, 61, 143, 0.08) 70.5%, transparent 70.5%,
+        transparent 72%, rgba(74, 61, 143, 0.06) 72%, rgba(74, 61, 143, 0.06) 73%, transparent 73%,
+        transparent 68%, rgba(74, 61, 143, 0.1) 68%, rgba(74, 61, 143, 0.1) 69%, transparent 69%,
+        transparent 75%, rgba(74, 61, 143, 0.05) 75%, rgba(74, 61, 143, 0.05) 78%, transparent 78%,
+        transparent 65%, rgba(74, 61, 143, 0.07) 65%, rgba(74, 61, 143, 0.07) 66%, transparent 66%
       );
-    opacity: 0.25;
+    opacity: 0.3;
     will-change: transform;
     transform: translateZ(0);
   }

@@ -179,8 +179,8 @@ export default function LeaderboardPage() {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[#2d6af2]/10 blur-[120px] rounded-full mix-blend-screen pointer-events-none" />
 
       {/* Top Bar: Logo1 left, Logo2 right */}
-      <div className="w-full z-30 px-4 md:px-6 pt-4 pb-2 flex items-center justify-between">
-        <div className="flex items-center justify-center">
+      <div className="w-full max-w-6xl z-30 px-4 md:px-6 pt-4 pb-2 flex items-center justify-between">
+        <div className="flex flex-col items-center justify-center">
           <img
             src="/assets/logo/logo1.png"
             alt="NitroQuiz Logo"
@@ -258,45 +258,29 @@ export default function LeaderboardPage() {
                   </div>
                 </div>
                 <div className="w-[85px] sm:w-[120px] h-[110px] sm:h-[140px] bg-gradient-to-b from-[#1a2235] to-[#0a0f1a] border-t-4 border-l border-r border-[#64748b] rounded-t-xl flex flex-col items-center justify-between py-2 sm:py-3">
-                  <div className="relative">
-                    <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full border-2 border-slate-400/30 bg-black/40 overflow-hidden flex items-center justify-center p-0 shadow-inner relative z-10">
-                      {secondPlace.avatar_url ? (
-                        <img
-                          src={secondPlace.avatar_url}
-                          alt="Avatar"
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <img
-                          src={
-                            logoImageMap[
-                              (secondPlace.car_character || "white").replace(
-                                "-bot",
-                                "",
-                              )
-                            ] || "/assets/characters/scloski/logo/logo1.png"
-                          }
-                          alt="Logo"
-                          className="w-full h-full object-contain p-0 scale-[2.1]"
-                        />
-                      )}
-                    </div>
-                    <div className="absolute -right-2 -bottom-1 w-10 h-10 bg-black/60 rounded-full border border-white/20 p-1 flex items-center justify-center z-20 shadow-xl">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full border-2 border-slate-400/30 bg-black/40 overflow-hidden flex items-center justify-center p-0 shadow-inner">
+                    {secondPlace.avatar_url ? (
+                      <img
+                        src={secondPlace.avatar_url}
+                        alt="Avatar"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
                       <img
                         src={
-                          carImageMap[
+                          logoImageMap[
                             (secondPlace.car_character || "white").replace(
                               "-bot",
                               "",
                             )
-                          ] || carImageMap["white"]
+                          ] || "/assets/characters/scloski/logo/logo1.png"
                         }
-                        alt="Car"
-                        className="w-full h-full object-contain"
+                        alt="Logo"
+                        className="w-full h-full object-contain p-0 scale-[2.1]"
                       />
-                    </div>
+                    )}
                   </div>
-                  <span className="font-display text-3xl sm:text-5xl text-slate-600/50 font-bold mb-1">
+                  <span className="font-display text-3xl sm:text-5xl text-slate-600/50 font-bold">
                     2
                   </span>
                 </div>
@@ -317,7 +301,7 @@ export default function LeaderboardPage() {
                   transition={{ repeat: Infinity, duration: 2 }}
                   className="mb-1"
                 >
-                  <Crown className="w-7 h-7 sm:w-9 sm:h-9 text-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,0.8)]" />
+                  <Crown className="w-8 h-8 sm:w-10 sm:h-10 text-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,0.8)]" />
                 </motion.div>
                 <div className="mb-2 text-center">
                   <div className="bg-[#1a1500]/80 border border-yellow-500/60 backdrop-blur-md px-4 sm:px-5 py-2 rounded-xl shadow-[0_0_25px_rgba(250,204,21,0.3)]">
@@ -332,45 +316,29 @@ export default function LeaderboardPage() {
                 <div className="w-[100px] sm:w-[140px] h-[160px] sm:h-[200px] bg-gradient-to-b from-[#2a1f0a] to-[#0a0f1a] border-t-8 border-l-2 border-r-2 border-[#eab308] rounded-t-xl relative overflow-hidden flex flex-col items-center justify-between py-3 sm:py-5">
                   <div className="absolute top-0 w-full h-1 bg-gradient-to-r from-transparent via-[#eab308] to-transparent" />
                   <div className="absolute inset-0 bg-yellow-500/5 opacity-50 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-yellow-500/40 to-transparent" />
-                  <div className="relative z-10">
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-4 border-yellow-500/30 bg-black/40 overflow-hidden flex items-center justify-center p-0 shadow-inner relative z-10">
-                      {firstPlace.avatar_url ? (
-                        <img
-                          src={firstPlace.avatar_url}
-                          alt="Avatar"
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <img
-                          src={
-                            logoImageMap[
-                              (firstPlace.car_character || "purple").replace(
-                                "-bot",
-                                "",
-                              )
-                            ] || "/assets/characters/scloski/logo/logo1.png"
-                          }
-                          alt="Logo"
-                          className="w-full h-full object-contain p-0 scale-[2.1]"
-                        />
-                      )}
-                    </div>
-                    <div className="absolute -right-3 -bottom-1 w-12 h-12 bg-black/60 rounded-full border border-yellow-500/40 p-1.5 flex items-center justify-center z-20 shadow-xl">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-4 border-yellow-500/30 bg-black/40 overflow-hidden flex items-center justify-center p-0 shadow-inner relative z-10">
+                    {firstPlace.avatar_url ? (
+                      <img
+                        src={firstPlace.avatar_url}
+                        alt="Avatar"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
                       <img
                         src={
-                          carImageMap[
+                          logoImageMap[
                             (firstPlace.car_character || "purple").replace(
                               "-bot",
                               "",
                             )
-                          ] || carImageMap["purple"]
+                          ] || "/assets/characters/scloski/logo/logo1.png"
                         }
-                        alt="Car"
-                        className="w-full h-full object-contain"
+                        alt="Logo"
+                        className="w-full h-full object-contain p-0 scale-[2.1]"
                       />
-                    </div>
+                    )}
                   </div>
-                  <span className="font-display text-5xl sm:text-7xl text-yellow-600/40 font-bold relative z-10 pb-0">
+                  <span className="font-display text-5xl sm:text-7xl text-yellow-600/40 font-bold relative z-10">
                     1
                   </span>
                 </div>
@@ -397,45 +365,29 @@ export default function LeaderboardPage() {
                   </div>
                 </div>
                 <div className="w-[75px] sm:w-[110px] h-[80px] sm:h-[110px] bg-gradient-to-b from-[#25140b] to-[#0a0f1a] border-t-4 border-l border-r border-[#c2410c] rounded-t-xl flex flex-col items-center justify-between py-2 sm:py-3">
-                  <div className="relative">
-                    <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-full border-2 border-orange-700/30 bg-black/40 overflow-hidden flex items-center justify-center p-0 shadow-inner relative z-10">
-                      {thirdPlace.avatar_url ? (
-                        <img
-                          src={thirdPlace.avatar_url}
-                          alt="Avatar"
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <img
-                          src={
-                            logoImageMap[
-                              (thirdPlace.car_character || "black").replace(
-                                "-bot",
-                                "",
-                              )
-                            ] || "/assets/characters/scloski/logo/logo1.png"
-                          }
-                          alt="Logo"
-                          className="w-full h-full object-contain p-0 scale-[2.1]"
-                        />
-                      )}
-                    </div>
-                    <div className="absolute -right-2 -bottom-1 w-9 h-9 bg-black/60 rounded-full border border-white/20 p-1 flex items-center justify-center z-20 shadow-xl">
+                  <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-full border-2 border-orange-700/30 bg-black/40 overflow-hidden flex items-center justify-center p-0 shadow-inner">
+                    {thirdPlace.avatar_url ? (
+                      <img
+                        src={thirdPlace.avatar_url}
+                        alt="Avatar"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
                       <img
                         src={
-                          carImageMap[
+                          logoImageMap[
                             (thirdPlace.car_character || "black").replace(
                               "-bot",
                               "",
                             )
-                          ] || carImageMap["black"]
+                          ] || "/assets/characters/scloski/logo/logo1.png"
                         }
-                        alt="Car"
-                        className="w-full h-full object-contain"
+                        alt="Logo"
+                        className="w-full h-full object-contain p-0 scale-[2.1]"
                       />
-                    </div>
+                    )}
                   </div>
-                  <span className="font-display text-2xl sm:text-4xl text-orange-700/40 font-bold mb-1">
+                  <span className="font-display text-2xl sm:text-4xl text-orange-700/40 font-bold">
                     3
                   </span>
                 </div>
@@ -458,7 +410,7 @@ export default function LeaderboardPage() {
             }}
             className="bg-black/40 backdrop-blur-xl border border-[#2d6af2]/30 rounded-2xl p-4 sm:p-6 shadow-[0_0_40px_rgba(0,0,0,0.5)]"
           >
-            <div className="overflow-x-auto w-full custom-scrollbar max-h-[470px] overflow-y-auto">
+            <div className="overflow-x-auto w-full custom-scrollbar max-h-[600px] overflow-y-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="border-b border-[#2d6af2]/20 text-gray-400 font-display text-[10px] sm:text-xs tracking-wider">

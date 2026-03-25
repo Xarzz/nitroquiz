@@ -183,10 +183,10 @@ export default function Home() {
 
   if (!user || isHosting || isRedirecting) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#0a0a0f] relative overflow-hidden font-display text-white">
+      <div className="flex items-center justify-center min-h-screen bg-[#04060f] relative overflow-hidden font-display text-white">
         <div className="text-center z-10">
-          <div className="w-16 h-16 border-4 border-[#2d6af2]/30 border-t-[#2d6af2] rounded-full animate-spin mx-auto mb-6"></div>
-          <p className="mt-4 text-[#2d6af2] text-xl tracking-[0.2em] uppercase animate-pulse">
+          <div className="w-16 h-16 border-4 border-[#2d6af2]/30 border-t-[#00ff9d] rounded-full animate-spin mx-auto mb-6"></div>
+          <p className="mt-4 text-[#00ff9d] text-xl tracking-[0.2em] uppercase animate-pulse">
             Establishing Signal...
           </p>
         </div>
@@ -195,7 +195,7 @@ export default function Home() {
   }
 
   return (
-    <div className="bg-[#0b101a] text-white min-h-screen relative overflow-hidden font-body selection:bg-[#2d6af2] selection:text-white flex flex-col">
+    <div className="bg-[#04060f] text-white min-h-screen relative overflow-hidden font-body selection:bg-[#2d6af2] selection:text-white flex flex-col">
       {/* Main Background Image */}
       <div
         className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat pointer-events-none"
@@ -206,7 +206,7 @@ export default function Home() {
       ></div>
 
       {/* Overlays to ensure readability and mood */}
-      <div className="fixed inset-0 z-0 bg-gradient-to-t from-[#0b101a] via-[#0b101a]/40 to-transparent pointer-events-none"></div>
+      <div className="fixed inset-0 z-0 bg-gradient-to-t from-[#04060f] via-[#04060f]/60 to-[#2d6af2]/10 pointer-events-none"></div>
       <div className="scanlines"></div>
 
       {/* Top Bar: Logo1 left, Logo2 right */}
@@ -225,7 +225,7 @@ export default function Home() {
             alt="GameForSmart.com"
             width={240}
             height={60}
-            className="object-contain opacity-70 hover:opacity-100 transition-opacity duration-300 drop-shadow-[0_0_10px_rgba(45,106,242,0.3)]"
+            className="object-contain opacity-70 hover:opacity-100 transition-opacity duration-300 drop-shadow-[0_0_10px_rgba(169,141,197,0.4)]"
             priority
           />
         </div>
@@ -258,7 +258,7 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
                 transition={{ duration: 0.2, ease: "easeOut" }}
-                className="absolute top-14 right-0 w-72 bg-[#0d121f]/95 backdrop-blur-2xl border border-white/10 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col font-body z-[101]"
+                className="absolute top-14 right-0 w-72 bg-[#080d1a]/95 backdrop-blur-2xl border border-[#2d6af2]/30 rounded-[2rem] shadow-[0_0_50px_rgba(45,106,242,0.12),inset_0_1px_0_rgba(255,255,255,0.06)] overflow-hidden flex flex-col font-body z-[101]"
               >
                 {/* User Header */}
                 <div className="p-6 bg-gradient-to-br from-white/[0.05] to-transparent border-b border-white/5">
@@ -292,9 +292,9 @@ export default function Home() {
                   >
                     <div className="p-2 rounded-xl bg-gray-500/10 group-hover:bg-[#2d6af2]/20 transition-colors">
                       {isFullscreen ? (
-                        <Minimize className="w-4 h-4 text-[#2d6af2]" />
+                        <Minimize className="w-4 h-4 text-[#00ff9d]" />
                       ) : (
-                        <Maximize className="w-4 h-4 text-[#2d6af2]" />
+                        <Maximize className="w-4 h-4 text-[#00ff9d]" />
                       )}
                     </div>
 
@@ -311,7 +311,7 @@ export default function Home() {
                     className="flex items-center gap-4 w-full px-4 py-3.5 rounded-2xl hover:bg-white/5 text-gray-400 hover:text-white transition-all group"
                   >
                     <div className="p-2 rounded-xl bg-gray-500/10 group-hover:bg-[#2d6af2]/20 transition-colors">
-                      <PlayCircle className="w-4 h-4 text-[#2d6af2]" />
+                      <PlayCircle className="w-4 h-4 text-[#00ff9d]" />
                     </div>
                     <span className="text-sm font-medium tracking-wide">
                       How to Play
@@ -320,7 +320,7 @@ export default function Home() {
 
                   <button className="flex items-center gap-4 w-full px-4 py-3.5 rounded-2xl hover:bg-white/5 text-gray-400 hover:text-white transition-all group opacity-50 cursor-not-allowed">
                     <div className="p-2 rounded-xl bg-gray-500/10 transition-colors">
-                      <DownloadIcon className="w-4 h-4 text-[#2d6af2]" />
+                      <DownloadIcon className="w-4 h-4 text-[#00ff9d]" />
                     </div>
                     <span className="text-sm font-medium tracking-wide">
                       Install App
@@ -417,7 +417,7 @@ export default function Home() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
               transition={{ duration: 0.3, type: "spring", stiffness: 150 }}
-              className="w-full max-w-lg bg-[#0d121f]/98 backdrop-blur-2xl border border-white/10 rounded-[2rem] shadow-[0_20px_60px_rgba(0,0,0,0.6)] overflow-hidden"
+              className="w-full max-w-lg bg-[#080d1a]/98 backdrop-blur-2xl border border-white/10 rounded-[2rem] shadow-[0_0_50px_rgba(45,106,242,0.12)] overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Top accent */}
@@ -548,7 +548,7 @@ export default function Home() {
             <div className="w-full">
               <button
                 onClick={handleHost}
-                className="w-full bg-[#00ff9d] hover:bg-[#33ffb0] text-black font-display text-sm py-4 px-6 rounded-xl shadow-[0_0_20px_rgba(0,255,157,0.4)] hover:shadow-[0_0_30px_rgba(0,255,157,0.6)] transition-all duration-300 uppercase tracking-wider transform active:scale-[0.98] border border-white/20"
+                className="w-full bg-gradient-to-r from-[#1a45c4] via-[#2d6af2] to-[#1a45c4] hover:shadow-[0_0_20px_rgba(45,106,242,0.6)] text-white font-display text-sm py-4 px-6 rounded-xl transition-all duration-300 uppercase tracking-wider transform active:scale-[0.98] font-bold"
               >
                 Create Room
               </button>
@@ -572,7 +572,7 @@ export default function Home() {
             <div className="w-full space-y-3">
               <div className="relative group/input">
                 <input
-                  className="w-full bg-black/60 border border-white/10 text-white font-display text-center text-sm py-4 px-4 rounded-xl focus:outline-none focus:border-[#2d6af2] focus:ring-1 focus:ring-[#2d6af2] transition-all placeholder:font-display placeholder:text-xs uppercase tracking-widest shadow-inner placeholder:text-gray-500"
+                  className="w-full bg-white/[0.03] border border-white/[0.07] text-white font-display text-center text-sm py-4 px-4 rounded-xl focus:outline-none focus:border-[#00ff9d]/60 focus:bg-white/[0.05] focus:shadow-[0_0_0_3px_rgba(0,255,157,0.1)] transition-all placeholder:font-display placeholder:text-xs uppercase tracking-widest placeholder:text-gray-600"
                   maxLength={6}
                   placeholder="ROOM CODE"
                   type="text"
@@ -583,7 +583,7 @@ export default function Home() {
               </div>
               <button
                 onClick={handleJoin}
-                className="w-full bg-[#2d6af2] hover:bg-[#4da6ff] text-white font-display text-sm py-4 px-6 rounded-xl shadow-[0_0_20px_rgba(45,106,242,0.4)] hover:shadow-[0_0_30px_rgba(45,106,242,0.6)] transition-all duration-300 uppercase tracking-wider transform active:scale-[0.98] border border-white/20"
+                className="w-full bg-gradient-to-r from-teal-500 via-[#00ff9d] to-teal-500 hover:shadow-[0_0_20px_rgba(0,255,157,0.5)] text-[#04060f] font-display text-sm py-4 px-6 rounded-xl transition-all duration-300 uppercase tracking-wider transform active:scale-[0.98] font-bold"
               >
                 Join
               </button>
@@ -591,7 +591,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="absolute top-1/4 left-10 w-1 h-24 bg-gradient-to-b from-transparent via-[#2d6af2]/40 to-transparent blur-sm hidden lg:block"></div>
+        <div className="absolute top-1/4 left-10 w-1 h-24 bg-gradient-to-b from-transparent via-[#2d6af2]/50 to-transparent blur-sm hidden lg:block"></div>
         <div className="absolute bottom-1/3 right-10 w-1 h-32 bg-gradient-to-b from-transparent via-[#00ff9d]/40 to-transparent blur-sm hidden lg:block"></div>
       </main>
     </div>

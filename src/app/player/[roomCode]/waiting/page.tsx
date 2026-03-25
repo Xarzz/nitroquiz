@@ -26,7 +26,7 @@ export default function PlayerWaitingPage() {
     const [errorMessage, setErrorMessage] = useState("");
     const [assignedCar, setAssignedCar] = useState<string>("/assets/characters/scloski/showroom/showroom1.png");
     const [assignedCarIndex, setAssignedCarIndex] = useState<number>(0);
-    const [countdownValue, setCountdownValue] = useState(10);
+    const [countdownValue, setCountdownValue] = useState(5);
     const [sessionId, setSessionId] = useState<string | null>(null);
     const [participantCount, setParticipantCount] = useState(1);
     const [username, setUsername] = useState("");
@@ -52,13 +52,22 @@ export default function PlayerWaitingPage() {
 
                 const { data: existingP } = await supabase.from("participants").select("id")
                     .eq("session_id", sessionData.id).eq("nickname", user.username).maybeSingle();
+                
+                let currentParticipantId = existingP?.id;
+
                 if (!existingP) {
-                    const { error: insertError } = await supabase.from("participants").insert({
+                    const { data: newP, error: insertError } = await supabase.from("participants").insert({
                         session_id: sessionData.id, user_id: user.id || null,
                         nickname: user.username, car_character: carChoice, score: 0, minigame: false,
                         avatar_url: user.avatar || null
-                    });
+                    }).select('id').single();
+                    
                     if (insertError) { setStatus("error"); setErrorMessage("Failed to enter room. " + insertError.message); return; }
+                    currentParticipantId = newP?.id;
+                }
+
+                if (currentParticipantId) {
+                    localStorage.setItem('nitroquiz_game_participantId', currentParticipantId);
                 }
 
                 const { data: pList, count } = await supabase.from("participants")
@@ -103,35 +112,50 @@ export default function PlayerWaitingPage() {
     const preloadQuizData = async (sessId: string) => {
         try {
             const { data } = await supabase.from("sessions")
-                .select("current_questions, question_limit, quiz_id").eq("id", sessId).single();
+                .select("current_questions, question_limit, quiz_id, difficulty").eq("id", sessId).single();
             if (data?.current_questions) {
                 let questions = data.current_questions;
                 if (typeof questions === 'string') { try { questions = JSON.parse(questions); } catch (e) { } }
                 localStorage.setItem('nitroquiz_game_questions', JSON.stringify(questions));
                 localStorage.setItem('nitroquiz_game_roomCode', roomCode);
                 localStorage.setItem('nitroquiz_game_sessionId', sessId);
+                localStorage.setItem('nitroquiz_game_difficulty', data.difficulty || 'easy');
                 if (data.quiz_id) localStorage.setItem('nitroquiz_game_quizId', data.quiz_id);
             }
-            const link = document.createElement('link'); link.rel = 'prefetch'; link.href = '/quiz'; document.head.appendChild(link);
+            
+            const difficulty = data?.difficulty || 'easy';
+            const route = (difficulty === 'normal' || difficulty === 'medium') ? '/gamespeed-medium' : '/gamespeed';
+            
+            const link = document.createElement('link'); link.rel = 'prefetch'; link.href = route; document.head.appendChild(link);
         } catch (err) { console.error('Failed to preload quiz:', err); }
     };
 
     useEffect(() => {
         if (status !== "countdown") return;
-        if (countdownValue <= 0) { setStatus("go"); setTimeout(() => router.push('/quiz'), 1500); return; }
+        if (countdownValue <= 0) { 
+            setStatus("go"); 
+            setTimeout(() => {
+                const diff = localStorage.getItem('nitroquiz_game_difficulty') || 'easy';
+                const route = (diff === 'normal' || diff === 'medium') ? '/gamespeed-medium' : '/gamespeed';
+                router.push(route);
+            }, 1500); 
+            return; 
+        }
         const timer = setTimeout(() => setCountdownValue(prev => prev - 1), 1000);
         return () => clearTimeout(timer);
     }, [status, countdownValue, router]);
 
     const getCountdownLabel = (val: number) => {
-        if (val > 6) return "GET SET"; 
-        if (val > 3) return "READY"; 
-        if (val > 0) return "STEADY"; 
+        if (val >= 4) return "GET READY"; 
+        if (val === 3) return "READY"; 
+        if (val === 2) return "STEADY"; 
+        if (val === 1) return "GO RACE"; 
         return "GO!";
     };
     const getCountdownColor = (val: number) => {
-        if (val > 6) return "text-[#2d6af2]"; 
-        if (val > 3) return "text-yellow-400"; 
+        if (val >= 4) return "text-blue-500"; 
+        if (val === 3) return "text-red-500"; 
+        if (val === 2) return "text-yellow-400"; 
         return "text-[#00ff9d]";
     };
 
@@ -415,10 +439,14 @@ export default function PlayerWaitingPage() {
                         style={{ animation: 'fadeIn 0.3s ease-out' }}>
                         <div className="flex gap-4 mb-10">
                             {[0, 1, 2, 3, 4].map((i) => {
-                                const val = 10 - i * 2; // Map 10s to 5 dots
+                                const val = 5 - i; // Map 5s to 5 dots
                                 const isLit = countdownValue <= val; 
                                 const isGo = countdownValue <= 0;
-                                const color = isGo ? '#00ff9d' : '#ef4444';
+                                let color = "#3b82f6"; // Blue for 5, 4
+                                if (val === 3) color = "#ef4444";
+                                if (val === 2) color = "#facc15";
+                                if (val === 1 || isGo) color = "#00ff9d";
+
                                 return <div key={i} className="w-8 h-8 rounded-full border-2" style={{
                                     borderColor: isGo ? '#00ff9d' : isLit ? color : '#4b5563',
                                     backgroundColor: isGo ? '#00ff9d' : isLit ? color : '#1f2937',

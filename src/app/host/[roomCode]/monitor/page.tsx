@@ -1,28 +1,9 @@
 "use client";
 
 import { useState, useEffect, useMemo, useRef } from "react";
-import { Button } from "@/components/ui/button";
-import { Users, Clock, Flag, Trophy, Skull, FileText } from "lucide-react";
+import { Users, Skull } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/lib/supabase";
-import Image from "next/image";
-
-const carImageMap: Record<string, string> = {
-  purple: "/assets/characters/scloski/showroom/showroom1.png",
-  white: "/assets/characters/scloski/showroom/showroom2.png",
-  black: "/assets/characters/scloski/showroom/showroom1.png",
-  aqua: "/assets/characters/scloski/showroom/showroom2.png",
-  blue: "/assets/characters/scloski/showroom/showroom1.png",
-};
-
-const monitorGifMap: Record<string, string> = {
-  purple: "/assets/characters/scloski/monitor/monitor1.gif",
-  white: "/assets/characters/scloski/monitor/monitor1.gif",
-  black: "/assets/characters/scloski/monitor/monitor1.gif",
-  aqua: "/assets/characters/scloski/monitor/monitor1.gif",
-  blue: "/assets/characters/scloski/monitor/monitor1.gif",
-};
 
 const logoImageMap: Record<string, string> = {
   purple: "/assets/characters/scloski/logo/logo1.png",
@@ -45,6 +26,323 @@ interface Participant {
   avatar_url?: string | null;
 }
 
+// ── Lap Indicator: BIG NUMBER ──
+function LapIndicator({ current, total }: { current: number; total: number }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "2px",
+      }}
+    >
+      <span
+        style={{
+          fontFamily: "Orbitron, monospace",
+          fontSize: "26px",
+          fontWeight: 900,
+          color: "#ffffff",
+          lineHeight: 1,
+          textShadow: "0 0 10px rgba(147,197,253,0.8)",
+        }}
+      >
+        {current}
+      </span>
+
+      <span
+        style={{
+          fontFamily: "Orbitron, monospace",
+          fontSize: "10px",
+          letterSpacing: "0.2em",
+          color: "rgba(255,255,255,0.5)",
+        }}
+      >
+        / {total}
+      </span>
+    </div>
+  );
+}
+
+// ── Single Player Card ──
+function PlayerCard({
+  player,
+  rank,
+  totalQuestions,
+}: {
+  player: Participant;
+  rank: number;
+  totalQuestions: number;
+}) {
+  const baseCar = (player.car_character || "purple").replace("-bot", "");
+  const avatarSrc =
+    player.avatar_url ||
+    logoImageMap[baseCar] ||
+    "/assets/characters/scloski/logo/logo1.png";
+
+  const isFinished =
+    player.finished_at !== null || player.current_question >= totalQuestions;
+  const isNew = player.current_question === 0 && !player.finished_at && !player.eliminated;
+
+  const rankColors: Record<number, string> = {
+    0: "#f59e0b",
+    1: "#94a3b8",
+    2: "#b45309",
+  };
+  const rankColor = rankColors[rank] ?? "rgba(255,255,255,0.15)";
+
+  let statusLabel = "RACING";
+  let statusBg = "rgba(255,255,255,0.05)";
+  let statusBorder = "rgba(255,255,255,0.12)";
+  let statusText = "rgba(255,255,255,0.45)";
+  let statusPulse = false;
+
+  if (isFinished) {
+    statusLabel = "FINISH";
+    statusBg = "rgba(16,185,129,0.12)";
+    statusBorder = "rgba(16,185,129,0.5)";
+    statusText = "#34d399";
+  } else if (player.eliminated) {
+    statusLabel = "CRASHED";
+    statusBg = "rgba(239,68,68,0.12)";
+    statusBorder = "rgba(239,68,68,0.5)";
+    statusText = "#f87171";
+  } else if (player.minigame) {
+    statusLabel = "QUIZ";
+    statusBg = "rgba(59,130,246,0.12)";
+    statusBorder = "rgba(59,130,246,0.5)";
+    statusText = "#93c5fd";
+    statusPulse = true;
+  }
+
+  return (
+    <div
+      style={{
+        position: "relative",
+        display: "flex",
+        alignItems: "stretch",
+        borderRadius: "12px",
+        overflow: "hidden",
+        background: "linear-gradient(135deg, rgba(16,26,52,0.97) 0%, rgba(11,16,32,0.97) 100%)",
+        border: "1px solid rgba(255,255,255,0.07)",
+        boxShadow: "0 4px 20px rgba(0,0,0,0.45)",
+      }}
+    >
+      {/* Left rank stripe */}
+      <div
+        style={{
+          position: "absolute",
+          left: 0,
+          top: 0,
+          bottom: 0,
+          width: "3px",
+          background: rankColor,
+          boxShadow: `0 0 8px ${rankColor}`,
+        }}
+      />
+
+      {/* Avatar */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "10px",
+          marginLeft: "3px",
+        }}
+      >
+        <div
+          style={{
+            position: "relative",
+            width: "64px",
+            height: "64px",
+            borderRadius: "50%",
+            flexShrink: 0,
+            overflow: "hidden",
+            border: `2px solid ${rankColor}`,
+            boxShadow: `0 0 10px ${rankColor}40`,
+            background: "rgba(0,0,0,0.2)",
+          }}
+        >
+          {isNew && (
+            <div
+              style={{
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                right: 0,
+                zIndex: 10,
+                textAlign: "center",
+                padding: "2px 0",
+                background: "rgba(37,99,235,0.85)",
+                fontFamily: "Orbitron, monospace",
+                fontSize: "7px",
+                fontWeight: 700,
+                letterSpacing: "0.05em",
+                color: "#bfdbfe",
+                textTransform: "uppercase",
+              }}
+            >
+              NEW
+            </div>
+          )}
+          {player.eliminated ? (
+            <div
+              style={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                background: "rgba(239,68,68,0.15)",
+              }}
+            >
+              <Skull size={28} color="#f87171" />
+            </div>
+          ) : (
+            <img
+              src={avatarSrc}
+              alt={player.nickname}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                objectPosition: "top center",
+              }}
+            />
+          )}
+        </div>
+      </div>
+
+      {/* Info */}
+      <div
+        style={{
+          flex: 1,
+          padding: "10px 12px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          gap: "5px",
+          minWidth: 0,
+        }}
+      >
+        {/* Rank + Name */}
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <span
+            style={{
+              fontFamily: "Orbitron, monospace",
+              fontSize: "20px",
+              fontWeight: 900,
+              fontStyle: "italic",
+              color: rankColor,
+              textShadow: `0 0 10px ${rankColor}80`,
+              flexShrink: 0,
+            }}
+          >
+            #{rank + 1}
+          </span>
+          <span
+            style={{
+              fontFamily: "Orbitron, monospace",
+              fontSize: "13px",
+              fontWeight: 700,
+              letterSpacing: "0.12em",
+              color: "rgba(255,255,255,0.92)",
+              textTransform: "uppercase",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {player.nickname}
+          </span>
+        </div>
+
+        {/* Score */}
+        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          {/* <span style={{ fontSize: "14px" }}>⭐</span> */}
+          <span
+            style={{
+              fontFamily: "monospace",
+              fontSize: "13px",
+              fontWeight: 700,
+              color: "#93c5fd",
+            }}
+          >
+            {player.score.toLocaleString()}
+          </span>
+        </div>
+
+        {/* Status */}
+        <div
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "5px",
+            padding: "2px 10px",
+            borderRadius: "20px",
+            background: statusBg,
+            border: `1px solid ${statusBorder}`,
+            color: statusText,
+            fontFamily: "Orbitron, monospace",
+            fontSize: "9px",
+            fontWeight: 700,
+            letterSpacing: "0.2em",
+            textTransform: "uppercase",
+            alignSelf: "flex-start",
+          }}
+        >
+          {statusPulse && (
+            <span
+              style={{
+                width: "6px",
+                height: "6px",
+                borderRadius: "50%",
+                background: statusText,
+                animation: "pulse 1.5s infinite",
+              }}
+            />
+          )}
+          {statusLabel}
+        </div>
+      </div>
+
+      {/* Lap indicator */}
+      <div
+        style={{
+          flexShrink: 0,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "10px 14px",
+          borderLeft: "1px solid rgba(255,255,255,0.06)",
+          minWidth: "80px",
+          gap: "4px",
+        }}
+      >
+        <span
+          style={{
+            fontFamily: "Orbitron, monospace",
+            fontSize: "8px",
+            letterSpacing: "0.3em",
+            color: "rgba(255,255,255,0.28)",
+            textTransform: "uppercase",
+          }}
+        >
+          LAP
+        </span>
+        <LapIndicator
+          current={player.current_question}
+          total={totalQuestions}
+        />
+      </div>
+    </div>
+  );
+}
+
+// ── Main Page ──
 export default function GameMonitorPage() {
   const params = useParams();
   const router = useRouter();
@@ -52,51 +350,37 @@ export default function GameMonitorPage() {
 
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [participants, setParticipants] = useState<Participant[]>([]);
-
-  // Session state
   const [totalQuestions, setTotalQuestions] = useState(5);
-  const [timeLeft, setTimeLeft] = useState(300); // 5 mins default
+  const [timeLeft, setTimeLeft] = useState(300);
   const [isEnding, setIsEnding] = useState(false);
 
-  // Track participants using ref for bot logic interval
   const participantsRef = useRef(participants);
   useEffect(() => {
     participantsRef.current = participants;
   }, [participants]);
 
-  // 1. Initial Load: Get Session and Participants
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
-        // Fetch Session
         const { data: sessionData, error: sessionError } = await supabase
           .from("sessions")
           .select("id, question_limit, total_time_minutes, started_at")
           .eq("game_pin", roomCode)
           .single();
 
-        if (sessionError) {
-          console.error("Session fetch error:", sessionError);
-          // alert("Could not load session data!");
-          return;
-        }
+        if (sessionError) return;
 
         if (sessionData) {
           setSessionId(sessionData.id);
           setTotalQuestions(sessionData.question_limit || 5);
           setTimeLeft((sessionData.total_time_minutes || 5) * 60);
 
-          // Fetch Participants
           const { data: pData } = await supabase
             .from("participants")
             .select("*")
             .eq("session_id", sessionData.id);
 
-          if (pData) {
-            setParticipants(pData as Participant[]);
-          }
-
-          // Session status already set to "active" from lobby page
+          if (pData) setParticipants(pData as Participant[]);
         }
       } catch (err) {
         console.error("Initialization error:", err);
@@ -106,7 +390,6 @@ export default function GameMonitorPage() {
     fetchInitialData();
   }, [roomCode]);
 
-  // 2. Real-time Subscription for Player Updates
   useEffect(() => {
     if (!sessionId) return;
 
@@ -114,113 +397,63 @@ export default function GameMonitorPage() {
       .channel("host_game_monitor")
       .on(
         "postgres_changes",
-        {
-          event: "UPDATE",
-          schema: "public",
-          table: "participants",
-          filter: `session_id=eq.${sessionId}`,
-        },
+        { event: "UPDATE", schema: "public", table: "participants", filter: `session_id=eq.${sessionId}` },
         (payload) => {
           const updated = payload.new as Participant;
-          setParticipants((prev) =>
-            prev.map((p) => (p.id === updated.id ? updated : p)),
-          );
-        },
+          setParticipants((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
+        }
       )
       .on(
         "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "participants",
-          filter: `session_id=eq.${sessionId}`,
-        },
+        { event: "INSERT", schema: "public", table: "participants", filter: `session_id=eq.${sessionId}` },
         (payload) => {
           setParticipants((prev) => [...prev, payload.new as Participant]);
-        },
+        }
       )
       .subscribe();
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return () => { supabase.removeChannel(channel); };
   }, [sessionId]);
 
-  // 3. Timer Logic
   useEffect(() => {
-    if (timeLeft <= 0) {
-      handleEndRace();
-      return;
-    }
-
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => prev - 1);
-    }, 1000);
-
+    if (timeLeft <= 0) { handleEndRace(); return; }
+    const timer = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
     return () => clearInterval(timer);
   }, [timeLeft]);
 
-  // 3.5 Auto-end when ALL players finish (no need to wait for timer)
   useEffect(() => {
     if (!sessionId || participants.length === 0 || isEnding) return;
-    const allDone = participants.every(p =>
-      p.finished_at !== null || p.eliminated === true
-    );
-    if (allDone) {
-      // Jump immediately
-      handleEndRace();
-    }
+    const allDone = participants.every((p) => p.finished_at !== null || p.eliminated === true);
+    if (allDone) handleEndRace();
   }, [participants, sessionId, isEnding]);
 
-  // 4. Bot Brain System
   useEffect(() => {
     if (!sessionId || isEnding) return;
-
-    // Bot actions run every 3 seconds
     const botInterval = setInterval(() => {
-      // Retrieve latest participant data from ref
       const currentPlayers = participantsRef.current;
-
-      // Find all active bots who haven't finished yet
       const activeBots = currentPlayers.filter(
-        (p) =>
-          p.car_character?.endsWith("-bot") &&
-          !p.eliminated &&
-          p.current_question < totalQuestions &&
-          p.finished_at === null,
+        (p) => p.car_character?.endsWith("-bot") && !p.eliminated && p.current_question < totalQuestions && p.finished_at === null
       );
-
-      // Give each bot a 60% chance to answer and advance per tick (simulates thinking)
       activeBots.forEach(async (bot) => {
         if (Math.random() > 0.4) {
           const nextQ = bot.current_question + 1;
-          // Bots can gain random score simulating "Time Multiplier" logic
           const scoreAdd = Math.floor(Math.random() * 80) + 20;
           const isFinished = nextQ >= totalQuestions;
-
           try {
-            await supabase
-              .from("participants")
-              .update({
-                current_question: nextQ,
-                score: bot.score + scoreAdd,
-                finished_at: isFinished ? new Date().toISOString() : null,
-              })
-              .eq("id", bot.id);
-          } catch (e) {
-            console.error("Bot action error:", e);
-          }
+            await supabase.from("participants").update({
+              current_question: nextQ,
+              score: bot.score + scoreAdd,
+              finished_at: isFinished ? new Date().toISOString() : null,
+            }).eq("id", bot.id);
+          } catch (e) { console.error("Bot error:", e); }
         }
       });
     }, 3000);
-
     return () => clearInterval(botInterval);
   }, [sessionId, isEnding, totalQuestions]);
 
   const formatTime = (seconds: number) => {
-    const m = Math.floor(seconds / 60)
-      .toString()
-      .padStart(2, "0");
+    const m = Math.floor(seconds / 60).toString().padStart(2, "0");
     const s = (seconds % 60).toString().padStart(2, "0");
     return `${m}:${s}`;
   };
@@ -228,14 +461,8 @@ export default function GameMonitorPage() {
   const handleEndRace = async () => {
     if (isEnding || !sessionId) return;
     setIsEnding(true);
-
     try {
-      await supabase
-        .from("sessions")
-        .update({ status: "finished", ended_at: new Date().toISOString() })
-        .eq("id", sessionId);
-
-      // Navigate to Podium/Leaderboard
+      await supabase.from("sessions").update({ status: "finished", ended_at: new Date().toISOString() }).eq("id", sessionId);
       router.push(`/host/${roomCode}/leaderboard`);
     } catch (error) {
       console.error("Failed to end race:", error);
@@ -243,261 +470,262 @@ export default function GameMonitorPage() {
     }
   };
 
-  // Derived states
-  // Sort players by position (score and progression)
   const rankedParticipants = useMemo(() => {
     return [...participants].sort((a, b) => {
-      if (b.score !== a.score) {
-        return b.score - a.score;
-      }
+      if (b.score !== a.score) return b.score - a.score;
       return b.current_question - a.current_question;
     });
   }, [participants]);
 
+  // Pair into rows of 2
+  const pairedRows = useMemo(() => {
+    const rows: Participant[][] = [];
+    for (let i = 0; i < rankedParticipants.length; i += 2) {
+      rows.push(rankedParticipants.slice(i, i + 2));
+    }
+    return rows;
+  }, [rankedParticipants]);
+
   return (
-    <div className="min-h-screen bg-[#050508] relative overflow-hidden font-rajdhani text-white flex flex-col">
-      {/* Dark Space & Grids Background */}
-      <div className="fixed inset-0 z-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/10 via-[#0a0a0f] to-[#050508] pointer-events-none"></div>
-      
-      {/* Fine Grid lines */}
-      <div 
-        className="fixed inset-0 z-0 opacity-20 pointer-events-none"
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "#07091a",
+        position: "relative",
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        fontFamily: "Rajdhani, sans-serif",
+        color: "white",
+      }}
+    >
+      {/* BG Grid */}
+      <div
         style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 0,
+          pointerEvents: "none",
+          opacity: 0.25,
           backgroundImage: `
-            linear-gradient(rgba(45,106,242,0.15) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(45,106,242,0.15) 1px, transparent 1px)
+            linear-gradient(rgba(45,106,242,0.18) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(45,106,242,0.18) 1px, transparent 1px)
           `,
-          backgroundSize: '30px 30px'
+          backgroundSize: "40px 40px",
         }}
       />
+      {/* Radial center glow */}
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 0,
+          pointerEvents: "none",
+          background: "radial-gradient(ellipse 80% 55% at 50% 50%, rgba(45,106,242,0.07) 0%, transparent 70%)",
+        }}
+      />
+      {/* Purple corner accents */}
+      <div style={{ position: "fixed", bottom: 0, left: 0, zIndex: 0, pointerEvents: "none", width: "320px", height: "320px", background: "radial-gradient(circle at bottom left, rgba(139,92,246,0.35) 0%, transparent 70%)", opacity: 0.2 }} />
+      <div style={{ position: "fixed", top: 0, right: 0, zIndex: 0, pointerEvents: "none", width: "320px", height: "320px", background: "radial-gradient(circle at top right, rgba(139,92,246,0.3) 0%, transparent 70%)", opacity: 0.15 }} />
 
-      {/* Decorative vertical lines / stripes from image */}
-      <div className="fixed inset-0 z-0 pointer-events-none opacity-10">
-        <div className="absolute left-10 top-0 bottom-0 w-[1px] bg-blue-500" />
-        <div className="absolute left-12 top-0 bottom-0 w-[1px] bg-blue-500/50" />
-      </div>
-
-      <div className="scanlines z-10 opacity-10 pointer-events-none"></div>
-
-      {/* Header / HUD */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="relative z-20 w-full px-8 py-4 flex items-center justify-between border-b border-white/5 bg-black/60 backdrop-blur-xl"
+      {/* ── HEADER ── */}
+      <div
+        style={{
+          position: "relative",
+          zIndex: 20,
+          width: "100%",
+          padding: "10px 20px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          background: "rgba(7,9,26,0.95)",
+          backdropFilter: "blur(20px)",
+          borderBottom: "1px solid rgba(255,255,255,0.05)",
+        }}
       >
-        <div className="flex items-center gap-6">
+        {/* Left: Logo + count */}
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
           <img
             src="/assets/logo/logo1.png"
-            alt="NitroQuiz"
-            style={{ width: '140px', height: '40px' }}
-            className="object-contain drop-shadow-[0_0_8px_rgba(45,106,242,0.5)]"
+            alt="NitroQuiz Logo"
+            style={{ height: "40px", objectFit: "contain", filter: "drop-shadow(0 0 6px rgba(45,106,242,0.5))" }}
           />
-          
-          <div className="flex items-center gap-2 bg-[#1a2235] border border-[#2d6af2]/30 px-3 py-1.5 rounded-lg shadow-[inset_0_0_10px_rgba(45,106,242,0.1)]">
-            <Users size={14} className="text-[#2d6af2]" />
-            <span className="font-orbitron text-xs tracking-widest text-blue-400">
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+              padding: "5px 12px",
+              borderRadius: "8px",
+              background: "rgba(26,34,53,0.8)",
+              border: "1px solid rgba(45,106,242,0.3)",
+            }}
+          >
+            <Users size={13} color="#60a5fa" />
+            <span style={{ fontFamily: "Orbitron, monospace", fontSize: "12px", color: "#60a5fa", letterSpacing: "0.15em" }}>
               {participants.length}
             </span>
           </div>
         </div>
 
-        {/* Digital Timer Box - Center */}
-        <div className="absolute left-1/2 -translate-x-1/2">
-          <div className="relative group">
-            <div className="absolute -inset-1 bg-blue-500/20 rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
-            <div className="relative flex items-center gap-3 bg-[#0a0f1e] border-2 border-blue-500/50 px-8 py-2 rounded-xl shadow-[0_0_20px_rgba(45,106,242,0.4)]">
-              <span className={`font-orbitron text-3xl tracking-[0.15em] ${timeLeft < 60 ? "text-red-500 animate-pulse" : "text-blue-400"}`} style={{ textShadow: '0 0 10px currentColor' }}>
-                {formatTime(timeLeft)}
-              </span>
-            </div>
+        {/* Center: LIVE TIMING + Timer */}
+        <div
+          style={{
+            position: "absolute",
+            left: "50%",
+            transform: "translateX(-50%)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "4px",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+              padding: "2px 10px",
+              borderRadius: "4px",
+              background: "rgba(239,68,68,0.12)",
+              border: "1px solid rgba(239,68,68,0.4)",
+            }}
+          >
+            <span
+              style={{
+                width: "6px",
+                height: "6px",
+                borderRadius: "50%",
+                background: "#ef4444",
+                boxShadow: "0 0 6px #ef4444",
+                animation: "pulse 1.5s infinite",
+              }}
+            />
+            <span style={{ fontFamily: "Orbitron, monospace", fontSize: "8px", letterSpacing: "0.3em", color: "#f87171", textTransform: "uppercase" }}>
+              LIVE TIMING
+            </span>
+          </div>
+          <div
+            style={{
+              padding: "6px 28px",
+              borderRadius: "10px",
+              background: "rgba(10,14,30,0.95)",
+              border: "2px solid rgba(45,106,242,0.6)",
+              boxShadow: "0 0 20px rgba(45,106,242,0.3), inset 0 0 10px rgba(45,106,242,0.05)",
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "Orbitron, monospace",
+                fontSize: "28px",
+                fontWeight: 700,
+                letterSpacing: "0.15em",
+                color: timeLeft < 60 ? "#ef4444" : "#93c5fd",
+                textShadow: `0 0 12px ${timeLeft < 60 ? "#ef4444" : "#93c5fd"}`,
+              }}
+            >
+              {formatTime(timeLeft)}
+            </span>
           </div>
         </div>
 
-        <div className="flex items-center gap-6">
+        {/* Right: logo2 + END RACE */}
+        <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
           <img
             src="/assets/logo/logo2.png"
-            alt="GameForSmart"
-            style={{ width: '240px', height: '60px' }}
-            className="object-contain opacity-80 hover:opacity-100 transition-opacity duration-300 drop-shadow-[0_0_10px_rgba(45,106,242,0.3)]"
+            alt="GameForSmart.com"
+            style={{ height: "36px", objectFit: "contain", opacity: 0.75 }}
           />
-        </div>
-      </motion.div>
-
-      {/* Floating End Button - Moved from header */}
-      <div className="fixed bottom-8 right-8 z-50">
-        <motion.button
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={handleEndRace}
-          disabled={isEnding}
-          style={{
-              background: 'linear-gradient(135deg, #991b1b 0%, #450a0a 100%)',
-              boxShadow: '0 0 20px rgba(220, 38, 38, 0.4)'
-          }}
-          className={`relative group px-10 py-4 rounded-2xl border border-red-500/50 overflow-hidden transition-all ${isEnding ? 'opacity-50 cursor-not-allowed' : 'hover:border-red-400'}`}
-        >
-          <div className="absolute inset-0 bg-red-600/20 group-hover:bg-red-600/30 transition-colors" />
-          <span className="relative z-10 font-orbitron text-xs font-bold tracking-[0.2em] text-red-100 uppercase">
+          <button
+            onClick={handleEndRace}
+            disabled={isEnding}
+            style={{
+              padding: "9px 22px",
+              borderRadius: "8px",
+              background: "linear-gradient(135deg, #dc2626 0%, #7f1d1d 100%)",
+              border: "1px solid rgba(239,68,68,0.5)",
+              boxShadow: "0 0 16px rgba(220,38,38,0.35)",
+              color: "#fecaca",
+              fontFamily: "Orbitron, monospace",
+              fontSize: "11px",
+              fontWeight: 700,
+              letterSpacing: "0.2em",
+              textTransform: "uppercase",
+              cursor: isEnding ? "not-allowed" : "pointer",
+              opacity: isEnding ? 0.5 : 1,
+            }}
+          >
             {isEnding ? "ENDING..." : "END RACE"}
-          </span>
-        </motion.button>
+          </button>
+        </div>
       </div>
 
-      {/* Main Tracks Area */}
-      <div className="relative z-20 flex-1 w-full mx-auto p-6 overflow-y-auto custom-scrollbar">
-        <div className="max-w-6xl mx-auto space-y-3">
-          {/* Leaderboard Title from image */}
-          <div className="flex justify-end pr-4">
-             <span className="font-orbitron text-[10px] tracking-[0.3em] text-blue-500/60 uppercase">Leaderboard</span>
-          </div>
+      {/* ── LEADERBOARD ── */}
+      <div
+        style={{
+          position: "relative",
+          zIndex: 20,
+          flex: 1,
+          padding: "14px 16px",
+          overflowY: "auto",
+        }}
+      >
+        {/* Label */}
+        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "8px", paddingRight: "4px" }}>
+          <span style={{ fontFamily: "Orbitron, monospace", fontSize: "9px", letterSpacing: "0.35em", color: "rgba(147,197,253,0.45)", textTransform: "uppercase" }}>
+            LEADERBOARD
+          </span>
+        </div>
 
-          <AnimatePresence>
-            {rankedParticipants.map((player, index) => {
-              const rawProgress = totalQuestions > 0 ? (player.current_question / totalQuestions) * 100 : 0;
-              const progress = Math.min(100, Math.max(0, rawProgress));
-              const isFinished = player.finished_at !== null || progress >= 100;
-              
-              const baseCar = (player.car_character || "purple").replace("-bot", "");
-              const carSrc = carImageMap[baseCar] || carImageMap["purple"];
-
-              return (
-                <motion.div
-                  key={player.id}
-                  layout
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="relative flex items-center bg-[#0d1425]/80 backdrop-blur-md border border-white/5 rounded-xl px-6 py-3 group hover:border-blue-500/30 transition-all shadow-xl"
-                  style={{
-                    background: 'linear-gradient(90deg, #111b33 0%, #0d121f 100%)'
-                  }}
-                >
-                  {/* Subtle edge glow for top 3 */}
-                  {index < 3 && (
-                    <div className={`absolute inset-y-0 left-0 w-1 ${index === 0 ? 'bg-yellow-500' : index === 1 ? 'bg-slate-300' : 'bg-amber-700'} shadow-[0_0_10px_currentColor]`} />
-                  )}
-
-                  {/* Rank */}
-                  <div className="w-14 flex-shrink-0 flex items-center justify-center">
-                    <span className={`font-orbitron text-2xl font-black italic ${index === 0 ? 'text-yellow-500' : index === 1 ? 'text-gray-400' : index === 2 ? 'text-amber-700' : 'text-white/20'}`}>
-                      #{index + 1}
-                    </span>
-                  </div>
-
-                  {/* Avatar Slot */}
-                  <div className="relative mr-6">
-                      <div className="w-16 h-16 rounded-full border-2 border-white/20 bg-black/40 overflow-hidden flex items-center justify-center p-0 shadow-[0_0_10px_rgba(255,255,255,0.1)]">
-                        {player.avatar_url ? (
-                          <img src={player.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
-                        ) : (
-                          <img 
-                            src={logoImageMap[baseCar] || "/assets/characters/scloski/logo/logo1.png"} 
-                            alt="Avatar" 
-                            className="w-full h-full object-contain p-0 scale-[2.1] drop-shadow-[0_0_5px_rgba(255,255,255,0.2)]" 
-                          />
-                        )}
-                      </div>
-                    {/* Rank specific badge/circle */}
-                    <div className={`absolute -bottom-1 -right-1 w-6 h-6 rounded-full border border-white/20 flex items-center justify-center text-[10px] font-bold ${index === 0 ? 'bg-yellow-500 text-black' : 'bg-[#1a2235] text-white'}`}>
-                      {index + 1}
-                    </div>
-                  </div>
-
-                  {/* Player Stats */}
-                  <div className="w-44 flex-shrink-0 flex flex-col justify-center gap-0.5">
-                    <h3 className="font-orbitron text-sm font-bold tracking-widest text-white/90 truncate uppercase">{player.nickname}</h3>
-                    <div className="flex items-center gap-1.5">
-                       <span className="text-yellow-500 text-xs">⭐</span>
-                       <span className="font-mono text-xs text-blue-400 font-bold">{player.score.toLocaleString()}</span>
-                    </div>
-                  </div>
-
-                  {/* Visual Track Area (The SVG Wavy line logic from image) */}
-                  <div className="flex-1 relative h-16 mx-4 flex items-center">
-                    {/* Decorative wavy lines mimicking the image */}
-                    <svg className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-full w-full opacity-20" preserveAspectRatio="none">
-                      <path 
-                        d="M 0 30 Q 50 10 100 30 T 200 30 T 300 30 T 400 30 T 500 30" 
-                        stroke="#2d6af2" 
-                        strokeWidth="2" 
-                        fill="none" 
-                        vectorEffect="non-scaling-stroke"
-                        className="animate-pulse"
-                      />
-                    </svg>
-
-                    {/* Progress Track Line */}
-                    <div className="absolute inset-x-0 h-[2px] bg-white/5">
-                        <motion.div 
-                          className="h-full bg-blue-500 shadow-[0_0_10px_#3b82f6]"
-                          animate={{ width: `${progress}%` }}
-                        />
-                    </div>
-
-                    {/* Moving Car */}
-                    <motion.div
-                      className="absolute left-0 z-20 flex items-center justify-center -ml-10"
-                      animate={{ left: `${progress}%` }}
-                      transition={{ type: "spring", stiffness: 45, damping: 15 }}
-                    >
-                      <div className="relative group/car">
-                        {/* Speed lines/trails */}
-                        <div className="absolute right-full top-1/2 -translate-y-1/2 w-20 h-8 bg-gradient-to-r from-transparent to-blue-500/20 blur-sm pointer-events-none" />
-                        
-                        {player.eliminated ? (
-                          <div className="w-16 h-12 flex items-center justify-center bg-red-500/20 rounded-full border border-red-500 shadow-[0_0_20px_rgba(239,68,68,0.3)]">
-                            <Skull className="text-red-500" size={24} />
-                          </div>
-                        ) : (
-                          <div className="w-24 drop-shadow-[0_0_15px_rgba(0,195,255,0.4)] transition-transform group-hover/car:scale-110">
-                            <img 
-                              src={monitorGifMap[baseCar] || "/assets/characters/scloski/monitor/monitor1.gif"} 
-                              alt="car" 
-                              className="w-full h-auto object-contain" 
-                            />
-                          </div>
-                        )}
-                      </div>
-                    </motion.div>
-                  </div>
-
-                  {/* Progress Detail */}
-                  <div className="w-24 flex-shrink-0 flex flex-col items-center justify-center border-l border-white/5">
-                    <span className="text-[10px] text-white/30 uppercase font-black tracking-tighter">QUIZ</span>
-                    <div className="flex items-center gap-1.5 font-orbitron font-bold">
-                        <span className="text-sm text-white/80">{player.current_question}/{totalQuestions}</span>
-                        <FileText size={14} className="text-[#2d6af2]" />
-                    </div>
-                  </div>
-
-                  {/* Status Indicator */}
-                  <div className="w-32 flex-shrink-0 flex justify-end pl-4">
-                    <div className={`
-                      px-4 py-1.5 rounded-full text-[10px] font-orbitron font-black tracking-[0.2em] uppercase text-center w-full border
-                      ${isFinished ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.2)]' : 
-                        player.eliminated ? 'bg-red-500/10 border-red-500/40 text-red-400' :
-                        player.minigame ? 'bg-blue-500/10 border-blue-500/40 text-blue-400 animate-pulse' :
-                        'bg-white/5 border-white/10 text-white/40'}
-                    `}>
-                      {isFinished ? 'FINISH' : player.eliminated ? 'CRASHED' : player.minigame ? 'QUIZ' : 'RACING'}
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </AnimatePresence>
+        <div style={{ maxWidth: "1280px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "10px" }}>
+          {pairedRows.map((row, rowIndex) => (
+            <div
+              key={rowIndex}
+              style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}
+            >
+              {row.map((player) => {
+                const globalRank = rankedParticipants.findIndex((p) => p.id === player.id);
+                return (
+                  <PlayerCard
+                    key={player.id}
+                    player={player}
+                    rank={globalRank}
+                    totalQuestions={totalQuestions}
+                  />
+                );
+              })}
+              {row.length === 1 && <div />}
+            </div>
+          ))}
 
           {participants.length === 0 && (
-            <div className="h-64 flex flex-col items-center justify-center text-gray-700 bg-black/20 rounded-2xl border border-white/5 border-dashed">
-              <Users size={40} className="mb-4 opacity-20" />
-              <p className="font-orbitron tracking-[0.4em] text-xs uppercase opacity-30">
+            <div
+              style={{
+                height: "240px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: "16px",
+                background: "rgba(0,0,0,0.2)",
+                border: "1px dashed rgba(255,255,255,0.07)",
+              }}
+            >
+              <Users size={36} style={{ opacity: 0.2, marginBottom: "12px" }} />
+              <p style={{ fontFamily: "Orbitron, monospace", fontSize: "11px", letterSpacing: "0.4em", textTransform: "uppercase", opacity: 0.25 }}>
                 Waiting for Grid...
               </p>
             </div>
           )}
         </div>
       </div>
+
+      <style>{`
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.4; }
+        }
+      `}</style>
     </div>
   );
 }

@@ -1,270 +1,310 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { getQuizSession, saveQuizSession, getGameSettings } from '@/lib/storage';
-import { QuizSession, UserAnswer, GameSettings } from '@/types';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Check, X, Timer, Trophy, ArrowRight, Loader2 } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
+
+// Reuse QuizQuestion type
+export interface QuizQuestion {
+    id: string;
+    question: string;
+    options: string[];
+    correctAnswer: number;
+}
 
 export default function QuizPage() {
     const router = useRouter();
-    const [session, setSession] = useState<QuizSession | null>(null);
-    const [settings, setSettings] = useState<GameSettings | null>(null);
-    const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-    const [timeLeft, setTimeLeft] = useState(60);
+    const [mounted, setMounted] = useState(false);
+    const [questions, setQuestions] = useState<QuizQuestion[]>([]);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [score, setScore] = useState(0);
+    const [questionsAnsweredInRound, setQuestionsAnsweredInRound] = useState(0);
+    const [selectedOption, setSelectedOption] = useState<number | null>(null);
+    const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
     const [isAnswered, setIsAnswered] = useState(false);
-    const [showFeedback, setShowFeedback] = useState(false);
-    const [isCorrect, setIsCorrect] = useState(false);
+    // const [timeLeft, setTimeLeft] = useState(15);
+    const [roomCode, setRoomCode] = useState<string | null>(null);
+    const [sessionId, setSessionId] = useState<string | null>(null);
+    const [statusText, setStatusText] = useState("ROUND COMPLETE!");
+
+    // const timerRef = useRef<NodeJS.Timeout | null>(null);
+    const QUESTIONS_PER_ROUND = 3;
 
     useEffect(() => {
-        const savedSession = getQuizSession();
-        const savedSettings = getGameSettings();
+        setMounted(true);
+        const storedQuestions = localStorage.getItem('nitroquiz_game_questions');
+        const storedIndex = localStorage.getItem('nitroquiz_game_questionIndex');
+        const storedScore = localStorage.getItem('nitroquiz_game_score');
+        const storedRoom = localStorage.getItem('nitroquiz_game_roomCode');
+        const storedSession = localStorage.getItem('nitroquiz_game_sessionId');
 
-        if (!savedSession) {
-            router.push('/home');
-            return;
+        if (storedQuestions) {
+            try {
+                const parsed = JSON.parse(storedQuestions);
+                // The questions might need normalization if they are in the DB format
+                const normalized: QuizQuestion[] = parsed.map((q: any, idx: number) => {
+                    if (q.options && typeof q.correctAnswer === 'number') return q as QuizQuestion;
+                    
+                    let options: string[] = [];
+                    let correctAnswer = 0;
+                    if (Array.isArray(q.answers)) {
+                        options = q.answers.map((a: any) => a.answer || '');
+                        const correctId = String(q.correct);
+                        const correctIdx = q.answers.findIndex((a: any) => String(a.id) === correctId);
+                        correctAnswer = correctIdx >= 0 ? correctIdx : 0;
+                    } else if (Array.isArray(q.options)) {
+                        options = q.options;
+                        correctAnswer = q.correctAnswer ?? 0;
+                    }
+                    return {
+                        id: q.id || `q-${idx}`,
+                        question: q.question || q.text || '',
+                        options,
+                        correctAnswer
+                    };
+                });
+                setQuestions(normalized);
+            } catch (e) {
+                console.error("Failed to parse questions", e);
+            }
+        } else {
+            router.push('/');
         }
 
-        setSession(savedSession);
-        setSettings(savedSettings);
-        setTimeLeft(savedSettings?.timeLimit || 60);
+        if (storedIndex) setCurrentIndex(parseInt(storedIndex, 10));
+        if (storedScore) setScore(parseInt(storedScore, 10));
+        setRoomCode(storedRoom);
+        setSessionId(storedSession);
     }, [router]);
 
-    // Timer countdown
-    useEffect(() => {
-        if (!session || isAnswered) return;
-
-        const timer = setInterval(() => {
-            setTimeLeft((prev) => {
+    /* const startTimer = useCallback(() => {
+        if (timerRef.current) clearInterval(timerRef.current);
+        setTimeLeft(15);
+        timerRef.current = setInterval(() => {
+            setTimeLeft(prev => {
                 if (prev <= 1) {
-                    handleTimeout();
+                    if (timerRef.current) clearInterval(timerRef.current);
+                    handleAnswer(-1); // Timeout
                     return 0;
                 }
                 return prev - 1;
             });
         }, 1000);
+    }, []); */
 
-        return () => clearInterval(timer);
-    }, [session, isAnswered]);
+    /* useEffect(() => {
+        if (questions.length > 0 && !isAnswered && questionsAnsweredInRound < QUESTIONS_PER_ROUND && currentIndex < questions.length) {
+            startTimer();
+        }
+        return () => { if (timerRef.current) clearInterval(timerRef.current); };
+    }, [questions.length, currentIndex, isAnswered, questionsAnsweredInRound, startTimer]); */
 
-    const handleTimeout = useCallback(() => {
+    const handleAnswer = async (optionIndex: number) => {
         if (isAnswered) return;
-        handleAnswer(-1); // -1 indicates timeout
-    }, [isAnswered]);
+        // if (timerRef.current) clearInterval(timerRef.current);
 
-    const handleAnswer = (answerIndex: number) => {
-        if (!session) return;
-
-        setSelectedAnswer(answerIndex);
+        const currentQ = questions[currentIndex];
+        const correct = optionIndex === currentQ.correctAnswer;
+        
+        setSelectedOption(optionIndex);
+        setIsCorrect(correct);
         setIsAnswered(true);
 
-        const currentQuestion = session.questions[session.currentQuestionIndex];
-        const correct = answerIndex === currentQuestion.correctAnswer;
-        setIsCorrect(correct);
-        setShowFeedback(true);
+        const earnedPoints = correct ? 10 : 0;
+        const newScore = score + earnedPoints;
+        setScore(newScore);
+        
+        // Save score immediately to localStorage
+        localStorage.setItem('nitroquiz_game_score', newScore.toString());
 
-        const answer: UserAnswer = {
-            questionId: currentQuestion.id,
-            selectedAnswer: answerIndex,
-            isCorrect: correct,
-            timeSpent: (settings?.timeLimit || 60) - timeLeft,
-            bonusPoints: correct ? 100 : 0,
-        };
+        // Update participant score in Supabase
+        if (sessionId && localStorage.getItem('nitroquiz_user')) {
+            try {
+                const user = JSON.parse(localStorage.getItem('nitroquiz_user') || '{}');
+                await supabase
+                    .from('participants')
+                    .update({ score: newScore })
+                    .eq('session_id', sessionId)
+                    .eq('nickname', user.nickname);
+            } catch (e) {
+                console.error("Failed to update score in DB", e);
+            }
+        }
 
-        const updatedSession: QuizSession = {
-            ...session,
-            answers: [...session.answers, answer],
-            totalPoints: session.totalPoints + (correct ? 100 : 0),
-        };
-
-        setSession(updatedSession);
-        saveQuizSession(updatedSession);
-
-        // Wait for feedback, then proceed
         setTimeout(() => {
-            goToNext(updatedSession);
+            nextQuestion();
         }, 1500);
     };
 
-    const goToNext = (currentSession: QuizSession) => {
-        const nextIndex = currentSession.currentQuestionIndex + 1;
-
-        // After question 3 (index 2), go to racing game
-        if (nextIndex === 3) {
-            const updatedSession: QuizSession = {
-                ...currentSession,
-                currentQuestionIndex: nextIndex,
-            };
-            saveQuizSession(updatedSession);
-            router.push('/gamespeed');
-            return;
-        }
-
-        // If all questions answered, go to results
-        if (nextIndex >= currentSession.questions.length) {
-            const finalSession: QuizSession = {
-                ...currentSession,
-                status: 'completed',
-                endTime: new Date().toISOString(),
-            };
-            saveQuizSession(finalSession);
-            router.push('/results');
-            return;
-        }
-
-        // Go to next question
-        const updatedSession: QuizSession = {
-            ...currentSession,
-            currentQuestionIndex: nextIndex,
-        };
-        setSession(updatedSession);
-        saveQuizSession(updatedSession);
-
-        // Reset state for next question
-        setSelectedAnswer(null);
+    const nextQuestion = () => {
+        const nextIdx = currentIndex + 1;
+        const nextRoundCount = questionsAnsweredInRound + 1;
+        
+        setCurrentIndex(nextIdx);
+        setQuestionsAnsweredInRound(nextRoundCount);
         setIsAnswered(false);
-        setShowFeedback(false);
-        setTimeLeft(settings?.timeLimit || 60);
+        setSelectedOption(null);
+        setIsCorrect(null);
+        
+        localStorage.setItem('nitroquiz_game_questionIndex', nextIdx.toString());
+
+        // Check if round or game is finished
+        if (nextRoundCount >= QUESTIONS_PER_ROUND || nextIdx >= questions.length) {
+            if (nextIdx >= questions.length) {
+                setStatusText("QUIZ FINISHED!");
+            } else {
+                setStatusText("ROUND COMPLETE!");
+            }
+        }
     };
 
-    if (!session) {
+    const handleBackToGame = () => {
+        if (currentIndex >= questions.length) {
+            router.push(`/player/${roomCode}/result`);
+        } else {
+            let customDiff = localStorage.getItem('nitroquiz_game_difficulty');
+            if (!customDiff) {
+                try {
+                    const settingsStr = localStorage.getItem('edurace_game_settings');
+                    if (settingsStr) {
+                        const settings = JSON.parse(settingsStr);
+                        customDiff = settings.difficulty;
+                    }
+                } catch (e) {}
+            }
+            const diff = customDiff || 'easy';
+            const route = (diff === 'normal' || diff === 'medium') ? '/gamespeed-medium' : '/gamespeed';
+            router.push(route);
+        }
+    };
+
+    if (!mounted || questions.length === 0 || currentIndex >= questions.length && questionsAnsweredInRound < QUESTIONS_PER_ROUND) {
+        if (currentIndex >= questions.length && questions.length > 0) {
+            // Handled by the check below
+        } else {
+            return (
+                <div className="min-h-screen bg-[#020617] flex flex-col items-center justify-center text-white font-rajdhani">
+                    <Loader2 className="w-12 h-12 text-blue-500 animate-spin mb-4" />
+                    <p className="text-xl tracking-widest uppercase">Initializing Quiz Round...</p>
+                </div>
+            );
+        }
+    }
+
+    // Round or Game complete screen
+    if (questionsAnsweredInRound >= QUESTIONS_PER_ROUND || currentIndex >= questions.length) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="animated-bg" />
-                <div className="spinner w-12 h-12" />
+            <div className="min-h-screen bg-[#020617] flex flex-col items-center justify-center text-white px-6 font-rajdhani">
+                <motion.div 
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="w-full max-w-md bg-[#0f172a] border border-blue-500/30 rounded-3xl p-8 text-center shadow-[0_0_50px_rgba(59,130,246,0.2)]"
+                >
+                    <Trophy className="w-20 h-20 text-yellow-400 mx-auto mb-6" />
+                    <h1 className="text-4xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">
+                        {statusText}
+                    </h1>
+                    <p className="text-gray-400 mb-8 uppercase tracking-[0.2em]">Total Score: {score}</p>
+                    
+                    <button
+                        onClick={handleBackToGame}
+                        className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 hover:scale-105 transition-transform active:scale-95 shadow-[0_10px_20px_rgba(37,99,235,0.3)]"
+                    >
+                        {currentIndex >= questions.length ? "VIEW RESULTS" : "CONTINUE RACE"}
+                        <ArrowRight className="w-5 h-5" />
+                    </button>
+                </motion.div>
             </div>
         );
     }
 
-    const currentQuestion = session.questions[session.currentQuestionIndex];
-    const progress = ((session.currentQuestionIndex + 1) / session.questions.length) * 100;
-    const timerPercentage = (timeLeft / (settings?.timeLimit || 60)) * 100;
+    const currentQ = questions[currentIndex];
 
     return (
-        <div className="min-h-screen py-8 px-4">
-            <div className="animated-bg" />
-
-            <div className="container mx-auto max-w-3xl">
-                {/* Header with stats */}
-                <div className="flex items-center justify-between mb-8">
-                    <div className="flex items-center gap-4">
-                        <div className="glass-card px-4 py-2 flex items-center gap-2">
-                            <span className="text-xl">📝</span>
-                            <span className="font-bold text-white">
-                                {session.currentQuestionIndex + 1}/{session.questions.length}
-                            </span>
-                        </div>
-                        <div className="glass-card px-4 py-2 flex items-center gap-2">
-                            <span className="text-amber-400">⭐</span>
-                            <span className="font-bold text-amber-300">{session.totalPoints} pts</span>
-                        </div>
+        <div className="min-h-screen bg-[#020617] text-white font-rajdhani overflow-hidden relative flex flex-col items-center justify-center p-6">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,_rgba(59,130,246,0.15),_transparent_50%)]" />
+            
+            <div className="w-full max-w-2xl relative z-10">
+                {/* Header Info */}
+                <div className="flex justify-between items-end mb-8 px-2">
+                    <div>
+                        <p className="text-blue-400 text-sm uppercase tracking-widest mb-1">Question</p>
+                        <h2 className="text-3xl font-black italic">{currentIndex + 1}<span className="text-blue-500/50 not-italic mx-1">/</span>{questions.length}</h2>
                     </div>
-
-                    {/* Timer */}
-                    <div className="relative">
-                        <div className={`glass-card px-6 py-3 flex items-center gap-3 ${timeLeft <= 10 ? 'border-red-500/50 animate-pulse' : ''
-                            }`}>
-                            <span className={`text-2xl ${timeLeft <= 10 ? 'text-red-400' : 'text-white'}`}>⏱️</span>
-                            <span className={`text-2xl font-bold font-mono ${timeLeft <= 10 ? 'text-red-400' : 'text-white'
-                                }`}>
-                                {String(Math.floor(timeLeft / 60)).padStart(2, '0')}:
-                                {String(timeLeft % 60).padStart(2, '0')}
-                            </span>
-                        </div>
-                        <div
-                            className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-1000"
-                            style={{ width: `${timerPercentage}%` }}
-                        />
+                    <div className="text-right">
+                        <p className="text-emerald-400 text-sm uppercase tracking-widest mb-1">Current Score</p>
+                        <h2 className="text-3xl font-black italic">{score}</h2>
                     </div>
                 </div>
 
-                {/* Progress Bar */}
-                <div className="mb-8">
-                    <div className="progress-bar h-3">
-                        <div
-                            className="progress-fill transition-all duration-500"
-                            style={{ width: `${progress}%` }}
-                        />
-                    </div>
-                </div>
+                {/* Question Box */}
+                <motion.div 
+                    key={currentIndex}
+                    initial={{ x: 50, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    className="bg-[#0f172a] border-l-4 border-blue-500 p-8 rounded-2xl mb-8 shadow-xl"
+                >
+                    <h3 className="text-2xl font-bold leading-tight">{currentQ.question}</h3>
+                </motion.div>
 
-                {/* Question Card */}
-                <div className="glass-card p-8 mb-8 fade-in">
-                    <div className="flex items-center gap-3 mb-6">
-                        <span className="px-3 py-1 rounded-full text-xs font-medium bg-indigo-500/20 text-indigo-400">
-                            Soal {session.currentQuestionIndex + 1}
-                        </span>
-                        <span className="px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/20 text-emerald-400 capitalize">
-                            {currentQuestion.difficulty}
-                        </span>
-                    </div>
+                {/* Timer Bar */}
+                {/* <div className="w-full h-1.5 bg-gray-800 rounded-full mb-8 overflow-hidden">
+                    <motion.div 
+                        className={`h-full ${timeLeft <= 5 ? 'bg-red-500' : 'bg-blue-500'}`}
+                        initial={{ width: '100%' }}
+                        animate={{ width: `${(timeLeft / 15) * 100}%` }}
+                        transition={{ duration: 1, ease: "linear" }}
+                    />
+                </div> */}
 
-                    <h2 className="text-2xl md:text-3xl font-bold text-white leading-relaxed">
-                        {currentQuestion.question}
-                    </h2>
-                </div>
-
-                {/* Answer Options */}
-                <div className="grid gap-4 mb-8">
-                    {currentQuestion.options.map((option, index) => {
-                        let buttonClass = 'quiz-card p-5 text-left transition-all';
-
-                        if (showFeedback) {
-                            if (index === currentQuestion.correctAnswer) {
-                                buttonClass += ' border-emerald-500 bg-emerald-500/20';
-                            } else if (index === selectedAnswer && !isCorrect) {
-                                buttonClass += ' border-red-500 bg-red-500/20';
+                {/* Options */}
+                <div className="grid grid-cols-1 gap-4">
+                    <AnimatePresence mode="wait">
+                        {currentQ.options.map((option, idx) => {
+                            const isSelected = selectedOption === idx;
+                            const isCorrectOption = idx === currentQ.correctAnswer;
+                            
+                            let bgColor = "bg-[#1e293b]";
+                            let borderColor = "border-transparent";
+                            
+                            if (isAnswered) {
+                                if (isCorrectOption) {
+                                    bgColor = "bg-emerald-500/20";
+                                    borderColor = "border-emerald-500";
+                                } else if (isSelected) {
+                                    bgColor = "bg-red-500/20";
+                                    borderColor = "border-red-500";
+                                }
+                            } else {
+                                bgColor = "hover:bg-blue-500/10 hover:border-blue-500/50";
                             }
-                        } else if (selectedAnswer === index) {
-                            buttonClass += ' border-indigo-500 bg-indigo-500/20';
-                        }
 
-                        return (
-                            <button
-                                key={index}
-                                onClick={() => !isAnswered && handleAnswer(index)}
-                                disabled={isAnswered}
-                                className={`${buttonClass} ${isAnswered ? 'cursor-not-allowed' : 'hover:border-indigo-500'} slide-up`}
-                                style={{ animationDelay: `${index * 0.1}s` }}
-                            >
-                                <div className="flex items-center gap-4">
-                                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-bold text-lg ${showFeedback && index === currentQuestion.correctAnswer
-                                        ? 'bg-emerald-500 text-white'
-                                        : showFeedback && index === selectedAnswer && !isCorrect
-                                            ? 'bg-red-500 text-white'
-                                            : 'bg-white/10 text-white'
-                                        }`}>
-                                        {String.fromCharCode(65 + index)}
+                            return (
+                                <motion.button
+                                    key={`${currentIndex}-${idx}`}
+                                    whileHover={!isAnswered ? { x: 10 } : {}}
+                                    whileTap={!isAnswered ? { scale: 0.98 } : {}}
+                                    onClick={() => handleAnswer(idx)}
+                                    disabled={isAnswered}
+                                    className={`w-full p-5 rounded-xl border-2 text-left flex items-center gap-4 transition-all ${bgColor} ${borderColor}`}
+                                >
+                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-lg ${isSelected ? 'bg-blue-500 text-white' : 'bg-black/20 text-blue-400'}`}>
+                                        {String.fromCharCode(65 + idx)}
                                     </div>
-                                    <span className="text-lg text-white">{option}</span>
-
-                                    {showFeedback && index === currentQuestion.correctAnswer && (
-                                        <span className="ml-auto text-2xl">✅</span>
-                                    )}
-                                    {showFeedback && index === selectedAnswer && !isCorrect && (
-                                        <span className="ml-auto text-2xl">❌</span>
-                                    )}
-                                </div>
-                            </button>
-                        );
-                    })}
+                                    <span className="text-lg font-medium flex-1">{option}</span>
+                                    {isAnswered && isCorrectOption && <Check className="text-emerald-500 w-6 h-6" />}
+                                    {isAnswered && isSelected && !isCorrectOption && <X className="text-red-500 w-6 h-6" />}
+                                </motion.button>
+                            );
+                        })}
+                    </AnimatePresence>
                 </div>
-
-                {/* Feedback Message */}
-                {showFeedback && (
-                    <div className={`glass-card p-6 text-center fade-in ${isCorrect ? 'border-emerald-500/50 bg-emerald-500/10' : 'border-red-500/50 bg-red-500/10'
-                        }`}>
-                        <div className="text-4xl mb-3">{isCorrect ? '🎉' : '😔'}</div>
-                        <h3 className={`text-xl font-bold ${isCorrect ? 'text-emerald-400' : 'text-red-400'}`}>
-                            {isCorrect ? 'Benar! +100 poin' : 'Salah!'}
-                        </h3>
-                        <p className="text-gray-400 mt-2">
-                            {session.currentQuestionIndex === 2
-                                ? 'Bersiap untuk mini-game balapan!'
-                                : 'Lanjut ke soal berikutnya...'}
-                        </p>
-                    </div>
-                )}
             </div>
+
+            {/* Background elements */}
+            <div className="fixed bottom-0 left-0 w-full h-1/2 bg-[linear-gradient(transparent_0%,rgba(59,130,246,0.05)_1px,transparent_1px),linear-gradient(90deg,transparent_0%,rgba(59,130,246,0.05)_1px,transparent_1px)] bg-[length:50px_50px] [transform:perspective(500px)_rotateX(60deg)] origin-bottom -z-10" />
         </div>
     );
 }

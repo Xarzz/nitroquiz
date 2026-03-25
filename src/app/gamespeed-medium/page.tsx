@@ -264,8 +264,14 @@ export default function GameSpeedPage() {
 
             const promises: Promise<void>[] = [];
 
-            // Load from ASSET_LIST (named assets)
-            ASSET_LIST.forEach(item => {
+            // Extend asset list with obstacles for medium mode
+            const obstacles = [
+                { name: 'obstacle1', src: '/assets/material/pembatas_jalan/1penghalang.webp' },
+                { name: 'obstacle2', src: '/assets/material/pembatas_jalan/1roadbarrier.webp' }
+            ];
+
+            // Load from ASSET_LIST + obstacles (named assets)
+            [...ASSET_LIST, ...obstacles].forEach(item => {
                 promises.push(new Promise<void>((resolve) => {
                     const img = new Image();
                     img.onload = () => {
@@ -427,17 +433,29 @@ export default function GameSpeedPage() {
 
     const resetRoad = () => {
         state.current.segments = [];
-        // A cleaner, less "messy" track layout (Simplified Circuit)
+        
+        // --- MEDIUM DIFFICULTY TRACK LAYOUT ---
+        // A much more twisty track with more curves, s-curves, and hills
         addStraight(ROAD_CONF.LENGTH.SHORT);
-        addCurve(ROAD_CONF.LENGTH.MEDIUM, ROAD_CONF.CURVE.MEDIUM, ROAD_CONF.HILL.LOW);
-        addStraight(ROAD_CONF.LENGTH.LONG);
-        addCurve(ROAD_CONF.LENGTH.MEDIUM, -ROAD_CONF.CURVE.MEDIUM, ROAD_CONF.HILL.NONE);
+        addCurve(ROAD_CONF.LENGTH.MEDIUM, ROAD_CONF.CURVE.EASY, ROAD_CONF.HILL.NONE);
+        addStraight(ROAD_CONF.LENGTH.SHORT);
+        
+        // Start difficult part
+        addSCurves();
+        addBumps();
+        
+        addCurve(ROAD_CONF.LENGTH.LONG, -ROAD_CONF.CURVE.MEDIUM, ROAD_CONF.HILL.MEDIUM);
         addStraight(ROAD_CONF.LENGTH.MEDIUM);
-        addCurve(ROAD_CONF.LENGTH.LONG, ROAD_CONF.CURVE.EASY, ROAD_CONF.HILL.MEDIUM);
-        addStraight(ROAD_CONF.LENGTH.LONG);
-        addCurve(ROAD_CONF.LENGTH.MEDIUM, ROAD_CONF.CURVE.MEDIUM, -ROAD_CONF.HILL.LOW);
-        addStraight(ROAD_CONF.LENGTH.SHORT);
-        addDownhillToEnd(200);
+        
+        addSCurves();
+        
+        addCurve(ROAD_CONF.LENGTH.LONG, ROAD_CONF.CURVE.HARD, -ROAD_CONF.HILL.MEDIUM);
+        addCurve(ROAD_CONF.LENGTH.LONG, -ROAD_CONF.CURVE.HARD, ROAD_CONF.HILL.HIGH);
+        addBumps();
+        
+        addStraight(ROAD_CONF.LENGTH.MEDIUM);
+        
+        addDownhillToEnd(250);
 
         const len = state.current.segments.length;
 
@@ -522,6 +540,32 @@ export default function GameSpeedPage() {
             };
             state.current.cars.push(car);
             findSegment(z).cars.push(car);
+        }
+
+        // Add Stationary Obstacles for Medium Mode
+        for (let n = 0; n < 25; n++) {
+            // Start spawning obstacles after the first 20 segments to give
+            // the player some time to react, and distribute them across the track length
+            const zLength = len * SEGMENT_LENGTH;
+            const startOffset = 20 * SEGMENT_LENGTH;
+            const z = startOffset + Math.random() * (zLength - startOffset - 1000);
+            
+            // Random lane placement (-0.8 to 0.8)
+            const offset = (Math.random() * 1.6) - 0.8; 
+            
+            const isBarrier = Math.random() > 0.5;
+            const obstacleSprite = isBarrier ? state.current.sprites.obstacle2 : state.current.sprites.obstacle1;
+
+            const obstacle: Car = {
+                offset: offset,
+                z: z,
+                sprite: obstacleSprite || state.current.sprites.truck2,
+                speed: 0,
+                percent: 0,
+                type: 'obstacle' as any // Treating obstacle as a 0-speed NPC car for collision
+            };
+            state.current.cars.push(obstacle);
+            findSegment(z).cars.push(obstacle);
         }
 
         // Spawn Rival Opponent
@@ -1092,7 +1136,8 @@ export default function GameSpeedPage() {
 
         // Road Boundary Limit (Acts as invisible barrier)
         nextPlayerX = Util.limit(nextPlayerX, -1.5, 1.5);
-        nextSpeed = Util.limit(nextSpeed, 0, MAX_SPEED);
+        // Allow slightly negative speed for bounce-back physics
+        nextSpeed = Util.limit(nextSpeed, -MAX_SPEED / 2, MAX_SPEED);
 
         state.current.playerX = nextPlayerX;
         state.current.speed = nextSpeed;
@@ -1116,6 +1161,7 @@ export default function GameSpeedPage() {
                     if (nextSpeed > car.speed) {
                         const impact = nextSpeed - car.speed;
                         // "Mental ke belakang" effect lebih pendek/halus
+                        // Pengali dikecilkan dari 0.8 menjadi 0.15 agar mentalannya tidak jauh as per request
                         nextSpeed = car.speed - (impact * 0.15);
                         
                         // Mild horizontal push physically shifting out of object bounds
@@ -1124,6 +1170,9 @@ export default function GameSpeedPage() {
                         
                         // Disable throttle smoothly so the player gets thrown back without jittering
                         state.current.keyFaster = false;
+                        
+                        // Do NOT use Util.increase to abruptly teleport position.
+                        // Integration physics will automatically move player backwards via negative nextSpeed!
                     }
                 }
             }

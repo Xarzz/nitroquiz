@@ -316,7 +316,7 @@ export default function HostRoomPage() {
       }
     }
     // 2. Start host-side countdown
-    setCountdown(10);
+    setCountdown(5);
   };
 
   useEffect(() => {
@@ -453,7 +453,7 @@ export default function HostRoomPage() {
 
   return (
     <div
-      className="min-h-screen bg-[#0a0a0f] relative overflow-hidden font-body text-white flex flex-col"
+      className="h-screen bg-[#0a0a0f] relative overflow-hidden font-body text-white flex flex-col"
       onClick={() => setHasInteracted(true)}
     >
       {/* Background Layers */}
@@ -463,53 +463,45 @@ export default function HostRoomPage() {
       <div className="fixed bottom-0 w-full h-1/2 bg-[linear-gradient(transparent_0%,rgba(45,106,242,0.1)_1px,transparent_1px),linear-gradient(90deg,transparent_0%,rgba(45,106,242,0.1)_1px,transparent_1px)] bg-[length:60px_60px] [transform:perspective(500px)_rotateX(60deg)] origin-bottom z-0 pointer-events-none opacity-20"></div>
       <div className="scanlines"></div>
 
-      {/* Main Content */}
-      <div className="relative z-20 flex flex-col h-full w-full mx-auto p-4 md:p-8">
-        {/* Header */}
-        <div className="w-full px-4 md:px-6 pt-4 pb-2 flex items-center justify-between mb-6">
-          <div className="flex flex-col items-center justify-center">
-            <img
-              src="/assets/logo/logo1.png"
-              alt="NitroQuiz Logo"
-              width={140}
-              height={40}
-              className="object-contain"
-            />
-          </div>
+      {/* Main Content Wrapper - Fixed to viewport */}
+      <div className="relative z-20 flex flex-col h-full w-full mx-auto px-6 md:px-10 pb-4">
+        {/* Header - Logos in corners with improved visibility and balanced symmetry */}
+        <div className="w-full flex items-center justify-between pt-8 mb-8">
+          <img
+            src="/assets/logo/logo1.png"
+            alt="NitroQuiz Logo"
+            width={150}
+            height={42}
+            className="object-contain"
+          />
           <img
             src="/assets/logo/logo2.png"
             alt="GameForSmart.com"
             width={240}
             height={60}
-            className="object-contain opacity-70 hover:opacity-100 transition-opacity duration-300 drop-shadow-[0_0_10px_rgba(45,106,242,0.3)]"
+            className="object-contain opacity-80 hover:opacity-100 transition-opacity duration-300 drop-shadow-[0_0_15px_rgba(45,106,242,0.4)]"
           />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start relative">
-          {/* Left Column: Room Details (4 cols) */}
-          <div className="lg:col-span-4 space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-stretch relative flex-1 min-h-0 overflow-hidden">
+          {/* Left Column: Room Details (4/12 split) */}
+          <div className="md:col-span-4 space-y-4 flex flex-col min-h-0 h-full">
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 30 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{
-                duration: 0.6,
-                delay: 0.1,
-                type: "spring",
-                stiffness: 100,
-                damping: 12,
-              }}
-              className="flex flex-col gap-4 bg-black/60 backdrop-blur-md rounded-[2rem] p-8 shadow-[0_0_30px_rgba(45,106,242,0.15)] border border-[#2d6af2]/50 relative overflow-hidden group"
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="flex flex-col gap-4 bg-black/65 backdrop-blur-md rounded-[2.5rem] p-7 shadow-[0_0_40px_rgba(45,106,242,0.2)] border border-[#2d6af2]/60 relative overflow-y-auto custom-scrollbar group h-full"
             >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#2d6af2]/20 to-transparent rounded-bl-full pointer-events-none"></div>
+            <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-[#2d6af2]/25 to-transparent rounded-bl-full pointer-events-none"></div>
 
-              <div className="text-center relative z-10">
-                <div
-                  className="relative group/code cursor-pointer bg-white/5 rounded-2xl p-4 border border-white/10 hover:border-[#2d6af2]/50 transition-all"
-                  onClick={() => copyToClipboard(roomCode, setCopiedRoom)}
-                >
-                  <h1 className="font-display text-5xl sm:text-6xl text-white tracking-widest drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]">
-                    {roomCode}
-                  </h1>
+            <div className="text-center relative z-10">
+              <div
+                className="relative group/code cursor-pointer bg-white/5 rounded-2xl p-5 border border-white/10 hover:border-[#2d6af2]/50 transition-all"
+                onClick={() => copyToClipboard(roomCode, setCopiedRoom)}
+              >
+                <h1 className="font-display text-5xl sm:text-6xl text-white tracking-widest drop-shadow-[0_0_20px_rgba(255,255,255,0.6)]">
+                  {roomCode}
+                </h1>
                   <div className="absolute top-2 right-2">
                     {copiedRoom ? (
                       <Check size={14} className="text-[#00ff9d]" />
@@ -523,18 +515,20 @@ export default function HostRoomPage() {
                 </div>
               </div>
 
-              <div
-                className="flex justify-center bg-white p-4 rounded-2xl w-[220px] sm:w-[260px] md:w-[300px] lg:w-[20vw] xl:w-[22vw] mx-auto shadow-[0_0_20px_rgba(45,106,242,0.3)] relative group/qr cursor-pointer"
-                onClick={() => setOpen(true)}
-              >
-                <QRCode
-                  value={joinLink}
-                  style={{ width: "100%", height: "auto" }}
-                />
-              </div>
+            <div
+              className="flex justify-center bg-transparent p-4 rounded-3xl w-[180px] md:w-[240px] lg:w-full mx-auto shadow-[0_0_40px_rgba(45,106,242,0.5)] relative group/qr cursor-pointer max-h-[30vh] aspect-square border border-white/10 backdrop-blur-sm"
+              onClick={() => setOpen(true)}
+            >
+              <QRCode
+                value={joinLink}
+                style={{ width: "100%", height: "100%" }}
+                bgColor="transparent"
+                fgColor="white"
+              />
+            </div>
 
               <div
-                className="relative group/link cursor-pointer bg-[#0a101f] p-4 rounded-xl border border-[#2d6af2]/20 hover:border-[#2d6af2] transition-all"
+                className="relative group/link cursor-pointer bg-[#0a101f] p-3 rounded-xl border border-[#2d6af2]/20 hover:border-[#2d6af2] transition-all"
                 onClick={() => copyToClipboard(joinLink, setCopiedJoin)}
               >
                 <p className="text-center text-[#2d6af2] text-xs font-display tracking-wider truncate px-6">
@@ -552,40 +546,40 @@ export default function HostRoomPage() {
                 </div>
               </div>
 
-              <Button
-                onClick={startGame}
-                disabled={participants.length === 0 || countdown !== null}
-                className="w-full bg-gradient-to-r from-[#2d6af2] to-[#00ff9d] hover:from-[#3b7bf5] hover:to-[#33ffb0] text-black font-display text-lg py-6 rounded-xl shadow-[0_0_20px_rgba(45,106,242,0.4)] hover:shadow-[0_0_30px_rgba(45,106,242,0.6)] transition-all uppercase tracking-widest transform active:scale-[0.98] disabled:from-gray-800 disabled:to-gray-800 disabled:text-gray-500 disabled:shadow-none border-none relative overflow-hidden"
-              >
-                <div className="absolute inset-0 bg-[#00ff9d]/20 blur-xl opacity-0 hover:opacity-100 transition-opacity"></div>
-                <span className="relative z-10 flex items-center justify-center gap-2">
-                  <Play className="fill-current w-5 h-5" />
-                  {countdown !== null ? "STARTING..." : t("hostroom.start")}
-                </span>
-              </Button>
+            <Button
+              onClick={startGame}
+              disabled={participants.length === 0 || countdown !== null}
+              className="w-full bg-gradient-to-r from-[#2d6af2] to-[#00ff9d] hover:from-[#3b7bf5] hover:to-[#33ffb0] text-black font-display text-xl py-6 rounded-2xl shadow-[0_0_25px_rgba(45,106,242,0.5)] hover:shadow-[0_0_40px_rgba(45,106,242,0.7)] transition-all uppercase tracking-widest transform active:scale-[0.98] disabled:from-gray-800 disabled:to-gray-800 disabled:text-gray-500 disabled:shadow-none border-none relative overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-[#00ff9d]/20 blur-xl opacity-0 hover:opacity-100 transition-opacity"></div>
+              <span className="relative z-10 flex items-center justify-center gap-3">
+                <Play className="fill-current w-6 h-6" />
+                {countdown !== null ? "STARTING..." : t("hostroom.start")}
+              </span>
+            </Button>
 
               <div className="flex gap-4">
                 <Button
                   onClick={() => router.push("/host/select-quiz")}
-                  className="flex-1 bg-transparent border border-red-500/50 text-red-500 hover:bg-red-500/10 hover:border-red-500 font-display text-xs uppercase tracking-wider h-12 rounded-xl transition-all shadow-[0_0_10px_rgba(239,68,68,0.1)]"
+                  className="flex-1 bg-transparent border border-red-500/50 text-red-500 hover:bg-red-500/10 hover:border-red-500 font-display text-[10px] uppercase tracking-wider h-10 rounded-xl transition-all shadow-[0_0_10px_rgba(239,68,68,0.1)]"
                 >
-                  <LogOut className="mr-2 h-4 w-4" />
+                  <LogOut className="mr-1.5 h-3.5 w-3.5" />
                   Exit
                 </Button>
 
                 <Button
                   onClick={() => setShareOpen(true)}
-                  className="flex-1 bg-[#2d6af2]/10 border border-[#2d6af2]/30 text-[#2d6af2] hover:bg-[#2d6af2]/20 hover:text-white font-display text-xs uppercase tracking-wider h-12 rounded-xl transition-all shadow-[0_0_10px_rgba(45,106,242,0.2)]"
+                  className="flex-1 bg-[#2d6af2]/10 border border-[#2d6af2]/30 text-[#2d6af2] hover:bg-[#2d6af2]/20 hover:text-white font-display text-[10px] uppercase tracking-wider h-10 rounded-xl transition-all shadow-[0_0_10px_rgba(45,106,242,0.2)]"
                 >
-                  <Share2 className="mr-2 h-4 w-4" />
+                  <Share2 className="mr-1.5 h-3.5 w-3.5" />
                   Invite
                 </Button>
               </div>
             </motion.div>
           </div>
 
-          {/* Right Column: Players (8 cols) */}
-          <div className="lg:col-span-8 h-full min-h-[500px]">
+          {/* Right Column: Players (8/12 split) */}
+          <div className="md:col-span-8 flex flex-col min-h-0 overflow-hidden h-full">
             <motion.div
               initial={{ opacity: 0, scale: 0.95, x: 30 }}
               animate={{ opacity: 1, scale: 1, x: 0 }}
@@ -596,16 +590,16 @@ export default function HostRoomPage() {
                 stiffness: 100,
                 damping: 14,
               }}
-              className="bg-black/60 backdrop-blur-md rounded-[2rem] p-4 h-full shadow-[0_0_30px_rgba(0,255,157,0.1)] border border-[#00ff9d]/30 relative overflow-hidden flex flex-col"
-            >
+              className="bg-black/65 backdrop-blur-md rounded-[2.5rem] p-6 h-full shadow-[0_0_40px_rgba(0,255,157,0.15)] border border-[#00ff9d]/40 relative overflow-hidden flex flex-col"
+          >
               <div className="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-[#00ff9d]/10 to-transparent rounded-br-full pointer-events-none"></div>
 
-              <div className="flex items-center justify-between gap-1 relative z-10 border-b border-[#00ff9d]/10 pb-4">
-                <div className="flex items-center gap-2">
-                  <div className="p-3">
-                    <Users size={24} />
+              <div className="flex items-center justify-between gap-1 relative z-10 border-b border-[#00ff9d]/10 pb-2">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 bg-[#00ff9d]/5 rounded-xl border border-[#00ff9d]/10">
+                    <Users size={30} className="text-[#00ff9d]" />
                   </div>
-                  <h2 className="font-display text-2xl text-white tracking-wide">
+                  <h2 className="font-display text-3xl text-white tracking-wide">
                     Players: {participants.length}
                   </h2>
                 </div>
@@ -682,7 +676,7 @@ export default function HostRoomPage() {
                     </div>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-4 pt-5">
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 pb-3 pt-3">
                     <AnimatePresence>
                       {participants.map((player) => (
                         <motion.div
@@ -690,7 +684,7 @@ export default function HostRoomPage() {
                           initial={{ opacity: 0, scale: 0.9 }}
                           animate={{ opacity: 1, scale: 1 }}
                           exit={{ opacity: 0, scale: 0.9 }}
-                          className={`group relative bg-[#0a101f] border ${selectedPlayerIds.includes(player.id) ? "border-[#00ff9d] bg-[#00ff9d]/5 shadow-[0_0_15px_rgba(0,255,157,0.3)]" : "border-[#2d6af2]/20 hover:border-[#2d6af2] hover:shadow-[0_0_20px_rgba(45,106,242,0.3)]"} rounded-xl p-4 flex flex-col items-center transition-all hover:-translate-y-1 cursor-pointer overflow-hidden`}
+                          className={`group relative bg-[#0a101f] border ${selectedPlayerIds.includes(player.id) ? "border-[#00ff9d] bg-[#00ff9d]/15 shadow-[0_0_20px_rgba(0,255,157,0.4)]" : "border-[#2d6af2]/25 hover:border-[#2d6af2] hover:shadow-[0_0_25px_rgba(45,106,242,0.4)]"} rounded-2xl p-4 flex flex-col items-center transition-all hover:-translate-y-1.5 cursor-pointer overflow-hidden`}
                           onClick={(e) => toggleSelectPlayer(player.id, e)}
                         >
                           {/* Selection Checkbox — visible on hover or when selected */}
@@ -708,7 +702,7 @@ export default function HostRoomPage() {
 
                           <div className="relative mb-3 w-full flex justify-center">
                             <div className="absolute inset-0 bg-[#2d6af2]/20 blur-xl rounded-full scale-50 group-hover:scale-100 transition-transform duration-500"></div>
-                            <div className="w-20 h-20 rounded-full border-2 border-[#2d6af2]/40 bg-black/40 overflow-hidden flex items-center justify-center p-0 shadow-[0_0_15px_rgba(45,106,242,0.2)] relative z-10 transition-transform group-hover:scale-110">
+                            <div className="w-16 h-16 rounded-full border-2 border-[#2d6af2]/40 bg-black/40 overflow-hidden flex items-center justify-center p-0 shadow-[0_0_15px_rgba(45,106,242,0.2)] relative z-10 transition-transform group-hover:scale-110">
                               {player.avatar_url ? (
                                 <img
                                   src={player.avatar_url}
@@ -731,9 +725,9 @@ export default function HostRoomPage() {
                           </div>
 
                           <div className="w-full text-center relative z-10 max-w-full">
-                            <div className="bg-[#2d6af2]/10 border border-[#2d6af2]/20 rounded px-2 py-1 mb-1 max-w-full overflow-hidden">
+                            <div className="bg-[#2d6af2]/10 border border-[#2d6af2]/30 rounded-lg px-3 py-1.5 mb-1 max-w-full overflow-hidden">
                               <p
-                                className="font-display text-white text-xs tracking-wide truncate w-full"
+                                className="font-display text-white text-sm tracking-widest truncate w-full"
                                 title={player.nickname}
                               >
                                 {player.nickname}
@@ -928,10 +922,14 @@ export default function HostRoomPage() {
           {/* Racing lights */}
           <div className="flex gap-4 mb-10">
             {[0, 1, 2, 3, 4].map((i) => {
-              const val = 10 - i * 2; // Map 10s to 5 dots
+              const val = 5 - i; // Map 5s to 5 dots
               const isLit = countdown <= val;
               const isGo = countdown <= 0;
-              const color = isGo ? "#00ff9d" : "#ef4444";
+              let color = "#3b82f6"; // Default Blue for 5, 4
+              if (val === 3) color = "#ef4444";
+              if (val === 2) color = "#facc15";
+              if (val === 1 || isGo) color = "#00ff9d";
+              
               return (
                 <div
                   key={i}
@@ -960,9 +958,11 @@ export default function HostRoomPage() {
           <span
             key={countdown}
             className={`font-display text-[150px] md:text-[220px] font-black leading-none tracking-tighter ${
-              countdown > 6
-                ? "text-[#2d6af2]"
-                : countdown > 3
+              countdown >= 4
+                ? "text-blue-500"
+                : countdown === 3
+                ? "text-red-500"
+                : countdown === 2
                   ? "text-yellow-400"
                   : "text-[#00ff9d]"
             } drop-shadow-[0_0_50px_currentColor]`}
@@ -975,8 +975,13 @@ export default function HostRoomPage() {
           </span>
 
           {countdown > 0 && (
-            <p className="font-display text-xl md:text-2xl tracking-[0.3em] uppercase text-gray-500 mt-6">
-              RACE STARTING
+            <p className="font-display text-xl md:text-2xl tracking-[0.3em] uppercase text-gray-500 mt-6 animate-pulse">
+              {countdown >= 4 ? "PREPARING" : countdown === 3 ? "READY" : countdown === 2 ? "STEADY" : "GO RACE"}
+            </p>
+          )}
+          {countdown === 0 && (
+            <p className="font-display text-xl md:text-2xl tracking-[0.3em] uppercase text-[#00ff9d] mt-6">
+              GO!
             </p>
           )}
 
