@@ -304,31 +304,31 @@ export default function GameSpeedPage() {
             // Only load unique sources that aren't already covered (though re-loading is safe-ish, better to check)
 
             // To properly support the new direct 'src' usage in TRACK_ASSETS without re-defining them in ASSET_LIST:
-            TRACK_ASSETS.forEach(item => {
-                if (item.src) {
-                    promises.push(new Promise<void>((resolve) => {
-                        const img = new Image();
-                        img.onload = () => {
-                            (img as any).assetName = item.src; // Use src as name for these
-                            // Simpan dengan key 'src' 
-                            state.current.sprites[item.src] = img;
-                            resolve();
-                        };
-                        img.onerror = () => {
-                            // Fallback
-                            const cvs = document.createElement('canvas');
-                            cvs.width = 128; cvs.height = 128;
-                            const ctx = cvs.getContext('2d');
-                            if (ctx) {
-                                ctx.fillStyle = '#f0f'; // Pink for error
-                                ctx.fillRect(0, 0, 128, 128);
-                                state.current.sprites[item.src] = cvs;
-                            }
-                            resolve();
-                        };
-                        img.src = item.src;
-                    }));
-                }
+            const uniqueSources = Array.from(new Set(TRACK_ASSETS.map(item => item.src))).filter(Boolean);
+            
+            uniqueSources.forEach(src => {
+                promises.push(new Promise<void>((resolve) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        (img as any).assetName = src; // Use src as name for these
+                        // Simpan dengan key 'src' 
+                        state.current.sprites[src] = img;
+                        resolve();
+                    };
+                    img.onerror = () => {
+                        // Fallback
+                        const cvs = document.createElement('canvas');
+                        cvs.width = 128; cvs.height = 128;
+                        const ctx = cvs.getContext('2d');
+                        if (ctx) {
+                            ctx.fillStyle = '#f0f'; // Pink for error
+                            ctx.fillRect(0, 0, 128, 128);
+                            state.current.sprites[src] = cvs;
+                        }
+                        resolve();
+                    };
+                    img.src = src;
+                }));
             });
 
             await Promise.all(promises);
