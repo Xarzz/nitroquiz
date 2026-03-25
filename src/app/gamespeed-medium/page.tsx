@@ -1136,8 +1136,8 @@ export default function GameSpeedPage() {
 
         // Road Boundary Limit (Acts as invisible barrier)
         nextPlayerX = Util.limit(nextPlayerX, -1.5, 1.5);
-        // Allow slightly negative speed for bounce-back physics
-        nextSpeed = Util.limit(nextSpeed, -MAX_SPEED / 2, MAX_SPEED);
+        // Speed cannot go below 0 — no reverse driving allowed
+        nextSpeed = Util.limit(nextSpeed, 0, MAX_SPEED);
 
         state.current.playerX = nextPlayerX;
         state.current.speed = nextSpeed;
@@ -1161,18 +1161,16 @@ export default function GameSpeedPage() {
                     if (nextSpeed > car.speed) {
                         const impact = nextSpeed - car.speed;
                         // "Mental ke belakang" effect lebih pendek/halus
-                        // Pengali dikecilkan dari 0.8 menjadi 0.15 agar mentalannya tidak jauh as per request
-                        nextSpeed = car.speed - (impact * 0.15);
+                        // Jangan gunakan speed negatif karena akan membuat mobil terus mundur
+                        nextSpeed = 0; 
+                        position = Util.increase(position, -300, trackLength); // "duk" ke belakang sedikit secara instan
                         
                         // Mild horizontal push physically shifting out of object bounds
                         const dir = nextPlayerX > car.offset ? 1 : -1;
                         nextPlayerX += dir * 0.1;
                         
-                        // Disable throttle smoothly so the player gets thrown back without jittering
+                        // Disable throttle smoothly
                         state.current.keyFaster = false;
-                        
-                        // Do NOT use Util.increase to abruptly teleport position.
-                        // Integration physics will automatically move player backwards via negative nextSpeed!
                     }
                 }
             }

@@ -13,7 +13,7 @@
     },
     {
         "name": "npc_car",
-        "src": "/assets/vehicles/car_ai_blue.jpg"
+        "src": "/assets/vehicles/foward-opponent.png"
     },
     {
         "name": "car_rival",
@@ -21,11 +21,11 @@
     },
     {
         "name": "truck1",
-        "src": "/assets/vehicles/truck1.png"
+        "src": "/assets/vehicles/truck/0.webp"
     },
     {
         "name": "truck2",
-        "src": "/assets/vehicles/truck2.png"
+        "src": "/assets/vehicles/truck/1.webp"
     },
     {
         "name": "truck_straight_0",
@@ -77,7 +77,7 @@
     },
     {
         "name": "car_1st",
-        "src": "/assets/characters/scloski/1pov/1.png"
+        "src": "/assets/characters/scloski/1pov/0lurus.png"
     },
     {
         "name": "mc_1st_straight_0",
@@ -109,19 +109,19 @@
     },
     {
         "name": "start_1",
-        "src": "assets/characters/scloski/start/1rem.png"
+        "src": "/assets/characters/scloski/start/1rem.png"
     },
     {
         "name": "start_2",
-        "src": "assets/characters/scloski/start/2rem.png"
+        "src": "/assets/characters/scloski/start/2rem.png"
     },
     {
         "name": "start_3",
-        "src": "assets/characters/scloski/start/3rem.png"
+        "src": "/assets/characters/scloski/start/3rem.png"
     },
     {
         "name": "start_4",
-        "src": "assets/characters/scloski/start/4rem.png"
+        "src": "/assets/characters/scloski/start/4rem.png"
     },
     {
         "name": "mc_straight_0",

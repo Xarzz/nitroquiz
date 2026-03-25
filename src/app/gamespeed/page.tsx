@@ -1116,13 +1116,14 @@ export default function GameSpeedPage() {
                     if (nextSpeed > car.speed) {
                         const impact = nextSpeed - car.speed;
                         // "Mental ke belakang" effect lebih pendek/halus
-                        nextSpeed = car.speed - (impact * 0.15);
+                        nextSpeed = 0; 
+                        position = Util.increase(position, -300, trackLength); // "duk" ke belakang sedikit secara instan
                         
                         // Mild horizontal push physically shifting out of object bounds
                         const dir = nextPlayerX > car.offset ? 1 : -1;
                         nextPlayerX += dir * 0.1;
                         
-                        // Disable throttle smoothly so the player gets thrown back without jittering
+                        // Disable throttle smoothly
                         state.current.keyFaster = false;
                     }
                 }
