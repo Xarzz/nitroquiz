@@ -196,10 +196,10 @@ export default function Home() {
 
   if (!user || isHosting || isRedirecting) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#0d1b3e] relative overflow-hidden font-display text-white">
+      <div className="flex items-center justify-center min-h-screen bg-[#04060f] relative overflow-hidden font-display text-white">
         <div className="text-center z-10">
-          <div className="w-16 h-16 border-4 border-[#4a3d8f]/30 border-t-[#a98dc5] rounded-full animate-spin mx-auto mb-6"></div>
-          <p className="mt-4 text-[#a98dc5] text-xl tracking-[0.2em] uppercase animate-pulse">
+          <div className="w-16 h-16 border-4 border-[#2d6af2]/30 border-t-[#00ff9d] rounded-full animate-spin mx-auto mb-6"></div>
+          <p className="mt-4 text-[#00ff9d] text-xl tracking-[0.2em] uppercase animate-pulse">
             Establishing Signal...
           </p>
         </div>
@@ -208,18 +208,14 @@ export default function Home() {
   }
 
   return (
-    <div className="bg-[#0d1b3e] text-white min-h-screen relative overflow-hidden font-body selection:bg-[#4a3d8f] selection:text-white flex flex-col">
+    <div className="bg-[#04060f] text-white min-h-screen relative overflow-hidden font-body selection:bg-[#2d6af2] selection:text-white flex flex-col">
       {/* Main Background Image */}
-      <div 
-        className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat pointer-events-none"
-        style={{ 
-          backgroundImage: 'url("/assets/backgorund/homepage_bg.png")',
-          backgroundAttachment: 'fixed'
-        }}
-      ></div>
+      <div className="absolute inset-0 z-0 bg-[linear-gradient(rgba(0,255,157,0.022)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,157,0.022)_1px,transparent_1px)] bg-[length:80px_80px]" />
+      <div className="absolute bottom-0 left-0 right-0 h-52 z-0 bg-[linear-gradient(transparent_0%,rgba(45,106,242,0.06)_1px,transparent_1px),linear-gradient(90deg,transparent_0%,rgba(45,106,242,0.06)_1px,transparent_1px)] bg-[length:80px_40px] [transform:perspective(400px)_rotateX(60deg)] origin-bottom pointer-events-none opacity-60" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_50%_50%,rgba(45,106,242,0.07),transparent)] z-0" />
       
       {/* Overlays to ensure readability and mood */}
-      <div className="fixed inset-0 z-0 bg-gradient-to-t from-[#0d1b3e] via-[#0d1b3e]/60 to-[#4a3d8f]/10 pointer-events-none"></div>
+      <div className="fixed inset-0 z-0 bg-gradient-to-t from-[#04060f] via-[#04060f]/60 to-[#2d6af2]/10 pointer-events-none"></div>
       <div className="scanlines"></div>
 
       {/* Top Bar: Logo1 left, Logo2 right */}
@@ -254,8 +250,8 @@ export default function Home() {
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             className={`w-11 h-11 flex items-center justify-center rounded-2xl transition-all duration-300 border ${
               isDropdownOpen
-                ? "bg-[#4a3d8f] border-[#a98dc5] text-white shadow-[0_0_20px_rgba(74,61,143,0.6)]"
-                : "bg-[#0d1b3e]/60 backdrop-blur-md border-white/10 text-gray-400 hover:text-white hover:border-[#a98dc5]/30"
+                ? "bg-[#2d6af2]/20 border-[#00ff9d] text-white shadow-[0_0_20px_rgba(0,255,157,0.4)]"
+                : "bg-[#080d1a]/60 backdrop-blur-md border-white/10 text-gray-400 hover:text-white hover:border-[#00ff9d]/50"
             }`}
           >
             {isDropdownOpen ? (
@@ -272,13 +268,13 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
                 transition={{ duration: 0.2, ease: "easeOut" }}
-                className="absolute top-14 right-0 w-72 bg-[#0d1b3e]/95 backdrop-blur-2xl border border-[#4a3d8f]/30 rounded-[2rem] shadow-[0_20px_50px_rgba(13,27,62,0.7)] overflow-hidden flex flex-col font-body z-[101]"
+                className="absolute top-14 right-0 w-72 bg-[#080d1a]/95 backdrop-blur-2xl border border-[#2d6af2]/30 rounded-[2rem] shadow-[0_0_50px_rgba(45,106,242,0.12),inset_0_1px_0_rgba(255,255,255,0.06)] overflow-hidden flex flex-col font-body z-[101]"
               >
                 {/* User Header */}
                 <div className="p-6 bg-gradient-to-br from-white/[0.05] to-transparent border-b border-white/5">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-[#4a3d8f]/20 flex items-center justify-center border border-[#4a3d8f]/30">
-                      <UserIcon className="w-6 h-6 text-[#a98dc5]" />
+                    <div className="w-12 h-12 rounded-2xl bg-[#2d6af2]/20 flex items-center justify-center border border-[#2d6af2]/30">
+                      <UserIcon className="w-6 h-6 text-[#00ff9d]" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-white text-lg font-bold truncate tracking-tight">
@@ -294,11 +290,11 @@ export default function Home() {
                     onClick={toggleFullscreen}
                     className="flex items-center gap-4 w-full px-4 py-3.5 rounded-2xl hover:bg-white/5 text-gray-400 hover:text-white transition-all group"
                   >
-                    <div className="p-2 rounded-xl bg-gray-500/10 group-hover:bg-[#4a3d8f]/20 transition-colors">
+                    <div className="p-2 rounded-xl bg-gray-500/10 group-hover:bg-[#2d6af2]/20 transition-colors">
                       {isFullscreen ? (
-                        <Minimize className="w-4 h-4 text-[#a98dc5]" />
+                        <Minimize className="w-4 h-4 text-[#00ff9d]" />
                       ) : (
-                        <Maximize className="w-4 h-4 text-[#a98dc5]" />
+                        <Maximize className="w-4 h-4 text-[#00ff9d]" />
                       )}
                     </div>
 
@@ -314,8 +310,8 @@ export default function Home() {
                     }}
                     className="flex items-center gap-4 w-full px-4 py-3.5 rounded-2xl hover:bg-white/5 text-gray-400 hover:text-white transition-all group"
                   >
-                    <div className="p-2 rounded-xl bg-gray-500/10 group-hover:bg-[#4a3d8f]/20 transition-colors">
-                      <PlayCircle className="w-4 h-4 text-[#a98dc5]" />
+                    <div className="p-2 rounded-xl bg-gray-500/10 group-hover:bg-[#2d6af2]/20 transition-colors">
+                      <PlayCircle className="w-4 h-4 text-[#00ff9d]" />
                     </div>
                     <span className="text-sm font-medium tracking-wide">
                       How to Play
@@ -324,7 +320,7 @@ export default function Home() {
 
                   <button className="flex items-center gap-4 w-full px-4 py-3.5 rounded-2xl hover:bg-white/5 text-gray-400 hover:text-white transition-all group opacity-50 cursor-not-allowed">
                     <div className="p-2 rounded-xl bg-gray-500/10 transition-colors">
-                      <DownloadIcon className="w-4 h-4 text-[#a98dc5]" />
+                      <DownloadIcon className="w-4 h-4 text-[#00ff9d]" />
                     </div>
                     <span className="text-sm font-medium tracking-wide">
                       Install App
@@ -332,8 +328,8 @@ export default function Home() {
                   </button>
 
                   <button className="flex items-center gap-4 w-full px-4 py-3.5 rounded-2xl hover:bg-white/5 text-gray-400 hover:text-white transition-all group">
-                    <div className="p-2 rounded-xl bg-gray-500/10 group-hover:bg-[#4a3d8f]/20 transition-colors">
-                      <Globe className="w-4 h-4 text-[#a98dc5]" />
+                    <div className="p-2 rounded-xl bg-gray-500/10 group-hover:bg-[#2d6af2]/20 transition-colors">
+                      <Globe className="w-4 h-4 text-[#00ff9d]" />
                     </div>
                     <span className="text-sm font-medium tracking-wide">
                       Language (EN)
@@ -376,7 +372,7 @@ export default function Home() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
               transition={{ duration: 0.3, type: "spring", stiffness: 150 }}
-              className="w-full max-w-lg bg-[#0d121f]/98 backdrop-blur-2xl border border-white/10 rounded-[2rem] shadow-[0_20px_60px_rgba(0,0,0,0.6)] overflow-hidden"
+              className="w-full max-w-lg bg-[#080d1a]/98 backdrop-blur-2xl border border-white/10 rounded-[2rem] shadow-[0_0_50px_rgba(45,106,242,0.12)] overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Top accent */}
@@ -491,11 +487,11 @@ export default function Home() {
 
         <div className="flex flex-col md:flex-row gap-8 lg:gap-16 w-full justify-center items-stretch max-w-5xl">
           {/* Host Card */}
-          <div className="host-card rounded-[2rem] p-8 md:p-10 flex-1 flex flex-col items-center justify-between relative overflow-hidden group transition-all duration-300">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-[#00ff9d]/20 to-transparent rounded-bl-full pointer-events-none"></div>
+          <div className="bg-[#080d1a]/95 backdrop-blur-2xl border border-[#2d6af2]/30 rounded-[2rem] shadow-[0_0_50px_rgba(45,106,242,0.12),inset_0_1px_0_rgba(255,255,255,0.06)] p-8 md:p-10 flex-1 flex flex-col items-center justify-between relative overflow-hidden group transition-all duration-300">
+            <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-[#2d6af2]/20 to-transparent rounded-bl-full pointer-events-none"></div>
             <div className="w-full text-center mb-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#4a3d8f]/30 border border-[#a98dc5]/20 mb-6 shadow-[0_4px_20px_rgba(74,61,143,0.4)]">
-                <Gamepad2 className="w-8 h-8 text-[#a98dc5]" />
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#2d6af2]/20 border border-[#2d6af2]/30 mb-6 shadow-[0_4px_20px_rgba(45,106,242,0.4)]">
+                <Gamepad2 className="w-8 h-8 text-[#00ff9d]" />
               </div>
               <h2 className="font-body font-bold text-4xl text-white mb-2 tracking-wide glow-text uppercase">
                 HOST
@@ -507,7 +503,7 @@ export default function Home() {
             <div className="w-full mb-28">
               <button
                 onClick={handleHost}
-                className="w-full bg-gradient-to-r from-[#4a3d8f] to-[#a98dc5] hover:from-[#5a4da0] hover:to-[#b9a0d5] text-white font-display text-sm py-4 px-6 rounded-xl shadow-[0_0_25px_rgba(74,61,143,0.5)] hover:shadow-[0_0_35px_rgba(169,141,197,0.5)] transition-all duration-300 uppercase tracking-wider transform active:scale-[0.98] border border-[#a98dc5]/30"
+                className="w-full bg-gradient-to-r from-[#1a45c4] via-[#2d6af2] to-[#1a45c4] hover:shadow-[0_0_20px_rgba(45,106,242,0.6)] text-white font-display text-sm py-4 px-6 rounded-xl transition-all duration-300 uppercase tracking-wider transform active:scale-[0.98] font-bold"
               >
                 Create Room
               </button>
@@ -515,11 +511,11 @@ export default function Home() {
           </div>
 
           {/* Join Card */}
-          <div className="join-card rounded-[2rem] p-8 md:p-10 flex-1 flex flex-col items-center justify-between relative overflow-hidden group transition-all duration-300">
-            <div className="absolute top-0 left-0 w-24 h-24 bg-gradient-to-br from-[#2d6af2]/20 to-transparent rounded-br-full pointer-events-none"></div>
+          <div className="bg-[#080d1a]/95 backdrop-blur-2xl border border-[#00ff9d]/30 rounded-[2rem] shadow-[0_0_50px_rgba(0,255,157,0.12),inset_0_1px_0_rgba(255,255,255,0.06)] p-8 md:p-10 flex-1 flex flex-col items-center justify-between relative overflow-hidden group transition-all duration-300">
+            <div className="absolute top-0 left-0 w-24 h-24 bg-gradient-to-br from-[#00ff9d]/20 to-transparent rounded-br-full pointer-events-none"></div>
             <div className="w-full text-center mb-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#d4bc7a]/10 border border-[#d4bc7a]/20 mb-6 shadow-[0_4px_20px_rgba(212,188,122,0.3)]">
-                <LogIn className="w-8 h-8 text-[#d4bc7a]" />
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#00ff9d]/20 border border-[#00ff9d]/30 mb-6 shadow-[0_4px_20px_rgba(0,255,157,0.3)]">
+                <LogIn className="w-8 h-8 text-[#00ff9d]" />
               </div>
               <h2 className="font-body font-bold text-4xl text-white mb-2 tracking-wide glow-text uppercase">
                 JOIN
@@ -531,7 +527,7 @@ export default function Home() {
             <div className="w-full mt-auto space-y-3">
               <div className="relative group/input">
                 <input
-                  className="w-full bg-[#0d1b3e]/80 border border-[#d4bc7a]/20 text-white font-display text-center text-sm py-4 px-4 rounded-xl focus:outline-none focus:border-[#d4bc7a] focus:ring-1 focus:ring-[#d4bc7a]/50 transition-all placeholder:font-display placeholder:text-xs uppercase tracking-widest shadow-inner placeholder:text-gray-500"
+                  className="w-full bg-white/[0.03] border border-white/[0.07] text-white font-display text-center text-sm py-4 px-4 rounded-xl focus:outline-none focus:border-[#00ff9d]/60 focus:bg-white/[0.05] focus:shadow-[0_0_0_3px_rgba(0,255,157,0.1)] transition-all placeholder:font-display placeholder:text-xs uppercase tracking-widest placeholder:text-gray-600"
                   maxLength={6}
                   placeholder="ROOM CODE"
                   type="text"
@@ -542,7 +538,7 @@ export default function Home() {
               </div>
               <div className="relative group/input">
                 <input
-                  className="w-full bg-[#0d1b3e]/80 border border-[#d4bc7a]/20 text-white font-body text-center text-sm py-3 px-4 rounded-xl focus:outline-none focus:border-[#d4bc7a]/50 focus:ring-1 focus:ring-[#d4bc7a]/30 transition-all placeholder:text-xs placeholder:text-gray-500 shadow-inner"
+                  className="w-full bg-white/[0.03] border border-white/[0.07] text-white font-body text-center text-sm py-3 px-4 rounded-xl focus:outline-none focus:border-[#00ff9d]/60 focus:bg-white/[0.05] focus:shadow-[0_0_0_3px_rgba(0,255,157,0.1)] transition-all placeholder:text-xs placeholder:text-gray-600"
                   maxLength={20}
                   placeholder="Your Nickname"
                   type="text"
@@ -553,7 +549,7 @@ export default function Home() {
               </div>
               <button
                 onClick={handleJoin}
-                className="w-full bg-gradient-to-r from-[#d4bc7a] to-[#e8d49e] hover:from-[#ddc88a] hover:to-[#f0dca8] text-[#0d1b3e] font-display text-sm py-4 px-6 rounded-xl shadow-[0_0_25px_rgba(212,188,122,0.4)] hover:shadow-[0_0_35px_rgba(212,188,122,0.6)] transition-all duration-300 uppercase tracking-wider transform active:scale-[0.98] border border-[#d4bc7a]/30 font-bold"
+                className="w-full bg-gradient-to-r from-teal-500 via-[#00ff9d] to-teal-500 hover:shadow-[0_0_20px_rgba(0,255,157,0.5)] text-[#04060f] font-display text-sm py-4 px-6 rounded-xl transition-all duration-300 uppercase tracking-wider transform active:scale-[0.98] font-bold"
               >
                 Join
               </button>
@@ -561,8 +557,8 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="absolute top-1/4 left-10 w-1 h-24 bg-gradient-to-b from-transparent via-[#4a3d8f]/50 to-transparent blur-sm hidden lg:block"></div>
-        <div className="absolute bottom-1/3 right-10 w-1 h-32 bg-gradient-to-b from-transparent via-[#d4bc7a]/40 to-transparent blur-sm hidden lg:block"></div>
+        <div className="absolute top-1/4 left-10 w-1 h-24 bg-gradient-to-b from-transparent via-[#2d6af2]/50 to-transparent blur-sm hidden lg:block"></div>
+        <div className="absolute bottom-1/3 right-10 w-1 h-32 bg-gradient-to-b from-transparent via-[#00ff9d]/40 to-transparent blur-sm hidden lg:block"></div>
       </main>
     </div>
   );
