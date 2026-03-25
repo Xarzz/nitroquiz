@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { getUser, saveUser, removeUser } from "@/lib/storage";
-import { supabase } from "@/lib/supabase";
+import { supabase, supabaseCentral } from "@/lib/supabase";
 import { User } from "@/types";
 import {
   Menu,
@@ -25,16 +25,20 @@ import {
   LogIn,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "@/contexts/AuthContext";
+import { getI18nInstance } from "@/lib/i18n";
 import { Logo } from "@/components/ui/logo";
 import Image from "next/image";
 
 export default function Home() {
   const router = useRouter();
+  const { profile, loading: authLoading } = useAuth();
+  const i18n = getI18nInstance();
   const [roomCode, setRoomCode] = useState("");
-  const [nickname, setNickname] = useState("");
   const [isHosting, setIsHosting] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isLanguageOpen, setIsLanguageOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showHowToPlay, setShowHowToPlay] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
@@ -62,27 +66,59 @@ export default function Home() {
     setIsDropdownOpen(false);
   };
   useEffect(() => {
+    if (profile) {
+      const u = getUser();
+      const newUser: User = {
+        id: profile.auth_user_id,
+        username: profile.nickname || profile.fullname || profile.username || "Racer",
+        email: profile.email,
+        avatar: profile.avatar_url || "",
+        totalPoints: u?.totalPoints || 0,
+        gamesPlayed: u?.gamesPlayed || 0,
+        createdAt: u?.createdAt || new Date().toISOString(),
+      };
+
+      // Only update if data changed to prevent infinite loops
+      if (!u || u.id !== newUser.id || u.username !== newUser.username || u.avatar !== newUser.avatar) {
+        saveUser(newUser);
+        setUser(newUser);
+      } else {
+        setUser(u);
+      }
+    } else if (!authLoading) {
+      const currentUser = getUser();
+      if (!currentUser) {
+        // Double check session in case AuthContext is still initializing
+        supabaseCentral.auth.getSession().then(({ data: { session } }) => {
+          if (!session) {
+            router.push("/login");
+          }
+        });
+      } else {
+        setUser(currentUser);
+      }
+    }
+  }, [profile, authLoading, router]);
+
+  useEffect(() => {
     async function init() {
       // PRIORITY: Check if this is a QR scan redirect (?room=XXX)
-      // If so, show loading, check login, redirect immediately — never show homepage
       const params = new URLSearchParams(window.location.search);
       const roomParam = params.get("room");
       if (roomParam) {
         const code = roomParam.toUpperCase();
         setIsRedirecting(true);
 
-        // Quick check: is user already in localStorage?
         const existingUser = getUser();
         if (existingUser) {
           router.push(`/player/${code}/waiting`);
           return;
         }
 
-        // Also check Supabase session (OAuth users)
         try {
           const {
             data: { session },
-          } = await supabase.auth.getSession();
+          } = await supabaseCentral.auth.getSession();
           if (session?.user) {
             const newUser: User = {
               id: session.user.id,
@@ -104,55 +140,7 @@ export default function Home() {
           console.error("Session check failed:", e);
         }
 
-        // Not logged in → redirect to player login with room code
         router.push(`/player/${code}/login`);
-        return;
-      }
-
-      // Normal homepage flow (no ?room= param)
-      try {
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
-
-        if (session?.user) {
-          const u = getUser();
-          const sessionAvatar = session.user.user_metadata.avatar_url || session.user.user_metadata.picture || "";
-          
-          if (!u || u.id !== session.user.id || u.avatar !== sessionAvatar) {
-            const newUser: User = {
-              id: session.user.id,
-              username:
-                session.user.user_metadata.full_name ||
-                session.user.email?.split("@")[0] ||
-                "Racer",
-              email: session.user.email || "",
-              avatar: sessionAvatar,
-              totalPoints: u?.totalPoints || 0,
-              gamesPlayed: u?.gamesPlayed || 0,
-              createdAt: u?.createdAt || new Date().toISOString(),
-            };
-            saveUser(newUser);
-            setUser(newUser);
-          } else {
-            setUser(u);
-          }
-        } else {
-          const currentUser = getUser();
-          if (!currentUser) {
-            router.push("/login");
-            return;
-          }
-          setUser(currentUser);
-        }
-      } catch (error) {
-        console.error("Failed to get Supabase session:", error);
-        const currentUser = getUser();
-        if (!currentUser) {
-          router.push("/login");
-          return;
-        }
-        setUser(currentUser);
       }
     }
 
@@ -173,7 +161,7 @@ export default function Home() {
   }, []);
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    await supabaseCentral.auth.signOut();
     removeUser();
     router.push("/login");
   };
@@ -186,10 +174,9 @@ export default function Home() {
   };
 
   const handleJoin = () => {
-    if (roomCode.trim()) {
-      const nick = nickname.trim() || user?.username || "Racer";
+    if (roomCode.trim() && user) {
       router.push(
-        `/player/${roomCode.trim()}/login?nickname=${encodeURIComponent(nick)}`,
+        `/player/${roomCode.trim()}/login?nickname=${encodeURIComponent(user.username)}`,
       );
     }
   };
@@ -210,14 +197,14 @@ export default function Home() {
   return (
     <div className="bg-[#0b101a] text-white min-h-screen relative overflow-hidden font-body selection:bg-[#2d6af2] selection:text-white flex flex-col">
       {/* Main Background Image */}
-      <div 
+      <div
         className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat pointer-events-none"
-        style={{ 
+        style={{
           backgroundImage: 'url("/assets/backgorund/homepage_bg.png")',
           backgroundAttachment: 'fixed'
         }}
       ></div>
-      
+
       {/* Overlays to ensure readability and mood */}
       <div className="fixed inset-0 z-0 bg-gradient-to-t from-[#0b101a] via-[#0b101a]/40 to-transparent pointer-events-none"></div>
       <div className="scanlines"></div>
@@ -252,11 +239,10 @@ export default function Home() {
         >
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className={`w-11 h-11 flex items-center justify-center rounded-2xl transition-all duration-300 border ${
-              isDropdownOpen
-                ? "bg-[#2d6af2] border-[#2d6af2] text-white shadow-[0_0_20px_rgba(45,106,242,0.5)]"
-                : "bg-black/40 backdrop-blur-md border-white/10 text-gray-400 hover:text-white hover:border-white/20"
-            }`}
+            className={`w-11 h-11 flex items-center justify-center rounded-2xl transition-all duration-300 border ${isDropdownOpen
+              ? "bg-[#2d6af2] border-[#2d6af2] text-white shadow-[0_0_20px_rgba(45,106,242,0.5)]"
+              : "bg-black/40 backdrop-blur-md border-white/10 text-gray-400 hover:text-white hover:border-white/20"
+              }`}
           >
             {isDropdownOpen ? (
               <X className="w-5 h-5" />
@@ -277,8 +263,18 @@ export default function Home() {
                 {/* User Header */}
                 <div className="p-6 bg-gradient-to-br from-white/[0.05] to-transparent border-b border-white/5">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-[#2d6af2]/20 flex items-center justify-center border border-[#2d6af2]/30">
-                      <UserIcon className="w-6 h-6 text-[#2d6af2]" />
+                    <div className="w-12 h-12 rounded-2xl bg-[#2d6af2]/20 flex items-center justify-center border border-[#2d6af2]/30 overflow-hidden">
+                      {user.avatar ? (
+                        <Image
+                          src={user.avatar}
+                          alt={user.username}
+                          width={48}
+                          height={48}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <UserIcon className="w-6 h-6 text-[#2d6af2]" />
+                      )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-white text-lg font-bold truncate tracking-tight">
@@ -331,14 +327,59 @@ export default function Home() {
                     </span>
                   </button>
 
-                  <button className="flex items-center gap-4 w-full px-4 py-3.5 rounded-2xl hover:bg-white/5 text-gray-400 hover:text-white transition-all group">
-                    <div className="p-2 rounded-xl bg-gray-500/10 group-hover:bg-[#2d6af2]/20 transition-colors">
-                      <Globe className="w-4 h-4 text-[#2d6af2]" />
-                    </div>
-                    <span className="text-sm font-medium tracking-wide">
-                      Language (EN)
-                    </span>
-                  </button>
+                  <div className="relative">
+                    <button
+                      onClick={() => setIsLanguageOpen(!isLanguageOpen)}
+                      className="flex items-center gap-4 w-full px-4 py-3.5 rounded-2xl hover:bg-white/5 text-gray-400 hover:text-white transition-all group"
+                    >
+                      <div className="p-2 rounded-xl bg-gray-500/10 group-hover:bg-[#2d6af2]/20 transition-colors">
+                        <Globe className="w-4 h-4 text-[#2d6af2]" />
+                      </div>
+                      <span className="text-sm font-medium tracking-wide flex-1 text-left">
+                        {i18n.language.toUpperCase().startsWith('AR') ? 'العربية' :
+                          i18n.language.toUpperCase().startsWith('ID') ? 'Bahasa Indonesia' : 'English'}
+                      </span>
+                      <ChevronRight className={`w-4 h-4 transition-transform ${isLanguageOpen ? 'rotate-90' : ''}`} />
+                    </button>
+
+                    <AnimatePresence>
+                      {isLanguageOpen && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="px-3 pb-2 space-y-1 overflow-hidden"
+                        >
+                          {[
+                            { code: "en", label: "English", sub: "Global" },
+                            { code: "id", label: "Indonesia", sub: "Bahasa" },
+                            { code: "ar", label: "العربية", sub: "Arabic" },
+                          ].map((lang) => (
+                            <button
+                              key={lang.code}
+                              onClick={() => {
+                                i18n.changeLanguage(lang.code);
+                                setIsLanguageOpen(false);
+                                setIsDropdownOpen(false);
+                              }}
+                              className={`flex items-center justify-between w-full px-4 py-3 rounded-xl transition-all ${i18n.language.startsWith(lang.code)
+                                ? "bg-[#2d6af2]/10 text-[#2d6af2] border border-[#2d6af2]/20 shadow-[0_4px_12px_rgba(45,106,242,0.1)]"
+                                : "hover:bg-white/5 text-gray-500 hover:text-gray-300"
+                                }`}
+                            >
+                              <div className="flex flex-col items-start translate-x-1">
+                                <span className="text-xs font-bold uppercase tracking-widest">{lang.label}</span>
+                              </div>
+                              {i18n.language.startsWith(lang.code) && (
+                                <div className="w-1.5 h-1.5 rounded-full bg-[#2d6af2] shadow-[0_0_8px_#2d6af2]" />
+                              )}
+                            </button>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
                 </div>
 
                 {/* Footer Action */}
@@ -491,9 +532,9 @@ export default function Home() {
 
         <div className="flex flex-col md:flex-row gap-8 lg:gap-16 w-full justify-center items-stretch max-w-5xl">
           {/* Host Card */}
-          <div className="host-card rounded-[2rem] p-8 md:p-10 flex-1 flex flex-col items-center justify-between relative overflow-hidden group transition-all duration-300">
+          <div className="host-card rounded-[2rem] p-8 md:p-10 flex-1 flex flex-col items-center justify-between gap-12 relative overflow-hidden group transition-all duration-300">
             <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-[#00ff9d]/20 to-transparent rounded-bl-full pointer-events-none"></div>
-            <div className="w-full text-center mb-8">
+            <div className="w-full text-center">
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#000000]/50 border border-white/10 mb-6 shadow-[0_4px_15px_rgba(0,0,0,0.5)]">
                 <Gamepad2 className="w-8 h-8 text-[#00ff9d]" />
               </div>
@@ -504,7 +545,7 @@ export default function Home() {
                 Create a new room and invite players.
               </p>
             </div>
-            <div className="w-full mb-28">
+            <div className="w-full">
               <button
                 onClick={handleHost}
                 className="w-full bg-[#00ff9d] hover:bg-[#33ffb0] text-black font-display text-sm py-4 px-6 rounded-xl shadow-[0_0_20px_rgba(0,255,157,0.4)] hover:shadow-[0_0_30px_rgba(0,255,157,0.6)] transition-all duration-300 uppercase tracking-wider transform active:scale-[0.98] border border-white/20"
@@ -515,9 +556,9 @@ export default function Home() {
           </div>
 
           {/* Join Card */}
-          <div className="join-card rounded-[2rem] p-8 md:p-10 flex-1 flex flex-col items-center justify-between relative overflow-hidden group transition-all duration-300">
+          <div className="join-card rounded-[2rem] p-8 md:p-10 flex-1 flex flex-col items-center justify-center gap-12 relative overflow-hidden group transition-all duration-300">
             <div className="absolute top-0 left-0 w-24 h-24 bg-gradient-to-br from-[#2d6af2]/20 to-transparent rounded-br-full pointer-events-none"></div>
-            <div className="w-full text-center mb-8">
+            <div className="w-full text-center">
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#000000]/50 border border-white/10 mb-6 shadow-[0_4px_15px_rgba(0,0,0,0.5)]">
                 <LogIn className="w-8 h-8 text-[#2d6af2]" />
               </div>
@@ -528,7 +569,7 @@ export default function Home() {
                 Enter a code to join game.
               </p>
             </div>
-            <div className="w-full mt-auto space-y-3">
+            <div className="w-full space-y-3">
               <div className="relative group/input">
                 <input
                   className="w-full bg-black/60 border border-white/10 text-white font-display text-center text-sm py-4 px-4 rounded-xl focus:outline-none focus:border-[#2d6af2] focus:ring-1 focus:ring-[#2d6af2] transition-all placeholder:font-display placeholder:text-xs uppercase tracking-widest shadow-inner placeholder:text-gray-500"
@@ -537,17 +578,6 @@ export default function Home() {
                   type="text"
                   value={roomCode}
                   onChange={(e) => setRoomCode(e.target.value.toUpperCase())}
-                  onKeyDown={(e) => e.key === "Enter" && handleJoin()}
-                />
-              </div>
-              <div className="relative group/input">
-                <input
-                  className="w-full bg-black/60 border border-white/10 text-white font-body text-center text-sm py-3 px-4 rounded-xl focus:outline-none focus:border-[#00ff9d]/50 focus:ring-1 focus:ring-[#00ff9d]/30 transition-all placeholder:text-xs placeholder:text-gray-500 shadow-inner"
-                  maxLength={20}
-                  placeholder="Your Nickname"
-                  type="text"
-                  value={nickname}
-                  onChange={(e) => setNickname(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleJoin()}
                 />
               </div>
