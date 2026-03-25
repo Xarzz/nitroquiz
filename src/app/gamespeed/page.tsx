@@ -120,8 +120,8 @@ export default function GameSpeedPage() {
     // Game State
     const [gameState, setGameState] = useState<'preparation' | 'countdown' | 'playing' | 'finished' | 'gameover'>('preparation');
     // Countdown Ref helper
-    const countdownRef = useRef(5);
-    const [countdown, setCountdown] = useState(5); // Countdown dari 3
+    const countdownRef = useRef(3);
+    const [countdown, setCountdown] = useState(3);
     const [stats, setStats] = useState({ speed: 0, nos: 100, lap: 1, totalLaps: 1 });
 
     // Countdown timer effect — uses setInterval, only triggers on gameState change
@@ -194,7 +194,7 @@ export default function GameSpeedPage() {
             if (!isMobile || mobileOrientationChoice) {
                 // Short delay for visual transition
                 const timer = setTimeout(() => {
-                    countdownRef.current = 5;
+                    countdownRef.current = 3;
                     setGameState('countdown');
                 }, 800);
                 return () => clearTimeout(timer);
@@ -245,6 +245,9 @@ export default function GameSpeedPage() {
 
     // --- Loading Assets ---
     useEffect(() => {
+        // Ensure difficulty is stored for quiz return flow
+        localStorage.setItem('nitroquiz_game_difficulty', 'easy');
+
         // Reset sprites to force reload on mount/remount
         state.current.sprites = { ...state.current.sprites };
 

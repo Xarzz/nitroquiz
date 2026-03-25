@@ -12,20 +12,8 @@
         "src": "/assets/backgorund/citynight_mobile.png"
     },
     {
-        "name": "npc_car",
-        "src": "/assets/vehicles/foward-opponent.png"
-    },
-    {
         "name": "car_rival",
         "src": "/assets/vehicles/foward-opponent.png"
-    },
-    {
-        "name": "truck1",
-        "src": "/assets/vehicles/truck/0.webp"
-    },
-    {
-        "name": "truck2",
-        "src": "/assets/vehicles/truck/1.webp"
     },
     {
         "name": "truck_straight_0",
