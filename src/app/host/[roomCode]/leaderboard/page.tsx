@@ -508,7 +508,7 @@ export default function LeaderboardPage() {
                           </td>
                           <td className="px-2 sm:px-4 py-3">
                             <div className="flex items-center gap-2 sm:gap-3">
-                              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-black/50 border border-white/10 flex items-center justify-center text-lg shadow-inner overflow-hidden flex-shrink-0">
+                              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/50 border border-white/10 flex items-center justify-center text-lg shadow-inner overflow-hidden flex-shrink-0">
                                 {player.eliminated
                                   ? "💀"
                                   : (() => {
