@@ -164,7 +164,19 @@ export default function QuizPage() {
         if (currentIndex >= questions.length) {
             router.push(`/player/${roomCode}/result`);
         } else {
-            router.push('/gamespeed');
+            let customDiff = localStorage.getItem('nitroquiz_game_difficulty');
+            if (!customDiff) {
+                try {
+                    const settingsStr = localStorage.getItem('edurace_game_settings');
+                    if (settingsStr) {
+                        const settings = JSON.parse(settingsStr);
+                        customDiff = settings.difficulty;
+                    }
+                } catch (e) {}
+            }
+            const diff = customDiff || 'easy';
+            const route = (diff === 'normal' || diff === 'medium') ? '/gamespeed-medium' : '/gamespeed';
+            router.push(route);
         }
     };
 

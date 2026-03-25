@@ -264,8 +264,14 @@ export default function GameSpeedPage() {
 
             const promises: Promise<void>[] = [];
 
-            // Load from ASSET_LIST (named assets)
-            ASSET_LIST.forEach(item => {
+            // Extend asset list with obstacles for medium mode
+            const obstacles = [
+                { name: 'obstacle1', src: '/assets/material/pembatas_jalan/1penghalang.webp' },
+                { name: 'obstacle2', src: '/assets/material/pembatas_jalan/1roadbarrier.webp' }
+            ];
+
+            // Load from ASSET_LIST + obstacles (named assets)
+            [...ASSET_LIST, ...obstacles].forEach(item => {
                 promises.push(new Promise<void>((resolve) => {
                     const img = new Image();
                     img.onload = () => {
@@ -522,6 +528,32 @@ export default function GameSpeedPage() {
             };
             state.current.cars.push(car);
             findSegment(z).cars.push(car);
+        }
+
+        // Add Stationary Obstacles for Medium Mode
+        for (let n = 0; n < 25; n++) {
+            // Start spawning obstacles after the first 20 segments to give
+            // the player some time to react, and distribute them across the track length
+            const zLength = len * SEGMENT_LENGTH;
+            const startOffset = 20 * SEGMENT_LENGTH;
+            const z = startOffset + Math.random() * (zLength - startOffset - 1000);
+            
+            // Random lane placement (-0.8 to 0.8)
+            const offset = (Math.random() * 1.6) - 0.8; 
+            
+            const isBarrier = Math.random() > 0.5;
+            const obstacleSprite = isBarrier ? state.current.sprites.obstacle2 : state.current.sprites.obstacle1;
+
+            const obstacle: Car = {
+                offset: offset,
+                z: z,
+                sprite: obstacleSprite || state.current.sprites.truck2,
+                speed: 0,
+                percent: 0,
+                type: 'obstacle' as any // Treating obstacle as a 0-speed NPC car for collision
+            };
+            state.current.cars.push(obstacle);
+            findSegment(z).cars.push(obstacle);
         }
 
         // Spawn Rival Opponent

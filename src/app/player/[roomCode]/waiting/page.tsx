@@ -112,22 +112,35 @@ export default function PlayerWaitingPage() {
     const preloadQuizData = async (sessId: string) => {
         try {
             const { data } = await supabase.from("sessions")
-                .select("current_questions, question_limit, quiz_id").eq("id", sessId).single();
+                .select("current_questions, question_limit, quiz_id, difficulty").eq("id", sessId).single();
             if (data?.current_questions) {
                 let questions = data.current_questions;
                 if (typeof questions === 'string') { try { questions = JSON.parse(questions); } catch (e) { } }
                 localStorage.setItem('nitroquiz_game_questions', JSON.stringify(questions));
                 localStorage.setItem('nitroquiz_game_roomCode', roomCode);
                 localStorage.setItem('nitroquiz_game_sessionId', sessId);
+                localStorage.setItem('nitroquiz_game_difficulty', data.difficulty || 'easy');
                 if (data.quiz_id) localStorage.setItem('nitroquiz_game_quizId', data.quiz_id);
             }
-            const link = document.createElement('link'); link.rel = 'prefetch'; link.href = '/gamespeed'; document.head.appendChild(link);
+            
+            const difficulty = data?.difficulty || 'easy';
+            const route = (difficulty === 'normal' || difficulty === 'medium') ? '/gamespeed-medium' : '/gamespeed';
+            
+            const link = document.createElement('link'); link.rel = 'prefetch'; link.href = route; document.head.appendChild(link);
         } catch (err) { console.error('Failed to preload quiz:', err); }
     };
 
     useEffect(() => {
         if (status !== "countdown") return;
-        if (countdownValue <= 0) { setStatus("go"); setTimeout(() => router.push('/gamespeed'), 1500); return; }
+        if (countdownValue <= 0) { 
+            setStatus("go"); 
+            setTimeout(() => {
+                const diff = localStorage.getItem('nitroquiz_game_difficulty') || 'easy';
+                const route = (diff === 'normal' || diff === 'medium') ? '/gamespeed-medium' : '/gamespeed';
+                router.push(route);
+            }, 1500); 
+            return; 
+        }
         const timer = setTimeout(() => setCountdownValue(prev => prev - 1), 1000);
         return () => clearTimeout(timer);
     }, [status, countdownValue, router]);

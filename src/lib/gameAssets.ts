@@ -23,7 +23,6 @@ export const getAssetOffset = (side: 'left' | 'right', assetName: string): numbe
     // Penyesuaian offset spesifik per tipe aset jika perlu
     // Penyesuaian offset spesifik per tipe aset jika perlu
     if (assetName.includes('pohon')) baseOffset = side === 'left' ? -5.5 : 5.5; // Next to/behind buildings (was 8.0)
-    else if (assetName.includes('trash')) baseOffset = side === 'left' ? -1.7 : 1.7;
 
     return baseOffset;
 };
