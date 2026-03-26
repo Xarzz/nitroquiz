@@ -748,5 +748,430 @@
         "z": 1439,
         "side": "right",
         "src": "/assets/material/pohon/4.webp"
+    },
+    {
+        "z": 1329,
+        "side": "left",
+        "src": "/assets/material/kiri_jalan/1baliho.webp"
+    },
+    {
+        "z": 1457,
+        "side": "right",
+        "src": "/assets/material/kanan_jalan/1bsi.webp"
+    },
+    {
+        "z": 1347,
+        "side": "left",
+        "src": "/assets/material/bangku/1.png"
+    },
+    {
+        "z": 1475,
+        "side": "right",
+        "src": "/assets/material/pohon/2.webp"
+    },
+    {
+        "z": 1365,
+        "side": "left",
+        "src": "/assets/material/pohon/4.webp"
+    },
+    {
+        "z": 1493,
+        "side": "right",
+        "src": "/assets/material/kanan_jalan/1burgerking.webp"
+    },
+    {
+        "z": 1383,
+        "side": "left",
+        "src": "/assets/material/kiri_jalan/1basmallah.webp"
+    },
+    {
+        "z": 1511,
+        "side": "right",
+        "src": "/assets/material/pohon/2.webp"
+    },
+    {
+        "z": 1401,
+        "side": "left",
+        "src": "/assets/material/pohon/4.webp"
+    },
+    {
+        "z": 1529,
+        "side": "right",
+        "src": "/assets/material/kanan_jalan/1cgv.webp"
+    },
+    {
+        "z": 1419,
+        "side": "left",
+        "src": "/assets/material/kiri_jalan/1gacoan.webp"
+    },
+    {
+        "z": 1547,
+        "side": "right",
+        "src": "/assets/material/pohon/4.webp"
+    },
+    {
+        "z": 1437,
+        "side": "left",
+        "src": "/assets/material/pohon/4.webp"
+    },
+    {
+        "z": 1565,
+        "side": "right",
+        "src": "/assets/material/kanan_jalan/1indosat.png"
+    },
+    {
+        "z": 1455,
+        "side": "left",
+        "src": "/assets/material/kiri_jalan/1gameforsmart.webp"
+    },
+    {
+        "z": 1583,
+        "side": "right",
+        "src": "/assets/material/pohon/2.webp"
+    },
+    {
+        "z": 1473,
+        "side": "left",
+        "src": "/assets/material/bangku/1.png"
+    },
+    {
+        "z": 1601,
+        "side": "right",
+        "src": "/assets/material/kanan_jalan/1kemendikbud.webp"
+    },
+    {
+        "z": 1491,
+        "side": "left",
+        "src": "/assets/material/pohon/2.webp"
+    },
+    {
+        "z": 1619,
+        "side": "right",
+        "src": "/assets/material/bangku/1.png"
+    },
+    {
+        "z": 1509,
+        "side": "left",
+        "src": "/assets/material/kiri_jalan/1ganesha.webp"
+    },
+    {
+        "z": 1637,
+        "side": "right",
+        "src": "/assets/material/pohon/2.webp"
+    },
+    {
+        "z": 1527,
+        "side": "left",
+        "src": "/assets/material/pohon/4.webp"
+    },
+    {
+        "z": 1655,
+        "side": "right",
+        "src": "/assets/material/kanan_jalan/1lawson.webp"
+    },
+    {
+        "z": 1545,
+        "side": "left",
+        "src": "/assets/material/kiri_jalan/1mcc.webp"
+    },
+    {
+        "z": 1673,
+        "side": "right",
+        "src": "/assets/material/pohon/4.webp"
+    },
+    {
+        "z": 1563,
+        "side": "left",
+        "src": "/assets/material/pohon/4.webp"
+    },
+    {
+        "z": 1691,
+        "side": "right",
+        "src": "/assets/material/kanan_jalan/1matos.webp"
+    },
+    {
+        "z": 1581,
+        "side": "left",
+        "src": "/assets/material/kiri_jalan/1ruangguru.webp"
+    },
+    {
+        "z": 1709,
+        "side": "right",
+        "src": "/assets/material/pohon/4.webp"
+    },
+    {
+        "z": 1599,
+        "side": "left",
+        "src": "/assets/material/pohon/2.webp"
+    },
+    {
+        "z": 1727,
+        "side": "right",
+        "src": "/assets/material/kanan_jalan/1pocari.webp"
+    },
+    {
+        "z": 1617,
+        "side": "left",
+        "src": "/assets/material/kiri_jalan/1ubig.webp"
+    },
+    {
+        "z": 1745,
+        "side": "right",
+        "src": "/assets/material/pohon/4.webp"
+    },
+    {
+        "z": 1635,
+        "side": "left",
+        "src": "/assets/material/pohon/2.webp"
+    },
+    {
+        "z": 1763,
+        "side": "right",
+        "src": "/assets/material/kanan_jalan/1shell.webp"
+    },
+    {
+        "z": 1653,
+        "side": "left",
+        "src": "/assets/material/kiri_jalan/2cgv.webp"
+    },
+    {
+        "z": 1781,
+        "side": "right",
+        "src": "/assets/material/bangku/1.png"
+    },
+    {
+        "z": 1671,
+        "side": "left",
+        "src": "/assets/material/pohon/4.webp"
+    },
+    {
+        "z": 1799,
+        "side": "right",
+        "src": "/assets/material/pohon/4.webp"
+    },
+    {
+        "z": 1689,
+        "side": "left",
+        "src": "/assets/material/kiri_jalan/2indosat.png"
+    },
+    {
+        "z": 1817,
+        "side": "right",
+        "src": "/assets/material/kanan_jalan/2baliho.webp"
+    },
+    {
+        "z": 1707,
+        "side": "left",
+        "src": "/assets/material/pohon/4.webp"
+    },
+    {
+        "z": 1835,
+        "side": "right",
+        "src": "/assets/material/pohon/2.webp"
+    },
+    {
+        "z": 1725,
+        "side": "left",
+        "src": "/assets/material/kiri_jalan/2kemendikbud.webp"
+    },
+    {
+        "z": 1853,
+        "side": "right",
+        "src": "/assets/material/kanan_jalan/2basmallah.webp"
+    },
+    {
+        "z": 1743,
+        "side": "left",
+        "src": "/assets/material/pohon/2.webp"
+    },
+    {
+        "z": 1871,
+        "side": "right",
+        "src": "/assets/material/pohon/2.webp"
+    },
+    {
+        "z": 1761,
+        "side": "left",
+        "src": "/assets/material/kiri_jalan/2lawson.webp"
+    },
+    {
+        "z": 1889,
+        "side": "right",
+        "src": "/assets/material/kanan_jalan/2burgerking.webp"
+    },
+    {
+        "z": 1779,
+        "side": "left",
+        "src": "/assets/material/pohon/2.webp"
+    },
+    {
+        "z": 1907,
+        "side": "right",
+        "src": "/assets/material/bangku/1.png"
+    },
+    {
+        "z": 1797,
+        "side": "left",
+        "src": "/assets/material/kiri_jalan/2matos.webp"
+    },
+    {
+        "z": 1925,
+        "side": "right",
+        "src": "/assets/material/pohon/4.webp"
+    },
+    {
+        "z": 1815,
+        "side": "left",
+        "src": "/assets/material/pohon/4.webp"
+    },
+    {
+        "z": 1943,
+        "side": "right",
+        "src": "/assets/material/kanan_jalan/2gacoan.webp"
+    },
+    {
+        "z": 1833,
+        "side": "left",
+        "src": "/assets/material/kiri_jalan/2pocari.webp"
+    },
+    {
+        "z": 1961,
+        "side": "right",
+        "src": "/assets/material/pohon/2.webp"
+    },
+    {
+        "z": 1851,
+        "side": "left",
+        "src": "/assets/material/pohon/4.webp"
+    },
+    {
+        "z": 1979,
+        "side": "right",
+        "src": "/assets/material/kanan_jalan/2gramedia.webp"
+    },
+    {
+        "z": 1869,
+        "side": "left",
+        "src": "/assets/material/kiri_jalan/2shell.webp"
+    },
+    {
+        "z": 1997,
+        "side": "right",
+        "src": "/assets/material/bangku/1.png"
+    },
+    {
+        "z": 1887,
+        "side": "left",
+        "src": "/assets/material/pohon/2.webp"
+    },
+    {
+        "z": 2015,
+        "side": "right",
+        "src": "/assets/material/pohon/2.webp"
+    },
+    {
+        "z": 1905,
+        "side": "left",
+        "src": "/assets/material/kiri_jalan/3bsi.webp"
+    },
+    {
+        "z": 2033,
+        "side": "right",
+        "src": "/assets/material/kanan_jalan/2mcc.webp"
+    },
+    {
+        "z": 1923,
+        "side": "left",
+        "src": "/assets/material/pohon/2.webp"
+    },
+    {
+        "z": 2051,
+        "side": "right",
+        "src": "/assets/material/pohon/2.webp"
+    },
+    {
+        "z": 1941,
+        "side": "left",
+        "src": "/assets/material/kiri_jalan/3mcc.webp"
+    },
+    {
+        "z": 2069,
+        "side": "right",
+        "src": "/assets/material/kanan_jalan/2ruangguru.webp"
+    },
+    {
+        "z": 1959,
+        "side": "left",
+        "src": "/assets/material/pohon/2.webp"
+    },
+    {
+        "z": 2087,
+        "side": "right",
+        "src": "/assets/material/pohon/4.webp"
+    },
+    {
+        "z": 1977,
+        "side": "left",
+        "src": "/assets/material/kiri_jalan/alfamart_kiri.png"
+    },
+    {
+        "z": 2105,
+        "side": "right",
+        "src": "/assets/material/kanan_jalan/2ubig.webp"
+    },
+    {
+        "z": 1995,
+        "side": "left",
+        "src": "/assets/material/pohon/2.webp"
+    },
+    {
+        "z": 2123,
+        "side": "right",
+        "src": "/assets/material/bangku/1.png"
+    },
+    {
+        "z": 2013,
+        "side": "left",
+        "src": "/assets/material/kiri_jalan/amanda_kiri.png"
+    },
+    {
+        "z": 2141,
+        "side": "right",
+        "src": "/assets/material/pohon/4.webp"
+    },
+    {
+        "z": 2031,
+        "side": "left",
+        "src": "/assets/material/bangku/1.png"
+    },
+    {
+        "z": 2049,
+        "side": "left",
+        "src": "/assets/material/pohon/4.webp"
+    },
+    {
+        "z": 2067,
+        "side": "left",
+        "src": "/assets/material/kiri_jalan/bca-kiri.png"
+    },
+    {
+        "z": 2085,
+        "side": "left",
+        "src": "/assets/material/pohon/2.webp"
+    },
+    {
+        "z": 2103,
+        "side": "left",
+        "src": "/assets/material/kiri_jalan/bsi-kiri.png"
+    },
+    {
+        "z": 2121,
+        "side": "left",
+        "src": "/assets/material/pohon/4.webp"
+    },
+    {
+        "z": 2139,
+        "side": "left",
+        "src": "/assets/material/kiri_jalan/burgerbangor-kiri.webp"
     }
 ]
