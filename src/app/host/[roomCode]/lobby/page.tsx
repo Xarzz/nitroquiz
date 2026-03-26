@@ -466,7 +466,7 @@ export default function HostRoomPage() {
       {/* Main Content Wrapper - Fixed to viewport */}
       <div className="relative z-20 flex flex-col h-full w-full max-w-[1750px] mx-auto px-6 md:px-10 xl:px-12 pb-4">
         {/* Header - Logos in corners with improved visibility and balanced symmetry */}
-        <div className="w-full flex items-center justify-between pt-6 mb-6">
+        <div className="w-full flex items-center justify-between pt-3 mb-3">
           <img
             src="/assets/logo/logo1.png"
             alt="NitroQuiz Logo"
@@ -490,11 +490,11 @@ export default function HostRoomPage() {
               initial={{ opacity: 0, scale: 0.9, y: 30 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="flex flex-col bg-black/65 backdrop-blur-md rounded-[2.5rem] p-8 shadow-[0_0_40px_rgba(45,106,242,0.2)] border border-[#2d6af2]/60 relative overflow-y-auto custom-scrollbar group h-full justify-between"
+              className="flex flex-col bg-black/65 backdrop-blur-md rounded-[2.5rem] p-5 md:p-6 shadow-[0_0_40px_rgba(45,106,242,0.2)] border border-[#2d6af2]/60 relative overflow-y-auto custom-scrollbar group h-full justify-between"
             >
               <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-[#2d6af2]/25 to-transparent rounded-bl-full pointer-events-none"></div>
 
-              <div className="flex flex-col gap-4 relative z-10 flex-1 px-1">
+              <div className="flex flex-col gap-3 relative z-10 flex-1 px-1 w-full max-w-[360px] mx-auto min-h-0">
                 {/* ROOM CODE */}
                 <div className="text-center w-full">
                   <div
@@ -534,7 +534,7 @@ export default function HostRoomPage() {
 
                 {/* JOIN LINK */}
                 <div
-                  className="relative group/link cursor-pointer bg-white/5 py-3 px-6 rounded-3xl border border-white/10 hover:border-[#2d6af2] transition-all w-full flex flex-col items-center justify-center"
+                  className="relative group/link cursor-pointer bg-white/5 py-2 px-6 rounded-3xl border border-white/10 hover:border-[#2d6af2] transition-all w-full flex flex-col items-center justify-center shrink-0"
                   onClick={() => copyToClipboard(joinLink, setCopiedJoin)}
                 >
                   <p className="text-center text-white text-sm font-display tracking-wider truncate w-full pr-6">
@@ -551,23 +551,23 @@ export default function HostRoomPage() {
               </div>
 
               {/* ACTION BUTTONS (Bottom part) */}
-              <div className="flex flex-col gap-4 mt-6 relative z-10 shrink-0">
+              <div className="flex flex-col gap-3 mt-4 relative z-10 shrink-0 w-full max-w-[360px] mx-auto">
                 <Button
                   onClick={startGame}
                   disabled={participants.length === 0 || countdown !== null}
-                  className="w-full bg-gradient-to-r from-[#2d6af2] to-[#00ff9d] hover:from-[#3b7bf5] hover:to-[#33ffb0] text-black font-display text-xl py-7 rounded-2xl shadow-[0_0_25px_rgba(45,106,242,0.5)] hover:shadow-[0_0_40px_rgba(45,106,242,0.7)] transition-all uppercase tracking-widest transform active:scale-[0.98] disabled:from-gray-800 disabled:to-gray-800 disabled:text-gray-500 disabled:shadow-none border-none relative overflow-hidden"
+                  className="w-full bg-gradient-to-r from-[#2d6af2] to-[#00ff9d] hover:from-[#3b7bf5] hover:to-[#33ffb0] text-black font-display text-xl py-5 rounded-2xl shadow-[0_0_25px_rgba(45,106,242,0.5)] hover:shadow-[0_0_40px_rgba(45,106,242,0.7)] transition-all uppercase tracking-widest transform active:scale-[0.98] disabled:from-gray-800 disabled:to-gray-800 disabled:text-gray-500 disabled:shadow-none border-none relative overflow-hidden"
                 >
                   <div className="absolute inset-0 bg-[#00ff9d]/20 blur-xl opacity-0 hover:opacity-100 transition-opacity"></div>
                   <span className="relative z-10 flex items-center justify-center gap-3">
-                    <Play className="fill-current w-7 h-7" />
+                    <Play className="fill-current w-6 h-6" />
                     {countdown !== null ? "STARTING..." : t("hostroom.start")}
                   </span>
                 </Button>
 
-                <div className="flex gap-4">
+                <div className="flex gap-3">
                   <Button
                     onClick={() => router.push("/host/select-quiz")}
-                    className="flex-1 bg-transparent border border-red-500/50 text-red-500 hover:bg-red-500/10 hover:border-red-500 font-display text-[10px] uppercase tracking-wider h-11 rounded-xl transition-all shadow-[0_0_10px_rgba(239,68,68,0.1)]"
+                    className="flex-1 bg-transparent border border-red-500/50 text-red-500 hover:bg-red-500/10 hover:border-red-500 font-display text-[10px] uppercase tracking-wider h-10 rounded-xl transition-all shadow-[0_0_10px_rgba(239,68,68,0.1)]"
                   >
                     <LogOut className="mr-2 h-4 w-4" />
                     Exit
@@ -575,7 +575,7 @@ export default function HostRoomPage() {
 
                   <Button
                     onClick={() => setShareOpen(true)}
-                    className="flex-1 bg-[#2d6af2]/10 border border-[#2d6af2]/30 text-[#2d6af2] hover:bg-[#2d6af2]/20 hover:text-white font-display text-[10px] uppercase tracking-wider h-11 rounded-xl transition-all shadow-[0_0_10px_rgba(45,106,242,0.2)]"
+                    className="flex-1 bg-[#2d6af2]/10 border border-[#2d6af2]/30 text-[#2d6af2] hover:bg-[#2d6af2]/20 hover:text-white font-display text-[10px] uppercase tracking-wider h-10 rounded-xl transition-all shadow-[0_0_10px_rgba(45,106,242,0.2)]"
                   >
                     <Share2 className="mr-2 h-4 w-4" />
                     Invite
