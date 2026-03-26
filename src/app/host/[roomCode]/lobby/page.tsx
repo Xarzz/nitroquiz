@@ -498,10 +498,10 @@ export default function HostRoomPage() {
                 {/* ROOM CODE */}
                 <div className="text-center w-full">
                   <div
-                    className="relative group/code cursor-pointer bg-white/5 rounded-3xl py-3 px-6 border border-white/10 hover:border-[#2d6af2]/50 transition-all flex flex-col items-center justify-center"
+                    className="relative group/code cursor-pointer bg-white/5 rounded-3xl py-1.5 px-6 border border-white/10 hover:border-[#2d6af2]/50 transition-all flex flex-col items-center justify-center"
                     onClick={() => copyToClipboard(roomCode, setCopiedRoom)}
                   >
-                    <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl text-white tracking-widest drop-shadow-[0_0_20px_rgba(255,255,255,0.6)]">
+                    <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl leading-none pt-1 text-white tracking-widest drop-shadow-[0_0_20px_rgba(255,255,255,0.6)]">
                       {roomCode}
                     </h1>
                     <div className="absolute top-1/2 -translate-y-1/2 right-5">
