@@ -290,12 +290,12 @@ export default function SettingsPage() {
                                                 className={`h-11 text-xs font-display uppercase tracking-wider transition-all duration-200 rounded-xl border ${
                                                     selectedDifficulty === diff.toLowerCase()
                                                         ? diff === "Easy"
-                                                            ? "bg-[#2d6af2] text-white border-[#00ff9d] shadow-[0_0_14px_rgba(0,255,157,0.5)]"
+                                                            ? "bg-emerald-500/20 text-[#00ff9d] border-[#00ff9d] shadow-[0_0_14px_rgba(0,255,157,0.5)]"
                                                             : diff === "Normal"
                                                             ? "bg-amber-500/20 text-amber-400 border-amber-500/60 shadow-[0_0_14px_rgba(245,158,11,0.3)]"
                                                             : "bg-red-500/20 text-red-400 border-red-500/60 shadow-[0_0_14px_rgba(239,68,68,0.3)]"
                                                         : diff === "Easy"
-                                                        ? "bg-white/[0.03] border-[#2d6af2]/25 text-[#2d6af2]/60 hover:border-[#00ff9d]/60 hover:text-[#00ff9d]"
+                                                        ? "bg-white/[0.03] border-emerald-500/20 text-emerald-500/50 hover:border-[#00ff9d]/60 hover:text-[#00ff9d]"
                                                         : diff === "Normal"
                                                         ? "bg-white/[0.03] border-amber-500/20 text-amber-500/50 hover:border-amber-500/50 hover:text-amber-400"
                                                         : "bg-white/[0.03] border-red-500/20 text-red-500/50 hover:border-red-500/50 hover:text-red-400"

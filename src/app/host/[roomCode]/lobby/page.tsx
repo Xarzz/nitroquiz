@@ -485,95 +485,105 @@ export default function HostRoomPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-stretch relative flex-1 min-h-0 overflow-hidden">
           {/* Left Column: Room Details (4/12 split) */}
-          <div className="md:col-span-4 space-y-4 flex flex-col min-h-0 h-full">
+          <div className="md:col-span-4 flex flex-col min-h-0 h-full">
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 30 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="flex flex-col gap-4 bg-black/65 backdrop-blur-md rounded-[2.5rem] p-7 shadow-[0_0_40px_rgba(45,106,242,0.2)] border border-[#2d6af2]/60 relative overflow-y-auto custom-scrollbar group h-full"
+              className="flex flex-col bg-black/65 backdrop-blur-md rounded-[2.5rem] p-8 shadow-[0_0_40px_rgba(45,106,242,0.2)] border border-[#2d6af2]/60 relative overflow-y-auto custom-scrollbar group h-full justify-between"
             >
-            <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-[#2d6af2]/25 to-transparent rounded-bl-full pointer-events-none"></div>
+              <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-[#2d6af2]/25 to-transparent rounded-bl-full pointer-events-none"></div>
 
-            <div className="text-center relative z-10">
-              <div
-                className="relative group/code cursor-pointer bg-white/5 rounded-2xl p-5 border border-white/10 hover:border-[#2d6af2]/50 transition-all"
-                onClick={() => copyToClipboard(roomCode, setCopiedRoom)}
-              >
-                <h1 className="font-display text-5xl sm:text-6xl text-white tracking-widest drop-shadow-[0_0_20px_rgba(255,255,255,0.6)]">
-                  {roomCode}
-                </h1>
-                  <div className="absolute top-2 right-2">
-                    {copiedRoom ? (
-                      <Check size={14} className="text-[#00ff9d]" />
+              <div className="flex flex-col gap-6 relative z-10 flex-1">
+                {/* ROOM CODE */}
+                <div className="text-center">
+                  <div
+                    className="relative group/code cursor-pointer bg-white/5 rounded-2xl p-6 border border-white/10 hover:border-[#2d6af2]/50 transition-all"
+                    onClick={() => copyToClipboard(roomCode, setCopiedRoom)}
+                  >
+                    <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl text-white tracking-widest drop-shadow-[0_0_20px_rgba(255,255,255,0.6)]">
+                      {roomCode}
+                    </h1>
+                    <div className="absolute top-3 right-3">
+                      {copiedRoom ? (
+                        <Check size={18} className="text-[#00ff9d]" />
+                      ) : (
+                        <Copy
+                          size={18}
+                          className="text-gray-500 group-hover/code:text-[#2d6af2]"
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* QR CODE - Take up remaining space gracefully */}
+                <div className="flex-1 flex items-center justify-center min-h-[150px]">
+                  <div
+                    className="bg-transparent p-4 lg:p-6 rounded-3xl w-full max-w-[280px] aspect-square shadow-[0_0_40px_rgba(45,106,242,0.4)] relative group/qr cursor-pointer border border-white/10 backdrop-blur-sm"
+                    onClick={() => setOpen(true)}
+                  >
+                    <QRCode
+                      value={joinLink}
+                      style={{ width: "100%", height: "100%" }}
+                      bgColor="transparent"
+                      fgColor="white"
+                    />
+                  </div>
+                </div>
+
+                {/* JOIN LINK */}
+                <div
+                  className="relative group/link cursor-pointer bg-[#0a101f] p-4 rounded-xl border border-[#2d6af2]/20 hover:border-[#2d6af2] transition-all"
+                  onClick={() => copyToClipboard(joinLink, setCopiedJoin)}
+                >
+                  <p className="text-center text-[#2d6af2] text-sm font-display tracking-wider truncate px-6">
+                    {formatUrlBreakable(joinLink)}
+                  </p>
+                  <div className="absolute top-1/2 -translate-y-1/2 right-4">
+                    {copiedJoin ? (
+                      <Check size={16} className="text-[#00ff9d]" />
                     ) : (
                       <Copy
-                        size={14}
-                        className="text-gray-500 group-hover/code:text-[#2d6af2]"
+                        size={16}
+                        className="text-gray-500 group-hover/link:text-[#2d6af2]"
                       />
                     )}
                   </div>
                 </div>
               </div>
 
-            <div
-              className="flex justify-center bg-transparent p-4 rounded-3xl w-[180px] md:w-[240px] lg:w-full mx-auto shadow-[0_0_40px_rgba(45,106,242,0.5)] relative group/qr cursor-pointer max-h-[30vh] aspect-square border border-white/10 backdrop-blur-sm"
-              onClick={() => setOpen(true)}
-            >
-              <QRCode
-                value={joinLink}
-                style={{ width: "100%", height: "100%" }}
-                bgColor="transparent"
-                fgColor="white"
-              />
-            </div>
+              {/* ACTION BUTTONS (Bottom part) */}
+              <div className="flex flex-col gap-4 mt-6 relative z-10 shrink-0">
+                <Button
+                  onClick={startGame}
+                  disabled={participants.length === 0 || countdown !== null}
+                  className="w-full bg-gradient-to-r from-[#2d6af2] to-[#00ff9d] hover:from-[#3b7bf5] hover:to-[#33ffb0] text-black font-display text-xl py-7 rounded-2xl shadow-[0_0_25px_rgba(45,106,242,0.5)] hover:shadow-[0_0_40px_rgba(45,106,242,0.7)] transition-all uppercase tracking-widest transform active:scale-[0.98] disabled:from-gray-800 disabled:to-gray-800 disabled:text-gray-500 disabled:shadow-none border-none relative overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-[#00ff9d]/20 blur-xl opacity-0 hover:opacity-100 transition-opacity"></div>
+                  <span className="relative z-10 flex items-center justify-center gap-3">
+                    <Play className="fill-current w-7 h-7" />
+                    {countdown !== null ? "STARTING..." : t("hostroom.start")}
+                  </span>
+                </Button>
 
-              <div
-                className="relative group/link cursor-pointer bg-[#0a101f] p-3 rounded-xl border border-[#2d6af2]/20 hover:border-[#2d6af2] transition-all"
-                onClick={() => copyToClipboard(joinLink, setCopiedJoin)}
-              >
-                <p className="text-center text-[#2d6af2] text-xs font-display tracking-wider truncate px-6">
-                  {formatUrlBreakable(joinLink)}
-                </p>
-                <div className="absolute top-1/2 -translate-y-1/2 right-3">
-                  {copiedJoin ? (
-                    <Check size={14} className="text-[#00ff9d]" />
-                  ) : (
-                    <Copy
-                      size={14}
-                      className="text-gray-500 group-hover/link:text-[#2d6af2]"
-                    />
-                  )}
+                <div className="flex gap-4">
+                  <Button
+                    onClick={() => router.push("/host/select-quiz")}
+                    className="flex-1 bg-transparent border border-red-500/50 text-red-500 hover:bg-red-500/10 hover:border-red-500 font-display text-[10px] uppercase tracking-wider h-11 rounded-xl transition-all shadow-[0_0_10px_rgba(239,68,68,0.1)]"
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Exit
+                  </Button>
+
+                  <Button
+                    onClick={() => setShareOpen(true)}
+                    className="flex-1 bg-[#2d6af2]/10 border border-[#2d6af2]/30 text-[#2d6af2] hover:bg-[#2d6af2]/20 hover:text-white font-display text-[10px] uppercase tracking-wider h-11 rounded-xl transition-all shadow-[0_0_10px_rgba(45,106,242,0.2)]"
+                  >
+                    <Share2 className="mr-2 h-4 w-4" />
+                    Invite
+                  </Button>
                 </div>
-              </div>
-
-            <Button
-              onClick={startGame}
-              disabled={participants.length === 0 || countdown !== null}
-              className="w-full bg-gradient-to-r from-[#2d6af2] to-[#00ff9d] hover:from-[#3b7bf5] hover:to-[#33ffb0] text-black font-display text-xl py-6 rounded-2xl shadow-[0_0_25px_rgba(45,106,242,0.5)] hover:shadow-[0_0_40px_rgba(45,106,242,0.7)] transition-all uppercase tracking-widest transform active:scale-[0.98] disabled:from-gray-800 disabled:to-gray-800 disabled:text-gray-500 disabled:shadow-none border-none relative overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-[#00ff9d]/20 blur-xl opacity-0 hover:opacity-100 transition-opacity"></div>
-              <span className="relative z-10 flex items-center justify-center gap-3">
-                <Play className="fill-current w-6 h-6" />
-                {countdown !== null ? "STARTING..." : t("hostroom.start")}
-              </span>
-            </Button>
-
-              <div className="flex gap-4">
-                <Button
-                  onClick={() => router.push("/host/select-quiz")}
-                  className="flex-1 bg-transparent border border-red-500/50 text-red-500 hover:bg-red-500/10 hover:border-red-500 font-display text-[10px] uppercase tracking-wider h-10 rounded-xl transition-all shadow-[0_0_10px_rgba(239,68,68,0.1)]"
-                >
-                  <LogOut className="mr-1.5 h-3.5 w-3.5" />
-                  Exit
-                </Button>
-
-                <Button
-                  onClick={() => setShareOpen(true)}
-                  className="flex-1 bg-[#2d6af2]/10 border border-[#2d6af2]/30 text-[#2d6af2] hover:bg-[#2d6af2]/20 hover:text-white font-display text-[10px] uppercase tracking-wider h-10 rounded-xl transition-all shadow-[0_0_10px_rgba(45,106,242,0.2)]"
-                >
-                  <Share2 className="mr-1.5 h-3.5 w-3.5" />
-                  Invite
-                </Button>
               </div>
             </motion.div>
           </div>
