@@ -92,10 +92,10 @@ const ROAD_WIDTH = 2000;
 const SEGMENT_LENGTH = 200;
 const RUMBLE_LENGTH = 3;
 const LANES = 4;
-const FIELD_OF_VIEW = 80;       // Narrower FOV for more elevated/top-down perspective
-const CAMERA_HEIGHT = 1200;     // Much higher camera for bird's-eye city view
+const FIELD_OF_VIEW = 85;        // Slightly narrower for elevated perspective
+const CAMERA_HEIGHT = 1000;      // Higher camera - more top-down city view
 const DRAW_DISTANCE = 300;
-const FOG_DENSITY = 3;          // Less fog to see further into the city
+const FOG_DENSITY = 3;           // Less fog to see the city further
 const MAX_SPEED = SEGMENT_LENGTH / STEP;
 const ACCEL = MAX_SPEED / 5;
 const BREAKING = -MAX_SPEED * 2.5;
@@ -104,11 +104,11 @@ const OFF_ROAD_DECEL = -MAX_SPEED / 2;
 const OFF_ROAD_LIMIT = MAX_SPEED / 4;
 
 const COLORS = {
-    SKY: '#05081a',  // Deep city night sky
+    SKY: '#070b1e',  // Deep city night
     TREE: '#064e3b',
-    FOG: '#05081a',
-    LIGHT: { road: '#1a1e2e', grass: '#0c1022', rumble: '#2a2040', strip: '#fbbf24', sidewalk: '#3d3a50', curb: '#6b6580' },
-    DARK:  { road: '#141828', grass: '#080c1a', rumble: '#1e1835', strip: '',        sidewalk: '#2e2c42', curb: '#504a68' },
+    FOG: '#070b1e',
+    LIGHT: { road: '#1c2030', grass: '#0e1225', rumble: '#2a2145', strip: '#fbbf24', sidewalk: '#45404a', curb: '#7a7085' },
+    DARK:  { road: '#161a28', grass: '#0a0e1c', rumble: '#201838', strip: '',        sidewalk: '#38343e', curb: '#5e5570' },
     START: { road: '#ffffff', grass: '#334155', rumble: '#ffffff', strip: '',        sidewalk: '#ffffff', curb: '#ffffff' },
     FINISH:{ road: '#000000', grass: '#111827', rumble: '#000000', strip: '',        sidewalk: '#000000', curb: '#000000' }
 };
@@ -585,13 +585,13 @@ export default function GameSpeedPage() {
         ctx.closePath();
         ctx.fill();
 
-        // Sidewalk (Much wider for urban city feel)
-        const sw1 = w1 * 1.2; // Wide sidewalk for city street look
-        const sw2 = w2 * 1.2;
-        const cw1 = w1 * 0.08; // Thicker curb
-        const cw2 = w2 * 0.08;
+        // Sidewalk (Wide city sidewalk)
+        const sw1 = w1 * 1.0; // Wide sidewalk
+        const sw2 = w2 * 1.0;
+        const cw1 = w1 * 0.07; // Thick curb edge
+        const cw2 = w2 * 0.07;
 
-        // Draw Left Sidewalk (Base)
+        // Draw Left Sidewalk
         ctx.fillStyle = color.sidewalk;
         ctx.beginPath();
         ctx.moveTo(x1 - w1 - r1 - sw1, y1);
@@ -601,7 +601,7 @@ export default function GameSpeedPage() {
         ctx.closePath();
         ctx.fill();
 
-        // Draw Right Sidewalk (Base)
+        // Draw Right Sidewalk
         ctx.beginPath();
         ctx.moveTo(x1 + w1 + r1 + sw1, y1);
         ctx.lineTo(x1 + w1 + r1, y1);
@@ -692,8 +692,8 @@ export default function GameSpeedPage() {
         else if (name?.includes('truck')) worldWidth = carWorldWidth * 1.1; // Truk sedikit lebih besar dari mobil
         else if (name?.includes('car_rival') || name === 'foward-opponent') worldWidth = carWorldWidth * 0.75; // Rival sama dengan NPC
         else if (name?.includes('odong') || name?.includes('taxi')) worldWidth = carWorldWidth * 0.8; 
-        else if (name?.includes('kiri_') || name?.includes('kanan_')) worldWidth = carWorldWidth * 20.0; // Larger buildings for city canyon
-        else if (name?.includes('pohon')) worldWidth = carWorldWidth * 8.0; // Trees slightly smaller to fit between buildings
+        else if (name?.includes('kiri_') || name?.includes('kanan_')) worldWidth = carWorldWidth * 20.0; // Big buildings for city canyon
+        else if (name?.includes('pohon')) worldWidth = carWorldWidth * 8.0; // Trees between buildings
         else if (name?.includes('bush') || name?.includes('semak')) worldWidth = carWorldWidth * 2.35;
         else if (name?.includes('bench') || name?.includes('bangku')) worldWidth = carWorldWidth * 2.8;
         else if (name?.includes('barrier') || name?.includes('pembatas_jalan')) worldWidth = carWorldWidth * 2.8;
@@ -971,7 +971,7 @@ export default function GameSpeedPage() {
         // For now, we trust the assets have reasonable relative resolutions.
 
         const finalX = width / 2 - finalW / 2 + (steer * 50);
-        const finalY = height - finalH - 10; // Lower on screen for elevated camera
+        const finalY = height - finalH - 15; // Slightly lower for elevated camera
 
         // Render sprite apa adanya tanpa tilt - gambar sudah memiliki posisi miring sendiri
         ctx.drawImage(finalSprite, finalX, finalY, finalW, finalH);
@@ -1327,7 +1327,6 @@ export default function GameSpeedPage() {
             const bgW = bg.width;
             const bgH = bg.height;
 
-            // 1. Scale to cover screen with extra width for movement
             const extraParallax = isMobile ? 1.5 : 1.3;
             const scaleX = (width / bgW) * extraParallax;
             const scaleY = (height / bgH);
@@ -1336,15 +1335,11 @@ export default function GameSpeedPage() {
             const scaledW = bgW * layerScale;
             const scaledH = bgH * layerScale;
 
-            // 2. Parallax Positioning (Offset calculated in update())
             state.current.bgOffset = state.current.bgOffset || 0;
-
-            // 3. Dynamic Clamping to prevent black bars
             const maxOverflowX = (scaledW - width) / 2;
             const maxAllowedFactor = maxOverflowX / scaledW;
             state.current.bgOffset = Util.limit(state.current.bgOffset, -maxAllowedFactor, maxAllowedFactor);
 
-            // 4. Position and Render
             const finalScrollX = ((width - scaledW) / 2) - (state.current.bgOffset * scaledW);
             const finalScrollY = (height - scaledH) / 2;
 
@@ -1352,6 +1347,80 @@ export default function GameSpeedPage() {
             ctx.drawImage(bg, finalScrollX, finalScrollY, scaledW, scaledH);
             ctx.restore();
         }
+
+        // === PROCEDURAL CITY SKYLINE ===
+        // Draw silhouette buildings with lit windows above the road horizon
+        const skylineY = height * 0.25; // Horizon line for skyline
+        const skylineH = height * 0.35; // Height range of skyline
+        const buildingColors = ['#0a0e1e', '#0c1020', '#0e1225', '#101428', '#121630'];
+        const windowColors = ['#fbbf24', '#f59e0b', '#60a5fa', '#c084fc', '#f472b6', '#ffffff'];
+        
+        // Seed random per position to keep consistent
+        const seed = Math.floor(state.current.bgOffset * 100);
+        const pseudoRand = (i: number) => {
+            const x = Math.sin(i * 127.1 + seed * 311.7) * 43758.5453;
+            return x - Math.floor(x);
+        };
+
+        // Far background - tall skyscrapers (silhouettes)
+        for (let i = 0; i < 30; i++) {
+            const bx = (i / 30) * width - (state.current.bgOffset * width * 0.3);
+            const bw = 15 + pseudoRand(i) * 40;
+            const bh = 40 + pseudoRand(i + 100) * skylineH * 0.8;
+            const by = skylineY + skylineH - bh;
+            
+            ctx.fillStyle = buildingColors[i % buildingColors.length];
+            ctx.fillRect(bx, by, bw, bh);
+            
+            // Lit windows
+            for (let wy = by + 4; wy < by + bh - 4; wy += 8) {
+                for (let wx = bx + 3; wx < bx + bw - 3; wx += 6) {
+                    if (pseudoRand(wx * 7 + wy * 13 + i) > 0.4) {
+                        ctx.fillStyle = windowColors[Math.floor(pseudoRand(wx + wy * 3) * windowColors.length)];
+                        ctx.globalAlpha = 0.3 + pseudoRand(wx * 3 + wy) * 0.5;
+                        ctx.fillRect(wx, wy, 3, 3);
+                    }
+                }
+            }
+            ctx.globalAlpha = 1.0;
+        }
+
+        // Mid buildings - medium height
+        for (let i = 0; i < 20; i++) {
+            const bx = (i / 20) * width - (state.current.bgOffset * width * 0.5);
+            const bw = 25 + pseudoRand(i + 200) * 50;
+            const bh = 30 + pseudoRand(i + 300) * skylineH * 0.5;
+            const by = skylineY + skylineH - bh;
+            
+            ctx.fillStyle = buildingColors[(i + 2) % buildingColors.length];
+            ctx.fillRect(bx, by, bw, bh);
+            
+            // Lit windows (bigger)
+            for (let wy = by + 5; wy < by + bh - 5; wy += 10) {
+                for (let wx = bx + 4; wx < bx + bw - 4; wx += 8) {
+                    if (pseudoRand(wx * 11 + wy * 17 + i + 500) > 0.45) {
+                        ctx.fillStyle = windowColors[Math.floor(pseudoRand(wx + wy * 5 + 999) * windowColors.length)];
+                        ctx.globalAlpha = 0.4 + pseudoRand(wx * 5 + wy + 777) * 0.5;
+                        ctx.fillRect(wx, wy, 4, 4);
+                    }
+                }
+            }
+            ctx.globalAlpha = 1.0;
+        }
+
+        // Crescent moon
+        ctx.save();
+        ctx.fillStyle = '#e2e8f0';
+        ctx.globalAlpha = 0.8;
+        ctx.beginPath();
+        ctx.arc(width * 0.8, height * 0.08, 12, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = COLORS.SKY;
+        ctx.beginPath();
+        ctx.arc(width * 0.8 + 5, height * 0.08 - 3, 10, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+        ctx.globalAlpha = 1.0;
 
         let maxy = height;
         let x = 0;
