@@ -692,8 +692,8 @@ export default function GameSpeedPage() {
         else if (name?.includes('truck')) worldWidth = carWorldWidth * 1.1; // Truk sedikit lebih besar dari mobil
         else if (name?.includes('car_rival') || name === 'foward-opponent') worldWidth = carWorldWidth * 0.75; // Rival sama dengan NPC
         else if (name?.includes('odong') || name?.includes('taxi')) worldWidth = carWorldWidth * 0.8; 
-        else if (name?.includes('kiri_') || name?.includes('kanan_')) worldWidth = carWorldWidth * 15.0; // Large building (22 segments wide)
-        else if (name?.includes('pohon')) worldWidth = carWorldWidth * 8.0; // Large tree (12 segments wide)
+        else if (name?.includes('kiri_') || name?.includes('kanan_')) worldWidth = carWorldWidth * 18.0; // Large building (27 segments wide, with 65 segment gap)
+        else if (name?.includes('pohon')) worldWidth = carWorldWidth * 10.0; // Large tree (15 segments wide, with 65 segment gap)
         else if (name?.includes('bush') || name?.includes('semak')) worldWidth = carWorldWidth * 2.35;
         else if (name?.includes('bench') || name?.includes('bangku')) worldWidth = carWorldWidth * 2.8;
         else if (name?.includes('barrier') || name?.includes('pembatas_jalan')) worldWidth = carWorldWidth * 2.8;

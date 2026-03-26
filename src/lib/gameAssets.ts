@@ -22,12 +22,12 @@ export const getAssetOffset = (side: 'left' | 'right', assetName: string): numbe
 
     // Push buildings further away from road
     if (assetName.includes('kiri_') || assetName.includes('kanan_') || assetName.includes('baliho')) {
-        baseOffset = side === 'left' ? -5.0 : 5.0;
+        baseOffset = side === 'left' ? -5.5 : 5.5;
     }
     
     // Push trees even further back to avoid overlapping with buildings
     if (assetName.includes('pohon')) {
-        baseOffset = side === 'left' ? -8.5 : 8.5;
+        baseOffset = side === 'left' ? -9.0 : 9.0;
     }
 
     return baseOffset;
