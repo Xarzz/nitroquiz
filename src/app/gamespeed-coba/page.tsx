@@ -92,25 +92,25 @@ const ROAD_WIDTH = 2000;
 const SEGMENT_LENGTH = 200;
 const RUMBLE_LENGTH = 3;
 const LANES = 4;
-const FIELD_OF_VIEW = 100;
-const CAMERA_HEIGHT = 500;
+const FIELD_OF_VIEW = 80;       // Narrower FOV for more elevated/top-down perspective
+const CAMERA_HEIGHT = 1200;     // Much higher camera for bird's-eye city view
 const DRAW_DISTANCE = 300;
-const FOG_DENSITY = 5;
+const FOG_DENSITY = 3;          // Less fog to see further into the city
 const MAX_SPEED = SEGMENT_LENGTH / STEP;
 const ACCEL = MAX_SPEED / 5;
-const BREAKING = -MAX_SPEED * 2.5; // Stronger braking for mobile
+const BREAKING = -MAX_SPEED * 2.5;
 const DECEL = -MAX_SPEED / 5;
 const OFF_ROAD_DECEL = -MAX_SPEED / 2;
 const OFF_ROAD_LIMIT = MAX_SPEED / 4;
 
 const COLORS = {
-    SKY: '#020617', // Deep Midnight Blue/Black
+    SKY: '#05081a',  // Deep city night sky
     TREE: '#064e3b',
-    FOG: '#020617',
-    LIGHT: { road: '#0a0d14', grass: '#1e293b', rumble: '#111827', strip: '#fbbf24', sidewalk: '#334155', curb: '#475569' }, // Neon Yellow Markings
-    DARK: { road: '#05070a', grass: '#0f172a', rumble: '#0d1117', strip: '', sidewalk: '#1e293b', curb: '#334155' },
-    START: { road: '#ffffff', grass: '#334155', rumble: '#ffffff', strip: '', sidewalk: '#ffffff', curb: '#ffffff' },
-    FINISH: { road: '#000000', grass: '#111827', rumble: '#000000', strip: '', sidewalk: '#000000', curb: '#000000' }
+    FOG: '#05081a',
+    LIGHT: { road: '#1a1e2e', grass: '#0c1022', rumble: '#2a2040', strip: '#fbbf24', sidewalk: '#3d3a50', curb: '#6b6580' },
+    DARK:  { road: '#141828', grass: '#080c1a', rumble: '#1e1835', strip: '',        sidewalk: '#2e2c42', curb: '#504a68' },
+    START: { road: '#ffffff', grass: '#334155', rumble: '#ffffff', strip: '',        sidewalk: '#ffffff', curb: '#ffffff' },
+    FINISH:{ road: '#000000', grass: '#111827', rumble: '#000000', strip: '',        sidewalk: '#000000', curb: '#000000' }
 };
 
 export default function GameSpeedPage() {
@@ -246,7 +246,7 @@ export default function GameSpeedPage() {
     // --- Loading Assets ---
     useEffect(() => {
         // Ensure difficulty is stored for quiz return flow
-        localStorage.setItem('nitroquiz_game_difficulty', 'medium');
+        localStorage.setItem('nitroquiz_game_difficulty', 'coba');
         
         // Pre-fetch quiz page in background so transition is instant
         router.prefetch('/quiz');
@@ -270,14 +270,8 @@ export default function GameSpeedPage() {
 
             const promises: Promise<void>[] = [];
 
-            // Extend asset list with obstacles for medium mode
-            const obstacles = [
-                { name: 'obstacle1', src: '/assets/material/pembatas_jalan/1penghalang.webp' },
-                { name: 'obstacle2', src: '/assets/material/pembatas_jalan/1roadbarrier.webp' }
-            ];
-
-            // Load from ASSET_LIST + obstacles (named assets)
-            [...ASSET_LIST, ...obstacles].forEach(item => {
+            // Load from ASSET_LIST (named assets)
+            ASSET_LIST.forEach(item => {
                 promises.push(new Promise<void>((resolve) => {
                     const img = new Image();
                     img.onload = () => {
@@ -439,29 +433,17 @@ export default function GameSpeedPage() {
 
     const resetRoad = () => {
         state.current.segments = [];
-        
-        // --- MEDIUM DIFFICULTY TRACK LAYOUT ---
-        // A much more twisty track with more curves, s-curves, and hills
+        // A cleaner, less "messy" track layout (Simplified Circuit)
         addStraight(ROAD_CONF.LENGTH.SHORT);
-        addCurve(ROAD_CONF.LENGTH.MEDIUM, ROAD_CONF.CURVE.EASY, ROAD_CONF.HILL.NONE);
+        addCurve(ROAD_CONF.LENGTH.MEDIUM, ROAD_CONF.CURVE.MEDIUM, ROAD_CONF.HILL.LOW);
+        addStraight(ROAD_CONF.LENGTH.LONG);
+        addCurve(ROAD_CONF.LENGTH.MEDIUM, -ROAD_CONF.CURVE.MEDIUM, ROAD_CONF.HILL.NONE);
+        addStraight(ROAD_CONF.LENGTH.MEDIUM);
+        addCurve(ROAD_CONF.LENGTH.LONG, ROAD_CONF.CURVE.EASY, ROAD_CONF.HILL.MEDIUM);
+        addStraight(ROAD_CONF.LENGTH.LONG);
+        addCurve(ROAD_CONF.LENGTH.MEDIUM, ROAD_CONF.CURVE.MEDIUM, -ROAD_CONF.HILL.LOW);
         addStraight(ROAD_CONF.LENGTH.SHORT);
-        
-        // Start difficult part
-        addSCurves();
-        addBumps();
-        
-        addCurve(ROAD_CONF.LENGTH.LONG, -ROAD_CONF.CURVE.MEDIUM, ROAD_CONF.HILL.MEDIUM);
-        addStraight(ROAD_CONF.LENGTH.MEDIUM);
-        
-        addSCurves();
-        
-        addCurve(ROAD_CONF.LENGTH.LONG, ROAD_CONF.CURVE.HARD, -ROAD_CONF.HILL.MEDIUM);
-        addCurve(ROAD_CONF.LENGTH.LONG, -ROAD_CONF.CURVE.HARD, ROAD_CONF.HILL.HIGH);
-        addBumps();
-        
-        addStraight(ROAD_CONF.LENGTH.MEDIUM);
-        
-        addDownhillToEnd(250);
+        addDownhillToEnd(200);
 
         const len = state.current.segments.length;
 
@@ -548,32 +530,6 @@ export default function GameSpeedPage() {
             findSegment(z).cars.push(car);
         }
 
-        // Add Stationary Obstacles for Medium Mode
-        for (let n = 0; n < 25; n++) {
-            // Start spawning obstacles after the first 20 segments to give
-            // the player some time to react, and distribute them across the track length
-            const zLength = len * SEGMENT_LENGTH;
-            const startOffset = 20 * SEGMENT_LENGTH;
-            const z = startOffset + Math.random() * (zLength - startOffset - 1000);
-            
-            // Random lane placement (-0.8 to 0.8)
-            const offset = (Math.random() * 1.6) - 0.8; 
-            
-            const isBarrier = Math.random() > 0.5;
-            const obstacleSprite = isBarrier ? state.current.sprites.obstacle2 : state.current.sprites.obstacle1;
-
-            const obstacle: Car = {
-                offset: offset,
-                z: z,
-                sprite: obstacleSprite || state.current.sprites.truck2,
-                speed: 0,
-                percent: 0,
-                type: 'obstacle' as any // Treating obstacle as a 0-speed NPC car for collision
-            };
-            state.current.cars.push(obstacle);
-            findSegment(z).cars.push(obstacle);
-        }
-
         // Spawn Rival Opponent
         const rivalCar: Car = {
             offset: -0.4,
@@ -629,11 +585,11 @@ export default function GameSpeedPage() {
         ctx.closePath();
         ctx.fill();
 
-        // Sidewalk (Detailed gray tiles)
-        const sw1 = w1 * 0.5; // Sidewalk width relative to road
-        const sw2 = w2 * 0.5;
-        const cw1 = w1 * 0.05; // Curb width
-        const cw2 = w2 * 0.05;
+        // Sidewalk (Much wider for urban city feel)
+        const sw1 = w1 * 1.2; // Wide sidewalk for city street look
+        const sw2 = w2 * 1.2;
+        const cw1 = w1 * 0.08; // Thicker curb
+        const cw2 = w2 * 0.08;
 
         // Draw Left Sidewalk (Base)
         ctx.fillStyle = color.sidewalk;
@@ -736,8 +692,8 @@ export default function GameSpeedPage() {
         else if (name?.includes('truck')) worldWidth = carWorldWidth * 1.1; // Truk sedikit lebih besar dari mobil
         else if (name?.includes('car_rival') || name === 'foward-opponent') worldWidth = carWorldWidth * 0.75; // Rival sama dengan NPC
         else if (name?.includes('odong') || name?.includes('taxi')) worldWidth = carWorldWidth * 0.8; 
-        else if (name?.includes('kiri_') || name?.includes('kanan_')) worldWidth = carWorldWidth * 18.0; // Large building (27 segments wide, with 65 segment gap)
-        else if (name?.includes('pohon')) worldWidth = carWorldWidth * 10.0; // Large tree (15 segments wide, with 65 segment gap)
+        else if (name?.includes('kiri_') || name?.includes('kanan_')) worldWidth = carWorldWidth * 20.0; // Larger buildings for city canyon
+        else if (name?.includes('pohon')) worldWidth = carWorldWidth * 8.0; // Trees slightly smaller to fit between buildings
         else if (name?.includes('bush') || name?.includes('semak')) worldWidth = carWorldWidth * 2.35;
         else if (name?.includes('bench') || name?.includes('bangku')) worldWidth = carWorldWidth * 2.8;
         else if (name?.includes('barrier') || name?.includes('pembatas_jalan')) worldWidth = carWorldWidth * 2.8;
@@ -1015,7 +971,7 @@ export default function GameSpeedPage() {
         // For now, we trust the assets have reasonable relative resolutions.
 
         const finalX = width / 2 - finalW / 2 + (steer * 50);
-        const finalY = height - finalH - 35;
+        const finalY = height - finalH - 10; // Lower on screen for elevated camera
 
         // Render sprite apa adanya tanpa tilt - gambar sudah memiliki posisi miring sendiri
         ctx.drawImage(finalSprite, finalX, finalY, finalW, finalH);
@@ -1128,7 +1084,6 @@ export default function GameSpeedPage() {
 
         // Road Boundary Limit (Acts as invisible barrier)
         nextPlayerX = Util.limit(nextPlayerX, -1.5, 1.5);
-        // Speed cannot go below 0 — no reverse driving allowed
         nextSpeed = Util.limit(nextSpeed, 0, MAX_SPEED);
 
         state.current.playerX = nextPlayerX;
@@ -1948,7 +1903,7 @@ export default function GameSpeedPage() {
             console.error("Failed to unlock orientation:", e);
         }
 
-        // 3. Clean up session data from localStorage
+        // 3. Clean up session data from localStorage (keep questions for quiz page if needed)
         localStorage.removeItem('nitroquiz_game_questions');
         localStorage.removeItem('nitroquiz_game_questionIndex');
         localStorage.removeItem('nitroquiz_game_score');
@@ -2625,9 +2580,9 @@ export default function GameSpeedPage() {
                     {/* Racing lights - 3 circles: Red, Yellow, Green */}
                     <div style={{ display: 'flex', gap: usePCLayout ? '1.25rem' : '0.75rem' }}>
                         {[
-                            { color: '#ef4444', activeAt: 3 },
-                            { color: '#facc15', activeAt: 2 },
-                            { color: '#00ff9d', activeAt: 1 },
+                            { color: '#ef4444', activeAt: 3 }, // Red = lit when countdown === 3
+                            { color: '#facc15', activeAt: 2 }, // Yellow = lit when countdown <= 2
+                            { color: '#00ff9d', activeAt: 1 }, // Green = lit when countdown <= 1
                         ].map((light, i) => {
                             const isGo = countdown <= 0;
                             const isLit = isGo || countdown <= light.activeAt;
