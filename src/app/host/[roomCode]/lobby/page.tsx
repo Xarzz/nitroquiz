@@ -464,9 +464,9 @@ export default function HostRoomPage() {
       <div className="scanlines"></div>
 
       {/* Main Content Wrapper - Fixed to viewport */}
-      <div className="relative z-20 flex flex-col h-full w-full mx-auto px-6 md:px-10 pb-4">
+      <div className="relative z-20 flex flex-col h-full w-full max-w-[1500px] mx-auto px-6 md:px-16 lg:px-24 xl:px-36 pb-4">
         {/* Header - Logos in corners with improved visibility and balanced symmetry */}
-        <div className="w-full flex items-center justify-between pt-8 mb-8">
+        <div className="w-full flex items-center justify-between pt-6 mb-6">
           <img
             src="/assets/logo/logo1.png"
             alt="NitroQuiz Logo"
