@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Orbitron, Rajdhani, Press_Start_2P } from "next/font/google";
+import localFont from "next/font/local";
 import NextTopLoader from 'nextjs-toploader';
 import "./globals.css";
 import ClientLayout from "./ClientLayout";
@@ -30,6 +31,12 @@ const pressStart2P = Press_Start_2P({
   variable: '--font-press-start-2p',
 });
 
+const lpmq = localFont({
+  src: '../../public/assets/font/LPMQ_IsepMisbah.ttf',
+  variable: '--font-lpmq',
+  display: 'swap',
+});
+
 export const metadata: Metadata = {
   title: "NitroQuiz - Balap Cerdas Adrenalin Tinggi",
   description: "Game kuis seru berkecepatan tinggi! Jawab pertanyaan, nyalakan nitro, dan jadilah juara di NitroQuiz.",
@@ -52,7 +59,7 @@ export default function RootLayout({
       <head>
         {/* Fonts are loaded via next/font/google - no CDN links needed */}
       </head>
-      <body className={`${inter.variable} ${orbitron.variable} ${rajdhani.variable} ${pressStart2P.variable}`}>
+      <body className={`${inter.variable} ${orbitron.variable} ${rajdhani.variable} ${pressStart2P.variable} ${lpmq.variable}`}>
         <ClientLayout>
         <NextTopLoader
           color="#2d6af2"

@@ -70,6 +70,7 @@ const config: Config = {
             fontFamily: {
                 display: ['"Press Start 2P"', 'var(--font-press-start-2p)', 'cursive'],
                 body: ['"Rajdhani"', 'var(--font-rajdhani)', 'sans-serif'],
+                arabic: ['var(--font-lpmq)', 'sans-serif'],
             },
             boxShadow: {
                 'neon-blue': '0 0 10px #3BC9F5, 0 0 20px #3BC9F5',

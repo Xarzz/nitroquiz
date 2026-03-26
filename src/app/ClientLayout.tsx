@@ -46,13 +46,13 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
       document.documentElement.lang = currentLang;
 
       // Set direction and body class for Arabic
-    //   if (currentLang === 'ar') {
-    //     document.documentElement.dir = 'rtl';
-    //     document.body.classList.add('lang-ar');
-    //   } else {
-    //     document.documentElement.dir = 'ltr';
-    //     document.body.classList.remove('lang-ar');
-    //   }
+      if (currentLang === 'ar') {
+        document.documentElement.dir = 'rtl';
+        document.body.classList.add('lang-ar');
+      } else {
+        document.documentElement.dir = 'ltr';
+        document.body.classList.remove('lang-ar');
+      }
     }
   }, [currentLang, isClient]);
 
