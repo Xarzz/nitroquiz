@@ -494,14 +494,13 @@ export default function HostRoomPage() {
             >
               <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-[#2d6af2]/25 to-transparent rounded-bl-full pointer-events-none"></div>
 
-              <div className="flex flex-col gap-5 relative z-10 flex-1 px-2">
+              <div className="flex flex-col gap-4 relative z-10 flex-1 px-1">
                 {/* ROOM CODE */}
                 <div className="text-center w-full">
                   <div
-                    className="relative group/code cursor-pointer bg-white/5 rounded-[2rem] p-6 border border-white/10 hover:border-[#2d6af2]/50 transition-all flex flex-col items-center justify-center"
+                    className="relative group/code cursor-pointer bg-white/5 rounded-[2rem] p-5 border border-white/10 hover:border-[#2d6af2]/50 transition-all flex flex-col items-center justify-center"
                     onClick={() => copyToClipboard(roomCode, setCopiedRoom)}
                   >
-                    <p className="text-[10px] font-display uppercase tracking-widest text-[#2d6af2] mb-1 opacity-80">Room Code</p>
                     <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl text-white tracking-widest drop-shadow-[0_0_20px_rgba(255,255,255,0.6)]">
                       {roomCode}
                     </h1>
@@ -516,9 +515,9 @@ export default function HostRoomPage() {
                 </div>
 
                 {/* QR CODE - Take up remaining space gracefully */}
-                <div className="flex-1 w-full flex items-center justify-center shrink-0">
+                <div className="flex-1 w-full flex items-center justify-center min-h-[120px]">
                   <div
-                    className="bg-white/[0.02] p-6 sm:p-8 rounded-[2rem] w-full aspect-square shadow-[0_0_40px_rgba(45,106,242,0.3)] relative group/qr cursor-pointer border border-white/10 backdrop-blur-sm transition-transform hover:scale-[1.02] hover:bg-white/[0.04]"
+                    className="bg-white/[0.02] p-4 sm:p-5 lg:p-6 rounded-[2rem] w-full max-w-[280px] aspect-square shadow-[0_0_40px_rgba(45,106,242,0.3)] relative group/qr cursor-pointer border border-white/10 backdrop-blur-sm transition-transform hover:scale-[1.02] hover:bg-white/[0.04]"
                     onClick={() => setOpen(true)}
                   >
                     <QRCode
@@ -535,14 +534,13 @@ export default function HostRoomPage() {
 
                 {/* JOIN LINK */}
                 <div
-                  className="relative group/link cursor-pointer bg-white/5 p-5 rounded-[1.5rem] border border-white/10 hover:border-[#2d6af2] transition-all w-full flex flex-col items-center justify-center"
+                  className="relative group/link cursor-pointer bg-white/5 p-4 rounded-[1.5rem] border border-white/10 hover:border-[#2d6af2] transition-all w-full flex flex-col items-center justify-center"
                   onClick={() => copyToClipboard(joinLink, setCopiedJoin)}
                 >
-                  <p className="text-[10px] font-display uppercase tracking-widest text-[#2d6af2] mb-1 opacity-80">Join Link</p>
                   <p className="text-center text-white text-sm font-display tracking-wider truncate w-full px-6">
                     {formatUrlBreakable(joinLink)}
                   </p>
-                  <div className="absolute top-1/2 -translate-y-1/2 right-5 mt-3">
+                  <div className="absolute top-1/2 -translate-y-1/2 right-4">
                     {copiedJoin ? (
                       <Check size={16} className="text-[#00ff9d]" />
                     ) : (
