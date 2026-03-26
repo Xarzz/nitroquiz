@@ -91,11 +91,11 @@ const STEP = 1 / FPS;
 const ROAD_WIDTH = 2000;
 const SEGMENT_LENGTH = 200;
 const RUMBLE_LENGTH = 3;
-const LANES = 4;
-const FIELD_OF_VIEW = 100;
-const CAMERA_HEIGHT = 500;
-const DRAW_DISTANCE = 300;
-const FOG_DENSITY = 5;
+const LANES = 2; // Clean 2-way road like in the image
+const FIELD_OF_VIEW = 140; // Extremely wide cinematic angle
+const CAMERA_HEIGHT = 180; // Very low angle like in the screenshot
+const DRAW_DISTANCE = 500; // Seeing further into the city
+const FOG_DENSITY = 2; // Lighter fog so city lights pierce through
 const MAX_SPEED = SEGMENT_LENGTH / STEP;
 const ACCEL = MAX_SPEED / 5;
 const BREAKING = -MAX_SPEED * 2.5; // Stronger braking for mobile
@@ -106,11 +106,11 @@ const OFF_ROAD_LIMIT = MAX_SPEED / 4;
 const COLORS = {
     SKY: '#020617', // Deep Midnight Blue/Black
     TREE: '#064e3b',
-    FOG: '#020617',
-    LIGHT: { road: '#0a0d14', grass: '#1e293b', rumble: '#111827', strip: '#fbbf24', sidewalk: '#334155', curb: '#475569' }, // Neon Yellow Markings
-    DARK: { road: '#05070a', grass: '#0f172a', rumble: '#0d1117', strip: '', sidewalk: '#1e293b', curb: '#334155' },
-    START: { road: '#ffffff', grass: '#334155', rumble: '#ffffff', strip: '', sidewalk: '#ffffff', curb: '#ffffff' },
-    FINISH: { road: '#000000', grass: '#111827', rumble: '#000000', strip: '', sidewalk: '#000000', curb: '#000000' }
+    FOG: '#000000',
+    LIGHT: { road: '#05070a', grass: '#0a0d14', rumble: '#111827', strip: '#fbbf24', sidewalk: '#1a1d23', curb: '#64748b' }, // Dark city asphalt
+    DARK: { road: '#020406', grass: '#05070a', rumble: '#0a0d14', strip: '#fbbf24', sidewalk: '#111827', curb: '#475569' },
+    START: { road: '#ffffff', grass: '#ffffff', rumble: '#ffffff', strip: '#ffffff' },
+    FINISH: { road: '#22c55e', grass: '#22c55e', rumble: '#22c55e', strip: '#ffffff' }
 };
 
 export default function GameSpeedPage() {
@@ -211,7 +211,7 @@ export default function GameSpeedPage() {
         playerZ: 0,
         speed: 0,
         trackLength: 0,
-        sprites: { car: null, bg: null, obstacle: null } as any,
+        sprites: { car: null, bg: null, bg_mobile: null, obstacle: null } as any,
         keyLeft: false,
         keyRight: false,
         keyFaster: false,
@@ -433,16 +433,15 @@ export default function GameSpeedPage() {
 
     const resetRoad = () => {
         state.current.segments = [];
-        // A cleaner, less "messy" track layout (Simplified Circuit)
-        addStraight(ROAD_CONF.LENGTH.SHORT);
+        // --- URBAN CITY CIRCUIT (STRAIGHT START LIKE IMAGE) ---
+        addStraight(ROAD_CONF.LENGTH.LONG * 3); // Long straight corridor through the city
         addCurve(ROAD_CONF.LENGTH.MEDIUM, ROAD_CONF.CURVE.MEDIUM, ROAD_CONF.HILL.LOW);
         addStraight(ROAD_CONF.LENGTH.LONG);
         addCurve(ROAD_CONF.LENGTH.MEDIUM, -ROAD_CONF.CURVE.MEDIUM, ROAD_CONF.HILL.NONE);
-        addStraight(ROAD_CONF.LENGTH.MEDIUM);
         addCurve(ROAD_CONF.LENGTH.LONG, ROAD_CONF.CURVE.EASY, ROAD_CONF.HILL.MEDIUM);
-        addStraight(ROAD_CONF.LENGTH.LONG);
+        addStraight(ROAD_CONF.LENGTH.LONG * 2);
         addCurve(ROAD_CONF.LENGTH.MEDIUM, ROAD_CONF.CURVE.MEDIUM, -ROAD_CONF.HILL.LOW);
-        addStraight(ROAD_CONF.LENGTH.SHORT);
+        addStraight(ROAD_CONF.LENGTH.LONG);
         addDownhillToEnd(200);
 
         const len = state.current.segments.length;
