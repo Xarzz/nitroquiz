@@ -815,27 +815,17 @@ export default function HostRoomPage() {
 
       {/* QR Dialog */}
       <Dialog open={open} onOpenChange={setOpen}>
-        {/* Darker and more blurred background */}
-        <DialogOverlay className="bg-black/95 backdrop-blur-xl transition-all duration-300" />
-        <DialogContent className="bg-transparent border-none p-0 flex flex-col items-center justify-center shadow-none max-w-none w-auto [&>button]:top-4 [&>button]:right-4 [&>button]:bg-white/10 [&>button]:hover:bg-white/20 [&>button]:text-white [&>button]:rounded-full [&>button]:w-14 [&>button]:h-14 [&>button>svg]:w-6 [&>button>svg]:h-6">
+        {/* Slightly lighter but still dark blurred background */}
+        <DialogOverlay className="bg-black/80 backdrop-blur-xl transition-all duration-300" />
+        <DialogContent className="bg-transparent border-none p-0 flex flex-col items-center justify-center shadow-none max-w-none w-auto h-screen outline-none [&>button]:top-4 [&>button]:right-4 [&>button]:bg-white/10 [&>button]:hover:bg-white/20 [&>button]:text-white [&>button]:rounded-full [&>button]:w-14 [&>button]:h-14 [&>button>svg]:w-6 [&>button>svg]:h-6">
           <VisuallyHidden>
             <DialogTitle>QR Code Invitation</DialogTitle>
           </VisuallyHidden>
           
-          <div className="flex flex-col items-center gap-6">
-            <h2 className="font-display text-3xl md:text-5xl text-white tracking-widest drop-shadow-[0_0_20px_rgba(45,106,242,0.6)] uppercase">
-              SCAN TO JOIN
-            </h2>
-            
-            <div className="bg-white p-8 md:p-12 rounded-[3rem] shadow-[0_0_100px_rgba(45,106,242,0.6)] transform transition-transform duration-300 border-4 border-[#2d6af2]/30">
-              {/* Larger QR Code */}
+          <div className="flex flex-col items-center justify-center h-full">
+            <div className="bg-white p-8 md:p-12 rounded-[3rem] shadow-[0_0_100px_rgba(45,106,242,0.6)] transform transition-transform duration-300 border-4 border-[#2d6af2]/30 flex items-center justify-center m-auto">
+              {/* Centered Large QR Code */}
               <QRCode value={joinLink} size={Math.min(typeof window !== 'undefined' ? window.innerWidth * 0.8 : 700, 700)} />
-            </div>
-            
-            <div className="mt-4 bg-black/50 border border-white/10 rounded-2xl p-4 backdrop-blur-sm">
-              <h1 className="font-display text-6xl text-[#00ff9d] tracking-widest drop-shadow-[0_0_15px_rgba(0,255,157,0.5)]">
-                {roomCode}
-              </h1>
             </div>
           </div>
         </DialogContent>
