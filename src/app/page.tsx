@@ -211,17 +211,11 @@ export default function Home() {
       <div className="fixed inset-0 z-0 bg-gradient-to-t from-[#04060f] via-[#04060f]/60 to-[#2d6af2]/10 pointer-events-none"></div>
       <div className="scanlines"></div>
 
-      {/* Top Bar: Logo1 left, Logo2 right */}
-      <div className="fixed top-0 left-0 right-0 z-[90] px-4 md:px-6 py-3 flex items-center justify-between pointer-events-none">
-        {/* Logo kiri (jika ingin dipakai nanti) */}
-        {/* 
-  <div className="pointer-events-auto">
-    <Logo width={140} height={40} withText={false} animated={false} />
-  </div>
-  */}
-
-        {/* Logo kanan */}
-        <div className="pointer-events-auto mr-16 md:mr-20">
+      {/* Top Bar: Always render Left-to-Right so the component stays on the left */}
+      <div dir="ltr" className="fixed top-0 left-0 right-0 z-[90] px-4 md:px-6 py-3 flex items-center justify-between pointer-events-none">
+        
+        {/* Logo Kiri */}
+        <div className="pointer-events-auto">
           <Image
             src="/assets/logo/logo2.png"
             alt="GameForSmart.com"
@@ -520,7 +514,7 @@ export default function Home() {
       </AnimatePresence>
 
       <main className="relative z-20 flex flex-col items-center justify-center min-h-screen w-full max-w-7xl mx-auto p-4 md:p-8">
-        <header className="text-center mb-12 relative z-30 w-full flex flex-col items-center">
+        <header className="text-center mb-7 relative z-30 w-full flex flex-col items-center">
           <Image
             src="/assets/logo/logo1.png"
             alt="GameForSmart Logo"

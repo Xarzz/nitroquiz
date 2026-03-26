@@ -49,6 +49,12 @@
     user-select: none;
   }
 
+  /* Override font when language is Arabic */
+  html[lang="ar"] body,
+  html[lang="ar"] * {
+    font-family: var(--font-lpmq), sans-serif !important;
+  }
+
   /* Re-enable selection for inputs and text areas */
   input, textarea, select {
     -webkit-user-select: auto;
