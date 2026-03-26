@@ -1,6 +1,6 @@
 
 import globalAssets from './globalAssets.json';
-import trackAssets from './trackAssets';
+import trackAssets from './trackAssets.json';
 
 export const ASSET_LIST = globalAssets;
 
