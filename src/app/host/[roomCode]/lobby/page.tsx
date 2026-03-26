@@ -494,60 +494,59 @@ export default function HostRoomPage() {
             >
               <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-[#2d6af2]/25 to-transparent rounded-bl-full pointer-events-none"></div>
 
-              <div className="flex flex-col gap-6 relative z-10 flex-1">
+              <div className="flex flex-col gap-5 relative z-10 flex-1 px-2">
                 {/* ROOM CODE */}
-                <div className="text-center">
+                <div className="text-center w-full">
                   <div
-                    className="relative group/code cursor-pointer bg-white/5 rounded-2xl p-6 border border-white/10 hover:border-[#2d6af2]/50 transition-all"
+                    className="relative group/code cursor-pointer bg-white/5 rounded-[2rem] p-6 border border-white/10 hover:border-[#2d6af2]/50 transition-all flex flex-col items-center justify-center"
                     onClick={() => copyToClipboard(roomCode, setCopiedRoom)}
                   >
+                    <p className="text-[10px] font-display uppercase tracking-widest text-[#2d6af2] mb-1 opacity-80">Room Code</p>
                     <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl text-white tracking-widest drop-shadow-[0_0_20px_rgba(255,255,255,0.6)]">
                       {roomCode}
                     </h1>
-                    <div className="absolute top-3 right-3">
+                    <div className="absolute top-4 right-4">
                       {copiedRoom ? (
                         <Check size={18} className="text-[#00ff9d]" />
                       ) : (
-                        <Copy
-                          size={18}
-                          className="text-gray-500 group-hover/code:text-[#2d6af2]"
-                        />
+                        <Copy size={18} className="text-gray-500 group-hover/code:text-[#2d6af2]" />
                       )}
                     </div>
                   </div>
                 </div>
 
                 {/* QR CODE - Take up remaining space gracefully */}
-                <div className="flex-1 flex items-center justify-center min-h-[150px]">
+                <div className="flex-1 w-full flex items-center justify-center shrink-0">
                   <div
-                    className="bg-transparent p-4 lg:p-6 rounded-3xl w-full max-w-[280px] aspect-square shadow-[0_0_40px_rgba(45,106,242,0.4)] relative group/qr cursor-pointer border border-white/10 backdrop-blur-sm"
+                    className="bg-white/[0.02] p-6 sm:p-8 rounded-[2rem] w-full aspect-square shadow-[0_0_40px_rgba(45,106,242,0.3)] relative group/qr cursor-pointer border border-white/10 backdrop-blur-sm transition-transform hover:scale-[1.02] hover:bg-white/[0.04]"
                     onClick={() => setOpen(true)}
                   >
                     <QRCode
                       value={joinLink}
-                      style={{ width: "100%", height: "100%" }}
+                      style={{ width: "100%", height: "100%", opacity: 0.9 }}
                       bgColor="transparent"
                       fgColor="white"
                     />
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/qr:opacity-100 transition-opacity bg-black/40 rounded-[2rem] backdrop-blur-sm">
+                      <Maximize2 size={32} className="text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]" />
+                    </div>
                   </div>
                 </div>
 
                 {/* JOIN LINK */}
                 <div
-                  className="relative group/link cursor-pointer bg-[#0a101f] p-4 rounded-xl border border-[#2d6af2]/20 hover:border-[#2d6af2] transition-all"
+                  className="relative group/link cursor-pointer bg-white/5 p-5 rounded-[1.5rem] border border-white/10 hover:border-[#2d6af2] transition-all w-full flex flex-col items-center justify-center"
                   onClick={() => copyToClipboard(joinLink, setCopiedJoin)}
                 >
-                  <p className="text-center text-[#2d6af2] text-sm font-display tracking-wider truncate px-6">
+                  <p className="text-[10px] font-display uppercase tracking-widest text-[#2d6af2] mb-1 opacity-80">Join Link</p>
+                  <p className="text-center text-white text-sm font-display tracking-wider truncate w-full px-6">
                     {formatUrlBreakable(joinLink)}
                   </p>
-                  <div className="absolute top-1/2 -translate-y-1/2 right-4">
+                  <div className="absolute top-1/2 -translate-y-1/2 right-5 mt-3">
                     {copiedJoin ? (
                       <Check size={16} className="text-[#00ff9d]" />
                     ) : (
-                      <Copy
-                        size={16}
-                        className="text-gray-500 group-hover/link:text-[#2d6af2]"
-                      />
+                      <Copy size={16} className="text-gray-500 group-hover/link:text-[#2d6af2]" />
                     )}
                   </div>
                 </div>
@@ -818,13 +817,28 @@ export default function HostRoomPage() {
 
       {/* QR Dialog */}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogOverlay className="bg-black/90 backdrop-blur-md" />
-        <DialogContent className="bg-transparent border-none p-0 flex flex-col items-center justify-center shadow-none max-w-none w-auto [&>button]:top-4 [&>button]:right-4 [&>button]:bg-white/10 [&>button]:hover:bg-white/20 [&>button]:text-white [&>button]:rounded-full [&>button]:w-10 [&>button]:h-10">
+        {/* Darker and more blurred background */}
+        <DialogOverlay className="bg-black/95 backdrop-blur-xl transition-all duration-300" />
+        <DialogContent className="bg-transparent border-none p-0 flex flex-col items-center justify-center shadow-none max-w-none w-auto [&>button]:top-4 [&>button]:right-4 [&>button]:bg-white/10 [&>button]:hover:bg-white/20 [&>button]:text-white [&>button]:rounded-full [&>button]:w-14 [&>button]:h-14 [&>button>svg]:w-6 [&>button>svg]:h-6">
           <VisuallyHidden>
             <DialogTitle>QR Code Invitation</DialogTitle>
           </VisuallyHidden>
-          <div className="bg-white p-6 rounded-3xl shadow-[0_0_50px_rgba(45,106,242,0.5)] transform transition-transform duration-300">
-            <QRCode value={joinLink} size={550} />
+          
+          <div className="flex flex-col items-center gap-6">
+            <h2 className="font-display text-3xl md:text-5xl text-white tracking-widest drop-shadow-[0_0_20px_rgba(45,106,242,0.6)] uppercase">
+              SCAN TO JOIN
+            </h2>
+            
+            <div className="bg-white p-8 md:p-12 rounded-[3rem] shadow-[0_0_100px_rgba(45,106,242,0.6)] transform transition-transform duration-300 border-4 border-[#2d6af2]/30">
+              {/* Larger QR Code */}
+              <QRCode value={joinLink} size={Math.min(typeof window !== 'undefined' ? window.innerWidth * 0.8 : 700, 700)} />
+            </div>
+            
+            <div className="mt-4 bg-black/50 border border-white/10 rounded-2xl p-4 backdrop-blur-sm">
+              <h1 className="font-display text-6xl text-[#00ff9d] tracking-widest drop-shadow-[0_0_15px_rgba(0,255,157,0.5)]">
+                {roomCode}
+              </h1>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
