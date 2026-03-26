@@ -490,34 +490,34 @@ export default function HostRoomPage() {
               initial={{ opacity: 0, scale: 0.9, y: 30 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="flex flex-col bg-black/65 backdrop-blur-md rounded-[2.5rem] p-6 shadow-[0_0_40px_rgba(45,106,242,0.2)] border border-[#2d6af2]/60 relative overflow-y-auto custom-scrollbar group h-full justify-between"
+              className="flex flex-col bg-black/65 backdrop-blur-md rounded-[2.5rem] p-8 shadow-[0_0_40px_rgba(45,106,242,0.2)] border border-[#2d6af2]/60 relative overflow-y-auto custom-scrollbar group h-full justify-between"
             >
               <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-[#2d6af2]/25 to-transparent rounded-bl-full pointer-events-none"></div>
 
-              <div className="flex flex-col gap-3 relative z-10 flex-1 w-full max-w-[300px] mx-auto justify-center">
+              <div className="flex flex-col gap-4 relative z-10 flex-1 px-1">
                 {/* ROOM CODE */}
-                <div className="text-center w-full shrink-0">
+                <div className="text-center w-full">
                   <div
-                    className="relative group/code cursor-pointer bg-white/5 rounded-2xl p-3 sm:p-4 border border-white/10 hover:border-[#2d6af2]/50 transition-all flex flex-col items-center justify-center"
+                    className="relative group/code cursor-pointer bg-white/5 rounded-3xl py-3 px-6 border border-white/10 hover:border-[#2d6af2]/50 transition-all flex flex-col items-center justify-center"
                     onClick={() => copyToClipboard(roomCode, setCopiedRoom)}
                   >
-                    <h1 className="font-display text-4xl sm:text-5xl text-white tracking-widest drop-shadow-[0_0_20px_rgba(255,255,255,0.6)] leading-none my-1">
+                    <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl text-white tracking-widest drop-shadow-[0_0_20px_rgba(255,255,255,0.6)]">
                       {roomCode}
                     </h1>
-                    <div className="absolute top-1/2 -translate-y-1/2 right-4">
+                    <div className="absolute top-1/2 -translate-y-1/2 right-5">
                       {copiedRoom ? (
-                        <Check size={16} className="text-[#00ff9d]" />
+                        <Check size={18} className="text-[#00ff9d]" />
                       ) : (
-                        <Copy size={16} className="text-gray-500 group-hover/code:text-[#2d6af2]" />
+                        <Copy size={18} className="text-gray-500 group-hover/code:text-[#2d6af2]" />
                       )}
                     </div>
                   </div>
                 </div>
 
-                {/* QR CODE - Synchronous size */}
-                <div className="w-full flex items-center justify-center shrink-0">
+                {/* QR CODE - Take up remaining space gracefully */}
+                <div className="flex-1 w-full flex items-center justify-center shrink-0">
                   <div
-                    className="bg-white/[0.02] p-4 lg:p-5 rounded-2xl w-full aspect-square shadow-[0_0_40px_rgba(45,106,242,0.3)] relative group/qr cursor-pointer border border-white/10 backdrop-blur-sm transition-transform hover:scale-[1.01] hover:bg-white/[0.04]"
+                    className="bg-white/[0.02] p-4 lg:p-6 rounded-[2rem] w-full aspect-square shadow-[0_0_40px_rgba(45,106,242,0.3)] relative group/qr cursor-pointer border border-white/10 backdrop-blur-sm transition-transform hover:scale-[1.02] hover:bg-white/[0.04]"
                     onClick={() => setOpen(true)}
                   >
                     <QRCode
@@ -526,7 +526,7 @@ export default function HostRoomPage() {
                       bgColor="transparent"
                       fgColor="white"
                     />
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/qr:opacity-100 transition-opacity bg-black/40 rounded-2xl backdrop-blur-sm">
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/qr:opacity-100 transition-opacity bg-black/40 rounded-[2rem] backdrop-blur-sm">
                       <Maximize2 size={32} className="text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]" />
                     </div>
                   </div>
@@ -534,13 +534,13 @@ export default function HostRoomPage() {
 
                 {/* JOIN LINK */}
                 <div
-                  className="relative group/link cursor-pointer bg-white/5 py-4 px-5 rounded-2xl border border-white/10 hover:border-[#2d6af2] transition-all w-full flex flex-col items-center justify-center shrink-0"
+                  className="relative group/link cursor-pointer bg-white/5 py-3 px-6 rounded-3xl border border-white/10 hover:border-[#2d6af2] transition-all w-full flex flex-col items-center justify-center"
                   onClick={() => copyToClipboard(joinLink, setCopiedJoin)}
                 >
-                  <p className="text-center text-white text-xs sm:text-sm font-display tracking-wider truncate w-full px-4">
+                  <p className="text-center text-white text-sm font-display tracking-wider truncate w-full pr-6">
                     {formatUrlBreakable(joinLink)}
                   </p>
-                  <div className="absolute top-1/2 -translate-y-1/2 right-4">
+                  <div className="absolute top-1/2 -translate-y-1/2 right-5">
                     {copiedJoin ? (
                       <Check size={16} className="text-[#00ff9d]" />
                     ) : (
@@ -551,7 +551,7 @@ export default function HostRoomPage() {
               </div>
 
               {/* ACTION BUTTONS (Bottom part) */}
-              <div className="flex flex-col gap-3 mt-4 relative z-10 shrink-0 mx-auto w-full max-w-[340px]">
+              <div className="flex flex-col gap-4 mt-6 relative z-10 shrink-0">
                 <Button
                   onClick={startGame}
                   disabled={participants.length === 0 || countdown !== null}

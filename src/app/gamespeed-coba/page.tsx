@@ -98,7 +98,7 @@ const DRAW_DISTANCE = 300;
 const FOG_DENSITY = 3;           // Less fog to see the city further
 const MAX_SPEED = SEGMENT_LENGTH / STEP;
 const ACCEL = MAX_SPEED / 5;
-const BREAKING = -MAX_SPEED * 2.5;
+const BREAKING = -MAX_SPEED * 2.5; // Stronger braking for mobile
 const DECEL = -MAX_SPEED / 5;
 const OFF_ROAD_DECEL = -MAX_SPEED / 2;
 const OFF_ROAD_LIMIT = MAX_SPEED / 4;
@@ -108,9 +108,9 @@ const COLORS = {
     TREE: '#064e3b',
     FOG: '#070b1e',
     LIGHT: { road: '#1c2030', grass: '#0e1225', rumble: '#2a2145', strip: '#fbbf24', sidewalk: '#45404a', curb: '#7a7085' },
-    DARK:  { road: '#161a28', grass: '#0a0e1c', rumble: '#201838', strip: '',        sidewalk: '#38343e', curb: '#5e5570' },
-    START: { road: '#ffffff', grass: '#334155', rumble: '#ffffff', strip: '',        sidewalk: '#ffffff', curb: '#ffffff' },
-    FINISH:{ road: '#000000', grass: '#111827', rumble: '#000000', strip: '',        sidewalk: '#000000', curb: '#000000' }
+    DARK: { road: '#161a28', grass: '#0a0e1c', rumble: '#201838', strip: '', sidewalk: '#38343e', curb: '#5e5570' },
+    START: { road: '#ffffff', grass: '#334155', rumble: '#ffffff', strip: '', sidewalk: '#ffffff', curb: '#ffffff' },
+    FINISH: { road: '#000000', grass: '#111827', rumble: '#000000', strip: '', sidewalk: '#000000', curb: '#000000' }
 };
 
 export default function GameSpeedPage() {
@@ -156,7 +156,7 @@ export default function GameSpeedPage() {
 
     // Quiz Integration State
     const [allQuizQuestions, setAllQuizQuestions] = useState<QuizQuestion[]>([]);
-    const [quizQuestionIndex, setQuizQuestionIndex] = useState(0); 
+    const [quizQuestionIndex, setQuizQuestionIndex] = useState(0);
     const [totalQuizScore, setTotalQuizScore] = useState(0);
     const QUESTIONS_PER_ROUND = 3;
 
@@ -247,7 +247,7 @@ export default function GameSpeedPage() {
     useEffect(() => {
         // Ensure difficulty is stored for quiz return flow
         localStorage.setItem('nitroquiz_game_difficulty', 'coba');
-        
+
         // Pre-fetch quiz page in background so transition is instant
         router.prefetch('/quiz');
 
@@ -305,7 +305,7 @@ export default function GameSpeedPage() {
 
             // To properly support the new direct 'src' usage in TRACK_ASSETS without re-defining them in ASSET_LIST:
             const uniqueSources = Array.from(new Set(TRACK_ASSETS.map(item => item.src))).filter(Boolean);
-            
+
             uniqueSources.forEach(src => {
                 promises.push(new Promise<void>((resolve) => {
                     const img = new Image();
@@ -691,7 +691,7 @@ export default function GameSpeedPage() {
         if (name?.includes('lampulalulintas') || name === 'traffic_light') worldWidth = carWorldWidth * 4.7;
         else if (name?.includes('truck')) worldWidth = carWorldWidth * 1.1; // Truk sedikit lebih besar dari mobil
         else if (name?.includes('car_rival') || name === 'foward-opponent') worldWidth = carWorldWidth * 0.75; // Rival sama dengan NPC
-        else if (name?.includes('odong') || name?.includes('taxi')) worldWidth = carWorldWidth * 0.8; 
+        else if (name?.includes('odong') || name?.includes('taxi')) worldWidth = carWorldWidth * 0.8;
         else if (name?.includes('kiri_') || name?.includes('kanan_')) worldWidth = carWorldWidth * 20.0; // Big buildings for city canyon
         else if (name?.includes('pohon')) worldWidth = carWorldWidth * 8.0; // Trees between buildings
         else if (name?.includes('bush') || name?.includes('semak')) worldWidth = carWorldWidth * 2.35;
@@ -1110,7 +1110,7 @@ export default function GameSpeedPage() {
                         // "Mental ke belakang" — kurangi kecepatan tapi jangan 0, biar bisa langsung gas lagi
                         nextSpeed = nextSpeed * 0.3;
                         position = Util.increase(position, -200, trackLength); // "duk" mundur sedikit
-                        
+
                         // Mild horizontal push
                         const dir = nextPlayerX > car.offset ? 1 : -1;
                         nextPlayerX += dir * 0.15;
@@ -1273,9 +1273,9 @@ export default function GameSpeedPage() {
                             hasQuizRemaining = true;
                         }
                     }
-                } catch(e) {}
+                } catch (e) { }
             }
-            
+
             if (hasQuizRemaining) {
                 // Save current state to localStorage before redirect
                 localStorage.setItem('nitroquiz_game_questionIndex', quizQuestionIndex.toString());
@@ -1354,7 +1354,7 @@ export default function GameSpeedPage() {
         const skylineH = height * 0.35; // Height range of skyline
         const buildingColors = ['#0a0e1e', '#0c1020', '#0e1225', '#101428', '#121630'];
         const windowColors = ['#fbbf24', '#f59e0b', '#60a5fa', '#c084fc', '#f472b6', '#ffffff'];
-        
+
         // Seed random per position to keep consistent
         const seed = Math.floor(state.current.bgOffset * 100);
         const pseudoRand = (i: number) => {
@@ -1368,10 +1368,10 @@ export default function GameSpeedPage() {
             const bw = 15 + pseudoRand(i) * 40;
             const bh = 40 + pseudoRand(i + 100) * skylineH * 0.8;
             const by = skylineY + skylineH - bh;
-            
+
             ctx.fillStyle = buildingColors[i % buildingColors.length];
             ctx.fillRect(bx, by, bw, bh);
-            
+
             // Lit windows
             for (let wy = by + 4; wy < by + bh - 4; wy += 8) {
                 for (let wx = bx + 3; wx < bx + bw - 3; wx += 6) {
@@ -1391,10 +1391,10 @@ export default function GameSpeedPage() {
             const bw = 25 + pseudoRand(i + 200) * 50;
             const bh = 30 + pseudoRand(i + 300) * skylineH * 0.5;
             const by = skylineY + skylineH - bh;
-            
+
             ctx.fillStyle = buildingColors[(i + 2) % buildingColors.length];
             ctx.fillRect(bx, by, bw, bh);
-            
+
             // Lit windows (bigger)
             for (let wy = by + 5; wy < by + bh - 5; wy += 10) {
                 for (let wx = bx + 4; wx < bx + bw - 4; wx += 8) {
@@ -1959,7 +1959,7 @@ export default function GameSpeedPage() {
                 console.error("Failed to update participant finish state:", e);
             }
         }
-        
+
         // 2. Return to standard orientation
         try {
             if (screen.orientation && (screen.orientation as any).unlock) {
@@ -1980,7 +1980,7 @@ export default function GameSpeedPage() {
         localStorage.removeItem('nitroquiz_game_sessionId');
         localStorage.removeItem('nitroquiz_game_quizId');
         localStorage.removeItem('nitroquiz_game_difficulty');
-        
+
         // 4. Redirect to Podium (Host's monitor will also see we are finished)
         if (roomCode) {
             window.location.href = `/player/${roomCode}/podium`;
@@ -2041,7 +2041,7 @@ export default function GameSpeedPage() {
                     });
                     console.log('[GameSpeed] Loaded quiz questions:', normalized.length, 'Sample:', normalized[0]);
                     setAllQuizQuestions(normalized);
-                    
+
                     // Sync current progress from localStorage
                     const storedIndex = localStorage.getItem('nitroquiz_game_questionIndex');
                     const storedScore = localStorage.getItem('nitroquiz_game_score');
@@ -2086,20 +2086,20 @@ export default function GameSpeedPage() {
                     fontFamily: 'var(--font-rajdhani)'
                 }}>
                     <div style={{ textAlign: 'center' }}>
-                        <div style={{ 
-                            width: '64px', height: '64px', 
-                            border: '4px solid rgba(45, 106, 242, 0.3)', 
-                            borderTopColor: '#2d6af2', 
-                            borderRadius: '50%', 
+                        <div style={{
+                            width: '64px', height: '64px',
+                            border: '4px solid rgba(45, 106, 242, 0.3)',
+                            borderTopColor: '#2d6af2',
+                            borderRadius: '50%',
                             margin: '0 auto 1.5rem auto',
-                            animation: 'spin 1s linear infinite' 
+                            animation: 'spin 1s linear infinite'
                         }} />
-                        <p style={{ 
-                            marginTop: '1rem', 
-                            color: '#2d6af2', 
-                            fontSize: '1.25rem', 
-                            letterSpacing: '0.2em', 
-                            textTransform: 'uppercase', 
+                        <p style={{
+                            marginTop: '1rem',
+                            color: '#2d6af2',
+                            fontSize: '1.25rem',
+                            letterSpacing: '0.2em',
+                            textTransform: 'uppercase',
                             fontWeight: 700,
                             animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
                         }}>
