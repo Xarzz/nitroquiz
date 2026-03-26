@@ -20,9 +20,15 @@ export const TRACK_ASSETS: AssetPlacement[] = trackAssets as AssetPlacement[];
 export const getAssetOffset = (side: 'left' | 'right', assetName: string): number => {
     let baseOffset = side === 'left' ? -2.8 : 2.8;
 
-    // Penyesuaian offset spesifik per tipe aset jika perlu
-    // Penyesuaian offset spesifik per tipe aset jika perlu
-    if (assetName.includes('pohon')) baseOffset = side === 'left' ? -5.5 : 5.5; // Next to/behind buildings (was 8.0)
+    // Push buildings further away from road
+    if (assetName.includes('kiri_') || assetName.includes('kanan_') || assetName.includes('baliho')) {
+        baseOffset = side === 'left' ? -5.0 : 5.0;
+    }
+    
+    // Push trees even further back to avoid overlapping with buildings
+    if (assetName.includes('pohon')) {
+        baseOffset = side === 'left' ? -8.5 : 8.5;
+    }
 
     return baseOffset;
 };

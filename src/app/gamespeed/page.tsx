@@ -433,19 +433,17 @@ export default function GameSpeedPage() {
 
     const resetRoad = () => {
         state.current.segments = [];
-        // A much longer and cleaner track to give assets space (approx 5000+ segments)
-        addStraight(ROAD_CONF.LENGTH.LONG * 2);
-        addCurve(ROAD_CONF.LENGTH.LONG, ROAD_CONF.CURVE.MEDIUM, ROAD_CONF.HILL.LOW);
-        addStraight(ROAD_CONF.LENGTH.LONG * 2);
-        addCurve(ROAD_CONF.LENGTH.MEDIUM, -ROAD_CONF.CURVE.MEDIUM, ROAD_CONF.HILL.NONE);
-        addStraight(ROAD_CONF.LENGTH.LONG);
-        addCurve(ROAD_CONF.LENGTH.LONG, ROAD_CONF.CURVE.EASY, ROAD_CONF.HILL.MEDIUM);
-        addStraight(ROAD_CONF.LENGTH.LONG * 2);
-        addCurve(ROAD_CONF.LENGTH.MEDIUM, ROAD_CONF.CURVE.MEDIUM, -ROAD_CONF.HILL.LOW);
+        // A cleaner, less "messy" track layout (Simplified Circuit)
+        addStraight(ROAD_CONF.LENGTH.SHORT);
+        addCurve(ROAD_CONF.LENGTH.MEDIUM, ROAD_CONF.CURVE.MEDIUM, ROAD_CONF.HILL.LOW);
         addStraight(ROAD_CONF.LENGTH.LONG);
         addCurve(ROAD_CONF.LENGTH.MEDIUM, -ROAD_CONF.CURVE.MEDIUM, ROAD_CONF.HILL.NONE);
         addStraight(ROAD_CONF.LENGTH.MEDIUM);
-        addDownhillToEnd(600);
+        addCurve(ROAD_CONF.LENGTH.LONG, ROAD_CONF.CURVE.EASY, ROAD_CONF.HILL.MEDIUM);
+        addStraight(ROAD_CONF.LENGTH.LONG);
+        addCurve(ROAD_CONF.LENGTH.MEDIUM, ROAD_CONF.CURVE.MEDIUM, -ROAD_CONF.HILL.LOW);
+        addStraight(ROAD_CONF.LENGTH.SHORT);
+        addDownhillToEnd(200);
 
         const len = state.current.segments.length;
 
@@ -694,8 +692,8 @@ export default function GameSpeedPage() {
         else if (name?.includes('truck')) worldWidth = carWorldWidth * 1.1; // Truk sedikit lebih besar dari mobil
         else if (name?.includes('car_rival') || name === 'foward-opponent') worldWidth = carWorldWidth * 0.75; // Rival sama dengan NPC
         else if (name?.includes('odong') || name?.includes('taxi')) worldWidth = carWorldWidth * 0.8; 
-        else if (name?.includes('kiri_') || name?.includes('kanan_')) worldWidth = carWorldWidth * 25.0; // Bangunan dikembalikan ke ukuran besar (agak lebih besar dari sebelumnya)
-        else if (name?.includes('pohon')) worldWidth = carWorldWidth * 15.0; // Pohon dikembalikan besar
+        else if (name?.includes('kiri_') || name?.includes('kanan_')) worldWidth = carWorldWidth * 18.0; // Moderate large building
+        else if (name?.includes('pohon')) worldWidth = carWorldWidth * 10.0; // Moderate large tree
         else if (name?.includes('bush') || name?.includes('semak')) worldWidth = carWorldWidth * 2.35;
         else if (name?.includes('bench') || name?.includes('bangku')) worldWidth = carWorldWidth * 2.8;
         else if (name?.includes('barrier') || name?.includes('pembatas_jalan')) worldWidth = carWorldWidth * 2.8;
