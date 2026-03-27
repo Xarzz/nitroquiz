@@ -548,13 +548,13 @@ export default function GameMonitorPage() {
           position: "relative",
           zIndex: 20,
           width: "100%",
-          padding: "10px 20px",
+          padding: "40px 24px 20px", // Increased top padding to move elements down
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          background: "rgba(7,9,26,0.95)",
-          backdropFilter: "blur(20px)",
-          borderBottom: "1px solid rgba(255,255,255,0.05)",
+          background: "transparent", // Removed solid background
+          backdropFilter: "none", // Removed blur wrapper
+          borderBottom: "none", // Removed border line
         }}
       >
         {/* Left: Logo + count */}

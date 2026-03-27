@@ -233,11 +233,15 @@ export default function GameSpeedPage() {
         nosFrameTimer: 0,
         nosWasPressed: false,
         // Starting Sequence - Revving State
-        revvingFrame: 0, // 0 atau 1 untuk toggle antara start_1 dan start_2
+        revvingFrame: 0, 
         revvingTimer: 0,
         // MC / Forward Animation State
         mcFrame: 0,
         mcTimer: 0,
+        // Quiz State for loop access (avoids stale closures)
+        allQuizQuestions: [] as QuizQuestion[],
+        quizQuestionIndex: 0,
+        totalQuizScore: 0,
     });
 
 
@@ -1293,8 +1297,8 @@ export default function GameSpeedPage() {
         state.current.playerZ = (CAMERA_HEIGHT * state.current.cameraDepth);
         playerZ = state.current.playerZ;
 
-        const currentRound = Math.floor(quizQuestionIndex / QUESTIONS_PER_ROUND) + 1;
-        const totalRounds = Math.max(1, Math.ceil(allQuizQuestions.length / QUESTIONS_PER_ROUND));
+        const currentRound = Math.floor(state.current.quizQuestionIndex / QUESTIONS_PER_ROUND) + 1;
+        const totalRounds = Math.max(1, Math.ceil(state.current.allQuizQuestions.length / QUESTIONS_PER_ROUND));
 
         // HUD update
         setStats({
@@ -1307,26 +1311,13 @@ export default function GameSpeedPage() {
         // Lap & Finish line check
         if (position > trackLength - playerZ && gameState !== 'finished') {
             state.current.speed = 0;
-            // Check if we have quiz questions remaining (from state or localStorage)
-            let hasQuizRemaining = allQuizQuestions.length > 0 && quizQuestionIndex < allQuizQuestions.length;
-            if (!hasQuizRemaining) {
-                // Fallback: check localStorage directly
-                try {
-                    const storedQ = localStorage.getItem('nitroquiz_game_questions');
-                    const storedIdx = parseInt(localStorage.getItem('nitroquiz_game_questionIndex') || '0', 10);
-                    if (storedQ) {
-                        const parsed = JSON.parse(storedQ);
-                        if (Array.isArray(parsed) && storedIdx < parsed.length) {
-                            hasQuizRemaining = true;
-                        }
-                    }
-                } catch(e) {}
-            }
+            // Check if we have quiz questions remaining (from state ref)
+            let hasQuizRemaining = state.current.allQuizQuestions.length > 0 && state.current.quizQuestionIndex < state.current.allQuizQuestions.length;
             
             if (hasQuizRemaining) {
                 // Save current state to localStorage before redirect
-                localStorage.setItem('nitroquiz_game_questionIndex', quizQuestionIndex.toString());
-                localStorage.setItem('nitroquiz_game_score', totalQuizScore.toString());
+                localStorage.setItem('nitroquiz_game_questionIndex', state.current.quizQuestionIndex.toString());
+                localStorage.setItem('nitroquiz_game_score', state.current.totalQuizScore.toString());
                 router.push(`/quiz/${roomCode}`);
             } else {
                 setGameState('finished');
@@ -2018,12 +2009,21 @@ export default function GameSpeedPage() {
                     });
                     console.log('[GameSpeed] Loaded quiz questions:', normalized.length, 'Sample:', normalized[0]);
                     setAllQuizQuestions(normalized);
+                    state.current.allQuizQuestions = normalized;
                     
                     // Sync current progress from localStorage
                     const storedIndex = localStorage.getItem('nitroquiz_game_questionIndex');
                     const storedScore = localStorage.getItem('nitroquiz_game_score');
-                    if (storedIndex) setQuizQuestionIndex(parseInt(storedIndex, 10));
-                    if (storedScore) setTotalQuizScore(parseInt(storedScore, 10));
+                    if (storedIndex) {
+                        const idx = parseInt(storedIndex, 10);
+                        setQuizQuestionIndex(idx);
+                        state.current.quizQuestionIndex = idx;
+                    }
+                    if (storedScore) {
+                        const sc = parseInt(storedScore, 10);
+                        setTotalQuizScore(sc);
+                        state.current.totalQuizScore = sc;
+                    }
                 }
             }
         } catch (e) {
