@@ -222,25 +222,13 @@ export default function QuizPage() {
     // Round or Game complete screen
     if (questionsAnsweredInRound >= QUESTIONS_PER_ROUND || currentIndex >= questions.length) {
         return (
-            <div className="min-h-screen bg-[#020617] flex flex-col items-center justify-center text-white px-6 font-rajdhani">
-                <motion.div 
-                    initial={{ scale: 0.9, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    className="w-full max-w-md bg-[#0f172a] border border-blue-500/30 rounded-3xl p-8 text-center shadow-[0_0_50px_rgba(59,130,246,0.2)]"
-                >
-                    <Trophy className="w-20 h-20 text-yellow-400 mx-auto mb-6" />
-                    <h1 className="text-4xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">
-                        {statusText}
-                    </h1>
-                    <p className="text-gray-400 mb-8 uppercase tracking-[0.2em]">Total Score: {score}</p>
-                    
-                    <div className="flex flex-col items-center gap-4">
-                      <div className="w-10 h-10 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin"></div>
-                      <p className="text-blue-400 text-sm font-bold uppercase tracking-widest animate-pulse">
+            <div className="min-h-screen bg-[#020617] flex items-center justify-center text-white font-rajdhani">
+                <div className="flex flex-col items-center gap-4">
+                    <Loader2 className="w-10 h-10 text-blue-500 animate-spin" />
+                    <p className="text-blue-500 text-sm font-bold uppercase tracking-widest animate-pulse">
                         {currentIndex >= questions.length ? "PREPARING RESULTS..." : "RETURNING TO RACE..."}
-                      </p>
-                    </div>
-                </motion.div>
+                    </p>
+                </div>
             </div>
         );
     }
@@ -256,7 +244,7 @@ export default function QuizPage() {
                 <div className="flex justify-between items-end mb-8 px-2">
                     <div>
                         <p className="text-blue-400 text-sm uppercase tracking-widest mb-1">Question</p>
-                        <h2 className="text-3xl font-black italic">{questionsAnsweredInRound + 1}<span className="text-blue-500/50 not-italic mx-1">/</span>{Math.min(QUESTIONS_PER_ROUND, questions.length - currentIndex + questionsAnsweredInRound)}</h2>
+                        <h2 className="text-3xl font-black italic">{currentIndex + 1}<span className="text-blue-500/50 not-italic mx-1">/</span>{questions.length}</h2>
                     </div>
                     <div className="text-right">
                         <p className="text-emerald-400 text-sm uppercase tracking-widest mb-1">Current Score</p>
