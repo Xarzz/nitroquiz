@@ -176,14 +176,19 @@ export default function PlayerResultPage() {
     }, 250);
   };
 
+  const allFinished =
+    sessionStatus === "completed" || sessionStatus === "finished" ||
+    (participants.length > 0 &&
+      participants.every((p) => p.finished_at || p.eliminated));
+
   useEffect(() => {
     if (!isLoading) {
       setTimeout(() => {
         setShowResults(true);
-        if (rankedPlayers.length > 0) setTimeout(() => triggerConfetti(), 1000);
+        if (rankedPlayers.length > 0 && allFinished) setTimeout(() => triggerConfetti(), 1000);
       }, 600);
     }
-  }, [isLoading, rankedPlayers.length]);
+  }, [isLoading, rankedPlayers.length, allFinished]);
 
   const podiumVariants: any = {
     hidden: { y: 150, opacity: 0 },
@@ -211,11 +216,6 @@ export default function PlayerResultPage() {
     const s = (seconds % 60).toString().padStart(2, "0");
     return `${m}:${s}`;
   };
-
-  const allFinished =
-    sessionStatus === "finished" ||
-    (participants.length > 0 &&
-      participants.every((p) => p.finished_at || p.eliminated));
 
   const MobileBG = () => (
     <div className="fixed inset-0 z-0 pointer-events-none">
@@ -311,162 +311,8 @@ export default function PlayerResultPage() {
     );
   }
 
-  if (!allFinished) {
-    return (
-      <>
-        <div className="md:hidden min-h-screen bg-[#070d1c] text-white flex flex-col relative overflow-hidden font-body">
-          <MobileBG />
-          <div className="relative z-10 flex flex-col min-h-screen px-4 pt-8 pb-8">
-            <div className="flex justify-center mb-5 flex-shrink-0">
-              <img
-                src="/assets/logo/logo1.png"
-                alt="NitroQuiz"
-                className="h-14 object-contain drop-shadow-[0_0_30px_rgba(45,106,242,0.8)]"
-              />
-            </div>
-            <div
-              className="relative w-full rounded-2xl overflow-hidden mb-4 flex-shrink-0"
-              style={{
-                background:
-                  "linear-gradient(155deg,#0d1b3e,#091428 55%,#05101f)",
-                border: "1.5px solid rgba(45,106,242,0.5)",
-                boxShadow: "0 0 40px rgba(45,106,242,0.15)",
-              }}
-            >
-              <div className="absolute top-5 left-7 w-5 h-5 rounded-full bg-slate-700/30 border border-slate-600/20" />
-              <div className="absolute top-12 right-10 w-3.5 h-3.5 rounded-full bg-blue-900/35 border border-blue-700/20" />
-              <div className="absolute bottom-14 left-1/2 -translate-x-1/2 w-28 h-12 bg-[#2d6af2]/10 blur-2xl rounded-full" />
-              <div className="flex justify-center pt-10 pb-4">
-                <div className="relative w-32 h-32 flex items-center justify-center">
-                  <div
-                    className="absolute inset-0 border-r-4 border-b-4 border-transparent border-l-[#00ff9d] border-t-[#00ff9d] rounded-full animate-spin"
-                    style={{ animationDuration: "1.5s" }}
-                  />
-                  <div
-                    className="absolute inset-3 border-r-4 border-b-4 border-transparent border-l-[#2d6af2] border-t-[#2d6af2] rounded-full animate-spin"
-                    style={{
-                      animationDuration: "2s",
-                      animationDirection: "reverse",
-                    }}
-                  />
-                  <span className="text-3xl">🏁</span>
-                </div>
-              </div>
-              <div className="text-center pb-8">
-                <p
-                  className="font-display text-[#00d4ff] text-xl font-bold tracking-[0.18em] uppercase"
-                  style={{ textShadow: "0 0 12px rgba(0,212,255,0.5)" }}
-                >
-                  {currentUser?.username || "PLAYER"}
-                </p>
-                <p className="text-[#00ff9d]/70 text-[10px] uppercase tracking-[0.2em] font-mono mt-1 animate-pulse">
-                  Waiting for others...
-                </p>
-              </div>
-            </div>
-            <div className="grid grid-cols-4 gap-2 mb-6 flex-shrink-0">
-              <MobileStatCard>
-                <span className="text-yellow-400 text-lg mb-0.5">🏆</span>
-                <span className="font-display text-white text-2xl font-black leading-none">
-                  ?
-                </span>
-                <span className="text-gray-400 text-[9px] uppercase tracking-widest mt-1.5 font-mono">
-                  RANK
-                </span>
-              </MobileStatCard>
-              <MobileStatCard>
-                <span className="font-display text-white text-2xl font-black leading-none">
-                  {currentPlayerData?.score ?? 0}
-                </span>
-                <span className="text-gray-400 text-[9px] uppercase tracking-widest mt-1.5 font-mono">
-                  SCORE
-                </span>
-              </MobileStatCard>
-              <MobileStatCard>
-                <span className="font-display text-white text-xl font-black leading-none font-mono">
-                  {totalQuestions > 0
-                    ? `${currentPlayerData?.current_question ?? 0}/${totalQuestions}`
-                    : (currentPlayerData?.current_question ?? 0)}
-                </span>
-                <span className="text-gray-400 text-[9px] uppercase tracking-widest mt-1.5 font-mono">
-                  CORRECT
-                </span>
-              </MobileStatCard>
-              <MobileStatCard>
-                <span className="font-display text-white text-base font-black leading-none font-mono">
-                  {formatDuration(currentPlayerData?.duration)}
-                </span>
-                <span className="text-gray-400 text-[9px] uppercase tracking-widest mt-1.5 font-mono">
-                  TIME
-                </span>
-              </MobileStatCard>
-            </div>
-            <div className="flex-1" />
-            <div className="flex gap-3 flex-shrink-0">
-              <button
-                onClick={() => router.push("/")}
-                className="flex-1 h-14 flex items-center justify-center gap-2 rounded-full font-display text-sm font-bold uppercase tracking-widest text-white active:scale-95 transition-transform"
-                style={{
-                  background: "linear-gradient(135deg,#00bcd4,#0288d1)",
-                  boxShadow: "0 0 24px rgba(0,188,212,0.35)",
-                }}
-              >
-                <House className="w-5 h-5" /> HOME
-              </button>
-              <button
-                onClick={() => sessionId && (window.location.href = `https://gameforsmartnewui.vercel.app/stat/${sessionId}`)}
-                className="flex-1 h-14 flex items-center justify-center gap-2 rounded-full font-display text-sm font-bold uppercase tracking-widest bg-gradient-to-r from-[#f59e0b] to-[#d97706] shadow-[0_0_24px_rgba(245,158,11,0.35)]"
-              >
-                <BarChart2 className="w-5 h-5" /> STATISTIK
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div className="hidden md:flex flex-col items-center justify-center min-h-screen bg-[#0a0a0f] font-display text-white relative overflow-hidden">
-          <div className="fixed inset-0 z-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/10 via-[#0a0a0f] to-[#050508] pointer-events-none" />
-          <div className="text-center z-10 px-4">
-            <div className="relative w-24 h-24 mx-auto mb-8">
-              <div
-                className="absolute inset-0 border-r-4 border-b-4 border-transparent border-l-[#00ff9d] border-t-[#00ff9d] rounded-full animate-spin mix-blend-screen"
-                style={{ animationDuration: "1.5s" }}
-              />
-              <div
-                className="absolute inset-2 border-r-4 border-b-4 border-transparent border-l-[#2d6af2] border-t-[#2d6af2] rounded-full animate-spin mix-blend-screen"
-                style={{
-                  animationDuration: "2s",
-                  animationDirection: "reverse",
-                }}
-              />
-              <div className="absolute inset-0 flex items-center justify-center text-3xl">
-                🏁
-              </div>
-            </div>
-            <h2 className="text-[#00ff9d] text-2xl md:text-3xl font-black tracking-widest uppercase mb-4 drop-shadow-[0_0_15px_rgba(0,255,157,0.5)]">
-              Mission Complete
-            </h2>
-            <p className="text-gray-400 text-sm md:text-base tracking-[0.2em] uppercase mb-8">
-              Waiting for other racers to finish...
-            </p>
-            <div className="bg-black/50 border border-white/10 rounded-xl p-4 max-w-xs mx-auto backdrop-blur-md">
-              <p className="text-xs text-gray-500 uppercase tracking-widest mb-2">
-                Your Preliminary Stats
-              </p>
-              <div className="flex justify-between items-center text-sm">
-                <span className="text-gray-400">Score:</span>
-                <span className="text-[#00ff9d] font-mono font-bold">
-                  {rankedPlayers
-                    .find((p) => p.nickname === currentUser?.username)
-                    ?.score.toLocaleString() || "0"}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </>
-    );
-  }
-
+  // Separated waiting screens deleted to unify layout
+  
   return (
     <>
       {/* ══ MOBILE — TIDAK DIUBAH ══ */}
@@ -536,6 +382,11 @@ export default function PlayerResultPage() {
                 >
                   {currentUser?.username || "PLAYER"}
                 </p>
+                {!allFinished && (
+                  <p className="text-[#00ff9d]/70 text-[10px] uppercase tracking-[0.2em] font-mono mt-1 animate-pulse">
+                    Waiting for others...
+                  </p>
+                )}
               </div>
             </motion.div>
             <motion.div
@@ -548,10 +399,10 @@ export default function PlayerResultPage() {
                 <span className="text-yellow-400 text-lg mb-0.5">🏆</span>
                 <div className="flex items-baseline gap-0.5">
                   <span className="font-display text-white text-2xl font-black leading-none">
-                    {currentPlayerRank}
+                    {allFinished ? currentPlayerRank : "?"}
                   </span>
                   <span className="font-display text-[#00ff9d] text-xs font-bold">
-                    {getRankSuffix(currentPlayerRank)}
+                    {allFinished ? getRankSuffix(currentPlayerRank) : ""}
                   </span>
                 </div>
                 <span className="text-gray-400 text-[9px] uppercase tracking-widest mt-1.5 font-mono">
@@ -1007,6 +858,16 @@ export default function PlayerResultPage() {
                     >
                       ELIMINATED
                     </span>
+                  ) : !allFinished ? (
+                    <span
+                      className="font-display text-xl font-black uppercase tracking-wider"
+                      style={{
+                        color: "#60a5fa",
+                        textShadow: "0 0 14px rgba(96,165,250,0.5)",
+                      }}
+                    >
+                      WAITING
+                    </span>
                   ) : currentPlayerRank === 1 ? (
                     <span
                       className="font-display text-xl font-black uppercase tracking-wider"
@@ -1089,8 +950,7 @@ export default function PlayerResultPage() {
                 border: "1px solid rgba(220,230,250,0.18)",
                 backdropFilter: "blur(32px) saturate(1.4)",
                 WebkitBackdropFilter: "blur(32px) saturate(1.4)",
-                boxShadow:
-                  "inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.1), 0 8px 40px rgba(0,0,0,0.2)",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.1), 0 8px 40px rgba(0,0,0,0.2)",
                 borderRadius: "1rem",
               }}
             >
@@ -1098,10 +958,15 @@ export default function PlayerResultPage() {
                 <DesktopStatCard label="RANK">
                   <p
                     className="font-display font-black text-white leading-none"
-                    style={{ fontSize: "clamp(32px,3.2vw,46px)" }}
+                    style={{ fontSize: "52px", textShadow: "0 0 20px rgba(255,255,255,0.4)" }}
                   >
-                    {currentPlayerRank}
-                    {getRankSuffix(currentPlayerRank)}
+                    {allFinished ? currentPlayerRank : "?"}
+                  </p>
+                  <p
+                    className="font-display font-bold text-[#facc15]"
+                    style={{ fontSize: "16px", letterSpacing: "0.2em" }}
+                  >
+                    {allFinished ? getRankSuffix(currentPlayerRank) : "WAIT FOR HOST"}
                   </p>
                 </DesktopStatCard>
                 <DesktopStatCard label="SCORE">

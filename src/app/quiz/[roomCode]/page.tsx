@@ -198,7 +198,7 @@ export default function QuizPage() {
                     }
                     router.push(route);
                 }
-            }, 2500); // Wait 2.5 seconds to show the status screen
+            }, 700);
 
             return () => clearTimeout(timer);
         }
@@ -256,7 +256,7 @@ export default function QuizPage() {
                 <div className="flex justify-between items-end mb-8 px-2">
                     <div>
                         <p className="text-blue-400 text-sm uppercase tracking-widest mb-1">Question</p>
-                        <h2 className="text-3xl font-black italic">{currentIndex + 1}<span className="text-blue-500/50 not-italic mx-1">/</span>{questions.length}</h2>
+                        <h2 className="text-3xl font-black italic">{questionsAnsweredInRound + 1}<span className="text-blue-500/50 not-italic mx-1">/</span>{Math.min(QUESTIONS_PER_ROUND, questions.length - currentIndex + questionsAnsweredInRound)}</h2>
                     </div>
                     <div className="text-right">
                         <p className="text-emerald-400 text-sm uppercase tracking-widest mb-1">Current Score</p>

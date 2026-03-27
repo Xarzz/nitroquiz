@@ -121,6 +121,8 @@ export default function PlayerWaitingPage() {
                 localStorage.setItem('nitroquiz_game_sessionId', sessId);
                 localStorage.setItem('nitroquiz_game_difficulty', data.difficulty || 'easy');
                 if (data.quiz_id) localStorage.setItem('nitroquiz_game_quizId', data.quiz_id);
+                localStorage.removeItem('nitroquiz_game_score');
+                localStorage.removeItem('nitroquiz_game_questionIndex');
             }
             
             const difficulty = data?.difficulty || 'easy';
