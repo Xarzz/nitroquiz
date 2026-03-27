@@ -26,7 +26,7 @@ export default function PlayerWaitingPage() {
     const [errorMessage, setErrorMessage] = useState("");
     const [assignedCar, setAssignedCar] = useState<string>("/assets/characters/scloski/showroom/showroom1.png");
     const [assignedCarIndex, setAssignedCarIndex] = useState<number>(0);
-    const [countdownValue, setCountdownValue] = useState(5);
+    const [countdownValue, setCountdownValue] = useState(3);
     const [sessionId, setSessionId] = useState<string | null>(null);
     const [participantCount, setParticipantCount] = useState(1);
     const [username, setUsername] = useState("");
@@ -150,7 +150,7 @@ export default function PlayerWaitingPage() {
                     route = `/gamespeed-coba/${roomCode}`;
                 }
                 router.push(route);
-            }, 1500); 
+            }, 800); 
             return; 
         }
         const timer = setTimeout(() => setCountdownValue(prev => prev - 1), 1000);
@@ -158,14 +158,12 @@ export default function PlayerWaitingPage() {
     }, [status, countdownValue, router]);
 
     const getCountdownLabel = (val: number) => {
-        if (val >= 4) return "GET READY"; 
         if (val === 3) return "READY"; 
         if (val === 2) return "STEADY"; 
         if (val === 1) return "GO RACE"; 
         return "GO!";
     };
     const getCountdownColor = (val: number) => {
-        if (val >= 4) return "text-blue-500"; 
         if (val === 3) return "text-red-500"; 
         if (val === 2) return "text-yellow-400"; 
         return "text-[#00ff9d]";
@@ -455,25 +453,6 @@ export default function PlayerWaitingPage() {
                 {status === "countdown" && (
                     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/80 backdrop-blur-sm"
                         style={{ animation: 'fadeIn 0.3s ease-out' }}>
-                        <div className="flex gap-4 mb-10">
-                            {[0, 1, 2, 3, 4].map((i) => {
-                                const val = 5 - i; // Map 5s to 5 dots
-                                const isLit = countdownValue <= val; 
-                                const isGo = countdownValue <= 0;
-                                let color = "#3b82f6"; // Blue for 5, 4
-                                if (val === 3) color = "#ef4444";
-                                if (val === 2) color = "#facc15";
-                                if (val === 1 || isGo) color = "#00ff9d";
-
-                                return <div key={i} className="w-8 h-8 rounded-full border-2" style={{
-                                    borderColor: isGo ? '#00ff9d' : isLit ? color : '#4b5563',
-                                    backgroundColor: isGo ? '#00ff9d' : isLit ? color : '#1f2937',
-                                    boxShadow: isGo ? '0 0 25px rgba(0,255,157,0.8)' : isLit ? `0 0 20px ${color}` : 'none',
-                                    transform: isLit ? 'scale(1.2)' : 'scale(1)',
-                                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                                }} />;
-                            })}
-                        </div>
                         <span key={countdownValue}
                             className={`font-display text-[120px] md:text-[160px] font-black leading-none tracking-tighter ${getCountdownColor(countdownValue)} drop-shadow-[0_0_40px_currentColor]`}
                             style={{ animation: 'countdown-pop 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)', willChange: 'transform, opacity', display: 'block' }}>

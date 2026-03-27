@@ -24,11 +24,11 @@ import confetti from "canvas-confetti";
 import { getUser } from "@/lib/storage";
 
 const carImageMap: Record<string, string> = {
-  purple: "/assets/car/car1_v2.webp",
-  white: "/assets/car/car2_v2.webp",
-  black: "/assets/car/car3_v2.webp",
-  aqua: "/assets/car/car4_v2.webp",
-  blue: "/assets/car/car5_v2.webp",
+  purple: "/assets/characters/scloski/showroom/showroom1.png",
+  white: "/assets/characters/scloski/showroom/showroom2.png",
+  black: "/assets/characters/scloski/showroom/showroom1.png",
+  aqua: "/assets/characters/scloski/showroom/showroom2.png",
+  blue: "/assets/characters/scloski/showroom/showroom1.png",
 };
 
 const logoImageMap: Record<string, string> = {
@@ -763,14 +763,16 @@ export default function PlayerResultPage() {
             className="h-15 object-contain"
           />
           <h1
-            className="font-display text-2xl font-black text-white uppercase tracking-[0.2em]"
+            className="font-display text-2xl font-black text-white uppercase tracking-[0.2em] absolute left-1/2 -translate-x-1/2"
             style={{ textShadow: "0 0 30px rgba(255,255,255,0.2)" }}
           >
             RACE COMPLETE
           </h1>
-          <div className="font-display text-[15px] text-gray-400 uppercase tracking-widest">
-            {roomCode}
-          </div>
+          <img
+            src="/assets/logo/logo2.png"
+            alt="NitroQuiz"
+            className="h-10 object-contain"
+          />
         </div>
 
         {showResults && (
@@ -830,10 +832,6 @@ export default function PlayerResultPage() {
                           className="w-full h-full object-contain p-0 scale-[2.1]"
                         />
                       )}
-                      {/* Smaller car overlay */}
-                      <div className="absolute -bottom-1 -right-1 w-12 h-12 bg-black/60 rounded-full border border-white/20 p-1.5 flex items-center justify-center shadow-xl">
-                        <img src={currentPlayerCarSrc} alt="Car" className="w-full h-full object-contain" />
-                      </div>
                     </div>
                     <div className="absolute inset-[-8px] rounded-full border border-[#2d6af2]/20 animate-pulse" />
                   </div>
