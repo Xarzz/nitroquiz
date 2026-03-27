@@ -292,7 +292,7 @@ export default function PlayerWaitingPage() {
                             </div>
 
                             {/* ── Left panel — floats over the showroom ── */}
-                            <div className="absolute top-[60px] left-5 bottom-[64px] z-10 flex flex-col" style={{ width: '320px' }}>
+                            <div className="absolute top-[60px] left-5 bottom-[64px] z-10 flex flex-col w-[320px] lg:w-[460px] xl:w-[540px]">
                                 {/* Outer panel */}
                                 <div className="flex-1 flex flex-col rounded-2xl overflow-hidden"
                                     style={{
@@ -317,7 +317,7 @@ export default function PlayerWaitingPage() {
                                     </div>
 
                                     {/* Scrollable cards */}
-                                    <div className="flex-1 overflow-y-auto p-3 flex flex-col gap-3"
+                                    <div className="flex-1 overflow-y-auto p-3 grid grid-cols-1 lg:grid-cols-2 gap-3 content-start"
                                         style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(45,106,242,0.25) transparent' }}>
 
                                         {/* YOU card */}
@@ -391,8 +391,8 @@ export default function PlayerWaitingPage() {
                             </div>
 
                             {/* ── Car name (right side) ── */}
-                            <div className="absolute z-10 text-left"
-                                style={{ top: '80px', left: 'calc(320px + 60px)' }}>
+                            <div className="absolute z-10 text-left md:left-[360px] lg:left-[500px] xl:left-[580px]"
+                                style={{ top: '80px' }}>
                                 <h2 className="font-display text-2xl font-black text-white uppercase tracking-wider leading-none">
                                     {carNames[assignedCarIndex]}
                                 </h2>
@@ -400,8 +400,8 @@ export default function PlayerWaitingPage() {
                             </div>
 
                             {/* ── Big car showcase (right, vertical center) ── */}
-                            <div className="absolute z-10 flex items-center justify-center"
-                                style={{ top: '60px', left: '38%', right: 0, bottom: '64px' }}>
+                            <div className="absolute z-10 flex items-center justify-center right-0 md:left-[340px] lg:left-[480px] xl:left-[560px]"
+                                style={{ top: '60px', bottom: '64px' }}>
                                 <motion.div className="relative"
                                     animate={{ y: [0, -14, 0] }}
                                     transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut" }}>
