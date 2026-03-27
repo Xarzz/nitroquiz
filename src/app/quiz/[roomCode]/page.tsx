@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, X, Timer, Trophy, ArrowRight, Loader2 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
@@ -16,6 +16,8 @@ export interface QuizQuestion {
 
 export default function QuizPage() {
     const router = useRouter();
+    const params = useParams();
+    const roomCodeFromParams = params?.roomCode as string;
     const [mounted, setMounted] = useState(false);
     const [questions, setQuestions] = useState<QuizQuestion[]>([]);
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -25,7 +27,7 @@ export default function QuizPage() {
     const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
     const [isAnswered, setIsAnswered] = useState(false);
     // const [timeLeft, setTimeLeft] = useState(15);
-    const [roomCode, setRoomCode] = useState<string | null>(null);
+    const [roomCode, setRoomCode] = useState<string | null>(roomCodeFromParams || null);
     const [sessionId, setSessionId] = useState<string | null>(null);
     const [statusText, setStatusText] = useState("ROUND COMPLETE!");
 
@@ -165,24 +167,45 @@ export default function QuizPage() {
         }
     };
 
-    const handleBackToGame = () => {
-        if (currentIndex >= questions.length) {
-            router.push(`/player/${roomCode}/result`);
-        } else {
-            let customDiff = localStorage.getItem('nitroquiz_game_difficulty');
-            if (!customDiff) {
-                try {
-                    const settingsStr = localStorage.getItem('edurace_game_settings');
-                    if (settingsStr) {
-                        const settings = JSON.parse(settingsStr);
-                        customDiff = settings.difficulty;
+    // Auto-redirect effect when round or quiz is ended
+    useEffect(() => {
+        if (!mounted || questions.length === 0) return;
+
+        const isFinished = currentIndex >= questions.length;
+        const isRoundEnd = questionsAnsweredInRound >= QUESTIONS_PER_ROUND;
+
+        if (isFinished || isRoundEnd) {
+            const timer = setTimeout(() => {
+                if (isFinished) {
+                    router.push(`/player/${roomCode || roomCodeFromParams}/result`);
+                } else {
+                    let customDiff = localStorage.getItem('nitroquiz_game_difficulty');
+                    if (!customDiff) {
+                        try {
+                            const settingsStr = localStorage.getItem('edurace_game_settings');
+                            if (settingsStr) {
+                                const settings = JSON.parse(settingsStr);
+                                customDiff = settings.difficulty;
+                            }
+                        } catch (e) {}
                     }
-                } catch (e) {}
-            }
-            const diff = customDiff || 'easy';
-            const route = (diff === 'normal' || diff === 'medium') ? '/gamespeed-medium' : '/gamespeed';
-            router.push(route);
+                    const diff = customDiff || 'easy';
+                    let route = `/gamespeed/${roomCode || roomCodeFromParams}`;
+                    if (diff === 'normal' || diff === 'medium') {
+                        route = `/gamespeed-medium/${roomCode || roomCodeFromParams}`;
+                    } else if (diff === 'coba') {
+                        route = `/gamespeed-coba/${roomCode || roomCodeFromParams}`;
+                    }
+                    router.push(route);
+                }
+            }, 2500); // Wait 2.5 seconds to show the status screen
+
+            return () => clearTimeout(timer);
         }
+    }, [questionsAnsweredInRound, currentIndex, questions.length, mounted, router, roomCode, roomCodeFromParams]);
+
+    const handleBackToGame = () => {
+        // Redirection now handled by useEffect
     };
 
     if (!mounted || questions.length === 0 || currentIndex >= questions.length && questionsAnsweredInRound < QUESTIONS_PER_ROUND) {
@@ -211,13 +234,12 @@ export default function QuizPage() {
                     </h1>
                     <p className="text-gray-400 mb-8 uppercase tracking-[0.2em]">Total Score: {score}</p>
                     
-                    <button
-                        onClick={handleBackToGame}
-                        className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 hover:scale-105 transition-transform active:scale-95 shadow-[0_10px_20px_rgba(37,99,235,0.3)]"
-                    >
-                        {currentIndex >= questions.length ? "VIEW RESULTS" : "CONTINUE RACE"}
-                        <ArrowRight className="w-5 h-5" />
-                    </button>
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="w-10 h-10 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin"></div>
+                      <p className="text-blue-400 text-sm font-bold uppercase tracking-widest animate-pulse">
+                        {currentIndex >= questions.length ? "PREPARING RESULTS..." : "RETURNING TO RACE..."}
+                      </p>
+                    </div>
                 </motion.div>
             </div>
         );

@@ -25,7 +25,12 @@ function CharacterSelectionContent() {
         saveSelectedCharacter(selectedCharacter);
 
         setTimeout(() => {
-            router.push('/quiz');
+            const roomCode = localStorage.getItem('nitroquiz_game_roomCode');
+            if (roomCode) {
+                router.push(`/quiz/${roomCode}`);
+            } else {
+                router.push('/quiz'); // Fallback if no roomCode (though unlikely in intended flow)
+            }
         }, 800);
     };
 

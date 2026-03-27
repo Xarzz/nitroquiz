@@ -124,7 +124,12 @@ export default function PlayerWaitingPage() {
             }
             
             const difficulty = data?.difficulty || 'easy';
-            const route = (difficulty === 'normal' || difficulty === 'medium') ? '/gamespeed-medium' : '/gamespeed';
+            let route = `/gamespeed/${roomCode}`;
+            if (difficulty === 'normal' || difficulty === 'medium') {
+                route = `/gamespeed-medium/${roomCode}`;
+            } else if (difficulty === 'coba') {
+                route = `/gamespeed-coba/${roomCode}`;
+            }
             
             const link = document.createElement('link'); link.rel = 'prefetch'; link.href = route; document.head.appendChild(link);
         } catch (err) { console.error('Failed to preload quiz:', err); }
@@ -136,7 +141,12 @@ export default function PlayerWaitingPage() {
             setStatus("go"); 
             setTimeout(() => {
                 const diff = localStorage.getItem('nitroquiz_game_difficulty') || 'easy';
-                const route = (diff === 'normal' || diff === 'medium') ? '/gamespeed-medium' : '/gamespeed';
+                let route = `/gamespeed/${roomCode}`;
+                if (diff === 'normal' || diff === 'medium') {
+                    route = `/gamespeed-medium/${roomCode}`;
+                } else if (diff === 'coba') {
+                    route = `/gamespeed-coba/${roomCode}`;
+                }
                 router.push(route);
             }, 1500); 
             return; 

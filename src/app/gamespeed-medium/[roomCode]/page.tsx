@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { ASSET_LIST, TRACK_ASSETS, getAssetOffset } from '@/lib/gameAssets';
 interface QuizQuestion {
     id: string;
@@ -115,6 +115,8 @@ const COLORS = {
 
 export default function GameSpeedPage() {
     const router = useRouter();
+    const params = useParams();
+    const roomCode = params?.roomCode as string;
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     // Game State
@@ -249,7 +251,7 @@ export default function GameSpeedPage() {
         localStorage.setItem('nitroquiz_game_difficulty', 'medium');
         
         // Pre-fetch quiz page in background so transition is instant
-        router.prefetch('/quiz');
+        router.prefetch(`/quiz/${roomCode}`);
 
         // Reset sprites to force reload on mount/remount
         state.current.sprites = { ...state.current.sprites };
@@ -1325,7 +1327,7 @@ export default function GameSpeedPage() {
                 // Save current state to localStorage before redirect
                 localStorage.setItem('nitroquiz_game_questionIndex', quizQuestionIndex.toString());
                 localStorage.setItem('nitroquiz_game_score', totalQuizScore.toString());
-                router.push('/quiz');
+                router.push(`/quiz/${roomCode}`);
             } else {
                 setGameState('finished');
                 endGame();
@@ -1922,7 +1924,6 @@ export default function GameSpeedPage() {
         if (hasEndedRef.current) return;
         hasEndedRef.current = true;
 
-        const roomCode = typeof window !== 'undefined' ? localStorage.getItem('nitroquiz_game_roomCode') : null;
         const participantId = typeof window !== 'undefined' ? localStorage.getItem('nitroquiz_game_participantId') : null;
 
         // 1. Mark player as finished in Supabase
@@ -1957,13 +1958,13 @@ export default function GameSpeedPage() {
         localStorage.removeItem('nitroquiz_game_quizId');
         localStorage.removeItem('nitroquiz_game_difficulty');
         
-        // 4. Redirect to Podium (Host's monitor will also see we are finished)
+        // 4. Redirect to Result Page (instead of Podium)
         if (roomCode) {
-            window.location.href = `/player/${roomCode}/podium`;
+            router.push(`/player/${roomCode}/result`);
         } else {
-            window.location.href = '/';
+            router.push('/');
         }
-    }, []);
+    }, [roomCode, router]);
 
     // Auto-complete game immediately when finished
     useEffect(() => {
