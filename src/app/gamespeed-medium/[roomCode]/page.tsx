@@ -1309,10 +1309,26 @@ export default function GameSpeedPage() {
         });
 
         // Lap & Finish line check
-        if (position > trackLength - playerZ && gameState !== 'finished') {
+        if (position > trackLength - playerZ && gameState !== 'finished' && !(state.current as any).hasFinishedLine) {
+            (state.current as any).hasFinishedLine = true;
             state.current.speed = 0;
+            
             // Check if we have quiz questions remaining (from state ref)
             let hasQuizRemaining = state.current.allQuizQuestions.length > 0 && state.current.quizQuestionIndex < state.current.allQuizQuestions.length;
+            
+            if (!hasQuizRemaining) {
+                // Fallback: check localStorage directly
+                try {
+                    const storedQ = localStorage.getItem('nitroquiz_game_questions');
+                    const storedIdx = parseInt(localStorage.getItem('nitroquiz_game_questionIndex') || '0', 10);
+                    if (storedQ) {
+                        const parsed = JSON.parse(storedQ);
+                        if (Array.isArray(parsed) && storedIdx < parsed.length) {
+                            hasQuizRemaining = true;
+                        }
+                    }
+                } catch(e) {}
+            }
             
             if (hasQuizRemaining) {
                 // Save current state to localStorage before redirect
