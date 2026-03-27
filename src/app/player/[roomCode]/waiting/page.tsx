@@ -280,7 +280,7 @@ export default function PlayerWaitingPage() {
                             <div className="absolute top-0 inset-x-0 z-20 flex items-center justify-between px-6 py-3"
                                 style={{ background: 'rgba(14,18,30,0.75)', backdropFilter: 'blur(14px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
                                 <div className="flex flex-col leading-none">
-                                    <img src="/assets/logo/logo1.png" alt="Logo" className="h-7 object-contain" />
+                                    <img src="/assets/logo/logo1.png" alt="Logo" className="h-10 object-contain" />
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <span className="font-display text-[11px] text-gray-300 uppercase tracking-[0.22em]">
@@ -288,8 +288,8 @@ export default function PlayerWaitingPage() {
                                     </span>
                                     <Loader2 className="w-3.5 h-3.5 text-gray-500 animate-spin" />
                                 </div>
-                                <div className="font-display text-[11px] text-gray-400 uppercase tracking-widest">
-                                    {roomCode}
+                                <div className="flex flex-col leading-none">
+                                    <img src="/assets/logo/logo2.png" alt="NitroQuiz" className="h-10 object-contain" />
                                 </div>
                             </div>
 
@@ -313,9 +313,9 @@ export default function PlayerWaitingPage() {
                                                 <div key={i} className="w-1.5 h-1.5 rounded-full bg-[#4a7cdc]" />
                                             ))}
                                         </div>
-                                        <div className="flex flex-col">
+                                        <div className="flex flex-col text-left">
                                             <span className="font-display text-white text-sm font-bold tracking-widest">
-                                                PLAYER ROSTER ({participantCount})
+                                                PLAYER ({participantCount})
                                             </span>
                                             <span className="font-display text-blue-300 text-[9px] uppercase tracking-[0.2em] opacity-80">
                                                 Connected Participants & Vehicles
@@ -411,17 +411,26 @@ export default function PlayerWaitingPage() {
                             </div>
 
                             {/* ── Big car showcase (right, vertical center) ── */}
-                            <div className="absolute z-10 flex items-center justify-center right-0 md:left-[340px] lg:left-[500px] xl:left-[700px]"
+                            <div className="absolute z-10 flex flex-col gap-6 items-center justify-center right-0 md:left-[340px] lg:left-[500px] xl:left-[700px]"
                                 style={{ top: '60px', bottom: '64px' }}>
                                 <motion.div className="relative"
                                     animate={{ y: [0, -14, 0] }}
                                     transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut" }}>
                                     <img src={assignedCar} alt="Your Car"
                                         className="object-contain drop-shadow-[0_28px_60px_rgba(40,70,200,0.22)]"
-                                        style={{ width: 'clamp(300px, 45vw, 560px)', maxHeight: '58vh' }} />
+                                        style={{ width: 'clamp(300px, 45vw, 560px)', maxHeight: '52vh' }} />
                                     {/* Ground shadow */}
                                     <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-3/4 h-3 bg-black/40 blur-xl rounded-full" />
                                 </motion.div>
+
+                                <button onClick={changeCar}
+                                    className="flex items-center gap-2 px-10 py-2.5 rounded-full font-display text-sm font-bold uppercase tracking-widest text-white active:scale-95 transition-all"
+                                    style={{
+                                        background: 'linear-gradient(135deg, #0fa8c4, #0880b8)',
+                                        boxShadow: '0 0 22px rgba(15,168,196,0.35)',
+                                    }}>
+                                    CHANGE CAR
+                                </button>
                             </div>
 
                             {/* ── Bottom bar ── */}
@@ -437,18 +446,6 @@ export default function PlayerWaitingPage() {
                                     }}>
                                     <LogOut className="w-4 h-4" />
                                 </button>
-
-                                {/* CHANGE CAR — absolute center */}
-                                <div className="absolute left-1/2 -translate-x-1/2">
-                                    <button onClick={changeCar}
-                                        className="flex items-center gap-2 px-10 py-2.5 rounded-full font-display text-sm font-bold uppercase tracking-widest text-white active:scale-95 transition-all"
-                                        style={{
-                                            background: 'linear-gradient(135deg, #0fa8c4, #0880b8)',
-                                            boxShadow: '0 0 22px rgba(15,168,196,0.35)',
-                                        }}>
-                                        CHANGE CAR
-                                    </button>
-                                </div>
                             </div>
                         </motion.div>
                     </>
