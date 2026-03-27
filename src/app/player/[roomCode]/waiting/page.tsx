@@ -292,7 +292,7 @@ export default function PlayerWaitingPage() {
                             </div>
 
                             {/* ── Left panel — floats over the showroom ── */}
-                            <div className="absolute top-[60px] left-5 bottom-[64px] z-10 flex flex-col w-[320px] lg:w-[460px] xl:w-[540px]">
+                            <div className="absolute top-[60px] left-5 bottom-[64px] z-10 flex flex-col w-[320px] lg:w-[480px] xl:w-[680px]">
                                 {/* Outer panel */}
                                 <div className="flex-1 flex flex-col rounded-2xl overflow-hidden"
                                     style={{
@@ -311,13 +311,18 @@ export default function PlayerWaitingPage() {
                                                 <div key={i} className="w-1.5 h-1.5 rounded-full bg-[#4a7cdc]" />
                                             ))}
                                         </div>
-                                        <span className="font-display text-white text-sm font-bold tracking-widest">
-                                            PLAYERS ({participantCount})
-                                        </span>
+                                        <div className="flex flex-col">
+                                            <span className="font-display text-white text-sm font-bold tracking-widest">
+                                                PLAYER ROSTER ({participantCount})
+                                            </span>
+                                            <span className="font-display text-blue-300 text-[9px] uppercase tracking-[0.2em] opacity-80">
+                                                Connected Participants & Vehicles
+                                            </span>
+                                        </div>
                                     </div>
 
                                     {/* Scrollable cards */}
-                                    <div className="flex-1 overflow-y-auto p-3 grid grid-cols-1 lg:grid-cols-2 gap-3 content-start"
+                                    <div className="flex-1 overflow-y-auto p-3 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3 content-start"
                                         style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(45,106,242,0.25) transparent' }}>
 
                                         {/* YOU card */}
@@ -341,6 +346,7 @@ export default function PlayerWaitingPage() {
                                             {/* Name */}
                                             <div className="text-center pb-3 px-3">
                                                 <p className="font-display text-white text-xs font-bold uppercase tracking-[0.18em] truncate">{username}</p>
+                                                <p className="font-display text-[#00ff9d] text-[9px] uppercase tracking-widest mt-1 opacity-80">{carNames[assignedCarIndex]}</p>
                                             </div>
                                         </div>
 
@@ -348,6 +354,8 @@ export default function PlayerWaitingPage() {
                                         {allParticipants.filter(p => p.nickname !== username).map((p, i) => {
                                             const key = p.car_character?.replace('-bot', '') || 'purple';
                                             const carSrc = carImageMap[key] || carGifs[0];
+                                            const carIdx = carMap.indexOf(key);
+                                            const pCarName = carIdx >= 0 ? carNames[carIdx] : "RACER";
                                             return (
                                                 <div key={i} className="relative rounded-xl overflow-hidden flex-shrink-0"
                                                     style={{
@@ -359,6 +367,7 @@ export default function PlayerWaitingPage() {
                                                     </div>
                                                     <div className="text-center pb-3 px-3">
                                                         <p className="font-display text-white text-xs font-bold uppercase tracking-[0.18em] truncate">{p.nickname}</p>
+                                                        <p className="font-display text-[#00d4ff] text-[9px] uppercase tracking-widest mt-1 opacity-80">{pCarName}</p>
                                                     </div>
                                                 </div>
                                             );
@@ -391,7 +400,7 @@ export default function PlayerWaitingPage() {
                             </div>
 
                             {/* ── Car name (right side) ── */}
-                            <div className="absolute z-10 text-left md:left-[360px] lg:left-[500px] xl:left-[580px]"
+                            <div className="absolute z-10 text-left md:left-[360px] lg:left-[520px] xl:left-[720px]"
                                 style={{ top: '80px' }}>
                                 <h2 className="font-display text-2xl font-black text-white uppercase tracking-wider leading-none">
                                     {carNames[assignedCarIndex]}
@@ -400,7 +409,7 @@ export default function PlayerWaitingPage() {
                             </div>
 
                             {/* ── Big car showcase (right, vertical center) ── */}
-                            <div className="absolute z-10 flex items-center justify-center right-0 md:left-[340px] lg:left-[480px] xl:left-[560px]"
+                            <div className="absolute z-10 flex items-center justify-center right-0 md:left-[340px] lg:left-[500px] xl:left-[700px]"
                                 style={{ top: '60px', bottom: '64px' }}>
                                 <motion.div className="relative"
                                     animate={{ y: [0, -14, 0] }}
