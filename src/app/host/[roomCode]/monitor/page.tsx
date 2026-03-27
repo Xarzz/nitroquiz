@@ -594,31 +594,7 @@ export default function GameMonitorPage() {
             gap: "4px",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-              padding: "2px 10px",
-              borderRadius: "4px",
-              background: "rgba(239,68,68,0.12)",
-              border: "1px solid rgba(239,68,68,0.4)",
-            }}
-          >
-            <span
-              style={{
-                width: "6px",
-                height: "6px",
-                borderRadius: "50%",
-                background: "#ef4444",
-                boxShadow: "0 0 6px #ef4444",
-                animation: "pulse 1.5s infinite",
-              }}
-            />
-            <span style={{ fontFamily: "Orbitron, monospace", fontSize: "8px", letterSpacing: "0.3em", color: "#f87171", textTransform: "uppercase" }}>
-              LIVE TIMING
-            </span>
-          </div>
+
           <div
             style={{
               padding: "6px 28px",

@@ -294,9 +294,9 @@ export default function PlayerWaitingPage() {
                             </div>
 
                             {/* ── Left panel — floats over the showroom ── */}
-                            <div className="absolute top-[60px] left-5 bottom-[64px] z-10 flex flex-col w-[320px] lg:w-[480px] xl:w-[680px]">
+                            <div className="absolute top-[60px] left-5 bottom-[64px] z-10 flex flex-col min-h-0 w-[320px] lg:w-[480px] xl:w-[680px]">
                                 {/* Outer panel */}
-                                <div className="flex-1 flex flex-col rounded-2xl overflow-hidden"
+                                <div className="flex-1 flex flex-col min-h-0 rounded-2xl overflow-hidden"
                                     style={{
                                         background: 'rgba(30,38,62,0.72)',
                                         border: '1px solid rgba(80,110,180,0.3)',
