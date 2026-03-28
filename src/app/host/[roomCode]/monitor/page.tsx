@@ -290,20 +290,17 @@ function PlayerCard({
             style={{
               display: "flex",
               alignItems: "center",
-              justifyContent: "center",
-              gap: "8px",
-              padding: "4px 12px",
-              borderRadius: "8px",
+              gap: "6px",
+              padding: "2px 8px",
+              borderRadius: "6px",
               background: "rgba(59,130,246,0.12)",
               border: "1px solid rgba(59,130,246,0.3)",
-              minWidth: "115px",
-              height: "28px",
             }}
           >
             <span
               style={{
                 fontFamily: "Orbitron, monospace",
-                fontSize: "8px",
+                fontSize: "7px",
                 fontWeight: 700,
                 letterSpacing: "0.15em",
                 color: "rgba(147,197,253,0.6)",
@@ -315,7 +312,7 @@ function PlayerCard({
             <span
               style={{
                 fontFamily: "Orbitron, monospace",
-                fontSize: "14px",
+                fontSize: "12px",
                 fontWeight: 900,
                 color: "#93c5fd",
                 lineHeight: 1,
@@ -330,27 +327,24 @@ function PlayerCard({
             style={{
               display: "flex",
               alignItems: "center",
-              justifyContent: "center",
-              gap: "6px",
-              padding: "4px 12px",
-              borderRadius: "8px",
+              gap: "5px",
+              padding: "2px 8px",
+              borderRadius: "6px",
               background: statusBg,
               border: `1px solid ${statusBorder}`,
               color: statusText,
               fontFamily: "Orbitron, monospace",
-              fontSize: "9px",
+              fontSize: "8.5px",
               fontWeight: 700,
-              letterSpacing: "0.15em",
+              letterSpacing: "0.12em",
               textTransform: "uppercase",
-              minWidth: "115px",
-              height: "28px",
             }}
           >
             {statusPulse && (
               <span
                 style={{
-                  width: "6px",
-                  height: "6px",
+                  width: "5px",
+                  height: "5px",
                   borderRadius: "50%",
                   background: statusText,
                   animation: "pulse 1.5s infinite",
