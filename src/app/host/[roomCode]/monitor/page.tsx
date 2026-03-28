@@ -288,13 +288,16 @@ function PlayerCard({
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
           <div
             style={{
-              display: "inline-flex",
+              display: "flex",
               alignItems: "center",
-              gap: "5px",
-              padding: "2px 10px",
+              justifyContent: "center",
+              gap: "8px",
+              padding: "4px 12px",
               borderRadius: "8px",
               background: "rgba(59,130,246,0.12)",
               border: "1px solid rgba(59,130,246,0.3)",
+              minWidth: "115px",
+              height: "28px",
             }}
           >
             <span
@@ -315,6 +318,7 @@ function PlayerCard({
                 fontSize: "14px",
                 fontWeight: 900,
                 color: "#93c5fd",
+                lineHeight: 1,
               }}
             >
               {player.score.toLocaleString()}
@@ -324,19 +328,22 @@ function PlayerCard({
           {/* Status badge */}
           <div
             style={{
-              display: "inline-flex",
+              display: "flex",
               alignItems: "center",
-              gap: "5px",
-              padding: "2px 10px",
-              borderRadius: "20px",
+              justifyContent: "center",
+              gap: "6px",
+              padding: "4px 12px",
+              borderRadius: "8px",
               background: statusBg,
               border: `1px solid ${statusBorder}`,
               color: statusText,
               fontFamily: "Orbitron, monospace",
               fontSize: "9px",
               fontWeight: 700,
-              letterSpacing: "0.2em",
+              letterSpacing: "0.15em",
               textTransform: "uppercase",
+              minWidth: "115px",
+              height: "28px",
             }}
           >
             {statusPulse && (
@@ -347,6 +354,7 @@ function PlayerCard({
                   borderRadius: "50%",
                   background: statusText,
                   animation: "pulse 1.5s infinite",
+                  flexShrink: 0,
                 }}
               />
             )}
@@ -369,17 +377,8 @@ function PlayerCard({
           gap: "4px",
         }}
       >
-        <span
-          style={{
-            fontFamily: "Orbitron, monospace",
-            fontSize: "8px",
-            letterSpacing: "0.3em",
-            color: "rgba(255,255,255,0.28)",
-            textTransform: "uppercase",
-          }}
-        >
-          POS
-        </span>
+        {/* No POS label as requested */}
+
         <span
           style={{
             fontFamily: "Orbitron, monospace",
