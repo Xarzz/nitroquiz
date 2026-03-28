@@ -249,21 +249,8 @@ function PlayerCard({
           minWidth: 0,
         }}
       >
-        {/* Rank + Name */}
+        {/* Name + Lap indicator */}
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          <span
-            style={{
-              fontFamily: "Orbitron, monospace",
-              fontSize: "20px",
-              fontWeight: 900,
-              fontStyle: "italic",
-              color: rankColor,
-              textShadow: `0 0 10px ${rankColor}80`,
-              flexShrink: 0,
-            }}
-          >
-            #{rank + 1}
-          </span>
           <span
             style={{
               fontFamily: "Orbitron, monospace",
@@ -279,58 +266,96 @@ function PlayerCard({
           >
             {player.nickname}
           </span>
-        </div>
-
-        {/* Score */}
-        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-          {/* <span style={{ fontSize: "14px" }}>⭐</span> */}
           <span
             style={{
-              fontFamily: "monospace",
-              fontSize: "13px",
+              fontFamily: "Orbitron, monospace",
+              fontSize: "9px",
               fontWeight: 700,
-              color: "#93c5fd",
+              letterSpacing: "0.15em",
+              color: "rgba(255,255,255,0.35)",
+              textTransform: "uppercase",
+              flexShrink: 0,
+              background: "rgba(255,255,255,0.06)",
+              padding: "2px 8px",
+              borderRadius: "6px",
             }}
           >
-            {player.score.toLocaleString()}
+            LAP {player.current_question}/{totalQuestions}
           </span>
         </div>
 
-        {/* Status */}
-        <div
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "5px",
-            padding: "2px 10px",
-            borderRadius: "20px",
-            background: statusBg,
-            border: `1px solid ${statusBorder}`,
-            color: statusText,
-            fontFamily: "Orbitron, monospace",
-            fontSize: "9px",
-            fontWeight: 700,
-            letterSpacing: "0.2em",
-            textTransform: "uppercase",
-            alignSelf: "flex-start",
-          }}
-        >
-          {statusPulse && (
+        {/* Score + Status row */}
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "5px",
+              padding: "2px 10px",
+              borderRadius: "8px",
+              background: "rgba(59,130,246,0.12)",
+              border: "1px solid rgba(59,130,246,0.3)",
+            }}
+          >
             <span
               style={{
-                width: "6px",
-                height: "6px",
-                borderRadius: "50%",
-                background: statusText,
-                animation: "pulse 1.5s infinite",
+                fontFamily: "Orbitron, monospace",
+                fontSize: "8px",
+                fontWeight: 700,
+                letterSpacing: "0.15em",
+                color: "rgba(147,197,253,0.6)",
+                textTransform: "uppercase",
               }}
-            />
-          )}
-          {statusLabel}
+            >
+              SCORE
+            </span>
+            <span
+              style={{
+                fontFamily: "Orbitron, monospace",
+                fontSize: "14px",
+                fontWeight: 900,
+                color: "#93c5fd",
+              }}
+            >
+              {player.score.toLocaleString()}
+            </span>
+          </div>
+
+          {/* Status badge */}
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "5px",
+              padding: "2px 10px",
+              borderRadius: "20px",
+              background: statusBg,
+              border: `1px solid ${statusBorder}`,
+              color: statusText,
+              fontFamily: "Orbitron, monospace",
+              fontSize: "9px",
+              fontWeight: 700,
+              letterSpacing: "0.2em",
+              textTransform: "uppercase",
+            }}
+          >
+            {statusPulse && (
+              <span
+                style={{
+                  width: "6px",
+                  height: "6px",
+                  borderRadius: "50%",
+                  background: statusText,
+                  animation: "pulse 1.5s infinite",
+                }}
+              />
+            )}
+            {statusLabel}
+          </div>
         </div>
       </div>
 
-      {/* Lap indicator */}
+      {/* Position indicator (right side) */}
       <div
         style={{
           flexShrink: 0,
@@ -353,12 +378,21 @@ function PlayerCard({
             textTransform: "uppercase",
           }}
         >
-          LAP
+          POS
         </span>
-        <LapIndicator
-          current={player.current_question}
-          total={totalQuestions}
-        />
+        <span
+          style={{
+            fontFamily: "Orbitron, monospace",
+            fontSize: "24px",
+            fontWeight: 900,
+            fontStyle: "italic",
+            color: rankColor,
+            textShadow: `0 0 12px ${rankColor}80`,
+            lineHeight: 1,
+          }}
+        >
+          #{rank + 1}
+        </span>
       </div>
     </div>
   );

@@ -316,7 +316,7 @@ export default function HostRoomPage() {
       }
     }
     // 2. Start host-side countdown
-    setCountdown(5);
+    setCountdown(3);
   };
 
   useEffect(() => {
@@ -931,34 +931,25 @@ export default function HostRoomPage() {
           className="fixed inset-0 z-[200] bg-black flex flex-col items-center justify-center"
           style={{ willChange: "opacity", animation: "fadeIn 0.3s ease-out" }}
         >
-          {/* Racing lights */}
+          {/* 3 traffic light dots: Red, Yellow, Green */}
           <div className="flex gap-4 mb-10">
-            {[0, 1, 2, 3, 4].map((i) => {
-              const val = 5 - i; // Map 5s to 5 dots
-              const isLit = countdown <= val;
+            {[
+              { color: "#ef4444", activeAt: 3 },
+              { color: "#facc15", activeAt: 2 },
+              { color: "#00ff9d", activeAt: 1 },
+            ].map((light, i) => {
               const isGo = countdown <= 0;
-              let color = "#3b82f6"; // Default Blue for 5, 4
-              if (val === 3) color = "#ef4444";
-              if (val === 2) color = "#facc15";
-              if (val === 1 || isGo) color = "#00ff9d";
-              
+              const isLit = isGo || countdown <= light.activeAt;
+              const displayColor = isGo ? "#00ff9d" : light.color;
               return (
                 <div
                   key={i}
                   className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2"
                   style={{
-                    borderColor: isGo ? "#00ff9d" : isLit ? color : "#374151",
-                    backgroundColor: isGo
-                      ? "#00ff9d"
-                      : isLit
-                        ? color
-                        : "rgba(55, 65, 81, 0.3)",
-                    boxShadow: isGo
-                      ? "0 0 30px rgba(0,255,157,0.8)"
-                      : isLit
-                        ? `0 0 25px ${color}`
-                        : "none",
-                    transform: isLit ? "scale(1.1)" : "scale(1)",
+                    borderColor: isLit ? displayColor : "#374151",
+                    backgroundColor: isLit ? displayColor : "rgba(55, 65, 81, 0.3)",
+                    boxShadow: isLit ? `0 0 25px ${displayColor}` : "none",
+                    transform: isLit ? "scale(1.15)" : "scale(1)",
                     transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
                   }}
                 />
@@ -966,13 +957,11 @@ export default function HostRoomPage() {
             })}
           </div>
 
-          {/* Countdown number - CSS animation only */}
+          {/* Countdown number */}
           <span
             key={countdown}
             className={`font-display text-[150px] md:text-[220px] font-black leading-none tracking-tighter ${
-              countdown >= 4
-                ? "text-blue-500"
-                : countdown === 3
+              countdown === 3
                 ? "text-red-500"
                 : countdown === 2
                   ? "text-yellow-400"
@@ -988,7 +977,7 @@ export default function HostRoomPage() {
 
           {countdown > 0 && (
             <p className="font-display text-xl md:text-2xl tracking-[0.3em] uppercase text-gray-500 mt-6 animate-pulse">
-              {countdown >= 4 ? "PREPARING" : countdown === 3 ? "READY" : countdown === 2 ? "STEADY" : "GO RACE"}
+              {countdown === 3 ? "READY" : countdown === 2 ? "STEADY" : "GO RACE"}
             </p>
           )}
           {countdown === 0 && (

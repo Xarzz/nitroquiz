@@ -120,7 +120,7 @@ export default function GameSpeedPage() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     // Game State
-    const [gameState, setGameState] = useState<'preparation' | 'countdown' | 'playing' | 'finished' | 'gameover'>('preparation');
+    const [gameState, setGameState] = useState<'preparation' | 'countdown' | 'playing' | 'finished' | 'gameover'>('playing');
     // Countdown Ref helper
     const countdownRef = useRef(3);
     const [countdown, setCountdown] = useState(3);
@@ -189,20 +189,8 @@ export default function GameSpeedPage() {
 
 
 
-    // Auto-start game logic - skip preparation screen after loading
-    useEffect(() => {
-        if (mounted && assetsLoaded && gameState === 'preparation') {
-            // Wait for orientation choice on mobile
-            if (!isMobile || mobileOrientationChoice) {
-                // Short delay for visual transition
-                const timer = setTimeout(() => {
-                    countdownRef.current = 3;
-                    setGameState('countdown');
-                }, 800);
-                return () => clearTimeout(timer);
-            }
-        }
-    }, [mounted, assetsLoaded, gameState, isMobile, mobileOrientationChoice]);
+
+
 
     // Refs for game loop
     const state = useRef({
@@ -2575,56 +2563,12 @@ export default function GameSpeedPage() {
                 }
             `}</style>
 
-            {/* Preparation Overlay - Citynight Premium Style */}
-            {/* Preparation Overlay - Citynight Premium Style */}
-            {mounted && assetsLoaded && gameState === 'preparation' && (
-                <div style={{ position: 'fixed', inset: 0, zIndex: 2000, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(2, 6, 23, 0.9)', color: 'white', fontFamily: 'var(--font-rajdhani)', padding: isMobileLandscape ? '0.5rem' : '0' }}>
-                    <div style={{
-                        backgroundColor: '#0f172a',
-                        padding: isMobileLandscape ? '1rem 2rem' : (usePCLayout ? '3.5rem' : '1.5rem'),
-                        borderRadius: usePCLayout ? '2rem' : '1.5rem',
-                        border: '2px solid #3b82f6',
-                        textAlign: 'center',
-                        boxShadow: '0 0 60px rgba(59, 130, 246, 0.3)',
-                        maxWidth: isMobileLandscape ? '28rem' : '38rem',
-                        width: isMobileLandscape ? '80%' : '90%'
-                    }}>
-                        <img src="/assets/logo/logo1.png" alt="Logo" style={{ height: isMobileLandscape ? '2rem' : (usePCLayout ? '6rem' : '3rem'), width: 'auto', marginBottom: '0.25rem', display: 'block', margin: '0 auto 0.25rem' }} />
-                        <h1 style={{ fontSize: isMobileLandscape ? '1.6rem' : (usePCLayout ? '4rem' : '2.5rem'), fontWeight: 950, fontStyle: 'italic', marginBottom: '0.15rem', color: '#fff' }}>GET READY!</h1>
-                        <p style={{ color: '#3b82f6', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.4em', marginBottom: isMobileLandscape ? '0.5rem' : (usePCLayout ? '3rem' : '1.5rem'), fontSize: isMobileLandscape ? '0.55rem' : (usePCLayout ? '1rem' : '0.7rem') }}>City Night Protocol Active</p>
-
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: isMobileLandscape ? '0.5rem' : (usePCLayout ? '1.5rem' : '0.75rem'), marginBottom: isMobileLandscape ? '0.5rem' : (usePCLayout ? '3rem' : '1.5rem') }}>
-                            <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', padding: isMobileLandscape ? '0.5rem' : (usePCLayout ? '1.5rem' : '1rem'), borderRadius: '1rem', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
-                                <div style={{ fontSize: isMobileLandscape ? '0.55rem' : '0.65rem', color: 'rgba(255, 255, 255, 0.4)', textTransform: 'uppercase', fontWeight: 800, marginBottom: '0.1rem' }}>Distance</div>
-                                <div style={{ fontSize: isMobileLandscape ? '1rem' : (usePCLayout ? '2.5rem' : '1.5rem'), fontWeight: 900, color: '#3b82f6' }}>{stats.totalLaps} LAPS</div>
-                            </div>
-                            <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', padding: isMobileLandscape ? '0.5rem' : (usePCLayout ? '1.5rem' : '1rem'), borderRadius: '1rem', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
-                                <div style={{ fontSize: isMobileLandscape ? '0.55rem' : '0.65rem', color: 'rgba(255, 255, 255, 0.4)', textTransform: 'uppercase', fontWeight: 800, marginBottom: '0.1rem' }}>Nitro Fuel</div>
-                                <div style={{ fontSize: isMobileLandscape ? '1rem' : (usePCLayout ? '2.5rem' : '1.5rem'), fontWeight: 900, color: '#10b981' }}>{stats.nos}%</div>
-                            </div>
-                        </div>
-
-                        <button
-                            onClick={() => {
-                                countdownRef.current = 3;
-                                setGameState('countdown');
-                            }}
-                            style={{
-                                width: '100%',
-                                padding: isMobileLandscape ? '0.7rem 0' : (usePCLayout ? '1.75rem 0' : '1.25rem 0'),
-                                background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
-                                color: '#fff',
-                                borderRadius: '1.25rem',
-                                fontWeight: 900,
-                                fontSize: isMobileLandscape ? '1rem' : (usePCLayout ? '1.75rem' : '1.25rem'),
-                                cursor: 'pointer',
-                                border: '2px solid rgba(255, 255, 255, 0.3)',
-                                boxShadow: '0 0 30px rgba(59, 130, 246, 0.4)'
-                            }}
-                        >
-                            START ENGINE
-                        </button>
-                    </div>
+            {/* Loading Overlay - show while assets load */}
+            {mounted && !assetsLoaded && (
+                <div style={{ position: 'fixed', inset: 0, zIndex: 2000, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#020617', color: 'white', fontFamily: 'var(--font-rajdhani)' }}>
+                    <div style={{ width: '40px', height: '40px', border: '4px solid rgba(59,130,246,0.3)', borderTopColor: '#3b82f6', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
+                    <p style={{ marginTop: '1.5rem', fontSize: '0.875rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em', color: '#3b82f6', animation: 'pulse 2s ease-in-out infinite' }}>LOADING TRACK...</p>
+                    <style>{`@keyframes spin{to{transform:rotate(360deg)}} @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}`}</style>
                 </div>
             )}
 

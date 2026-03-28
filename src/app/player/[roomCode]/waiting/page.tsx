@@ -453,6 +453,27 @@ export default function PlayerWaitingPage() {
                 {status === "countdown" && (
                     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/80 backdrop-blur-sm"
                         style={{ animation: 'fadeIn 0.3s ease-out' }}>
+                        {/* 3 traffic light dots */}
+                        <div className="flex gap-4 mb-8">
+                            {[
+                                { color: "#ef4444", activeAt: 3 },
+                                { color: "#facc15", activeAt: 2 },
+                                { color: "#00ff9d", activeAt: 1 },
+                            ].map((light, i) => {
+                                const isGo = countdownValue <= 0;
+                                const isLit = isGo || countdownValue <= light.activeAt;
+                                const displayColor = isGo ? "#00ff9d" : light.color;
+                                return (
+                                    <div key={i} className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2" style={{
+                                        borderColor: isLit ? displayColor : '#374151',
+                                        backgroundColor: isLit ? displayColor : 'rgba(55,65,81,0.3)',
+                                        boxShadow: isLit ? `0 0 25px ${displayColor}` : 'none',
+                                        transform: isLit ? 'scale(1.15)' : 'scale(1)',
+                                        transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                                    }} />
+                                );
+                            })}
+                        </div>
                         <span key={countdownValue}
                             className={`font-display text-[120px] md:text-[160px] font-black leading-none tracking-tighter ${getCountdownColor(countdownValue)} drop-shadow-[0_0_40px_currentColor]`}
                             style={{ animation: 'countdown-pop 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)', willChange: 'transform, opacity', display: 'block' }}>
