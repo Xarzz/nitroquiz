@@ -238,6 +238,8 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Top Right Dropdown Menu */}
+      {user && (
         <div
           className="fixed top-5 right-4 md:right-8 z-[100]"
           ref={dropdownRef}
@@ -404,7 +406,7 @@ export default function Home() {
             )}
           </AnimatePresence>
         </div>
-      )}
+        )}
 
       {/* How to Play Modal */}
       <AnimatePresence>
