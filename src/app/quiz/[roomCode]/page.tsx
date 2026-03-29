@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Check, X, Timer, Trophy, ArrowRight, Loader2 } from 'lucide-react';
+import { Check, X, Timer, Trophy, ArrowRight, Loader2, Sparkles } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
 // Reuse QuizQuestion type
@@ -24,14 +24,13 @@ export default function QuizPage() {
     const [score, setScore] = useState(0);
     const [questionsAnsweredInRound, setQuestionsAnsweredInRound] = useState(0);
     const [selectedOption, setSelectedOption] = useState<number | null>(null);
-    const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
     const [isAnswered, setIsAnswered] = useState(false);
-    // const [timeLeft, setTimeLeft] = useState(15);
+    const [timeLeft, setTimeLeft] = useState(15);
     const [roomCode, setRoomCode] = useState<string | null>(roomCodeFromParams || null);
     const [sessionId, setSessionId] = useState<string | null>(null);
     const [statusText, setStatusText] = useState("ROUND COMPLETE!");
 
-    // const timerRef = useRef<NodeJS.Timeout | null>(null);
+    const timerRef = useRef<NodeJS.Timeout | null>(null);
     const QUESTIONS_PER_ROUND = 3;
 
     useEffect(() => {
@@ -45,7 +44,6 @@ export default function QuizPage() {
         if (storedQuestions) {
             try {
                 const parsed = JSON.parse(storedQuestions);
-                // The questions might need normalization if they are in the DB format
                 const normalized: QuizQuestion[] = parsed.map((q: any, idx: number) => {
                     if (q.options && typeof q.correctAnswer === 'number') return q as QuizQuestion;
                     
@@ -80,13 +78,12 @@ export default function QuizPage() {
         setRoomCode(storedRoom);
         setSessionId(storedSession);
 
-        // Preload the game route so going back is instant
         const customDiff = localStorage.getItem('nitroquiz_game_difficulty') || 'easy';
         const route = (customDiff === 'normal' || customDiff === 'medium') ? '/gamespeed-medium' : '/gamespeed';
         router.prefetch(route);
     }, [router]);
 
-    /* const startTimer = useCallback(() => {
+    const startTimer = useCallback(() => {
         if (timerRef.current) clearInterval(timerRef.current);
         setTimeLeft(15);
         timerRef.current = setInterval(() => {
@@ -99,34 +96,31 @@ export default function QuizPage() {
                 return prev - 1;
             });
         }, 1000);
-    }, []); */
+    }, []);
 
-    /* useEffect(() => {
+    useEffect(() => {
         if (questions.length > 0 && !isAnswered && questionsAnsweredInRound < QUESTIONS_PER_ROUND && currentIndex < questions.length) {
             startTimer();
         }
         return () => { if (timerRef.current) clearInterval(timerRef.current); };
-    }, [questions.length, currentIndex, isAnswered, questionsAnsweredInRound, startTimer]); */
+    }, [questions.length, currentIndex, isAnswered, questionsAnsweredInRound, startTimer]);
 
     const handleAnswer = async (optionIndex: number) => {
         if (isAnswered) return;
-        // if (timerRef.current) clearInterval(timerRef.current);
+        if (timerRef.current) clearInterval(timerRef.current);
 
         const currentQ = questions[currentIndex];
         const correct = optionIndex === currentQ.correctAnswer;
         
         setSelectedOption(optionIndex);
-        setIsCorrect(correct);
         setIsAnswered(true);
 
-        const earnedPoints = correct ? 10 : 0;
+        const earnedPoints = correct ? (10 + Math.floor(timeLeft / 2)) : 0;
         const newScore = score + earnedPoints;
         setScore(newScore);
         
-        // Save score immediately to localStorage
         localStorage.setItem('nitroquiz_game_score', newScore.toString());
 
-        // Update participant score in Supabase
         if (sessionId && localStorage.getItem('nitroquiz_user')) {
             try {
                 const user = JSON.parse(localStorage.getItem('nitroquiz_user') || '{}');
@@ -142,7 +136,7 @@ export default function QuizPage() {
 
         setTimeout(() => {
             nextQuestion();
-        }, 1500);
+        }, 800); // Shorter transition for more competitive feel
     };
 
     const nextQuestion = () => {
@@ -153,11 +147,9 @@ export default function QuizPage() {
         setQuestionsAnsweredInRound(nextRoundCount);
         setIsAnswered(false);
         setSelectedOption(null);
-        setIsCorrect(null);
         
         localStorage.setItem('nitroquiz_game_questionIndex', nextIdx.toString());
 
-        // Check if round or game is finished
         if (nextRoundCount >= QUESTIONS_PER_ROUND || nextIdx >= questions.length) {
             if (nextIdx >= questions.length) {
                 setStatusText("QUIZ FINISHED!");
@@ -167,7 +159,7 @@ export default function QuizPage() {
         }
     };
 
-    // Auto-redirect effect when round or quiz is ended
+    // Auto-redirect
     useEffect(() => {
         if (!mounted || questions.length === 0) return;
 
@@ -198,35 +190,26 @@ export default function QuizPage() {
                     }
                     router.push(route);
                 }
-            }, 700);
+            }, 800);
 
             return () => clearTimeout(timer);
         }
     }, [questionsAnsweredInRound, currentIndex, questions.length, mounted, router, roomCode, roomCodeFromParams]);
 
-    const handleBackToGame = () => {
-        // Redirection now handled by useEffect
-    };
-
     if (!mounted || questions.length === 0 || currentIndex >= questions.length && questionsAnsweredInRound < QUESTIONS_PER_ROUND) {
-        if (currentIndex >= questions.length && questions.length > 0) {
-            // Handled by the check below
-        } else {
-            // Render a simple blank dark background instead of a spinning loader.
-            // This prevents a jarring "loading" flash during the split-second Next.js hydration, 
-            // making the transition from the racing screen feel instant.
-            return <div className="min-h-screen bg-[#020617]" />;
-        }
+        return <div className="min-h-screen bg-[#04060f]" />;
     }
 
-    // Round or Game complete screen
     if (questionsAnsweredInRound >= QUESTIONS_PER_ROUND || currentIndex >= questions.length) {
         return (
-            <div className="min-h-screen bg-[#020617] flex items-center justify-center text-white font-rajdhani">
+            <div className="min-h-screen bg-[#04060f] flex items-center justify-center text-white font-rajdhani">
                 <div className="flex flex-col items-center gap-4">
-                    <Loader2 className="w-10 h-10 text-blue-500 animate-spin" />
-                    <p className="text-blue-500 text-sm font-bold uppercase tracking-widest animate-pulse">
-                        {currentIndex >= questions.length ? "PREPARING RESULTS..." : "RETURNING TO RACE..."}
+                    <div className="relative">
+                         <Loader2 className="w-16 h-16 text-[#2d6af2] animate-spin" />
+                         <Trophy className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 text-[#00ff9d]" />
+                    </div>
+                    <p className="text-[#2d6af2] text-sm font-bold uppercase tracking-[0.3em] animate-pulse">
+                        {currentIndex >= questions.length ? "FINALIZING RESULTS" : "SYNCING DATA"}
                     </p>
                 </div>
             </div>
@@ -234,90 +217,124 @@ export default function QuizPage() {
     }
 
     const currentQ = questions[currentIndex];
+    const timerColor = timeLeft > 10 ? '#00ff9d' : timeLeft > 5 ? '#fbbf24' : '#ef4444';
+    const timerPercent = (timeLeft / 15) * 100;
 
     return (
-        <div className="min-h-screen bg-[#020617] text-white font-rajdhani overflow-hidden relative flex flex-col items-center justify-center p-6">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,_rgba(59,130,246,0.15),_transparent_50%)]" />
+        <div className="min-h-screen bg-[#04060f] text-white font-rajdhani overflow-hidden relative flex flex-col items-center justify-center p-4">
+            {/* Background Effects */}
+            <div className="absolute inset-0 z-0 bg-[linear-gradient(rgba(45,106,242,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(45,106,242,0.05)_1px,transparent_1px)] bg-[length:50px_50px]" />
+            <div className="absolute inset-x-0 top-0 h-96 bg-gradient-to-b from-[#2d6af2]/10 to-transparent pointer-events-none" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
             
-            <div className="w-full max-w-2xl relative z-10">
-                {/* Header Info */}
-                <div className="flex justify-between items-end mb-8 px-2">
-                    <div>
-                        <p className="text-blue-400 text-sm uppercase tracking-widest mb-1">Question</p>
-                        <h2 className="text-3xl font-black italic">{currentIndex + 1}<span className="text-blue-500/50 not-italic mx-1">/</span>{questions.length}</h2>
+            <div className="w-full max-w-2xl relative z-10 flex flex-col gap-6">
+                {/* Header Stats */}
+                <div className="flex justify-between items-end px-1">
+                    <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                             <Sparkles className="w-4 h-4 text-[#2d6af2]" />
+                             <span className="text-[#2d6af2] text-[10px] font-bold uppercase tracking-[0.3em]">Lap Progress</span>
+                        </div>
+                        <h2 className="text-4xl font-black italic tracking-tighter text-white">
+                            {currentIndex + 1}<span className="text-[#2d6af2]/30 not-italic mx-1">/</span>{questions.length}
+                        </h2>
                     </div>
-                    <div className="text-right">
-                        <p className="text-emerald-400 text-sm uppercase tracking-widest mb-1">Current Score</p>
-                        <h2 className="text-3xl font-black italic">{score}</h2>
+
+                    <div className="flex flex-col items-end gap-1">
+                        <div className="flex items-center gap-1.5 px-3 py-1 bg-white/5 border border-white/10 rounded-full">
+                            <Timer className={`w-3.5 h-3.5 ${timeLeft <= 5 ? 'text-red-500' : 'text-[#00ff9d]'}`} />
+                            <span className={`text-[11px] font-bold font-mono ${timeLeft <= 5 ? 'text-red-500' : 'text-[#00ff9d]'}`}>
+                                {timeLeft}S
+                            </span>
+                        </div>
+                        <div className="text-right">
+                             <p className="text-gray-500 text-[10px] font-bold uppercase tracking-[0.2em]">Total Score</p>
+                             <h2 className="text-3xl font-black italic tracking-tighter text-[#00ff9d] drop-shadow-[0_0_15px_rgba(0,255,157,0.3)]">
+                                {score}
+                             </h2>
+                        </div>
                     </div>
                 </div>
 
-                {/* Question Box */}
-                <motion.div 
-                    key={currentIndex}
-                    initial={{ x: 50, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    className="bg-[#0f172a] border-l-4 border-blue-500 p-8 rounded-2xl mb-8 shadow-xl"
-                >
-                    <h3 className="text-2xl font-bold leading-tight">{currentQ.question}</h3>
-                </motion.div>
+                {/* Main Card */}
+                <div className="bg-[#080d1a]/80 backdrop-blur-2xl border border-white/10 rounded-3xl overflow-hidden shadow-[0_25px_50px_-12px_rgba(0,0,0,0.8)]">
+                    {/* Timer Bar */}
+                    <div className="w-full h-1.5 bg-white/5 overflow-hidden">
+                        <motion.div 
+                            className="h-full"
+                            style={{ backgroundColor: timerColor, boxShadow: `0 0 15px ${timerColor}80` }}
+                            initial={{ width: '100%' }}
+                            animate={{ width: `${timerPercent}%` }}
+                            transition={{ duration: 1, ease: "linear" }}
+                        />
+                    </div>
 
-                {/* Timer Bar */}
-                {/* <div className="w-full h-1.5 bg-gray-800 rounded-full mb-8 overflow-hidden">
-                    <motion.div 
-                        className={`h-full ${timeLeft <= 5 ? 'bg-red-500' : 'bg-blue-500'}`}
-                        initial={{ width: '100%' }}
-                        animate={{ width: `${(timeLeft / 15) * 100}%` }}
-                        transition={{ duration: 1, ease: "linear" }}
-                    />
-                </div> */}
+                    <div className="p-8 md:p-12">
+                        {/* Question Box */}
+                        <AnimatePresence mode="wait">
+                            <motion.div 
+                                key={currentIndex}
+                                initial={{ y: 20, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                exit={{ y: -20, opacity: 0 }}
+                                className="mb-10 text-center"
+                            >
+                                <h3 className="text-2xl md:text-3xl font-bold leading-tight text-white tracking-tight">
+                                    {currentQ.question}
+                                </h3>
+                            </motion.div>
+                        </AnimatePresence>
 
-                {/* Options */}
-                <div className="grid grid-cols-1 gap-4">
-                    <AnimatePresence mode="wait">
-                        {currentQ.options.map((option, idx) => {
-                            const isSelected = selectedOption === idx;
-                            const isCorrectOption = idx === currentQ.correctAnswer;
-                            
-                            let bgColor = "bg-[#1e293b]";
-                            let borderColor = "border-transparent";
-                            
-                            if (isAnswered) {
-                                if (isCorrectOption) {
-                                    bgColor = "bg-emerald-500/20";
-                                    borderColor = "border-emerald-500";
-                                } else if (isSelected) {
-                                    bgColor = "bg-red-500/20";
-                                    borderColor = "border-red-500";
-                                }
-                            } else {
-                                bgColor = "hover:bg-blue-500/10 hover:border-blue-500/50";
-                            }
-
-                            return (
-                                <motion.button
-                                    key={`${currentIndex}-${idx}`}
-                                    whileHover={!isAnswered ? { x: 10 } : {}}
-                                    whileTap={!isAnswered ? { scale: 0.98 } : {}}
-                                    onClick={() => handleAnswer(idx)}
-                                    disabled={isAnswered}
-                                    className={`w-full p-5 rounded-xl border-2 text-left flex items-center gap-4 transition-all ${bgColor} ${borderColor}`}
-                                >
-                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-lg ${isSelected ? 'bg-blue-500 text-white' : 'bg-black/20 text-blue-400'}`}>
-                                        {String.fromCharCode(65 + idx)}
-                                    </div>
-                                    <span className="text-lg font-medium flex-1">{option}</span>
-                                    {isAnswered && isCorrectOption && <Check className="text-emerald-500 w-6 h-6" />}
-                                    {isAnswered && isSelected && !isCorrectOption && <X className="text-red-500 w-6 h-6" />}
-                                </motion.button>
-                            );
-                        })}
-                    </AnimatePresence>
+                        {/* Options */}
+                        <div className="grid grid-cols-1 gap-4">
+                            {currentQ.options.map((option, idx) => {
+                                const isSelected = selectedOption === idx;
+                                
+                                return (
+                                    <motion.button
+                                        key={`${currentIndex}-${idx}`}
+                                        whileHover={!isAnswered ? { x: 8, backgroundColor: 'rgba(255,255,255,0.08)' } : {}}
+                                        whileTap={!isAnswered ? { scale: 0.98 } : {}}
+                                        onClick={() => handleAnswer(idx)}
+                                        disabled={isAnswered}
+                                        className={`w-full group relative p-5 rounded-2xl border-2 text-left flex items-center gap-5 transition-all duration-300 ${
+                                            isSelected 
+                                            ? 'bg-[#2d6af2]/20 border-[#2d6af2] shadow-[0_0_20px_rgba(45,106,242,0.2)]' 
+                                            : 'bg-white/5 border-white/5 hover:border-white/20'
+                                        }`}
+                                    >
+                                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-lg flex-shrink-0 transition-all ${
+                                            isSelected ? 'bg-[#2d6af2] text-white' : 'bg-white/5 text-blue-400 group-hover:bg-[#2d6af2]/10'
+                                        }`}>
+                                            {String.fromCharCode(65 + idx)}
+                                        </div>
+                                        <span className={`text-lg font-semibold flex-1 ${isSelected ? 'text-white' : 'text-gray-300 group-hover:text-white'}`}>
+                                            {option}
+                                        </span>
+                                        
+                                        {isSelected && (
+                                             <motion.div 
+                                                initial={{ scale: 0 }}
+                                                animate={{ scale: 1 }}
+                                                className="w-2.5 h-2.5 rounded-full bg-[#2d6af2] shadow-[0_0_10px_#2d6af2]" 
+                                             />
+                                        )}
+                                    </motion.button>
+                                );
+                            })}
+                        </div>
+                    </div>
                 </div>
+
+                {/* Hints / Mini Label */}
+                <p className="text-center text-gray-500 text-[10px] uppercase tracking-[0.4em] mt-2">
+                    Locked In • Swift Response Bonus Active
+                </p>
             </div>
 
-            {/* Background elements */}
-            <div className="fixed bottom-0 left-0 w-full h-1/2 bg-[linear-gradient(transparent_0%,rgba(59,130,246,0.05)_1px,transparent_1px),linear-gradient(90deg,transparent_0%,rgba(59,130,246,0.05)_1px,transparent_1px)] bg-[length:50px_50px] [transform:perspective(500px)_rotateX(60deg)] origin-bottom -z-10" />
+            {/* Bottom Perspective Grid */}
+            <div className="fixed bottom-0 left-0 w-full h-[30vh] bg-[linear-gradient(transparent_0%,rgba(45,106,242,0.1)_1px,transparent_1px),linear-gradient(90deg,transparent_0%,rgba(45,106,242,0.1)_1px,transparent_1px)] bg-[length:60px_60px] [transform:perspective(500px)_rotateX(60deg)] origin-bottom -z-10" />
         </div>
     );
 }
+
