@@ -421,7 +421,7 @@ export default function PlayerWaitingPage() {
                                     <div className="flex items-center gap-6 w-full justify-center px-4 overflow-hidden relative">
                                         {/* Left Arrow */}
                                         <button className="z-20 w-10 h-10 flex items-center justify-center bg-[#151f38] rounded-xl hover:bg-[#1c294a] transition-colors shadow-lg flex-shrink-0">
-                                            <ChevronLeft className="w-5 h-5 text-[#64b5f6]" />
+                                            <ChevronLeft className="w-5 h-5 text-white" />
                                         </button>
                                         
                                         {/* Cards Container */}
@@ -432,14 +432,14 @@ export default function PlayerWaitingPage() {
                                                     <div key={c.id} onClick={() => setPendingCharacterId(c.id)} 
                                                         className={`relative flex flex-col items-center pt-10 pb-5 px-5 rounded-[16px] transition-all cursor-pointer ${isSel ? 'bg-[#182136] border-2 border-[#e6fdff]' : 'bg-[#111726] border border-[#2d4060]'}`} 
                                                         style={{ 
-                                                            width: '260px', 
-                                                            height: '360px',
+                                                            width: '280px', 
+                                                            height: '380px',
                                                             boxShadow: isSel ? '0 0 25px rgba(120,240,255,0.4), inset 0 0 20px rgba(120,240,255,0.15)' : 'none'
                                                         }}>
                                                         
                                                         {/* Car Image */}
                                                         <img src={c.imageSrc} alt={c.name} 
-                                                            className="w-full max-w-[200px] h-[160px] object-contain drop-shadow-[0_15px_15px_rgba(0,0,0,0.8)] mb-8" />
+                                                            className="w-full aspect-[4/3] object-contain drop-shadow-[0_15px_15px_rgba(0,0,0,0.8)] mb-8" />
                                                         
                                                         {/* Name */}
                                                         <h3 className="font-display text-[15px] font-bold text-white uppercase tracking-[0.1em] text-center mb-auto">
@@ -486,18 +486,18 @@ export default function PlayerWaitingPage() {
 
                                         {/* Right Arrow */}
                                         <button className="z-20 w-10 h-10 flex items-center justify-center bg-[#151f38] rounded-xl hover:bg-[#1c294a] transition-colors shadow-lg flex-shrink-0">
-                                            <ChevronRight className="w-5 h-5 text-[#64b5f6]" />
+                                            <ChevronRight className="w-5 h-5 text-white" />
                                         </button>
                                     </div>
 
                                     {/* Action Buttons */}
                                     <div className="flex gap-6 mt-8">
                                         <button onClick={() => { setIsSelectingCharacter(false); setPendingCharacterId(assignedCarId); }} 
-                                            className="w-[160px] py-3.5 rounded-full font-display text-[14px] font-bold uppercase tracking-widest text-[#0b101a] bg-[#22b7ca] hover:bg-[#1fa1b2] transition-colors shadow-[0_4px_15px_rgba(34,183,202,0.4)]">
+                                            className="w-[160px] py-3.5 rounded-full font-display text-[14px] font-bold uppercase tracking-widest text-white bg-[#22b7ca] hover:bg-[#1fa1b2] transition-colors shadow-[0_4px_15px_rgba(34,183,202,0.4)]">
                                             BACK
                                         </button>
                                         <button onClick={handleSelectCharacter} 
-                                            className="w-[160px] py-3.5 rounded-full font-display text-[14px] font-bold uppercase tracking-widest text-[#0b101a] bg-[#22b7ca] hover:bg-[#1fa1b2] transition-colors shadow-[0_4px_15px_rgba(34,183,202,0.4)]">
+                                            className="w-[160px] py-3.5 rounded-full font-display text-[14px] font-bold uppercase tracking-widest text-white bg-[#22b7ca] hover:bg-[#1fa1b2] transition-colors shadow-[0_4px_15px_rgba(34,183,202,0.4)]">
                                             SELECT
                                         </button>
                                     </div>
