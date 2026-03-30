@@ -40,5 +40,32 @@
             "desc": "أجب على الأسئلة بأسرع ما يمكن! تُمنح النقاط بناءً على السرعة والدقة. أسرع إجابة صحيحة تفوز!"
         }
     }
+  },
+  "login": {
+    "title": "تسجيل الدخول",
+    "google": {
+      "continue": "المتابعة باستخدام Google",
+      "redirecting": "جاري التوجيه...",
+      "failed": "فشل تسجيل الدخول. يرجى المحاولة مرة أخرى."
+    },
+    "or": "أو",
+    "form": {
+      "identifier_label": "اسم المستخدم أو البريد الإلكتروني",
+      "identifier_placeholder": "اسم المستخدم أو البريد...",
+      "identifier_error_min": "على الأقل 3 أحرف",
+      "password_label": "كلمة المرور",
+      "password_placeholder": "••••••••",
+      "password_error_min": "على الأقل 6 أحرف",
+      "forgot_password": "هل نسيت كلمة المرور؟",
+      "button": "دخول",
+      "authenticating": "جاري التحقق...",
+      "username_not_found": "اسم المستخدم غير موجود!",
+      "generic_error": "حدث خطأ، يرجى المحاولة مرة أخرى!"
+    },
+    "register": {
+      "text": "ليس لديك حساب؟",
+      "link": "تسجيل"
+    },
+    "footer": "© 2026 NitroQuiz — جميع المحركات تعمل"
   }
 }

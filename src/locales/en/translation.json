@@ -40,5 +40,32 @@
             "desc": "Answer questions as fast as possible! Points are awarded based on speed and accuracy. The fastest correct answer wins!"
         }
     }
+  },
+  "login": {
+    "title": "Login",
+    "google": {
+      "continue": "Continue with Google",
+      "redirecting": "Redirecting...",
+      "failed": "Google sign-in failed. Please try again."
+    },
+    "or": "OR",
+    "form": {
+      "identifier_label": "Username or Email",
+      "identifier_placeholder": "Your racer ID...",
+      "identifier_error_min": "At least 3 characters",
+      "password_label": "Password",
+      "password_placeholder": "••••••••",
+      "password_error_min": "At least 6 characters",
+      "forgot_password": "Forgot password?",
+      "button": "Login",
+      "authenticating": "Authenticating...",
+      "username_not_found": "Username not found!",
+      "generic_error": "An error occurred, please try again!"
+    },
+    "register": {
+      "text": "Don't have an account?",
+      "link": "Register"
+    },
+    "footer": "© 2026 NitroQuiz — All Engines On"
   }
 }

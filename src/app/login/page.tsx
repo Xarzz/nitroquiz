@@ -12,16 +12,19 @@ import { Eye, EyeOff, Loader2, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { Logo } from "@/components/ui/logo";
 import { useAuth } from "@/contexts/AuthContext";
+import Image from "next/image";
+import { useTranslation } from "react-i18next";
 
 const loginSchema = z.object({
-  identifier: z.string().min(3, "At least 3 characters"),
-  password: z.string().min(6, "At least 6 characters"),
+  identifier: z.string().min(3, "login.form.identifier_error_min"),
+  password: z.string().min(6, "login.form.password_error_min"),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const router = useRouter()
+  const { t } = useTranslation();
   const { user, profile, loading } = useAuth()
   const [showPassword, setShowPassword] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
@@ -81,7 +84,7 @@ export default function LoginPage() {
       .maybeSingle();
 
     if (error) throw error;
-    if (!data) throw new Error("Username tidak ditemukan!");
+    if (!data) throw new Error("login.form.username_not_found");
 
     return data.email.toLowerCase();
   };
@@ -100,7 +103,7 @@ export default function LoginPage() {
       if (error) throw error;
 
     } catch (err: any) {
-      setServerError(err.message || "Terjadi kesalahan, coba lagi!")
+      setServerError(t(err.message) || t('login.form.generic_error'))
     }
   }
 
@@ -113,7 +116,7 @@ export default function LoginPage() {
       });
       if (error) throw error;
     } catch (err: any) {
-      setServerError("Google sign-in failed. Please try again.");
+      setServerError(t('login.google.failed'));
       setIsGoogleLoading(false);
     }
   };
@@ -195,7 +198,7 @@ export default function LoginPage() {
 
             {/* Title (centered) */}
             <div className="text-center mb-7 mt-1">
-              <h1 className="text-white font-display text-2xl font-bold tracking-wider uppercase">Login</h1>
+              <h1 className="text-white font-display text-2xl font-bold tracking-wider uppercase">{t('login.title')}</h1>
             </div>
 
             {/* Google */}
@@ -215,13 +218,13 @@ export default function LoginPage() {
                   <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
                 </svg>
               }
-              <span className="text-sm">{isGoogleLoading ? "Redirecting..." : "Continue with Google"}</span>
+              <span className="text-sm">{isGoogleLoading ? t('login.google.redirecting') : t('login.google.continue')}</span>
             </button>
 
             {/* Divider */}
             <div className="flex items-center gap-3 mb-5">
               <div className="flex-1 h-px bg-white/[0.06]" />
-              <span className="text-gray-700 text-[10px] font-display tracking-widest">OR</span>
+              <span className="text-gray-700 text-[10px] font-display tracking-widest">{t('login.or')}</span>
               <div className="flex-1 h-px bg-white/[0.06]" />
             </div>
 
@@ -239,11 +242,11 @@ export default function LoginPage() {
 
               {/* Identifier (Email/Username) */}
               <div className="space-y-1.5">
-                <label className="text-gray-500 text-[10px] font-display tracking-[0.18em] uppercase">Username or Email</label>
+                <label className="text-gray-500 text-[10px] font-display tracking-[0.18em] uppercase">{t('login.form.identifier_label')}</label>
                 <div className="relative">
                   <input
                     type="text"
-                    placeholder="Username or Email..."
+                    placeholder={t('login.form.identifier_placeholder')}
                     autoComplete="username"
                     disabled={isSubmitting}
                     className={`w-full h-11 bg-white/[0.03] border ${errors.identifier ? 'border-red-500/40' : identifierVal ? 'border-[#00ff9d]/25' : 'border-white/[0.07]'} text-white text-sm px-4 rounded-xl outline-none transition-all placeholder:text-gray-700 focus:border-[#2d6af2]/60 focus:bg-white/[0.05] focus:shadow-[0_0_0_3px_rgba(45,106,242,0.1)] font-mono tracking-wide`}
@@ -253,18 +256,18 @@ export default function LoginPage() {
                     <div className="absolute right-3 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-[#00ff9d] shadow-[0_0_6px_#00ff9d]" />
                   )}
                 </div>
-                {errors.identifier && <p className="text-red-400 text-[10px] pl-1">{errors.identifier.message}</p>}
+                {errors.identifier && <p className="text-red-400 text-[10px] pl-1">{t(errors.identifier.message as string)}</p>}
               </div>
 
               {/* Password */}
               <div className="space-y-1.5">
                 <div className="flex justify-between items-center">
-                  <label className="text-gray-500 text-[10px] font-display tracking-[0.18em] uppercase">Password</label>
+                  <label className="text-gray-500 text-[10px] font-display tracking-[0.18em] uppercase">{t('login.form.password_label')}</label>
                 </div>
                 <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
-                    placeholder="••••••••"
+                    placeholder={t('login.form.password_placeholder')}
                     autoComplete="current-password"
                     disabled={isSubmitting}
                     className={`w-full h-11 bg-white/[0.03] border ${errors.password ? 'border-red-500/40' : 'border-white/[0.07]'} text-white text-sm px-4 pr-11 rounded-xl outline-none transition-all placeholder:text-gray-700 focus:border-[#2d6af2]/60 focus:bg-white/[0.05] focus:shadow-[0_0_0_3px_rgba(45,106,242,0.1)] font-mono`}
@@ -278,7 +281,7 @@ export default function LoginPage() {
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
-                {errors.password && <p className="text-red-400 text-[10px] pl-1">{errors.password.message}</p>}
+                {errors.password && <p className="text-red-400 text-[10px] pl-1">{t(errors.password.message as string)}</p>}
               </div>
 
                             {/* Submit */}
@@ -293,9 +296,9 @@ export default function LoginPage() {
                                 <div className="absolute inset-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]" />
                                 <span className="relative flex items-center justify-center gap-2">
                                     {isSubmitting ? (
-                                        <><Loader2 className="w-4 h-4 animate-spin" /> Authenticating...</>
+                                        <><Loader2 className="w-4 h-4 animate-spin" /> {t('login.form.authenticating')}</>
                                     ) : (
-                                        <>Login <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" /></>
+                                        <>{t('login.form.button')} <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" /></>
                                     )}
                                 </span>
                             </button>
@@ -303,14 +306,14 @@ export default function LoginPage() {
 
                         {/* Register link (bottom) */}
                         <p className="text-center text-gray-600 text-xs mt-5 pt-5 border-t border-white/[0.05]">
-                            Don't have an account?{' '}
+                            {t('login.register.text')}{' '}
                             <a
                                 href={registerUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-[#2d6af2] hover:text-[#00ff9d] transition-colors font-semibold"
                             >
-                                Register
+                                {t('login.register.link')}
                             </a>
                         </p>
 
@@ -326,7 +329,7 @@ export default function LoginPage() {
                     transition={{ delay: 0.5 }}
                     className="text-center text-gray-800 text-[10px] font-display tracking-widest mt-5 uppercase"
                 >
-                    © 2026 NitroQuiz — All Engines On
+                    {t('login.footer')}
                 </motion.p>
             </div>
         </div>

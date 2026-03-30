@@ -40,5 +40,32 @@
             "desc": "Jawab soal secepat mungkin! Poin diberikan berdasarkan kecepatan dan ketepatan. Jawaban benar tercepat yang menang!"
         }
     }
+  },
+  "login": {
+    "title": "Masuk",
+    "google": {
+      "continue": "Lanjutkan dengan Google",
+      "redirecting": "Mengalihkan...",
+      "failed": "Gagal masuk lewat Google. Silakan coba lagi."
+    },
+    "or": "ATAU",
+    "form": {
+      "identifier_label": "Username atau Email",
+      "identifier_placeholder": "Username/Email...",
+      "identifier_error_min": "Minimal 3 karakter",
+      "password_label": "Kata Sandi",
+      "password_placeholder": "••••••••",
+      "password_error_min": "Minimal 6 karakter",
+      "forgot_password": "Lupa kata sandi?",
+      "button": "Masuk",
+      "authenticating": "Memverifikasi...",
+      "username_not_found": "Username tidak ditemukan!",
+      "generic_error": "Terjadi kesalahan, coba lagi!"
+    },
+    "register": {
+      "text": "Belum punya akun?",
+      "link": "Daftar"
+    },
+    "footer": "© 2026 NitroQuiz — Semua Mesin Menyala"
   }
 }
