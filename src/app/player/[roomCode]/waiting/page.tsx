@@ -415,48 +415,89 @@ export default function PlayerWaitingPage() {
                             {/* ── Right Panel Area ── */}
                             {isSelectingCharacter ? (
                                 <div className="absolute z-10 flex flex-col items-center justify-center right-0 md:left-[340px] lg:left-[500px] xl:left-[700px]" style={{ top: '60px', bottom: '64px', right: '20px' }}>
-                                    <h2 className="font-display text-3xl font-black text-white uppercase tracking-wider mb-8 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+                                    <h2 className="font-display text-2xl font-black text-white uppercase tracking-wider mb-8 drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
                                         CHOOSE YOUR RACER
                                     </h2>
-                                    <div className="flex items-center gap-4 w-full justify-center px-4 overflow-hidden relative">
-                                        <button className="z-20 p-3 bg-[#2d6af2]/20 rounded-full hover:bg-[#2d6af2]/40 transition-all border border-[#2d6af2]/50 hover:shadow-[0_0_15px_rgba(45,106,242,0.5)]">
-                                            <ChevronLeft className="w-6 h-6 text-[#64b5f6]" />
+                                    <div className="flex items-center gap-6 w-full justify-center px-4 overflow-hidden relative">
+                                        {/* Left Arrow */}
+                                        <button className="z-20 w-10 h-10 flex items-center justify-center bg-[#151f38] rounded-xl hover:bg-[#1c294a] transition-colors shadow-lg flex-shrink-0">
+                                            <ChevronLeft className="w-5 h-5 text-[#64b5f6]" />
                                         </button>
-                                        <div className="flex justify-center gap-6 items-center overflow-x-auto no-scrollbar py-4 px-2" style={{ maxWidth: '100vw' }}>
+                                        
+                                        {/* Cards Container */}
+                                        <div className="flex justify-center gap-5 items-center overflow-x-auto no-scrollbar py-6 px-4">
                                             {PLAYER_CHARACTERS.map((c) => {
                                                 const isSel = pendingCharacterId === c.id;
                                                 return (
-                                                    <div key={c.id} onClick={() => setPendingCharacterId(c.id)} className={`relative flex flex-col items-center p-5 rounded-2xl border-2 transition-all cursor-pointer overflow-hidden ${isSel ? 'border-[#00ff9d] bg-[#00ff9d]/10 transform scale-105 shadow-[0_0_30px_rgba(0,255,157,0.25)]' : 'border-[#2d6af2]/30 bg-[#0b101a]/80 hover:border-[#2d6af2]/60'}`} style={{ width: '240px', height: '320px', backdropFilter: 'blur(10px)' }}>
-                                                        {isSel && <div className="absolute inset-0 bg-gradient-to-t from-[#00ff9d]/20 to-transparent pointer-events-none" />}
-                                                        <img src={c.imageSrc} alt={c.name} className="w-[180px] h-[140px] object-contain drop-shadow-[0_10px_15px_rgba(0,0,0,0.6)] mb-6 mt-2 transition-transform duration-300 hover:scale-110" />
-                                                        <h3 className="font-display text-[15px] font-bold text-white uppercase tracking-widest mb-4 z-10 text-center">{c.name}</h3>
-                                                        <div className="w-full space-y-3 z-10 p-2 bg-black/40 rounded-lg">
-                                                            <div className="flex items-center gap-3">
-                                                                <span className="text-[9px] text-gray-400 w-12 text-right tracking-widest font-mono">SPEED</span>
-                                                                <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden"><div className="h-full bg-[#00ff9d]" style={{ width: `${c.stats.speed}%`}}></div></div>
+                                                    <div key={c.id} onClick={() => setPendingCharacterId(c.id)} 
+                                                        className={`relative flex flex-col items-center pt-10 pb-5 px-5 rounded-[16px] transition-all cursor-pointer ${isSel ? 'bg-[#182136] border-2 border-[#e6fdff]' : 'bg-[#111726] border border-[#2d4060]'}`} 
+                                                        style={{ 
+                                                            width: '260px', 
+                                                            height: '360px',
+                                                            boxShadow: isSel ? '0 0 25px rgba(120,240,255,0.4), inset 0 0 20px rgba(120,240,255,0.15)' : 'none'
+                                                        }}>
+                                                        
+                                                        {/* Car Image */}
+                                                        <img src={c.imageSrc} alt={c.name} 
+                                                            className="w-full max-w-[200px] h-[160px] object-contain drop-shadow-[0_15px_15px_rgba(0,0,0,0.8)] mb-8" />
+                                                        
+                                                        {/* Name */}
+                                                        <h3 className="font-display text-[15px] font-bold text-white uppercase tracking-[0.1em] text-center mb-auto">
+                                                            {c.name}
+                                                        </h3>
+                                                        
+                                                        {/* Stats Grid */}
+                                                        <div className="w-full grid grid-cols-3 gap-3 border-t border-[#2d4060]/50 pt-4 mt-4">
+                                                            {/* SPEED */}
+                                                            <div className="flex flex-col gap-2">
+                                                                <div className="flex items-center text-[8px] text-[#8899bb] tracking-widest font-mono">
+                                                                    <svg className="w-2.5 h-2.5 mr-0.5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                                                    SPEED
+                                                                </div>
+                                                                <div className="w-full h-1 bg-[#0c1220] rounded-full overflow-hidden">
+                                                                    <div className="h-full bg-[#3b82f6]" style={{ width: `${c.stats.speed}%`}}></div>
+                                                                </div>
                                                             </div>
-                                                            <div className="flex items-center gap-3">
-                                                                <span className="text-[9px] text-gray-400 w-12 text-right tracking-widest font-mono">ACCEL</span>
-                                                                <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden"><div className="h-full bg-[#2d6af2]" style={{ width: `${c.stats.accel}%`}}></div></div>
+                                                            {/* ACCEL */}
+                                                            <div className="flex flex-col gap-2">
+                                                                <div className="flex items-center text-[8px] text-[#8899bb] tracking-widest font-mono">
+                                                                    <svg className="w-2.5 h-2.5 mr-0.5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                                                    ACCEL
+                                                                </div>
+                                                                <div className="w-full h-1 bg-[#0c1220] rounded-full overflow-hidden">
+                                                                    <div className="h-full bg-[#10b981]" style={{ width: `${c.stats.accel}%`}}></div>
+                                                                </div>
                                                             </div>
-                                                            <div className="flex items-center gap-3">
-                                                                <span className="text-[9px] text-gray-400 w-12 text-right tracking-widest font-mono">HANDLING</span>
-                                                                <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden"><div className="h-full bg-pink-500" style={{ width: `${c.stats.handling}%`}}></div></div>
+                                                            {/* HANDLING */}
+                                                            <div className="flex flex-col gap-2">
+                                                                <div className="flex items-center text-[8px] text-[#8899bb] tracking-widest font-mono">
+                                                                    <svg className="w-2.5 h-2.5 mr-0.5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                                                    HANDLING
+                                                                </div>
+                                                                <div className="w-full h-1 bg-[#0c1220] rounded-full overflow-hidden">
+                                                                    <div className="h-full bg-[#00d4ff]" style={{ width: `${c.stats.handling}%`}}></div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 );
                                             })}
                                         </div>
-                                        <button className="z-20 p-3 bg-[#2d6af2]/20 rounded-full hover:bg-[#2d6af2]/40 transition-all border border-[#2d6af2]/50 hover:shadow-[0_0_15px_rgba(45,106,242,0.5)]">
-                                            <ChevronRight className="w-6 h-6 text-[#64b5f6]" />
+
+                                        {/* Right Arrow */}
+                                        <button className="z-20 w-10 h-10 flex items-center justify-center bg-[#151f38] rounded-xl hover:bg-[#1c294a] transition-colors shadow-lg flex-shrink-0">
+                                            <ChevronRight className="w-5 h-5 text-[#64b5f6]" />
                                         </button>
                                     </div>
-                                    <div className="flex gap-8 mt-10">
-                                        <button onClick={() => { setIsSelectingCharacter(false); setPendingCharacterId(assignedCarId); }} className="px-10 py-3.5 rounded-full font-display text-[13px] font-bold uppercase tracking-[0.2em] text-[#64b5f6] border border-[#2d6af2]/50 bg-[#2d6af2]/10 hover:bg-[#2d6af2]/20 hover:text-white transition-all">
+
+                                    {/* Action Buttons */}
+                                    <div className="flex gap-6 mt-8">
+                                        <button onClick={() => { setIsSelectingCharacter(false); setPendingCharacterId(assignedCarId); }} 
+                                            className="w-[160px] py-3.5 rounded-full font-display text-[14px] font-bold uppercase tracking-widest text-[#0b101a] bg-[#22b7ca] hover:bg-[#1fa1b2] transition-colors shadow-[0_4px_15px_rgba(34,183,202,0.4)]">
                                             BACK
                                         </button>
-                                        <button onClick={handleSelectCharacter} className="px-12 py-3.5 rounded-full font-display text-[13px] font-bold uppercase tracking-[0.2em] text-[#0b101a] bg-gradient-to-r from-[#00ff9d] to-[#00d4ff] hover:from-[#00e68e] hover:to-[#00bcee] shadow-[0_0_20px_rgba(0,255,157,0.4)] hover:shadow-[0_0_30px_rgba(0,255,157,0.6)] transition-all">
+                                        <button onClick={handleSelectCharacter} 
+                                            className="w-[160px] py-3.5 rounded-full font-display text-[14px] font-bold uppercase tracking-widest text-[#0b101a] bg-[#22b7ca] hover:bg-[#1fa1b2] transition-colors shadow-[0_4px_15px_rgba(34,183,202,0.4)]">
                                             SELECT
                                         </button>
                                     </div>
