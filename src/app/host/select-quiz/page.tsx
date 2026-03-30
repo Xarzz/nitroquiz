@@ -93,7 +93,7 @@ export default function SelectQuizPage() {
     const [isFetching, setIsFetching] = useState(true);
     const [isReturning, setIsReturning] = useState(false);
 
-    const itemsPerPage = 9;
+    const itemsPerPage = 6;
 
     useEffect(() => {
         const user = getUser();
@@ -202,58 +202,54 @@ export default function SelectQuizPage() {
     };
 
     return (
-        <div className="min-h-screen bg-[#04060f] relative overflow-hidden font-body text-white selection:bg-[#2d6af2] selection:text-white">
+        <div className="h-screen bg-[#04060f] relative overflow-hidden font-body text-white selection:bg-[#2d6af2] selection:text-white flex flex-col">
             <div className="fixed inset-0 z-0 bg-[linear-gradient(rgba(0,255,157,0.022)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,157,0.022)_1px,transparent_1px)] bg-[length:80px_80px]" />
             <div className="fixed bottom-0 left-0 right-0 h-52 z-0 bg-[linear-gradient(transparent_0%,rgba(45,106,242,0.06)_1px,transparent_1px),linear-gradient(90deg,transparent_0%,rgba(45,106,242,0.06)_1px,transparent_1px)] bg-[length:80px_40px] [transform:perspective(400px)_rotateX(60deg)] origin-bottom pointer-events-none opacity-60" />
             <div className="fixed inset-0 z-0 bg-[radial-gradient(ellipse_70%_60%_at_50%_50%,rgba(45,106,242,0.07),transparent)] pointer-events-none" />
             <div className="fixed inset-0 z-0 bg-gradient-to-t from-[#04060f] via-[#04060f]/50 to-[#2d6af2]/10 pointer-events-none" />
             <div className="scanlines" />
 
-            <div className="absolute inset-0 overflow-y-auto z-10">
+            <div className="relative z-10 flex-1 flex flex-col h-full overflow-hidden">
                 {/* Top Bar */}
-                <div className="w-full px-4 md:px-6 pt-4 pb-2 flex items-center justify-between">
+                <div className="w-full px-4 md:px-6 pt-3 pb-1 flex items-center justify-between flex-shrink-0">
                     <div className="flex items-center gap-3">
                         <motion.button
                             initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} whileHover={{ scale: 1.05 }}
-                            className="p-3 bg-[#080d1a]/60 border border-[#2d6af2]/50 hover:bg-[#2d6af2]/20 hover:border-[#00ff9d] text-gray-300 rounded-xl transition-all shadow-[0_0_15px_rgba(45,106,242,0.3)] flex items-center justify-center group"
+                            className="p-2.5 bg-[#080d1a]/60 border border-[#2d6af2]/50 hover:bg-[#2d6af2]/20 hover:border-[#00ff9d] text-gray-300 rounded-xl transition-all shadow-[0_0_15px_rgba(45,106,242,0.3)] flex items-center justify-center group"
                             aria-label="Back to Home"
                             onClick={() => { setIsReturning(true); router.push('/'); }}
                         >
-                            <ArrowLeft size={20} className="group-hover:text-white transition-colors" />
+                            <ArrowLeft size={18} className="group-hover:text-white transition-colors" />
                         </motion.button>
-                        <Logo width={140} height={40} withText={false} animated={false} />
+                        <Logo width={120} height={35} withText={false} animated={false} />
                     </div>
-                    <Image src="/assets/logo/logo2.png" alt="GameForSmart.com" width={240} height={60}
+                    <Image src="/assets/logo/logo2.png" alt="NitroQuiz" width={180} height={45}
                         className="object-contain opacity-70 hover:opacity-100 transition-opacity duration-300 drop-shadow-[0_0_10px_rgba(169,141,197,0.4)]" />
                 </div>
 
-                <div className="relative container mx-auto px-6 pb-4 max-w-6xl pt-2">
+                <div className="flex-1 overflow-y-auto relative container mx-auto px-6 pb-4 max-w-5xl pt-1">
                     {/* Search & Filter Bar */}
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }}
-                        className="bg-[#080d1a]/80 border border-[#2d6af2]/30 rounded-2xl overflow-hidden mb-8 backdrop-blur-2xl shadow-[0_0_50px_rgba(45,106,242,0.12),inset_0_1px_0_rgba(255,255,255,0.06)]">
+                    <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}
+                        className="bg-[#080d1a]/80 border border-[#2d6af2]/30 rounded-2xl overflow-hidden mb-4 backdrop-blur-2xl shadow-[0_0_50px_rgba(45,106,242,0.12),inset_0_1px_0_rgba(255,255,255,0.06)] flex-shrink-0">
                         {/* ── Cyan accent bar ── */}
-                        <div className="h-[4px] w-full" style={{ background: 'linear-gradient(90deg,#1a45c4,#2d6af2,#00ff9d,#2d6af2,#1a45c4)' }} />
-                        <div className="p-4 sm:p-6">
-                        <div className="flex flex-col sm:flex-row gap-4 mb-6 relative">
+                        <div className="h-[3px] w-full" style={{ background: 'linear-gradient(90deg,#1a45c4,#2d6af2,#00ff9d,#2d6af2,#1a45c4)' }} />
+                        <div className="p-3 sm:p-4">
+                        <div className="flex flex-col sm:flex-row gap-3 mb-4 relative">
                             <div className="flex-1">
                                 <div className="relative group/search">
-                                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5 group-focus-within/search:text-[#00ff9d] transition-colors" />
+                                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4 group-focus-within/search:text-[#00ff9d] transition-colors" />
                                     <Input type="text" placeholder="Search quiz title..." value={searchInput}
                                         onChange={(e) => { setSearchInput(e.target.value); setSearchQuery(e.target.value); setCurrentPage(1); }}
-                                        className="w-full bg-white/[0.03] border border-white/[0.07] pl-11 h-12 text-white font-display uppercase tracking-widest placeholder:text-gray-600 rounded-xl focus-visible:ring-1 focus-visible:ring-[#00ff9d]/50 focus-visible:border-[#00ff9d]/50 focus-visible:bg-white/[0.05] transition-all" />
-                                    {searchInput && (
-                                        <button onClick={() => { setSearchInput(""); setSearchQuery(""); setCurrentPage(1); }}
-                                            className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white pb-1">×</button>
-                                    )}
+                                        className="w-full bg-white/[0.03] border border-white/[0.07] pl-10 h-10 text-white font-display text-xs uppercase tracking-widest placeholder:text-gray-600 rounded-xl focus-visible:ring-1 focus-visible:ring-[#00ff9d]/50 focus-visible:border-[#00ff9d]/50 focus-visible:bg-white/[0.05] transition-all" />
                                 </div>
                             </div>
                             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                                <SelectTrigger className="w-full sm:w-52 h-12 bg-white/[0.03] border border-white/[0.07] text-white focus:border-[#00ff9d]/50 focus:ring-1 focus:ring-[#00ff9d]/50 rounded-xl font-display text-xs tracking-wider uppercase">
+                                <SelectTrigger className="w-full sm:w-44 h-10 bg-white/[0.03] border border-white/[0.07] text-white focus:border-[#00ff9d]/50 focus:ring-1 focus:ring-[#00ff9d]/50 rounded-xl font-display text-[10px] tracking-wider uppercase">
                                     <SelectValue placeholder="CATEGORY" />
                                 </SelectTrigger>
                                 <SelectContent className="bg-[#04060f] border border-[#2d6af2]/30 text-white font-display text-xs uppercase tracking-wider backdrop-blur-3xl">
                                     {categories.map((cat) => (
-                                        <SelectItem key={cat} value={cat} className="focus:bg-[#4a3d8f]/20 focus:text-white cursor-pointer py-3">
+                                        <SelectItem key={cat} value={cat} className="focus:bg-[#4a3d8f]/20 focus:text-white cursor-pointer py-2">
                                             {getCategoryDisplayName(cat)}
                                         </SelectItem>
                                     ))}
@@ -262,20 +258,17 @@ export default function SelectQuizPage() {
                         </div>
                         <div className="flex items-center justify-center gap-2">
                             <button onClick={() => setActiveTab('all')}
-                                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-display text-xs tracking-wider uppercase transition-all duration-200 ${activeTab === 'all' ? 'bg-[#2d6af2] text-white shadow-[0_0_15px_rgba(45,106,242,0.5)]' : 'bg-white/[0.03] border border-white/[0.07] text-gray-400 hover:text-white hover:border-[#00ff9d]/50'}`}>
-                                <Search size={14} />Quizzes
+                                className={`flex items-center gap-2 px-4 py-2 rounded-xl font-display text-[10px] tracking-wider uppercase transition-all duration-200 ${activeTab === 'all' ? 'bg-[#2d6af2] text-white shadow-[0_0_15px_rgba(45,106,242,0.5)]' : 'bg-white/[0.03] border border-white/[0.07] text-gray-400 hover:text-white hover:border-[#00ff9d]/50'}`}>
+                                <Search size={12} />Quizzes
                             </button>
                             <button onClick={() => setActiveTab('favorites')}
-                                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-display text-xs tracking-wider uppercase transition-all duration-200 ${activeTab === 'favorites' ? 'bg-gradient-to-r from-pink-600 to-red-500 text-white shadow-[0_0_15px_rgba(236,72,153,0.4)]' : 'bg-black/40 border border-pink-500/20 text-gray-400 hover:text-pink-400 hover:border-pink-500/50'}`}>
-                                <Heart size={14} className={activeTab === 'favorites' ? 'fill-white' : ''} />
+                                className={`flex items-center gap-2 px-4 py-2 rounded-xl font-display text-[10px] tracking-wider uppercase transition-all duration-200 ${activeTab === 'favorites' ? 'bg-gradient-to-r from-pink-600 to-red-500 text-white shadow-[0_0_15px_rgba(236,72,153,0.4)]' : 'bg-black/40 border border-pink-500/20 text-gray-400 hover:text-pink-400 hover:border-pink-500/50'}`}>
+                                <Heart size={12} className={activeTab === 'favorites' ? 'fill-white' : ''} />
                                 Favorites
-                                {favorites.length > 0 && (
-                                    <span className={`ml-1 px-1.5 py-0.5 rounded-full text-[10px] font-bold ${activeTab === 'favorites' ? 'bg-white/20' : 'bg-pink-500/20 text-pink-400'}`}>{favorites.length}</span>
-                                )}
                             </button>
                             <button onClick={() => setActiveTab('myquiz')}
-                                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-display text-xs tracking-wider uppercase transition-all duration-200 ${activeTab === 'myquiz' ? 'bg-gradient-to-r from-[#00ff9d] to-[#04060f] text-white font-bold shadow-[0_0_15px_rgba(0,255,157,0.5)]' : 'bg-white/[0.03] border border-white/[0.07] text-gray-400 hover:text-[#00ff9d] hover:border-[#00ff9d]/50'}`}>
-                                <FileText size={14} />My Quiz
+                                className={`flex items-center gap-2 px-4 py-2 rounded-xl font-display text-[10px] tracking-wider uppercase transition-all duration-200 ${activeTab === 'myquiz' ? 'bg-gradient-to-r from-[#00ff9d] to-[#04060f] text-white font-bold shadow-[0_0_15px_rgba(0,255,157,0.5)]' : 'bg-white/[0.03] border border-white/[0.07] text-gray-400 hover:text-[#00ff9d] hover:border-[#00ff9d]/50'}`}>
+                                <FileText size={12} />My Quiz
                             </button>
                         </div>
                         </div>
@@ -285,12 +278,12 @@ export default function SelectQuizPage() {
                     <AnimatePresence mode="wait">
                         {(isFetching || isReturning || creating) ? (
                             <motion.div key="skeleton" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                 {Array.from({ length: 6 }).map((_, i) => (
                                     <div key={i} className="bg-[#080d1a]/80 border border-[#2d6af2]/15 rounded-2xl overflow-hidden animate-pulse">
-                                        <div className="h-1.5 w-full bg-[#2d6af2]/10" />
-                                        <div className="w-full h-40 bg-gradient-to-br from-[#2d6af2]/10 to-[#04060f]" />
-                                        <div className="p-4 space-y-3">
+                                        <div className="h-1 w-full bg-[#2d6af2]/10" />
+                                        <div className="w-full h-32 bg-gradient-to-br from-[#2d6af2]/10 to-[#04060f]" />
+                                        <div className="p-3 space-y-2">
                                             <div className="h-4 bg-white/5 rounded-lg w-3/4" />
                                             <div className="h-3 bg-white/5 rounded-lg w-1/2" />
                                             <div className="flex gap-2 mt-3">
@@ -303,7 +296,7 @@ export default function SelectQuizPage() {
                             </motion.div>
                         ) : paginatedQuizzes.length > 0 ? (
                             <motion.div key={`grid-${currentPage}-${activeTab}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                 {paginatedQuizzes.map((quiz, index) => {
                                     const isFavorited = favorites.includes(quiz.id);
                                     const colors = getCategoryColor(quiz.category);
@@ -347,10 +340,10 @@ export default function SelectQuizPage() {
                                                     <Heart size={14} className={isFavorited ? 'fill-pink-400' : ''} />
                                                 </button>
 
-                                                <CardHeader className="pb-4 relative z-20 flex-1 flex flex-col pt-5">
+                                                <CardHeader className="pb-3 relative z-20 flex-1 flex flex-col pt-4">
                                                     {/* ── Category badge with category color ── */}
-                                                    <div className="flex items-start mb-3 pr-10">
-                                                        <div className="px-2.5 py-1 rounded text-[10px] font-display font-bold uppercase tracking-wider backdrop-blur-sm shadow-sm"
+                                                    <div className="flex items-start mb-2 pr-10">
+                                                        <div className="px-2 py-0.5 rounded text-[9px] font-display font-bold uppercase tracking-wider backdrop-blur-sm shadow-sm"
                                                             style={{
                                                                 background: colors.badge,
                                                                 border: `1px solid ${colors.badgeBorder}`,
@@ -359,19 +352,19 @@ export default function SelectQuizPage() {
                                                             {getCategoryDisplayName(quiz.category)}
                                                         </div>
                                                     </div>
-                                                    <CardTitle className="text-lg md:text-xl text-white font-display uppercase tracking-wide leading-tight transition-colors drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] line-clamp-2"
+                                                    <CardTitle className="text-base md:text-lg text-white font-display uppercase tracking-wide leading-tight transition-colors drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] line-clamp-2"
                                                         style={{ color: '#fff' }}
                                                         onMouseEnter={e => (e.currentTarget.style.color = colors.badgeText)}
                                                         onMouseLeave={e => (e.currentTarget.style.color = '#fff')}
                                                         title={quiz.title}>
                                                         {quiz.title}
                                                     </CardTitle>
-                                                    <div className="text-sm text-gray-400 font-body line-clamp-2 mt-2 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] flex-1" title={quiz.description}>
+                                                    <div className="text-xs text-gray-400 font-body line-clamp-2 mt-1.5 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] flex-1" title={quiz.description}>
                                                         {quiz.description}
                                                     </div>
                                                 </CardHeader>
 
-                                                <CardFooter className="mt-auto pt-4 border-t border-white/5 flex justify-between items-center text-xs text-gray-400 font-display tracking-wider relative z-20 bg-black/40 backdrop-blur-sm">
+                                                <CardFooter className="mt-auto pt-3 border-t border-white/5 flex justify-between items-center text-[10px] text-gray-400 font-display tracking-wider relative z-20 bg-black/40 backdrop-blur-sm">
                                                     <div className="flex items-center gap-4 drop-shadow-md">
                                                         <div className="flex items-center gap-1.5">
                                                             <HelpCircle size={14} style={{ color: colors.bar }} />
@@ -437,14 +430,14 @@ export default function SelectQuizPage() {
 
                     {/* Pagination */}
                     {totalPages > 1 && (
-                        <div className="flex justify-center mt-12 gap-2">
+                        <div className="flex justify-center mt-6 mb-2 gap-2 flex-shrink-0">
                             <Button variant="outline" onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                                 disabled={currentPage === 1 || isFetching || creating || isReturning}
-                                className="h-10 px-4 bg-white/[0.03] border border-[#2d6af2]/30 text-white font-display text-xs disabled:opacity-30 hover:bg-[#2d6af2]/20 hover:border-[#00ff9d] transition-all uppercase tracking-wider">Prev</Button>
-                            <div className="flex items-center px-4 bg-[#2d6af2]/15 border border-[#2d6af2]/30 rounded-md text-[#00ff9d] font-display text-xs">PAGE {currentPage} / {totalPages}</div>
+                                className="h-8 px-3 bg-white/[0.03] border border-[#2d6af2]/30 text-white font-display text-[10px] disabled:opacity-30 hover:bg-[#2d6af2]/20 hover:border-[#00ff9d] transition-all uppercase tracking-wider">Prev</Button>
+                            <div className="flex items-center px-3 bg-[#2d6af2]/15 border border-[#2d6af2]/30 rounded-md text-[#00ff9d] font-display text-[10px]">PAGE {currentPage} / {totalPages}</div>
                             <Button variant="outline" onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                                 disabled={currentPage === totalPages || isFetching || creating || isReturning}
-                                className="h-10 px-4 bg-white/[0.03] border border-[#2d6af2]/30 text-white font-display text-xs disabled:opacity-30 hover:bg-[#2d6af2]/20 hover:border-[#00ff9d] transition-all uppercase tracking-wider">Next</Button>
+                                className="h-8 px-3 bg-white/[0.03] border border-[#2d6af2]/30 text-white font-display text-[10px] disabled:opacity-30 hover:bg-[#2d6af2]/20 hover:border-[#00ff9d] transition-all uppercase tracking-wider">Next</Button>
                         </div>
                     )}
                 </div>
