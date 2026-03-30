@@ -6,6 +6,7 @@ import { getUser } from '@/lib/storage';
 import { supabase } from '@/lib/supabase';
 import { Loader2, Zap, Users, LogOut, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from "react-i18next";
 
 export const PLAYER_CHARACTERS = [
     {
@@ -32,6 +33,7 @@ export const PLAYER_CHARACTERS = [
 export default function PlayerWaitingPage() {
     const router = useRouter();
     const params = useParams();
+    const { t } = useTranslation();
     const roomCode = params.roomCode as string;
 
     const [status, setStatus] = useState<"loading" | "waiting" | "countdown" | "go" | "error">("loading");
@@ -174,10 +176,10 @@ export default function PlayerWaitingPage() {
     }, [status, countdownValue, router]);
 
     const getCountdownLabel = (val: number) => {
-        if (val === 3) return "READY"; 
-        if (val === 2) return "STEADY"; 
-        if (val === 1) return "GO RACE"; 
-        return "GO!";
+        if (val === 3) return t("player_waiting.ready"); 
+        if (val === 2) return t("player_waiting.steady"); 
+        if (val === 1) return t("player_waiting.go_race"); 
+        return t("player_waiting.go");
     };
     const getCountdownColor = (val: number) => {
         if (val === 3) return "text-red-500"; 
@@ -214,7 +216,7 @@ export default function PlayerWaitingPage() {
                 {status === "loading" && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center">
                         <Loader2 className="w-16 h-16 text-[#00ff9d] animate-spin mb-6" />
-                        <h2 className="font-display text-2xl tracking-widest text-[#00ff9d] uppercase glow-text">CONNECTING...</h2>
+                        <h2 className="font-display text-2xl tracking-widest text-[#00ff9d] uppercase glow-text">{t("player_waiting.connecting")}</h2>
                     </motion.div>
                 )}
 
@@ -222,10 +224,10 @@ export default function PlayerWaitingPage() {
                 {status === "error" && (
                     <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="bg-red-500/10 border border-red-500/50 p-6 rounded-2xl backdrop-blur-md">
                         <Zap className="w-12 h-12 text-red-500 mx-auto mb-4" />
-                        <h2 className="font-display text-xl text-red-400 mb-2 uppercase tracking-widest">CONNECTION LOST</h2>
+                        <h2 className="font-display text-xl text-red-400 mb-2 uppercase tracking-widest">{t("player_waiting.connection_lost")}</h2>
                         <p className="text-gray-400 text-sm font-mono">{errorMessage}</p>
                         <button onClick={() => router.push('/')} className="mt-6 px-6 py-2 bg-red-500/20 hover:bg-red-500 text-white rounded-xl transition-colors font-display text-xs uppercase tracking-wider">
-                            Back to Home
+                            {t("player_waiting.back_home")}
                         </button>
                     </motion.div>
                 )}
@@ -248,7 +250,7 @@ export default function PlayerWaitingPage() {
                                         </div>
                                     </div>
                                     <div className="relative mx-auto" style={{ width: '200px' }}>
-                                        <div className="absolute -top-3 right-0 z-10 bg-[#00ff9d] text-black text-xs font-display font-black px-3 py-1 rounded-md tracking-widest shadow-[0_0_15px_rgba(0,255,157,0.5)]">YOU</div>
+                                        <div className="absolute -top-3 right-0 z-10 bg-[#00ff9d] text-black text-xs font-display font-black px-3 py-1 rounded-md tracking-widest shadow-[0_0_15px_rgba(0,255,157,0.5)]">{t("player_waiting.you")}</div>
                                         <div className="bg-[#080e1a] border border-[#00ff9d]/40 rounded-2xl p-4 flex flex-col items-center" style={{ minHeight: '220px' }}>
                                             <div className="flex-1 flex items-center justify-center w-full py-6">
                                                 <img src={assignedChar.imageSrc} alt="Your Car" className="w-[130px] object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.6)]" />
@@ -260,7 +262,7 @@ export default function PlayerWaitingPage() {
                                         <motion.div className="h-full bg-gradient-to-r from-[#2d6af2] to-[#00ff9d]"
                                             animate={{ x: ['-100%', '100%'] }} transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }} />
                                     </div>
-                                    <p className="font-display text-[#00ff9d]/60 text-[10px] uppercase tracking-[0.2em] mt-2 animate-pulse">Waiting for host to start...</p>
+                                    <p className="font-display text-[#00ff9d]/60 text-[10px] uppercase tracking-[0.2em] mt-2 animate-pulse">{t("player_waiting.waiting_host")}</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-3 px-5 pb-10 pt-4 flex-shrink-0">
@@ -268,7 +270,7 @@ export default function PlayerWaitingPage() {
                                     <LogOut className="w-5 h-5" />
                                 </button>
                                 <button onClick={() => setIsSelectingCharacter(true)} className="flex-1 h-14 flex items-center justify-center rounded-full border border-[#00ff9d]/60 text-[#00ff9d] font-display text-sm uppercase tracking-widest hover:bg-[#00ff9d]/10 active:scale-95 transition-all shadow-[0_0_20px_rgba(0,255,157,0.1)]">
-                                    CHOOSE CHARACTER
+                                    {t("player_waiting.choose_character")}
                                 </button>
                             </div>
                         </motion.div>
@@ -301,7 +303,7 @@ export default function PlayerWaitingPage() {
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <span className="font-display text-[11px] text-gray-300 uppercase tracking-[0.22em]">
-                                        WAITING FOR HOST TO START THE RACE...
+                                        {t("player_waiting.waiting_host_desktop")}
                                     </span>
                                     <Loader2 className="w-3.5 h-3.5 text-gray-500 animate-spin" />
                                 </div>
@@ -332,10 +334,10 @@ export default function PlayerWaitingPage() {
                                         </div>
                                         <div className="flex flex-col text-left">
                                             <span className="font-display text-white text-sm font-bold tracking-widest">
-                                                PLAYER ({participantCount})
+                                                {t("player_waiting.player", { count: participantCount })}
                                             </span>
                                             <span className="font-display text-blue-300 text-[9px] uppercase tracking-[0.2em] opacity-80">
-                                                Connected Participants & Vehicles
+                                                {t("player_waiting.connected_info")}
                                             </span>
                                         </div>
                                     </div>
@@ -354,7 +356,7 @@ export default function PlayerWaitingPage() {
                                             {/* YOU badge */}
                                             <div className="absolute top-2 right-2 z-10 font-display font-black text-[10px] tracking-widest px-2 py-0.5 rounded"
                                                 style={{ background: '#00d4ff', color: '#000' }}>
-                                                YOU
+                                                {t("player_waiting.you")}
                                             </div>
                                             {/* Car image */}
                                             <div className="flex items-center justify-center px-6 py-5"
@@ -409,7 +411,7 @@ export default function PlayerWaitingPage() {
                                             </div>
                                             <div className="text-center pb-3 px-3">
                                                 <p className="text-[10px] uppercase tracking-widest font-mono" style={{ color: 'rgba(120,140,180,0.45)' }}>
-                                                    WAITING FOR PLAYER...
+                                                    {t("player_waiting.waiting_player")}
                                                 </p>
                                             </div>
                                         </div>
@@ -421,7 +423,7 @@ export default function PlayerWaitingPage() {
                             {isSelectingCharacter ? (
                                 <div className="absolute z-10 flex flex-col items-center justify-center right-0 md:left-[340px] lg:left-[500px] xl:left-[700px]" style={{ top: '60px', bottom: '64px', right: '20px' }}>
                                     <h2 className="font-display text-2xl font-black text-white uppercase tracking-wider mb-8 drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
-                                        CHOOSE YOUR RACER
+                                        {t("player_waiting.choose_racer")}
                                     </h2>
                                     <div className="flex items-center gap-6 w-full justify-center px-4 overflow-hidden relative">
                                         {/* Left Arrow */}
@@ -451,39 +453,7 @@ export default function PlayerWaitingPage() {
                                                             {c.name}
                                                         </h3>
                                                         
-                                                        {/* Stats Grid */}
-                                                        <div className="w-full grid grid-cols-3 gap-3 border-t border-[#2d4060]/50 pt-4 mt-4">
-                                                            {/* SPEED */}
-                                                            <div className="flex flex-col gap-2">
-                                                                <div className="flex items-center text-[8px] text-[#8899bb] tracking-widest font-mono">
-                                                                    <svg className="w-2.5 h-2.5 mr-0.5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                                                                    SPEED
-                                                                </div>
-                                                                <div className="w-full h-1 bg-[#0c1220] rounded-full overflow-hidden">
-                                                                    <div className="h-full bg-[#3b82f6]" style={{ width: `${c.stats.speed}%`}}></div>
-                                                                </div>
-                                                            </div>
-                                                            {/* ACCEL */}
-                                                            <div className="flex flex-col gap-2">
-                                                                <div className="flex items-center text-[8px] text-[#8899bb] tracking-widest font-mono">
-                                                                    <svg className="w-2.5 h-2.5 mr-0.5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                                                                    ACCEL
-                                                                </div>
-                                                                <div className="w-full h-1 bg-[#0c1220] rounded-full overflow-hidden">
-                                                                    <div className="h-full bg-[#10b981]" style={{ width: `${c.stats.accel}%`}}></div>
-                                                                </div>
-                                                            </div>
-                                                            {/* HANDLING */}
-                                                            <div className="flex flex-col gap-2">
-                                                                <div className="flex items-center text-[8px] text-[#8899bb] tracking-widest font-mono">
-                                                                    <svg className="w-2.5 h-2.5 mr-0.5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                                                                    HANDLING
-                                                                </div>
-                                                                <div className="w-full h-1 bg-[#0c1220] rounded-full overflow-hidden">
-                                                                    <div className="h-full bg-[#00d4ff]" style={{ width: `${c.stats.handling}%`}}></div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+
                                                     </div>
                                                 );
                                             })}
@@ -499,11 +469,11 @@ export default function PlayerWaitingPage() {
                                     <div className="flex gap-6 mt-8">
                                         <button onClick={() => { setIsSelectingCharacter(false); setPendingCharacterId(assignedCarId); }} 
                                             className="w-[160px] py-3.5 rounded-full font-display text-[14px] font-bold uppercase tracking-widest text-white bg-[#22b7ca] hover:bg-[#1fa1b2] transition-colors shadow-[0_4px_15px_rgba(34,183,202,0.4)]">
-                                            BACK
+                                            {t("player_waiting.back")}
                                         </button>
                                         <button onClick={handleSelectCharacter} 
                                             className="w-[160px] py-3.5 rounded-full font-display text-[14px] font-bold uppercase tracking-widest text-white bg-[#22b7ca] hover:bg-[#1fa1b2] transition-colors shadow-[0_4px_15px_rgba(34,183,202,0.4)]">
-                                            SELECT
+                                            {t("player_waiting.select")}
                                         </button>
                                     </div>
                                 </div>
@@ -540,7 +510,7 @@ export default function PlayerWaitingPage() {
                                                 boxShadow: '0 0 22px rgba(15,168,196,0.4)',
                                                 border: '1px solid rgba(0,255,255,0.2)',
                                             }}>
-                                            CHOOSE CHARACTER
+                                            {t("player_waiting.choose_character")}
                                         </button>
                                     </div>
                                 </>
@@ -592,7 +562,7 @@ export default function PlayerWaitingPage() {
                         <span key={countdownValue}
                             className={`font-display text-[120px] md:text-[160px] font-black leading-none tracking-tighter ${getCountdownColor(countdownValue)} drop-shadow-[0_0_40px_currentColor]`}
                             style={{ animation: 'countdown-pop 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)', willChange: 'transform, opacity', display: 'block' }}>
-                            {countdownValue > 0 ? countdownValue : "GO!"}
+                            {countdownValue > 0 ? countdownValue : t("player_waiting.go")}
                         </span>
                         <p className="font-display text-lg tracking-[0.3em] uppercase text-gray-400 mt-6" style={{ animation: 'fadeInUp 0.3s ease-out' }}>
                             {getCountdownLabel(countdownValue)}
@@ -612,9 +582,9 @@ export default function PlayerWaitingPage() {
                     <motion.div initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center">
                         <motion.h1 animate={{ scale: [1, 1.1, 1] }} transition={{ repeat: Infinity, duration: 0.5 }}
                             className="font-display text-[100px] md:text-[140px] text-transparent bg-clip-text bg-gradient-to-b from-[#00ff9d] to-[#2d6af2] uppercase tracking-tighter leading-none font-black drop-shadow-[0_0_50px_rgba(0,255,157,0.6)]">
-                            GO!
+                            {t("player_waiting.go")}
                         </motion.h1>
-                        <p className="font-display text-[#00ff9d] text-sm uppercase tracking-[0.3em] mt-4 animate-pulse">LAUNCHING RACE...</p>
+                        <p className="font-display text-[#00ff9d] text-sm uppercase tracking-[0.3em] mt-4 animate-pulse">{t("player_waiting.launching")}</p>
                     </motion.div>
                 )}
             </div>

@@ -13,6 +13,7 @@ import { supabaseCentral } from "@/lib/supabase";
 import { Logo } from "@/components/ui/logo";
 import Image from "next/image";
 import { getUser } from "@/lib/storage";
+import { useTranslation } from "react-i18next";
 
 interface QuizView {
     id: string;
@@ -77,6 +78,7 @@ const getCategoryColor = (category: string) => {
 
 export default function SelectQuizPage() {
     const router = useRouter();
+    const { t, i18n } = useTranslation();
     const [searchQuery, setSearchQuery] = useState("");
     const [searchInput, setSearchInput] = useState("");
     const [selectedCategory, setSelectedCategory] = useState<string>("All");
@@ -186,7 +188,13 @@ export default function SelectQuizPage() {
     }, [allItems]);
 
     const getCategoryDisplayName = (cat: string): string => {
-        if (cat === 'All') return 'ALL CATEGORIES';
+        if (cat === 'All') return t('select_quiz.all_categories');
+        
+        const key = cat.toLowerCase().trim();
+        if (i18n.exists(`categories.${key}`)) {
+            return t(`categories.${key}`);
+        }
+
         // Auto-format the string (e.g. "bahasa-inggris" -> "Bahasa Inggris")
         return cat.split(/[-_\s]+/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
     };
@@ -238,7 +246,7 @@ export default function SelectQuizPage() {
                             <div className="flex-1">
                                 <div className="relative group/search">
                                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5 group-focus-within/search:text-[#00ff9d] transition-colors" />
-                                    <Input type="text" placeholder="Search quiz title..." value={searchInput}
+                                    <Input type="text" placeholder={t('select_quiz.search_placeholder')} value={searchInput}
                                         onChange={(e) => { setSearchInput(e.target.value); setSearchQuery(e.target.value); setCurrentPage(1); }}
                                         className="w-full bg-white/[0.03] border border-white/[0.07] pl-11 h-12 text-white font-display uppercase tracking-widest placeholder:text-gray-600 rounded-xl focus-visible:ring-1 focus-visible:ring-[#00ff9d]/50 focus-visible:border-[#00ff9d]/50 focus-visible:bg-white/[0.05] transition-all" />
                                     {searchInput && (
@@ -249,7 +257,7 @@ export default function SelectQuizPage() {
                             </div>
                             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
                                 <SelectTrigger className="w-full sm:w-52 h-12 bg-white/[0.03] border border-white/[0.07] text-white focus:border-[#00ff9d]/50 focus:ring-1 focus:ring-[#00ff9d]/50 rounded-xl font-display text-xs tracking-wider uppercase">
-                                    <SelectValue placeholder="CATEGORY" />
+                                    <SelectValue placeholder={t('select_quiz.category_placeholder')} />
                                 </SelectTrigger>
                                 <SelectContent className="bg-[#04060f] border border-[#2d6af2]/30 text-white font-display text-xs uppercase tracking-wider backdrop-blur-3xl">
                                     {categories.map((cat) => (
@@ -263,19 +271,19 @@ export default function SelectQuizPage() {
                         <div className="flex items-center justify-center gap-2">
                             <button onClick={() => setActiveTab('all')}
                                 className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-display text-xs tracking-wider uppercase transition-all duration-200 ${activeTab === 'all' ? 'bg-[#2d6af2] text-white shadow-[0_0_15px_rgba(45,106,242,0.5)]' : 'bg-white/[0.03] border border-white/[0.07] text-gray-400 hover:text-white hover:border-[#00ff9d]/50'}`}>
-                                <Search size={14} />Quizzes
+                                <Search size={14} />{t('select_quiz.tabs.quizzes')}
                             </button>
                             <button onClick={() => setActiveTab('favorites')}
                                 className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-display text-xs tracking-wider uppercase transition-all duration-200 ${activeTab === 'favorites' ? 'bg-gradient-to-r from-pink-600 to-red-500 text-white shadow-[0_0_15px_rgba(236,72,153,0.4)]' : 'bg-black/40 border border-pink-500/20 text-gray-400 hover:text-pink-400 hover:border-pink-500/50'}`}>
                                 <Heart size={14} className={activeTab === 'favorites' ? 'fill-white' : ''} />
-                                Favorites
+                                {t('select_quiz.tabs.favorites')}
                                 {favorites.length > 0 && (
                                     <span className={`ml-1 px-1.5 py-0.5 rounded-full text-[10px] font-bold ${activeTab === 'favorites' ? 'bg-white/20' : 'bg-pink-500/20 text-pink-400'}`}>{favorites.length}</span>
                                 )}
                             </button>
                             <button onClick={() => setActiveTab('myquiz')}
                                 className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-display text-xs tracking-wider uppercase transition-all duration-200 ${activeTab === 'myquiz' ? 'bg-gradient-to-r from-[#00ff9d] to-[#04060f] text-white font-bold shadow-[0_0_15px_rgba(0,255,157,0.5)]' : 'bg-white/[0.03] border border-white/[0.07] text-gray-400 hover:text-[#00ff9d] hover:border-[#00ff9d]/50'}`}>
-                                <FileText size={14} />My Quiz
+                                <FileText size={14} />{t('select_quiz.tabs.my_quiz')}
                             </button>
                         </div>
                         </div>
@@ -395,7 +403,7 @@ export default function SelectQuizPage() {
                                                         onMouseEnter={e => (e.currentTarget.style.boxShadow = `0 0 22px ${colors.badgeBorder}`)}
                                                         onMouseLeave={e => (e.currentTarget.style.boxShadow = `0 0 12px ${colors.badge}`)}>
                                                         <Play size={12} className="fill-white" />
-                                                        Start
+                                                        {t('select_quiz.start_button')}
                                                     </button>
                                                 </CardFooter>
                                             </Card>
@@ -409,26 +417,26 @@ export default function SelectQuizPage() {
                                 {activeTab === 'favorites' ? (
                                     <>
                                         <Heart className="h-16 w-16 mx-auto text-pink-500/20 mb-4" />
-                                        <h3 className="text-xl text-white font-display uppercase tracking-widest mb-2">No Favorites Yet</h3>
-                                        <p className="text-pink-400/40 text-sm mb-6">Tap the heart icon on any quiz to save it here</p>
-                                        <Button variant="outline" onClick={() => setActiveTab('all')} className="bg-pink-500/10 border border-pink-500/50 text-pink-400 hover:bg-pink-500 hover:text-white transition-all font-display text-xs uppercase tracking-wider">Browse Quizzes</Button>
+                                        <h3 className="text-xl text-white font-display uppercase tracking-widest mb-2">{t('select_quiz.empty_states.favorites_title')}</h3>
+                                        <p className="text-pink-400/40 text-sm mb-6">{t('select_quiz.empty_states.favorites_desc')}</p>
+                                        <Button variant="outline" onClick={() => setActiveTab('all')} className="bg-pink-500/10 border border-pink-500/50 text-pink-400 hover:bg-pink-500 hover:text-white transition-all font-display text-xs uppercase tracking-wider">{t('select_quiz.empty_states.browse_quizzes')}</Button>
                                     </>
                                 ) : activeTab === 'myquiz' ? (
                                     <>
                                         <FileText className="h-16 w-16 mx-auto text-[#00ff9d]/20 mb-4" />
-                                        <h3 className="text-xl text-white font-display uppercase tracking-widest mb-2">No Quizzes Created</h3>
-                                        <p className="text-[#00ff9d]/40 text-sm mb-6">Quizzes you create will appear here. Refresh if you just created one.</p>
+                                        <h3 className="text-xl text-white font-display uppercase tracking-widest mb-2">{t('select_quiz.empty_states.myquiz_title')}</h3>
+                                        <p className="text-[#00ff9d]/40 text-sm mb-6">{t('select_quiz.empty_states.myquiz_desc')}</p>
                                         <div className="flex justify-center gap-4">
-                                            <Button variant="outline" onClick={fetchQuizzes} className="bg-white/[0.03] border border-[#00ff9d]/50 text-[#00ff9d] hover:bg-[#00ff9d]/20 transition-all font-display text-xs uppercase tracking-wider"><RefreshCw className="w-4 h-4 mr-2" />Refresh</Button>
-                                            <Button variant="outline" onClick={() => setActiveTab('all')} className="bg-[#00ff9d]/10 border border-[#00ff9d]/50 text-[#00ff9d] hover:bg-[#00ff9d] hover:text-[#04060f] transition-all font-display text-xs uppercase tracking-wider">Browse All</Button>
+                                            <Button variant="outline" onClick={fetchQuizzes} className="bg-white/[0.03] border border-[#00ff9d]/50 text-[#00ff9d] hover:bg-[#00ff9d]/20 transition-all font-display text-xs uppercase tracking-wider"><RefreshCw className="w-4 h-4 mr-2" />{t('select_quiz.empty_states.refresh')}</Button>
+                                            <Button variant="outline" onClick={() => setActiveTab('all')} className="bg-[#00ff9d]/10 border border-[#00ff9d]/50 text-[#00ff9d] hover:bg-[#00ff9d] hover:text-[#04060f] transition-all font-display text-xs uppercase tracking-wider">{t('select_quiz.empty_states.browse_all')}</Button>
                                         </div>
                                     </>
                                 ) : (
                                     <>
                                         <Search className="h-16 w-16 mx-auto text-[#2d6af2]/20 mb-4" />
-                                        <h3 className="text-xl text-white font-display uppercase tracking-widest mb-2">No Quizzes Found</h3>
-                                        <p className="text-[#2d6af2]/40 text-sm mb-6">Try adjusting your filters or search terms</p>
-                                        <Button variant="outline" onClick={() => { setSearchQuery(""); setSearchInput(""); setSelectedCategory("All"); }} className="bg-[#2d6af2]/10 border border-[#2d6af2]/50 text-[#2d6af2] hover:bg-[#2d6af2] hover:text-white transition-all font-display text-xs uppercase tracking-wider">Reset Filters</Button>
+                                        <h3 className="text-xl text-white font-display uppercase tracking-widest mb-2">{t('select_quiz.empty_states.search_title')}</h3>
+                                        <p className="text-[#2d6af2]/40 text-sm mb-6">{t('select_quiz.empty_states.search_desc')}</p>
+                                        <Button variant="outline" onClick={() => { setSearchQuery(""); setSearchInput(""); setSelectedCategory("All"); }} className="bg-[#2d6af2]/10 border border-[#2d6af2]/50 text-[#2d6af2] hover:bg-[#2d6af2] hover:text-white transition-all font-display text-xs uppercase tracking-wider">{t('select_quiz.empty_states.reset_filters')}</Button>
                                     </>
                                 )}
                             </motion.div>
@@ -440,11 +448,11 @@ export default function SelectQuizPage() {
                         <div className="flex justify-center mt-12 gap-2">
                             <Button variant="outline" onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                                 disabled={currentPage === 1 || isFetching || creating || isReturning}
-                                className="h-10 px-4 bg-white/[0.03] border border-[#2d6af2]/30 text-white font-display text-xs disabled:opacity-30 hover:bg-[#2d6af2]/20 hover:border-[#00ff9d] transition-all uppercase tracking-wider">Prev</Button>
-                            <div className="flex items-center px-4 bg-[#2d6af2]/15 border border-[#2d6af2]/30 rounded-md text-[#00ff9d] font-display text-xs">PAGE {currentPage} / {totalPages}</div>
+                                className="h-10 px-4 bg-white/[0.03] border border-[#2d6af2]/30 text-white font-display text-xs disabled:opacity-30 hover:bg-[#2d6af2]/20 hover:border-[#00ff9d] transition-all uppercase tracking-wider">{t('select_quiz.pagination.prev')}</Button>
+                            <div className="flex items-center px-4 bg-[#2d6af2]/15 border border-[#2d6af2]/30 rounded-md text-[#00ff9d] font-display text-xs">{t('select_quiz.pagination.page')} {currentPage} / {totalPages}</div>
                             <Button variant="outline" onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                                 disabled={currentPage === totalPages || isFetching || creating || isReturning}
-                                className="h-10 px-4 bg-white/[0.03] border border-[#2d6af2]/30 text-white font-display text-xs disabled:opacity-30 hover:bg-[#2d6af2]/20 hover:border-[#00ff9d] transition-all uppercase tracking-wider">Next</Button>
+                                className="h-10 px-4 bg-white/[0.03] border border-[#2d6af2]/30 text-white font-display text-xs disabled:opacity-30 hover:bg-[#2d6af2]/20 hover:border-[#00ff9d] transition-all uppercase tracking-wider">{t('select_quiz.pagination.next')}</Button>
                         </div>
                     )}
                 </div>

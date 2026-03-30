@@ -67,5 +67,176 @@
       "link": "Daftar"
     },
     "footer": "© 2026 NitroQuiz — Semua Mesin Menyala"
+  },
+  "select_quiz": {
+    "search_placeholder": "Cari judul kuis...",
+    "category_placeholder": "KATEGORI",
+    "all_categories": "SEMUA KATEGORI",
+    "tabs": {
+      "quizzes": "Kuis",
+      "favorites": "Favorit",
+      "my_quiz": "Kuisku"
+    },
+    "start_button": "Mulai",
+    "empty_states": {
+      "favorites_title": "Belum Ada Favorit",
+      "favorites_desc": "Ketuk ikon hati pada kuis untuk menyimpannya di sini",
+      "browse_quizzes": "Cari Kuis",
+      "myquiz_title": "Belum Ada Kuis Dibuat",
+      "myquiz_desc": "Kuis yang kamu buat akan muncul di sini. Segarkan jika baru saja membuat.",
+      "refresh": "Segarkan",
+      "browse_all": "Lihat Semua",
+      "search_title": "Kuis Tidak Ditemukan",
+      "search_desc": "Coba sesuaikan kata kunci atau filternya",
+      "reset_filters": "Hapus Filter"
+    },
+    "pagination": {
+      "prev": "Sblm",
+      "next": "Lnjt",
+      "page": "HAL"
+    }
+  },
+  "categories": {
+    "general": "Umum",
+    "umum": "Umum",
+    "math": "Matematika",
+    "matematika": "Matematika",
+    "history": "Sejarah",
+    "sejarah": "Sejarah",
+    "science": "IPA",
+    "ipa": "IPA",
+    "geography": "Geografi",
+    "ips": "IPS",
+    "language": "Bahasa",
+    "bahasa": "Bahasa",
+    "sport": "Olahraga",
+    "olahraga": "Olahraga",
+    "sports": "Olahraga",
+    "technology": "Teknologi",
+    "teknologi": "Teknologi",
+    "art": "Seni",
+    "music": "Musik",
+    "business": "Bisnis",
+    "bisnis": "Bisnis"
+  },
+  "room_settings": {
+    "loading": "Memantapkan Sinyal...",
+    "duration": "Durasi",
+    "min": "Mnt",
+    "questions": "Soal",
+    "sound": "Suara",
+    "difficulty": {
+      "title": "Kesulitan",
+      "easy": "Mudah",
+      "normal": "Sedang",
+      "hard": "Sulit"
+    },
+    "button": {
+      "loading": "Memuat...",
+      "continue": "Lanjutkan"
+    },
+    "delete_dialog": {
+      "title": "Hapus Sesi?",
+      "description": "Ini akan menghapus sesi ini secara permanen.",
+      "cancel": "Batal",
+      "deleting": "MENGHAPUS...",
+      "delete": "HAPUS"
+    }
+  },
+  "host_lobby": {
+    "loading": "Memantapkan Sinyal...",
+    "start": "MULAI",
+    "starting": "MEMULAI...",
+    "exit": "Keluar",
+    "invite": "Undang",
+    "players_count": "Pemain: {{count}}",
+    "bot": "Bot",
+    "deselect": "Batal Pilih",
+    "all": "Semua",
+    "waiting": "MENUNGGU PEMAIN...",
+    "kick": "KICK",
+    "players": "PEMAIN",
+    "cancel": "Batal",
+    "kick_button": "Kick",
+    "invite_title": "UNDANG PEMBALAP",
+    "invite_desc": "Bagikan ruangan ini via platform sosial",
+    "copied": "Disalin",
+    "copy": "Salin",
+    "share_text1": "Ayo balap kuis bareng di NitroQuiz! Join room: ",
+    "share_text2": "Ayo balap kuis bareng di NitroQuiz! Join room {{code}} sekarang: ",
+    "share_text3": "Ayo balap kuis bareng di NitroQuiz!"
+  },
+  "host_monitor": {
+    "new": "BARU",
+    "racing": "BALAPAN",
+    "finish": "SELESAI",
+    "crashed": "HANCUR",
+    "quiz": "KUIS",
+    "lap": "PUTARAN",
+    "score": "SKOR",
+    "ending": "MENGAKHIRI...",
+    "end_race": "AKHIRI BALAPAN",
+    "leaderboard": "PAPAN PERINGKAT",
+    "waiting": "Menunggu Pembalap..."
+  },
+  "host_leaderboard": {
+    "loading": "Memantapkan Sinyal...",
+    "home_tooltip": "Beranda",
+    "play_again_tooltip": "Main Lagi",
+    "stats_tooltip": "Statistik",
+    "rank": "PERINGKAT",
+    "player": "PEMAIN",
+    "score": "SKOR",
+    "time": "WAKTU"
+  },
+  "player_waiting": {
+    "connecting": "MENYAMBUNGKAN...",
+    "connection_lost": "KONEKSI TERPUTUS",
+    "back_home": "Kembali ke Beranda",
+    "you": "KAMU",
+    "waiting_host": "Menunggu host memulai permainan...",
+    "choose_character": "PILIH KARAKTER",
+    "waiting_host_desktop": "MENUNGGU HOST MEMULAI BALAPAN...",
+    "player": "PEMBALAP ({{count}})",
+    "connected_info": "Partisipan Terhubung & Kendaraan",
+    "waiting_player": "MENUNGGU PEMAIN...",
+    "choose_racer": "PILIH PEMBALAPMU",
+    "speed": "KECEPATAN",
+    "accel": "AKSELERASI",
+    "handling": "PENGENDALIAN",
+    "back": "KEMBALI",
+    "select": "PILIH",
+    "ready": "SEDIA",
+    "steady": "SIAP",
+    "go_race": "BALAP",
+    "go": "GAS!",
+    "launching": "MELUNCURKAN BALAPAN..."
+  },
+  "player_quiz": {
+    "round_complete": "RONDE SELESAI!",
+    "quiz_finished": "KUIS SELESAI!",
+    "establishing_signal": "MEMANTAPKAN SINYAL...",
+    "question": "Pertanyaan {{current}}",
+    "score": "Skor:"
+  },
+  "player_result": {
+    "establishing_signal": "Memantapkan Sinyal...",
+    "waiting_others": "Menunggu pemain lain...",
+    "rank": "PERINGKAT",
+    "score": "SKOR",
+    "correct": "BENAR",
+    "time": "WAKTU",
+    "home": "BERANDA",
+    "stats": "STATISTIK",
+    "leaderboard": "Papan Peringkat",
+    "you": " (KAMU)",
+    "race_complete": "BALAPAN SELESAI",
+    "racer_profile": "PROFIL PEMBALAP",
+    "player_fallback": "PEMAIN",
+    "eliminated": "TERELIMINASI",
+    "waiting": "MENUNGGU",
+    "champion": "🏆 JUARA",
+    "finished": "SELESAI",
+    "wait_for_host": "MENUNGGU HOST"
   }
 }

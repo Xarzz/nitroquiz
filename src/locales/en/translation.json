@@ -67,5 +67,176 @@
       "link": "Register"
     },
     "footer": "© 2026 NitroQuiz — All Engines On"
+  },
+  "select_quiz": {
+    "search_placeholder": "Search quiz title...",
+    "category_placeholder": "CATEGORY",
+    "all_categories": "ALL CATEGORIES",
+    "tabs": {
+      "quizzes": "Quizzes",
+      "favorites": "Favorites",
+      "my_quiz": "My Quiz"
+    },
+    "start_button": "Start",
+    "empty_states": {
+      "favorites_title": "No Favorites Yet",
+      "favorites_desc": "Tap the heart icon on any quiz to save it here",
+      "browse_quizzes": "Browse Quizzes",
+      "myquiz_title": "No Quizzes Created",
+      "myquiz_desc": "Quizzes you create will appear here. Refresh if you just created one.",
+      "refresh": "Refresh",
+      "browse_all": "Browse All",
+      "search_title": "No Quizzes Found",
+      "search_desc": "Try adjusting your filters or search terms",
+      "reset_filters": "Reset Filters"
+    },
+    "pagination": {
+      "prev": "Prev",
+      "next": "Next",
+      "page": "PAGE"
+    }
+  },
+  "categories": {
+    "general": "General",
+    "umum": "General",
+    "math": "Mathematics",
+    "matematika": "Mathematics",
+    "history": "History",
+    "sejarah": "History",
+    "science": "Science",
+    "ipa": "Science",
+    "geography": "Geography",
+    "ips": "Social Science",
+    "language": "Language",
+    "bahasa": "Language",
+    "sport": "Sport",
+    "olahraga": "Sports",
+    "sports": "Sports",
+    "technology": "Technology",
+    "teknologi": "Technology",
+    "art": "Art",
+    "music": "Music",
+    "business": "Business",
+    "bisnis": "Business"
+  },
+  "room_settings": {
+    "loading": "Establishing Signal...",
+    "duration": "Duration",
+    "min": "Min",
+    "questions": "Questions",
+    "sound": "Sound",
+    "difficulty": {
+      "title": "Difficulty",
+      "easy": "Easy",
+      "normal": "Normal",
+      "hard": "Hard"
+    },
+    "button": {
+      "loading": "Loading...",
+      "continue": "Continue"
+    },
+    "delete_dialog": {
+      "title": "Delete Session?",
+      "description": "This will permanently delete this session.",
+      "cancel": "Cancel",
+      "deleting": "DELETING...",
+      "delete": "DELETE"
+    }
+  },
+  "host_lobby": {
+    "loading": "Establishing Signal...",
+    "start": "START",
+    "starting": "STARTING...",
+    "exit": "Exit",
+    "invite": "Invite",
+    "players_count": "Players: {{count}}",
+    "bot": "Bot",
+    "deselect": "Deselect",
+    "all": "All",
+    "waiting": "WAITING FOR PLAYERS...",
+    "kick": "KICK",
+    "players": "PLAYERS",
+    "cancel": "Cancel",
+    "kick_button": "Kick",
+    "invite_title": "INVITE RACERS",
+    "invite_desc": "Share this room via social platforms",
+    "copied": "Copied",
+    "copy": "Copy",
+    "share_text1": "Let's race quizzes together on NitroQuiz! Join room: ",
+    "share_text2": "Let's race quizzes together on NitroQuiz! Join room {{code}} now: ",
+    "share_text3": "Let's race quizzes together on NitroQuiz!"
+  },
+  "host_monitor": {
+    "new": "NEW",
+    "racing": "RACING",
+    "finish": "FINISH",
+    "crashed": "CRASHED",
+    "quiz": "QUIZ",
+    "lap": "LAP",
+    "score": "SCORE",
+    "ending": "ENDING...",
+    "end_race": "END RACE",
+    "leaderboard": "LEADERBOARD",
+    "waiting": "Waiting for Grid..."
+  },
+  "host_leaderboard": {
+    "loading": "Establishing Signal...",
+    "home_tooltip": "Home",
+    "play_again_tooltip": "Play Again",
+    "stats_tooltip": "Statistics",
+    "rank": "RANK",
+    "player": "PLAYER",
+    "score": "SCORE",
+    "time": "TIME"
+  },
+  "player_waiting": {
+    "connecting": "CONNECTING...",
+    "connection_lost": "CONNECTION LOST",
+    "back_home": "Back to Home",
+    "you": "YOU",
+    "waiting_host": "Waiting for host to start...",
+    "choose_character": "CHOOSE CHARACTER",
+    "waiting_host_desktop": "WAITING FOR HOST TO START THE RACE...",
+    "player": "PLAYER ({{count}})",
+    "connected_info": "Connected Participants & Vehicles",
+    "waiting_player": "WAITING FOR PLAYER...",
+    "choose_racer": "CHOOSE YOUR RACER",
+    "speed": "SPEED",
+    "accel": "ACCEL",
+    "handling": "HANDLING",
+    "back": "BACK",
+    "select": "SELECT",
+    "ready": "READY",
+    "steady": "STEADY",
+    "go_race": "GO RACE",
+    "go": "GO!",
+    "launching": "LAUNCHING RACE..."
+  },
+  "player_quiz": {
+    "round_complete": "ROUND COMPLETE!",
+    "quiz_finished": "QUIZ FINISHED!",
+    "establishing_signal": "ESTABLISHING SIGNAL...",
+    "question": "Question {{current}}",
+    "score": "Score:"
+  },
+  "player_result": {
+    "establishing_signal": "Establishing Signal...",
+    "waiting_others": "Waiting for others...",
+    "rank": "RANK",
+    "score": "SCORE",
+    "correct": "CORRECT",
+    "time": "TIME",
+    "home": "HOME",
+    "stats": "STATISTICS",
+    "leaderboard": "Leaderboard",
+    "you": " (YOU)",
+    "race_complete": "RACE COMPLETE",
+    "racer_profile": "RACER PROFILE",
+    "player_fallback": "PLAYER",
+    "eliminated": "ELIMINATED",
+    "waiting": "WAITING",
+    "champion": "🏆 CHAMPION",
+    "finished": "FINISHED",
+    "wait_for_host": "WAIT FOR HOST"
   }
 }

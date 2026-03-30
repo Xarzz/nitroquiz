@@ -14,7 +14,6 @@ import { Logo } from "@/components/ui/logo";
 import { useAuth } from "@/contexts/AuthContext";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
-import Image from "next/image";
 
 const loginSchema = z.object({
   identifier: z.string().min(3, "login.form.identifier_error_min"),

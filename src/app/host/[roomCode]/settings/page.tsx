@@ -15,11 +15,13 @@ import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { supabase, supabaseCentral } from "@/lib/supabase"
 import { Question } from "@/types"
 import { Logo } from "@/components/ui/logo"
+import { useTranslation } from "react-i18next"
 
 const backgroundGif = "/assets/background/2_v2.webp"
 
 export default function SettingsPage() {
     const router = useRouter()
+    const { t } = useTranslation()
     const params = useParams()
     const searchParams = useSearchParams()
 
@@ -170,7 +172,7 @@ export default function SettingsPage() {
             <div className="flex items-center justify-center min-h-screen bg-[#0d1b3e] relative overflow-hidden font-display text-white">
                 <div className="text-center z-10">
                     <div className="w-16 h-16 border-4 border-[#4a3d8f]/30 border-t-[#a98dc5] rounded-full animate-spin mx-auto mb-6"></div>
-                    <p className="mt-4 text-[#a98dc5] text-xl tracking-[0.2em] uppercase animate-pulse">Establishing Signal...</p>
+                    <p className="mt-4 text-[#a98dc5] text-xl tracking-[0.2em] uppercase animate-pulse">{t('room_settings.loading')}</p>
                 </div>
             </div>
         );
@@ -224,7 +226,7 @@ export default function SettingsPage() {
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">                                    {/* Duration */}
                                     <div className="space-y-1.5">
                                         <Label className="text-[10px] font-display uppercase tracking-[0.2em] flex items-center gap-1.5 pl-0.5" style={{ color: '#2d6af2' }}>
-                                            <Clock className="h-3 w-3" /><span>Duration</span>
+                                            <Clock className="h-3 w-3" /><span>{t('room_settings.duration')}</span>
                                         </Label>
                                         <Select value={duration} onValueChange={setDuration}>
                                             <SelectTrigger className="h-10 bg-white/[0.03] border border-[#2d6af2]/30 text-white font-display text-xs uppercase tracking-wider focus:border-[#00ff9d] focus:ring-1 focus:ring-[#00ff9d]/50 rounded-xl transition-all">
@@ -233,7 +235,7 @@ export default function SettingsPage() {
                                             <SelectContent className="bg-[#04060f] border border-[#2d6af2]/30 text-white font-display uppercase tracking-wider">
                                                 {Array.from({ length: 6 }, (_, i) => (i + 1) * 5).map((min) => (
                                                     <SelectItem key={min} value={(min * 60).toString()} className="focus:bg-[#2d6af2]/20 focus:text-white cursor-pointer">
-                                                        {min} Min
+                                                        {min} {t('room_settings.min')}
                                                     </SelectItem>
                                                 ))}
                                             </SelectContent>
@@ -243,7 +245,7 @@ export default function SettingsPage() {
                                     {/* Questions */}
                                     <div className="space-y-1.5">
                                         <Label className="text-[10px] font-display uppercase tracking-[0.2em] flex items-center gap-1.5 pl-0.5" style={{ color: '#2d6af2' }}>
-                                            <ListOrdered className="h-3 w-3" /><span>Questions</span>
+                                            <ListOrdered className="h-3 w-3" /><span>{t('room_settings.questions')}</span>
                                         </Label>
                                         <Select value={questionCount} onValueChange={setQuestionCount}>
                                             <SelectTrigger className="h-10 bg-white/[0.03] border border-[#2d6af2]/30 text-white font-display text-xs uppercase tracking-wider focus:border-[#00ff9d] focus:ring-1 focus:ring-[#00ff9d]/50 rounded-xl transition-all">
@@ -263,7 +265,7 @@ export default function SettingsPage() {
                                     <div className="space-y-1.5">
                                         <Label className="text-[10px] font-display uppercase tracking-[0.2em] flex items-center gap-1.5 pl-0.5" style={{ color: '#2d6af2' }}>
                                             {isMuted ? <VolumeX className="h-3 w-3" /> : <Volume2 className="h-3 w-3" />}
-                                            <span>Sound</span>
+                                            <span>{t('room_settings.sound')}</span>
                                         </Label>
                                         <div className="flex items-center justify-center gap-3 h-10 bg-white/[0.03] border border-[#2d6af2]/30 rounded-xl">
                                             <VolumeX className={`h-3.5 w-3.5 ${isMuted ? "text-red-500" : "text-gray-600"}`} />
@@ -280,7 +282,7 @@ export default function SettingsPage() {
                                 {/* ── Row 2: Difficulty ── */}
                                 <div className="space-y-1.5">
                                     <Label className="text-[10px] font-display uppercase tracking-[0.2em] flex items-center gap-1.5 pl-0.5" style={{ color: '#2d6af2' }}>
-                                        <Settings className="h-3 w-3" /><span>Difficulty</span>
+                                        <Settings className="h-3 w-3" /><span>{t('room_settings.difficulty.title')}</span>
                                     </Label>
                                     <div className="grid grid-cols-3 gap-4">
                                         {(["Easy", "Normal", "Hard"] as const).map((diff) => (
@@ -301,7 +303,7 @@ export default function SettingsPage() {
                                                         : "bg-white/[0.03] border-red-500/20 text-red-500/50 hover:border-red-500/50 hover:text-red-400"
                                                 }`}
                                             >
-                                                {diff}
+                                                {t(`room_settings.difficulty.${diff.toLowerCase()}`)}
                                             </button>
                                         ))}
                                     </div>
@@ -320,12 +322,12 @@ export default function SettingsPage() {
                                     {saving ? (
                                         <span className="flex items-center gap-2 text-gray-500">
                                             <div className="h-4 w-4 border-2 border-gray-600 border-t-gray-400 rounded-full animate-spin" />
-                                            Loading...
+                                            {t('room_settings.button.loading')}
                                         </span>
                                     ) : (
                                         <span className="flex items-center gap-2 text-white font-bold">
                                             <Play className="fill-white h-4 w-4" />
-                                            Continue
+                                            {t('room_settings.button.continue')}
                                         </span>
                                     )}
                                 </Button>
@@ -339,17 +341,17 @@ export default function SettingsPage() {
                             <div className="h-1.5 bg-gradient-to-r from-[#1a45c4] to-[#00ff9d] w-full" />
                             <div className="p-6">
                                 <DialogHeader>
-                                    <DialogTitle className="text-xl text-white font-display uppercase tracking-widest text-center drop-shadow-[0_0_10px_rgba(45,106,242,0.5)]">Delete Session?</DialogTitle>
-                                    <DialogDescription className="text-center text-gray-400 font-display text-xs tracking-wider mt-4 uppercase">This will permanently delete this session.</DialogDescription>
+                                    <DialogTitle className="text-xl text-white font-display uppercase tracking-widest text-center drop-shadow-[0_0_10px_rgba(45,106,242,0.5)]">{t('room_settings.delete_dialog.title')}</DialogTitle>
+                                    <DialogDescription className="text-center text-gray-400 font-display text-xs tracking-wider mt-4 uppercase">{t('room_settings.delete_dialog.description')}</DialogDescription>
                                 </DialogHeader>
                                 <DialogFooter className="flex gap-3 mt-8">
                                     <Button variant="outline" onClick={() => setShowCancelDialog(false)} disabled={isDeleting}
                                         className="flex-1 bg-transparent border border-white/10 text-gray-400 hover:bg-white/5 hover:text-white font-display text-xs uppercase tracking-wider h-12 rounded-xl transition-all">
-                                        Cancel
+                                        {t('room_settings.delete_dialog.cancel')}
                                     </Button>
                                     <Button onClick={handleCancelSession} disabled={isDeleting}
                                         className="flex-1 bg-gradient-to-r from-red-600 to-red-400 hover:from-red-700 hover:to-red-500 text-white border-none font-display text-xs uppercase tracking-wider shadow-[0_0_15px_rgba(239,68,68,0.4)] h-12 rounded-xl transition-all">
-                                        {isDeleting ? "DELETING..." : "DELETE"}
+                                        {isDeleting ? t('room_settings.delete_dialog.deleting') : t('room_settings.delete_dialog.delete')}
                                     </Button>
                                 </DialogFooter>
                             </div>
