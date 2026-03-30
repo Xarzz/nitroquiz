@@ -524,26 +524,26 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      <main className="relative z-20 flex flex-col items-center justify-center min-h-screen w-full max-w-7xl mx-auto p-4 md:p-8">
-        <header className="text-center mb-10 md:mb-14 relative z-30 w-full flex flex-col items-center">
+      <main className="relative z-20 flex flex-col items-center justify-center h-screen w-full max-w-5xl mx-auto p-4 md:p-6 overflow-hidden">
+        <header className="text-center mb-4 md:mb-6 relative z-30 w-full flex flex-col items-center">
           <div className="relative group">
             <Image
               src="/assets/logo/logo1.png"
               alt="GameForSmart Logo"
               width={500}
               height={150}
-              className="object-contain w-[280px] md:w-[450px] drop-shadow-[0_0_30px_rgba(45,106,242,0.6)] group-hover:drop-shadow-[0_0_40px_rgba(45,106,242,0.8)] transition-all duration-500 scale-95 group-hover:scale-100"
+              className="object-contain w-[200px] md:w-[320px] drop-shadow-[0_0_30px_rgba(45,106,242,0.6)] group-hover:drop-shadow-[0_0_40px_rgba(45,106,242,0.8)] transition-all duration-500 scale-95 group-hover:scale-100"
               priority
             />
           </div>
           
           {/* Interactive Slogan */}
-          <div className="mt-2 md:mt-6">
+          <div className="mt-1 md:mt-2">
             <motion.div 
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.8 }}
-              className="flex items-center justify-center gap-2 md:gap-5"
+              className="flex items-center justify-center gap-2 md:gap-3"
             >
               {[
                 { word: "RACE", color: "white" },
@@ -552,7 +552,7 @@ export default function Home() {
               ].map((item, idx) => (
                 <div key={item.word} className="flex items-center">
                   <span 
-                    className="font-display text-[10px] sm:text-lg md:text-2xl font-black italic tracking-[0.15em] sm:tracking-[0.2em] md:tracking-[0.4em] transition-all duration-300 cursor-default hover:text-[#00ff9d] hover:scale-110 hover:skew-x-[-12deg] active:scale-95"
+                    className="font-display text-[8px] sm:text-sm md:text-lg font-black italic tracking-[0.05em] sm:tracking-[0.1em] md:tracking-[0.2em] transition-all duration-300 cursor-default hover:text-[#00ff9d] hover:scale-110 hover:skew-x-[-12deg] active:scale-95"
                     style={{ 
                       color: item.color,
                       textShadow: '0 0 15px rgba(255,255,255,0.2)'
@@ -561,7 +561,7 @@ export default function Home() {
                     {item.word}
                   </span>
                   {idx < 2 && (
-                    <div className="mx-1.5 sm:mx-3 md:mx-4 w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-[#2d6af2] shadow-[0_0_10px_#2d6af2]" />
+                    <div className="mx-1 sm:mx-1.5 md:mx-2 w-1 h-1 md:w-1 md:h-1 rounded-full bg-[#2d6af2] shadow-[0_0_10px_#2d6af2]" />
                   )}
                 </div>
               ))}
@@ -569,25 +569,25 @@ export default function Home() {
           </div>
         </header>
 
-        <div className="flex flex-col md:flex-row gap-8 lg:gap-16 w-full justify-center items-stretch max-w-5xl">
+        <div className="flex flex-col md:flex-row gap-5 lg:gap-8 w-full justify-center items-stretch max-w-4xl px-4 md:px-0">
           {/* Host Card */}
-          <div className="host-card rounded-[2rem] p-8 md:p-10 flex-1 flex flex-col items-center justify-between gap-12 relative overflow-hidden group transition-all duration-300">
+          <div className="host-card rounded-[2rem] p-5 md:p-6 lg:p-7 flex-1 flex flex-col items-center justify-between gap-6 relative overflow-hidden group transition-all duration-300">
             <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-[#00ff9d]/20 to-transparent rounded-bl-full pointer-events-none"></div>
             <div className="w-full text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#000000]/50 border border-white/10 mb-6 shadow-[0_4px_15px_rgba(0,0,0,0.5)]">
-                <Gamepad2 className="w-8 h-8 text-[#00ff9d]" />
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#000000]/50 border border-white/10 mb-3 shadow-[0_4px_15px_rgba(0,0,0,0.5)]">
+                <Gamepad2 className="w-6 h-6 text-[#00ff9d]" />
               </div>
-              <h2 className="font-body font-bold text-4xl text-white mb-2 tracking-wide glow-text uppercase">
+              <h2 className="font-body font-bold text-2xl text-white mb-2 tracking-wide glow-text uppercase">
                 {t('homepage.host.title')}
               </h2>
-              <p className="text-gray-400 text-sm font-light tracking-wider">
+              <p className="text-gray-400 text-[10px] font-light tracking-wider leading-relaxed">
                 {t('homepage.host.subtitle')}
               </p>
             </div>
             <div className="w-full">
               <button
                 onClick={handleHost}
-                className="w-full bg-gradient-to-r from-[#1a45c4] via-[#2d6af2] to-[#1a45c4] hover:shadow-[0_0_20px_rgba(45,106,242,0.6)] text-white font-display text-sm py-4 px-6 rounded-xl transition-all duration-300 uppercase tracking-wider transform active:scale-[0.98] font-bold"
+                className="w-full bg-gradient-to-r from-[#1a45c4] via-[#2d6af2] to-[#1a45c4] hover:shadow-[0_0_20px_rgba(45,106,242,0.6)] text-white font-display text-[10px] py-3 px-6 rounded-xl transition-all duration-300 uppercase tracking-wider transform active:scale-[0.98] font-bold"
               >
                   {t('homepage.host.button')}
               </button>
@@ -595,23 +595,23 @@ export default function Home() {
           </div>
 
           {/* Join Card */}
-          <div className="join-card rounded-[2rem] p-8 md:p-10 flex-1 flex flex-col items-center justify-center gap-12 relative overflow-hidden group transition-all duration-300">
-            <div className="absolute top-0 left-0 w-24 h-24 bg-gradient-to-br from-[#2d6af2]/20 to-transparent rounded-br-full pointer-events-none"></div>
+          <div className="join-card rounded-[2rem] p-5 md:p-6 lg:p-7 flex-1 flex flex-col items-center justify-center gap-6 relative overflow-hidden group transition-all duration-300">
+            <div className="absolute top-0 left-0 w-20 h-20 bg-gradient-to-br from-[#2d6af2]/20 to-transparent rounded-br-full pointer-events-none"></div>
             <div className="w-full text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#000000]/50 border border-white/10 mb-6 shadow-[0_4px_15px_rgba(0,0,0,0.5)]">
-                <LogIn className="w-8 h-8 text-[#2d6af2]" />
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#000000]/50 border border-white/10 mb-3 shadow-[0_4px_15px_rgba(0,0,0,0.5)]">
+                <LogIn className="w-6 h-6 text-[#2d6af2]" />
               </div>
-              <h2 className="font-body font-bold text-4xl text-white mb-2 tracking-wide glow-text uppercase">
+              <h2 className="font-body font-bold text-2xl text-white mb-2 tracking-wide glow-text uppercase">
                 {t('homepage.join.title')}
               </h2>
-              <p className="text-gray-400 text-sm font-light tracking-wider">
+              <p className="text-gray-400 text-[10px] font-light tracking-wider leading-relaxed">
                 {t('homepage.join.subtitle')}
               </p>
             </div>
-            <div className="w-full space-y-3">
+            <div className="w-full space-y-2">
               <div className="relative group/input">
                 <input
-                  className="w-full bg-white/[0.03] border border-white/[0.07] text-white font-display text-center text-sm py-4 px-4 rounded-xl focus:outline-none focus:border-[#00ff9d]/60 focus:bg-white/[0.05] focus:shadow-[0_0_0_3px_rgba(0,255,157,0.1)] transition-all placeholder:font-display placeholder:text-xs uppercase tracking-widest placeholder:text-gray-600"
+                  className="w-full bg-white/[0.03] border border-white/[0.07] text-white font-display text-center text-xs py-3 px-4 rounded-xl focus:outline-none focus:border-[#00ff9d]/60 focus:bg-white/[0.05] focus:shadow-[0_0_0_3px_rgba(0,255,157,0.1)] transition-all placeholder:font-display placeholder:text-[9px] uppercase tracking-widest placeholder:text-gray-600"
                   maxLength={6}
                   placeholder={t('homepage.join.placeholder')}
                   type="text"
@@ -622,7 +622,7 @@ export default function Home() {
               </div>
               <button
                 onClick={handleJoin}
-                className="w-full bg-gradient-to-r from-teal-500 via-[#00ff9d] to-teal-500 hover:shadow-[0_0_20px_rgba(0,255,157,0.5)] text-[#04060f] font-display text-sm py-4 px-6 rounded-xl transition-all duration-300 uppercase tracking-wider transform active:scale-[0.98] font-bold"
+                className="w-full bg-gradient-to-r from-teal-500 via-[#00ff9d] to-teal-500 hover:shadow-[0_0_20px_rgba(0,255,157,0.5)] text-[#04060f] font-display text-[10px] py-3 px-6 rounded-xl transition-all duration-300 uppercase tracking-wider transform active:scale-[0.98] font-bold"
               >
                   {t('homepage.join.button')}
               </button>

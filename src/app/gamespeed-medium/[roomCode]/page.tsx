@@ -250,17 +250,18 @@ export default function GameSpeedPage() {
 
         const loadAssets = async () => {
             console.log("Starting asset load...");
-            let character = null;
+            
+            // Determine selected character ID for dynamic sprite loading
+            let selectedCharId = 'rico'; // Default fallback
             try {
                 const stored = localStorage.getItem('edurace_selected_character');
                 if (stored) {
-                    character = JSON.parse(stored);
+                    const character = JSON.parse(stored);
+                    if (character?.id) selectedCharId = character.id;
                 }
             } catch (e) {
                 console.error("Failed to load character", e);
             }
-
-            const assetList = ASSET_LIST;
 
             const promises: Promise<void>[] = [];
 
@@ -271,30 +272,49 @@ export default function GameSpeedPage() {
             ];
 
             // Load from ASSET_LIST + obstacles (named assets)
+            // Dynamically replace 'rico' with selected character in asset paths
             [...ASSET_LIST, ...obstacles].forEach(item => {
                 promises.push(new Promise<void>((resolve) => {
                     const img = new Image();
+                    let srcPath = item.src;
+                    if (srcPath.includes('/characters/rico/')) {
+                        srcPath = srcPath.replace('/characters/rico/', `/characters/${selectedCharId}/`);
+                    }
                     img.onload = () => {
                         (img as any).assetName = item.name;
-                        // Simpan dengan key 'name' (untuk akses global)
                         state.current.sprites[item.name] = img;
                         resolve();
                     };
                     img.onerror = () => {
-                        // Fallback logic
-                        const cvs = document.createElement('canvas');
-                        cvs.width = 128; cvs.height = 128;
-                        const ctx = cvs.getContext('2d');
-                        if (ctx) {
-                            ctx.fillStyle = '#444';
-                            ctx.fillRect(0, 0, 128, 128);
-                            const finalCvs = cvs as any;
-                            finalCvs.assetName = item.name;
-                            state.current.sprites[item.name] = finalCvs;
+                        // If selected character doesn't have this sprite, fall back to rico
+                        if (selectedCharId !== 'rico' && item.src.includes('/characters/')) {
+                            const fallbackImg = new Image();
+                            fallbackImg.onload = () => {
+                                (fallbackImg as any).assetName = item.name;
+                                state.current.sprites[item.name] = fallbackImg;
+                                resolve();
+                            };
+                            fallbackImg.onerror = () => {
+                                const cvs = document.createElement('canvas');
+                                cvs.width = 128; cvs.height = 128;
+                                const ctx = cvs.getContext('2d');
+                                if (ctx) { ctx.fillStyle = '#444'; ctx.fillRect(0, 0, 128, 128); }
+                                (cvs as any).assetName = item.name;
+                                state.current.sprites[item.name] = cvs;
+                                resolve();
+                            };
+                            fallbackImg.src = item.src; // Original rico path
+                        } else {
+                            const cvs = document.createElement('canvas');
+                            cvs.width = 128; cvs.height = 128;
+                            const ctx = cvs.getContext('2d');
+                            if (ctx) { ctx.fillStyle = '#444'; ctx.fillRect(0, 0, 128, 128); }
+                            (cvs as any).assetName = item.name;
+                            state.current.sprites[item.name] = cvs;
+                            resolve();
                         }
-                        resolve();
                     };
-                    img.src = item.src;
+                    img.src = srcPath;
                 }));
             });
 
@@ -720,21 +740,22 @@ export default function GameSpeedPage() {
         const name = (sprite as any).assetName;
 
         // Use a fixed reference width so asset sizes stay consistent regardless of player sprite dimensions
-        const playerRefWidth = 300;
-        const carWorldWidth = playerRefWidth * 1.0;
+        const playerRefWidth = 450;
+        const carWorldWidth = playerRefWidth * 1.5; // Larger base for vehicles to match character size
 
-        let worldWidth = carWorldWidth * 0.75; // NPC mobil disesuaikan (jangan terlalu besar)
-        if (name?.includes('lampulalulintas') || name === 'traffic_light') worldWidth = carWorldWidth * 4.7;
-        else if (name?.includes('truck')) worldWidth = carWorldWidth * 1.1; // Truk sedikit lebih besar dari mobil
-        else if (name?.includes('car_rival') || name === 'foward-opponent') worldWidth = carWorldWidth * 0.75; // Rival sama dengan NPC
-        else if (name?.includes('odong') || name?.includes('taxi')) worldWidth = carWorldWidth * 0.8; 
-        else if (name?.includes('kiri_') || name?.includes('kanan_')) worldWidth = carWorldWidth * 18.0; // Large building (27 segments wide, with 65 segment gap)
-        else if (name?.includes('pohon')) worldWidth = carWorldWidth * 10.0; // Large tree (15 segments wide, with 65 segment gap)
-        else if (name?.includes('bush') || name?.includes('semak')) worldWidth = carWorldWidth * 2.35;
-        else if (name?.includes('bench') || name?.includes('bangku')) worldWidth = carWorldWidth * 2.8;
-        else if (name?.includes('barrier') || name?.includes('pembatas_jalan')) worldWidth = carWorldWidth * 2.8;
-        else if (name?.includes('cone') || name?.includes('penghalang')) worldWidth = carWorldWidth * 0.95;
-        else if (name?.includes('obstacle') || name?.includes('construction')) worldWidth = carWorldWidth * 1.1;
+        let worldWidth = carWorldWidth * 1.0; 
+        if (name?.includes('lampulalulintas') || name === 'traffic_light') worldWidth = carWorldWidth * 5.5;
+        else if (name?.includes('truck')) worldWidth = carWorldWidth * 1.4; 
+        else if (name?.includes('car_rival') || name === 'foward-opponent') worldWidth = carWorldWidth * 1.0; 
+        else if (name?.includes('odong') || name?.includes('taxi')) worldWidth = carWorldWidth * 1.0; 
+        else if (name?.includes('jne')) worldWidth = carWorldWidth * 1.1;
+        else if (name?.includes('kiri_') || name?.includes('kanan_')) worldWidth = carWorldWidth * 18.0; // Building multiplier slightly adjusted down since playerRefWidth is up
+        else if (name?.includes('pohon')) worldWidth = carWorldWidth * 11.0; // Tree multiplier slightly adjusted down
+        else if (name?.includes('bush') || name?.includes('semak')) worldWidth = carWorldWidth * 3.5;
+        else if (name?.includes('bench') || name?.includes('bangku')) worldWidth = carWorldWidth * 3.5;
+        else if (name?.includes('barrier') || name?.includes('pembatas_jalan')) worldWidth = carWorldWidth * 3.5;
+        else if (name?.includes('cone') || name?.includes('penghalang')) worldWidth = carWorldWidth * 1.2;
+        else if (name?.includes('obstacle') || name?.includes('construction')) worldWidth = carWorldWidth * 1.3;
 
         const destW = scale * worldWidth * (width / 2);
         const destH = destW * (sprite.height / sprite.width);

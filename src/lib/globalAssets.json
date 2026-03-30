@@ -1,7 +1,7 @@
 [
     {
         "name": "car",
-        "src": "/assets/characters/scloski/0lurus.png"
+        "src": "/assets/characters/rico/0lurus.png"
     },
     {
         "name": "bg",
@@ -65,115 +65,115 @@
     },
     {
         "name": "car_1st",
-        "src": "/assets/characters/scloski/1pov/0lurus.png"
+        "src": "/assets/characters/rico/1pov/0lurus.png"
     },
     {
         "name": "mc_1st_straight_0",
-        "src": "/assets/characters/scloski/1pov/0lurus.png"
+        "src": "/assets/characters/rico/1pov/0lurus.png"
     },
     {
         "name": "mc_1st_straight_1",
-        "src": "/assets/characters/scloski/1pov/1lurus.png"
+        "src": "/assets/characters/rico/1pov/1lurus.png"
     },
     {
         "name": "mc_1st_straight_3",
-        "src": "/assets/characters/scloski/1pov/3lurus.png"
+        "src": "/assets/characters/rico/1pov/3lurus.png"
     },
     {
         "name": "mc_1st_left_0",
-        "src": "/assets/characters/scloski/1pov/0kirinew.png"
+        "src": "/assets/characters/rico/1pov/0kirinew.png"
     },
     {
         "name": "mc_1st_left_1",
-        "src": "/assets/characters/scloski/1pov/1kirinew.png"
+        "src": "/assets/characters/rico/1pov/1kirinew.png"
     },
     {
         "name": "mc_1st_right_0",
-        "src": "/assets/characters/scloski/1pov/0kanannew.png"
+        "src": "/assets/characters/rico/1pov/0kanannew.png"
     },
     {
         "name": "mc_1st_right_1",
-        "src": "/assets/characters/scloski/1pov/1kanannew.png"
+        "src": "/assets/characters/rico/1pov/1kanannew.png"
     },
     {
         "name": "start_1",
-        "src": "/assets/characters/scloski/start/1rem.png"
+        "src": "/assets/characters/rico/start/1rem.png"
     },
     {
         "name": "start_2",
-        "src": "/assets/characters/scloski/start/2rem.png"
+        "src": "/assets/characters/rico/start/2rem.png"
     },
     {
         "name": "start_3",
-        "src": "/assets/characters/scloski/start/3rem.png"
+        "src": "/assets/characters/rico/start/3rem.png"
     },
     {
         "name": "start_4",
-        "src": "/assets/characters/scloski/start/4rem.png"
+        "src": "/assets/characters/rico/start/4rem.png"
     },
     {
         "name": "mc_straight_0",
-        "src": "/assets/characters/scloski/0lurus.png"
+        "src": "/assets/characters/rico/0lurus.png"
     },
     {
         "name": "mc_straight_1",
-        "src": "/assets/characters/scloski/1lurus.png"
+        "src": "/assets/characters/rico/1lurus.png"
     },
     {
         "name": "mc_straight_2",
-        "src": "/assets/characters/scloski/2lurus.png"
+        "src": "/assets/characters/rico/2lurus.png"
     },
     {
         "name": "mc_straight_3",
-        "src": "/assets/characters/scloski/3lurus.png"
+        "src": "/assets/characters/rico/3lurus.png"
     },
     {
         "name": "mc_left_0",
-        "src": "/assets/characters/scloski/0kiri.png"
+        "src": "/assets/characters/rico/0kiri.png"
     },
     {
         "name": "mc_left_1",
-        "src": "/assets/characters/scloski/1kiri.png"
+        "src": "/assets/characters/rico/1kiri.png"
     },
     {
         "name": "mc_left_2",
-        "src": "/assets/characters/scloski/2kiri.png"
+        "src": "/assets/characters/rico/2kiri.png"
     },
     {
         "name": "mc_left_3",
-        "src": "/assets/characters/scloski/3kiri.png"
+        "src": "/assets/characters/rico/3kiri.png"
     },
     {
         "name": "mc_right_0",
-        "src": "/assets/characters/scloski/0kanan.png"
+        "src": "/assets/characters/rico/0kanan.png"
     },
     {
         "name": "mc_right_1",
-        "src": "/assets/characters/scloski/1kanan.png"
+        "src": "/assets/characters/rico/1kanan.png"
     },
     {
         "name": "mc_right_2",
-        "src": "/assets/characters/scloski/2kanan.png"
+        "src": "/assets/characters/rico/2kanan.png"
     },
     {
         "name": "mc_right_3",
-        "src": "/assets/characters/scloski/3kanan.png"
+        "src": "/assets/characters/rico/3kanan.png"
     },
     {
         "name": "rem_1",
-        "src": "/assets/characters/scloski/rem/1.png"
+        "src": "/assets/characters/rico/rem/1.png"
     },
     {
         "name": "rem_2",
-        "src": "/assets/characters/scloski/rem/2.png"
+        "src": "/assets/characters/rico/rem/2.png"
     },
     {
         "name": "rem_3",
-        "src": "/assets/characters/scloski/rem/3.png"
+        "src": "/assets/characters/rico/rem/3.png"
     },
     {
         "name": "rem_4",
-        "src": "/assets/characters/scloski/rem/4.png"
+        "src": "/assets/characters/rico/rem/4.png"
     },
     {
         "name": "odong_straight",
@@ -225,334 +225,334 @@
     },
     {
         "name": "nos_1",
-        "src": "/assets/characters/scloski/nos/1.png"
+        "src": "/assets/characters/rico/nos/1.png"
     },
     {
         "name": "nos_2",
-        "src": "/assets/characters/scloski/nos/2.png"
+        "src": "/assets/characters/rico/nos/2.png"
     },
     {
         "name": "nos_3",
-        "src": "/assets/characters/scloski/nos/3.png"
+        "src": "/assets/characters/rico/nos/3.png"
     },
     {
         "name": "nos_4",
-        "src": "/assets/characters/scloski/nos/4.png"
+        "src": "/assets/characters/rico/nos/4.png"
     },
     {
         "name": "nos_5",
-        "src": "/assets/characters/scloski/nos/5.png"
+        "src": "/assets/characters/rico/nos/5.png"
     },
     {
         "name": "nos_6",
-        "src": "/assets/characters/scloski/nos/6.png"
+        "src": "/assets/characters/rico/nos/6.png"
     },
     {
         "name": "nos_7",
-        "src": "/assets/characters/scloski/nos/7.png"
+        "src": "/assets/characters/rico/nos/7.png"
     },
     {
         "name": "nos_8",
-        "src": "/assets/characters/scloski/nos/8.png"
+        "src": "/assets/characters/rico/nos/8.png"
     },
     {
         "name": "nos_9",
-        "src": "/assets/characters/scloski/nos/9.png"
+        "src": "/assets/characters/rico/nos/9.png"
     },
     {
         "name": "nos_10",
-        "src": "/assets/characters/scloski/nos/10.png"
+        "src": "/assets/characters/rico/nos/10.png"
     },
     {
         "name": "nos_11",
-        "src": "/assets/characters/scloski/nos/11.png"
+        "src": "/assets/characters/rico/nos/11.png"
     },
     {
         "name": "nos_12",
-        "src": "/assets/characters/scloski/nos/12.png"
+        "src": "/assets/characters/rico/nos/12.png"
     },
     {
         "name": "nos_13",
-        "src": "/assets/characters/scloski/nos/13.png"
+        "src": "/assets/characters/rico/nos/13.png"
     },
     {
         "name": "nos_14",
-        "src": "/assets/characters/scloski/nos/14.png"
+        "src": "/assets/characters/rico/nos/14.png"
     },
     {
         "name": "nos_15",
-        "src": "/assets/characters/scloski/nos/15.png"
+        "src": "/assets/characters/rico/nos/15.png"
     },
     {
         "name": "nos_16",
-        "src": "/assets/characters/scloski/nos/16.png"
+        "src": "/assets/characters/rico/nos/16.png"
     },
     {
         "name": "nos_17",
-        "src": "/assets/characters/scloski/nos/17.png"
+        "src": "/assets/characters/rico/nos/17.png"
     },
     {
         "name": "nos_18",
-        "src": "/assets/characters/scloski/nos/18.png"
+        "src": "/assets/characters/rico/nos/18.png"
     },
     {
         "name": "nos_19",
-        "src": "/assets/characters/scloski/nos/19.png"
+        "src": "/assets/characters/rico/nos/19.png"
     },
     {
         "name": "nos_20",
-        "src": "/assets/characters/scloski/nos/20.png"
+        "src": "/assets/characters/rico/nos/20.png"
     },
     {
         "name": "nos_21",
-        "src": "/assets/characters/scloski/nos/21.png"
+        "src": "/assets/characters/rico/nos/21.png"
     },
     {
         "name": "nos_22",
-        "src": "/assets/characters/scloski/nos/22.png"
+        "src": "/assets/characters/rico/nos/22.png"
     },
     {
         "name": "nos_23",
-        "src": "/assets/characters/scloski/nos/23.png"
+        "src": "/assets/characters/rico/nos/23.png"
     },
     {
         "name": "nos_24",
-        "src": "/assets/characters/scloski/nos/24.png"
+        "src": "/assets/characters/rico/nos/24.png"
     },
     {
         "name": "nos_25",
-        "src": "/assets/characters/scloski/nos/25.png"
+        "src": "/assets/characters/rico/nos/25.png"
     },
     {
         "name": "nos_26",
-        "src": "/assets/characters/scloski/nos/26.png"
+        "src": "/assets/characters/rico/nos/26.png"
     },
     {
         "name": "nos_27",
-        "src": "/assets/characters/scloski/nos/27.png"
+        "src": "/assets/characters/rico/nos/27.png"
     },
     {
         "name": "nos_28",
-        "src": "/assets/characters/scloski/nos/28.png"
+        "src": "/assets/characters/rico/nos/28.png"
     },
     {
         "name": "nos_29",
-        "src": "/assets/characters/scloski/nos/29.png"
+        "src": "/assets/characters/rico/nos/29.png"
     },
     {
         "name": "nos_30",
-        "src": "/assets/characters/scloski/nos/30.png"
+        "src": "/assets/characters/rico/nos/30.png"
     },
     {
         "name": "nos_31",
-        "src": "/assets/characters/scloski/nos/31.png"
+        "src": "/assets/characters/rico/nos/31.png"
     },
     {
         "name": "nos_32",
-        "src": "/assets/characters/scloski/nos/32.png"
+        "src": "/assets/characters/rico/nos/32.png"
     },
     {
         "name": "nos_33",
-        "src": "/assets/characters/scloski/nos/33.png"
+        "src": "/assets/characters/rico/nos/33.png"
     },
     {
         "name": "nos_34",
-        "src": "/assets/characters/scloski/nos/34.png"
+        "src": "/assets/characters/rico/nos/34.png"
     },
     {
         "name": "nos_35",
-        "src": "/assets/characters/scloski/nos/35.png"
+        "src": "/assets/characters/rico/nos/35.png"
     },
     {
         "name": "nos_36",
-        "src": "/assets/characters/scloski/nos/36.png"
+        "src": "/assets/characters/rico/nos/36.png"
     },
     {
         "name": "nos_37",
-        "src": "/assets/characters/scloski/nos/37.png"
+        "src": "/assets/characters/rico/nos/37.png"
     },
     {
         "name": "nos_38",
-        "src": "/assets/characters/scloski/nos/38.png"
+        "src": "/assets/characters/rico/nos/38.png"
     },
     {
         "name": "nos_39",
-        "src": "/assets/characters/scloski/nos/39.png"
+        "src": "/assets/characters/rico/nos/39.png"
     },
     {
         "name": "nos_40",
-        "src": "/assets/characters/scloski/nos/40.png"
+        "src": "/assets/characters/rico/nos/40.png"
     },
     {
         "name": "nos_41",
-        "src": "/assets/characters/scloski/nos/41.png"
+        "src": "/assets/characters/rico/nos/41.png"
     },
     {
         "name": "nos_42",
-        "src": "/assets/characters/scloski/nos/42.png"
+        "src": "/assets/characters/rico/nos/42.png"
     },
     {
         "name": "nos_43",
-        "src": "/assets/characters/scloski/nos/43.png"
+        "src": "/assets/characters/rico/nos/43.png"
     },
     {
         "name": "nos_44",
-        "src": "/assets/characters/scloski/nos/44.png"
+        "src": "/assets/characters/rico/nos/44.png"
     },
     {
         "name": "nos_45",
-        "src": "/assets/characters/scloski/nos/45.png"
+        "src": "/assets/characters/rico/nos/45.png"
     },
     {
         "name": "nos_46",
-        "src": "/assets/characters/scloski/nos/46.png"
+        "src": "/assets/characters/rico/nos/46.png"
     },
     {
         "name": "nos_47",
-        "src": "/assets/characters/scloski/nos/47.png"
+        "src": "/assets/characters/rico/nos/47.png"
     },
     {
         "name": "nos_48",
-        "src": "/assets/characters/scloski/nos/48.png"
+        "src": "/assets/characters/rico/nos/48.png"
     },
     {
         "name": "nos_49",
-        "src": "/assets/characters/scloski/nos/49.png"
+        "src": "/assets/characters/rico/nos/49.png"
     },
     {
         "name": "nos_50",
-        "src": "/assets/characters/scloski/nos/50.png"
+        "src": "/assets/characters/rico/nos/50.png"
     },
     {
         "name": "nos_51",
-        "src": "/assets/characters/scloski/nos/51.png"
+        "src": "/assets/characters/rico/nos/51.png"
     },
     {
         "name": "nos_52",
-        "src": "/assets/characters/scloski/nos/52.png"
+        "src": "/assets/characters/rico/nos/52.png"
     },
     {
         "name": "nos_53",
-        "src": "/assets/characters/scloski/nos/53.png"
+        "src": "/assets/characters/rico/nos/53.png"
     },
     {
         "name": "nos_54",
-        "src": "/assets/characters/scloski/nos/54.png"
+        "src": "/assets/characters/rico/nos/54.png"
     },
     {
         "name": "nos_55",
-        "src": "/assets/characters/scloski/nos/55.png"
+        "src": "/assets/characters/rico/nos/55.png"
     },
     {
         "name": "nos_56",
-        "src": "/assets/characters/scloski/nos/56.png"
+        "src": "/assets/characters/rico/nos/56.png"
     },
     {
         "name": "nos_57",
-        "src": "/assets/characters/scloski/nos/57.png"
+        "src": "/assets/characters/rico/nos/57.png"
     },
     {
         "name": "nos_58",
-        "src": "/assets/characters/scloski/nos/58.png"
+        "src": "/assets/characters/rico/nos/58.png"
     },
     {
         "name": "nos_59",
-        "src": "/assets/characters/scloski/nos/59.png"
+        "src": "/assets/characters/rico/nos/59.png"
     },
     {
         "name": "nos_60",
-        "src": "/assets/characters/scloski/nos/60.png"
+        "src": "/assets/characters/rico/nos/60.png"
     },
     {
         "name": "nos_61",
-        "src": "/assets/characters/scloski/nos/61.png"
+        "src": "/assets/characters/rico/nos/61.png"
     },
     {
         "name": "nos_62",
-        "src": "/assets/characters/scloski/nos/62.png"
+        "src": "/assets/characters/rico/nos/62.png"
     },
     {
         "name": "nos_63",
-        "src": "/assets/characters/scloski/nos/63.png"
+        "src": "/assets/characters/rico/nos/63.png"
     },
     {
         "name": "nos_64",
-        "src": "/assets/characters/scloski/nos/64.png"
+        "src": "/assets/characters/rico/nos/64.png"
     },
     {
         "name": "nos_65",
-        "src": "/assets/characters/scloski/nos/65.png"
+        "src": "/assets/characters/rico/nos/65.png"
     },
     {
         "name": "nos_66",
-        "src": "/assets/characters/scloski/nos/66.png"
+        "src": "/assets/characters/rico/nos/66.png"
     },
     {
         "name": "nos_67",
-        "src": "/assets/characters/scloski/nos/67.png"
+        "src": "/assets/characters/rico/nos/67.png"
     },
     {
         "name": "nos_68",
-        "src": "/assets/characters/scloski/nos/68.png"
+        "src": "/assets/characters/rico/nos/68.png"
     },
     {
         "name": "nos_69",
-        "src": "/assets/characters/scloski/nos/69.png"
+        "src": "/assets/characters/rico/nos/69.png"
     },
     {
         "name": "nos_70",
-        "src": "/assets/characters/scloski/nos/70.png"
+        "src": "/assets/characters/rico/nos/70.png"
     },
     {
         "name": "nos_71",
-        "src": "/assets/characters/scloski/nos/71.png"
+        "src": "/assets/characters/rico/nos/71.png"
     },
     {
         "name": "nos_72",
-        "src": "/assets/characters/scloski/nos/72.png"
+        "src": "/assets/characters/rico/nos/72.png"
     },
     {
         "name": "nos_73",
-        "src": "/assets/characters/scloski/nos/73.png"
+        "src": "/assets/characters/rico/nos/73.png"
     },
     {
         "name": "nos_74",
-        "src": "/assets/characters/scloski/nos/74.png"
+        "src": "/assets/characters/rico/nos/74.png"
     },
     {
         "name": "nos_75",
-        "src": "/assets/characters/scloski/nos/75.png"
+        "src": "/assets/characters/rico/nos/75.png"
     },
     {
         "name": "nos_76",
-        "src": "/assets/characters/scloski/nos/76.png"
+        "src": "/assets/characters/rico/nos/76.png"
     },
     {
         "name": "nos_77",
-        "src": "/assets/characters/scloski/nos/77.png"
+        "src": "/assets/characters/rico/nos/77.png"
     },
     {
         "name": "nos_78",
-        "src": "/assets/characters/scloski/nos/78.png"
+        "src": "/assets/characters/rico/nos/78.png"
     },
     {
         "name": "nos_79",
-        "src": "/assets/characters/scloski/nos/79.png"
+        "src": "/assets/characters/rico/nos/79.png"
     },
     {
         "name": "nos_80",
-        "src": "/assets/characters/scloski/nos/80.png"
+        "src": "/assets/characters/rico/nos/80.png"
     },
     {
         "name": "nos_81",
-        "src": "/assets/characters/scloski/nos/81.png"
+        "src": "/assets/characters/rico/nos/81.png"
     },
     {
         "name": "nos_82",
-        "src": "/assets/characters/scloski/nos/82.png"
+        "src": "/assets/characters/rico/nos/82.png"
     },
     {
         "name": "nos_83",
-        "src": "/assets/characters/scloski/nos/83.png"
+        "src": "/assets/characters/rico/nos/83.png"
     }
 ]

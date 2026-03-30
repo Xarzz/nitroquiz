@@ -22,19 +22,19 @@ import confetti from "canvas-confetti";
 import { useTranslation } from "react-i18next";
 
 const carImageMap: Record<string, string> = {
-  purple: "/assets/characters/scloski/showroom/showroom1.png",
-  white: "/assets/characters/scloski/showroom/showroom2.png",
-  black: "/assets/characters/scloski/showroom/showroom1.png",
-  aqua: "/assets/characters/scloski/showroom/showroom2.png",
-  blue: "/assets/characters/scloski/showroom/showroom1.png",
+  purple: "/assets/characters/rico/showroom/showroom1.png",
+  white: "/assets/characters/rico/showroom/showroom2.png",
+  black: "/assets/characters/rico/showroom/showroom1.png",
+  aqua: "/assets/characters/rico/showroom/showroom2.png",
+  blue: "/assets/characters/rico/showroom/showroom1.png",
 };
 
 const logoImageMap: Record<string, string> = {
-  purple: "/assets/characters/scloski/logo/logo1.png",
-  white: "/assets/characters/scloski/logo/logo1.png",
-  black: "/assets/characters/scloski/logo/logo1.png",
-  aqua: "/assets/characters/scloski/logo/logo1.png",
-  blue: "/assets/characters/scloski/logo/logo1.png",
+  purple: "/assets/characters/rico/logo/logo1.png",
+  white: "/assets/characters/rico/logo/logo1.png",
+  black: "/assets/characters/rico/logo/logo1.png",
+  aqua: "/assets/characters/rico/logo/logo1.png",
+  blue: "/assets/characters/rico/logo/logo1.png",
 };
 
 interface Participant {
@@ -276,7 +276,7 @@ export default function LeaderboardPage() {
                                 "-bot",
                                 "",
                               )
-                            ] || "/assets/characters/scloski/logo/logo1.png"
+                            ] || "/assets/characters/rico/logo/logo1.png"
                           }
                           alt="Logo"
                           className="w-full h-full object-contain p-0 scale-[2.1]"
@@ -350,7 +350,7 @@ export default function LeaderboardPage() {
                                 "-bot",
                                 "",
                               )
-                            ] || "/assets/characters/scloski/logo/logo1.png"
+                            ] || "/assets/characters/rico/logo/logo1.png"
                           }
                           alt="Logo"
                           className="w-full h-full object-contain p-0 scale-[2.1]"
@@ -415,7 +415,7 @@ export default function LeaderboardPage() {
                                 "-bot",
                                 "",
                               )
-                            ] || "/assets/characters/scloski/logo/logo1.png"
+                            ] || "/assets/characters/rico/logo/logo1.png"
                           }
                           alt="Logo"
                           className="w-full h-full object-contain p-0 scale-[2.1]"

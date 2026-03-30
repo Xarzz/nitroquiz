@@ -56,12 +56,33 @@ interface Participant {
   avatar_url?: string | null;
 }
 
-const logoImageMap: Record<string, string> = {
-  purple: "/assets/characters/scloski/logo/logo1.png",
-  white: "/assets/characters/scloski/logo/logo1.png",
-  black: "/assets/characters/scloski/logo/logo1.png",
-  aqua: "/assets/characters/scloski/logo/logo1.png",
-  blue: "/assets/characters/scloski/logo/logo1.png",
+// Helper: Generate initials from a name
+const getInitials = (name: string): string => {
+  if (!name) return "?";
+  const parts = name.trim().split(/\s+/);
+  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+  return name.slice(0, 2).toUpperCase();
+};
+
+// Initials avatar colors based on nickname hash
+const AVATAR_COLORS = ['#3b82f6', '#ef4444', '#f59e0b', '#8b5cf6', '#10b981', '#ec4899', '#06b6d4', '#f97316'];
+const getAvatarColor = (name: string): string => {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+};
+
+// Reusable InitialsAvatar component
+const InitialsAvatar = ({ name, size = 'md' }: { name: string; size?: 'sm' | 'md' | 'lg' }) => {
+  const fontSize = size === 'lg' ? 'text-2xl' : size === 'md' ? 'text-xl' : 'text-xs';
+  return (
+    <div 
+      className={`w-full h-full rounded-full flex items-center justify-center ${fontSize} font-black text-white`}
+      style={{ backgroundColor: getAvatarColor(name) }}
+    >
+      {getInitials(name)}
+    </div>
+  );
 };
 
 export default function HostRoomPage() {
@@ -704,16 +725,7 @@ export default function HostRoomPage() {
                                   className="w-full h-full object-cover"
                                 />
                               ) : (
-                                <img
-                                  src={
-                                    logoImageMap[
-                                      player.car.replace("-bot", "")
-                                    ] ||
-                                    "/assets/characters/scloski/logo/logo1.png"
-                                  }
-                                  alt="Logo"
-                                  className="w-full h-full object-contain p-0 scale-[2.1] group-hover:scale-[2.35] transition-transform"
-                                />
+                                <InitialsAvatar name={player.nickname} size="md" />
                               )}
                             </div>
                           </div>
