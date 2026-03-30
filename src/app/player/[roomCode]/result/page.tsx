@@ -24,19 +24,27 @@ import confetti from "canvas-confetti";
 import { getUser } from "@/lib/storage";
 
 const carImageMap: Record<string, string> = {
-  purple: "/assets/characters/scloski/showroom/showroom1.png",
-  white: "/assets/characters/scloski/showroom/showroom2.png",
-  black: "/assets/characters/scloski/showroom/showroom1.png",
-  aqua: "/assets/characters/scloski/showroom/showroom2.png",
-  blue: "/assets/characters/scloski/showroom/showroom1.png",
+  rico: "/assets/characters/rico/showroom/showroom1.png",
+  gecho: "/assets/characters/gecho/showroom/showroom1.png",
+  roadhog: "/assets/characters/roadhog/showroom/showroom1.png",
+  // Legacy fallbacks
+  purple: "/assets/characters/rico/showroom/showroom1.png",
+  white: "/assets/characters/gecho/showroom/showroom1.png",
+  black: "/assets/characters/roadhog/showroom/showroom1.png",
+  aqua: "/assets/characters/rico/showroom/showroom1.png",
+  blue: "/assets/characters/rico/showroom/showroom1.png",
 };
 
 const logoImageMap: Record<string, string> = {
-  purple: "/assets/characters/scloski/logo/logo1.png",
-  white: "/assets/characters/scloski/logo/logo1.png",
-  black: "/assets/characters/scloski/logo/logo1.png",
-  aqua: "/assets/characters/scloski/logo/logo1.png",
-  blue: "/assets/characters/scloski/logo/logo1.png",
+  rico: "/assets/characters/rico/showroom/showroom1.png",
+  gecho: "/assets/characters/gecho/showroom/showroom1.png",
+  roadhog: "/assets/characters/roadhog/showroom/showroom1.png",
+  // Legacy fallbacks
+  purple: "/assets/characters/rico/showroom/showroom1.png",
+  white: "/assets/characters/rico/showroom/showroom1.png",
+  black: "/assets/characters/rico/showroom/showroom1.png",
+  aqua: "/assets/characters/rico/showroom/showroom1.png",
+  blue: "/assets/characters/rico/showroom/showroom1.png",
 };
 
 interface Participant {

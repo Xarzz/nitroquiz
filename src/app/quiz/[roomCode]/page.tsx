@@ -220,116 +220,103 @@ export default function QuizPage() {
     const timerColor = timeLeft > 10 ? '#00ff9d' : timeLeft > 5 ? '#fbbf24' : '#ef4444';
     const timerPercent = (timeLeft / 15) * 100;
 
+    const OPTION_COLORS = ['#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6']; // A=blue, B=amber, C=red, D=purple
+
     return (
         <div className="min-h-screen bg-[#04060f] text-white font-rajdhani overflow-hidden relative flex flex-col items-center justify-center p-4">
             {/* Background Effects */}
             <div className="absolute inset-0 z-0 bg-[linear-gradient(rgba(45,106,242,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(45,106,242,0.05)_1px,transparent_1px)] bg-[length:50px_50px]" />
-            <div className="absolute inset-x-0 top-0 h-96 bg-gradient-to-b from-[#2d6af2]/10 to-transparent pointer-events-none" />
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
             
-            <div className="w-full max-w-2xl relative z-10 flex flex-col gap-6">
-                {/* Header Stats */}
-                <div className="flex justify-between items-end px-1">
-                    <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                             <Sparkles className="w-4 h-4 text-[#2d6af2]" />
-                             <span className="text-[#2d6af2] text-[10px] font-bold uppercase tracking-[0.3em]">Lap Progress</span>
+            <div className="w-full max-w-3xl relative z-10 flex flex-col gap-4">
+                {/* Main Card */}
+                <div className="bg-[#0c1225]/90 backdrop-blur-2xl border border-[#1e2d4d] rounded-2xl overflow-hidden shadow-[0_25px_50px_-12px_rgba(0,0,0,0.8)]">
+                    
+                    {/* Card Header: Question X/Y | Timer | SCORE */}
+                    <div className="flex items-center justify-between px-6 py-4">
+                        <div className="flex items-baseline gap-1.5">
+                            <span className="text-white text-lg font-bold">Question {currentIndex + 1}</span>
+                            <span className="text-gray-500 text-lg font-bold">/{questions.length}</span>
                         </div>
-                        <h2 className="text-4xl font-black italic tracking-tighter text-white">
-                            {currentIndex + 1}<span className="text-[#2d6af2]/30 not-italic mx-1">/</span>{questions.length}
-                        </h2>
-                    </div>
-
-                    <div className="flex flex-col items-end gap-1">
-                        <div className="flex items-center gap-1.5 px-3 py-1 bg-white/5 border border-white/10 rounded-full">
-                            <Timer className={`w-3.5 h-3.5 ${timeLeft <= 5 ? 'text-red-500' : 'text-[#00ff9d]'}`} />
-                            <span className={`text-[11px] font-bold font-mono ${timeLeft <= 5 ? 'text-red-500' : 'text-[#00ff9d]'}`}>
-                                {timeLeft}S
+                        
+                        <div className="flex items-center gap-2 px-4 py-1.5 bg-[#0a0f1e] border border-[#1e2d4d] rounded-full">
+                            <Timer className="w-4 h-4 text-gray-400" />
+                            <span className={`text-base font-bold font-mono ${timeLeft <= 5 ? 'text-red-400' : 'text-white'}`}>
+                                {String(Math.floor(timeLeft / 60)).padStart(2, '0')}:{String(timeLeft % 60).padStart(2, '0')}
                             </span>
                         </div>
-                        <div className="text-right">
-                             <p className="text-gray-500 text-[10px] font-bold uppercase tracking-[0.2em]">Total Score</p>
-                             <h2 className="text-3xl font-black italic tracking-tighter text-[#00ff9d] drop-shadow-[0_0_15px_rgba(0,255,157,0.3)]">
-                                {score}
-                             </h2>
+
+                        <div className="flex items-baseline gap-1.5">
+                            <span className="text-[#ef4444] text-lg font-bold uppercase tracking-wider">Score:</span>
+                            <span className="text-[#ef4444] text-lg font-bold">{score}</span>
                         </div>
                     </div>
-                </div>
 
-                {/* Main Card */}
-                <div className="bg-[#080d1a]/80 backdrop-blur-2xl border border-white/10 rounded-3xl overflow-hidden shadow-[0_25px_50px_-12px_rgba(0,0,0,0.8)]">
-                    {/* Timer Bar */}
-                    <div className="w-full h-1.5 bg-white/5 overflow-hidden">
+                    {/* Progress Bar */}
+                    <div className="w-full h-1.5 bg-[#0a0f1e]">
                         <motion.div 
-                            className="h-full"
-                            style={{ backgroundColor: timerColor, boxShadow: `0 0 15px ${timerColor}80` }}
+                            className="h-full bg-[#3b82f6]"
+                            style={{ boxShadow: '0 0 10px rgba(59,130,246,0.5)' }}
                             initial={{ width: '100%' }}
                             animate={{ width: `${timerPercent}%` }}
                             transition={{ duration: 1, ease: "linear" }}
                         />
                     </div>
 
-                    <div className="p-8 md:p-12">
-                        {/* Question Box */}
+                    <div className="p-6 md:p-8">
+                        {/* Question Text */}
                         <AnimatePresence mode="wait">
                             <motion.div 
                                 key={currentIndex}
-                                initial={{ y: 20, opacity: 0 }}
+                                initial={{ y: 15, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
-                                exit={{ y: -20, opacity: 0 }}
-                                className="mb-10 text-center"
+                                exit={{ y: -15, opacity: 0 }}
+                                className="mb-8"
                             >
-                                <h3 className="text-2xl md:text-3xl font-bold leading-tight text-white tracking-tight">
+                                <h3 className="text-xl md:text-2xl font-semibold leading-relaxed text-gray-200">
                                     {currentQ.question}
                                 </h3>
                             </motion.div>
                         </AnimatePresence>
 
-                        {/* Options */}
-                        <div className="grid grid-cols-1 gap-4">
+                        {/* Options Grid - 2x2 */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {currentQ.options.map((option, idx) => {
                                 const isSelected = selectedOption === idx;
+                                const optionColor = OPTION_COLORS[idx] || OPTION_COLORS[0];
+                                const letter = String.fromCharCode(65 + idx);
                                 
                                 return (
                                     <motion.button
                                         key={`${currentIndex}-${idx}`}
-                                        whileHover={!isAnswered ? { x: 8, backgroundColor: 'rgba(255,255,255,0.08)' } : {}}
+                                        whileHover={!isAnswered ? { scale: 1.02 } : {}}
                                         whileTap={!isAnswered ? { scale: 0.98 } : {}}
                                         onClick={() => handleAnswer(idx)}
                                         disabled={isAnswered}
-                                        className={`w-full group relative p-5 rounded-2xl border-2 text-left flex items-center gap-5 transition-all duration-300 ${
+                                        className={`w-full group relative py-4 px-5 rounded-xl border text-left flex items-center gap-4 transition-all duration-200 ${
                                             isSelected 
-                                            ? 'bg-[#2d6af2]/20 border-[#2d6af2] shadow-[0_0_20px_rgba(45,106,242,0.2)]' 
-                                            : 'bg-white/5 border-white/5 hover:border-white/20'
+                                            ? 'bg-[#1a2744] border-[#3b82f6] shadow-[0_0_15px_rgba(59,130,246,0.15)]' 
+                                            : 'bg-[#111a2e] border-[#1e2d4d] hover:border-[#2d4060] hover:bg-[#152035]'
                                         }`}
                                     >
-                                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-lg flex-shrink-0 transition-all ${
-                                            isSelected ? 'bg-[#2d6af2] text-white' : 'bg-white/5 text-blue-400 group-hover:bg-[#2d6af2]/10'
-                                        }`}>
-                                            {String.fromCharCode(65 + idx)}
+                                        {/* Letter Badge */}
+                                        <div 
+                                            className="w-10 h-10 rounded-lg flex items-center justify-center font-bold text-base flex-shrink-0 text-white"
+                                            style={{ backgroundColor: optionColor }}
+                                        >
+                                            {letter}
                                         </div>
-                                        <span className={`text-lg font-semibold flex-1 ${isSelected ? 'text-white' : 'text-gray-300 group-hover:text-white'}`}>
+                                        
+                                        {/* Option Text */}
+                                        <span className={`text-base font-medium flex-1 ${isSelected ? 'text-white' : 'text-gray-300'}`}>
                                             {option}
                                         </span>
-                                        
-                                        {isSelected && (
-                                             <motion.div 
-                                                initial={{ scale: 0 }}
-                                                animate={{ scale: 1 }}
-                                                className="w-2.5 h-2.5 rounded-full bg-[#2d6af2] shadow-[0_0_10px_#2d6af2]" 
-                                             />
-                                        )}
                                     </motion.button>
                                 );
                             })}
                         </div>
                     </div>
                 </div>
-
-                {/* Hints / Mini Label */}
-                <p className="text-center text-gray-500 text-[10px] uppercase tracking-[0.4em] mt-2">
-                    Locked In • Swift Response Bonus Active
-                </p>
             </div>
 
             {/* Bottom Perspective Grid */}

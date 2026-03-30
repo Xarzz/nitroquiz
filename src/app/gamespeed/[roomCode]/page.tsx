@@ -675,10 +675,8 @@ export default function GameSpeedPage() {
 
         const name = (sprite as any).assetName;
 
-        // Menghitung worldWidth secara dinamis berdasarkan ukuran sprite mobil pemain
-        // Diubah rasionya menjadi 1.0 agar ukuran NPC pas dengan karakter pemain ketika didekati
-        const baseCar = state.current.sprites.car;
-        const playerRefWidth = baseCar ? baseCar.width : 300;
+        // Use a fixed reference width so asset sizes stay consistent regardless of player sprite dimensions
+        const playerRefWidth = 300;
         const carWorldWidth = playerRefWidth * 1.0;
 
         let worldWidth = carWorldWidth * 0.75; // NPC mobil disesuaikan (jangan terlalu besar)
