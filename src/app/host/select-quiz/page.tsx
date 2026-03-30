@@ -8,7 +8,6 @@ import { Search, ArrowLeft, HelpCircle, Heart, User, Play, FileText, RefreshCw }
 import { useEffect, useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { categoryNames } from "@/lib/questions";
 import { QuizCategory } from "@/types";
 import { supabaseCentral } from "@/lib/supabase";
 import { Logo } from "@/components/ui/logo";
@@ -188,8 +187,7 @@ export default function SelectQuizPage() {
 
     const getCategoryDisplayName = (cat: string): string => {
         if (cat === 'All') return 'ALL CATEGORIES';
-        const known = categoryNames[cat as QuizCategory];
-        if (known) return known;
+        // Auto-format the string (e.g. "bahasa-inggris" -> "Bahasa Inggris")
         return cat.split(/[-_\s]+/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
     };
 
