@@ -71,11 +71,11 @@ interface Participant {
 }
 
 const logoImageMap: Record<string, string> = {
-  purple: "/assets/characters/scloski/logo/logo1.png",
-  white: "/assets/characters/scloski/logo/logo1.png",
-  black: "/assets/characters/scloski/logo/logo1.png",
-  aqua: "/assets/characters/scloski/logo/logo1.png",
-  blue: "/assets/characters/scloski/logo/logo1.png",
+  purple: "/assets/characters/rico/logo/logo1.png",
+  white: "/assets/characters/rico/logo/logo1.png",
+  black: "/assets/characters/rico/logo/logo1.png",
+  aqua: "/assets/characters/rico/logo/logo1.png",
+  blue: "/assets/characters/rico/logo/logo1.png",
 };
 
 export default function HostRoomPage() {
@@ -722,7 +722,7 @@ export default function HostRoomPage() {
                                     logoImageMap[
                                       player.car.replace("-bot", "")
                                     ] ||
-                                    "/assets/characters/scloski/logo/logo1.png"
+                                    "/assets/characters/rico/logo/logo1.png"
                                   }
                                   alt="Logo"
                                   className="w-full h-full object-contain p-0 scale-[2.1] group-hover:scale-[2.35] transition-transform"

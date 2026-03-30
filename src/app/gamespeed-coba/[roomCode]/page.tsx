@@ -675,24 +675,23 @@ export default function GameSpeedPage() {
 
         const name = (sprite as any).assetName;
 
-        // Menghitung worldWidth secara dinamis berdasarkan ukuran sprite mobil pemain
-        // Diubah rasionya menjadi 1.0 agar ukuran NPC pas dengan karakter pemain ketika didekati
-        const baseCar = state.current.sprites.car;
-        const playerRefWidth = baseCar ? baseCar.width : 300;
+        // Use a fixed reference width so asset sizes stay consistent regardless of player sprite dimensions
+        const playerRefWidth = 300;
         const carWorldWidth = playerRefWidth * 1.0;
 
-        let worldWidth = carWorldWidth * 0.75; // NPC mobil disesuaikan (jangan terlalu besar)
-        if (name?.includes('lampulalulintas') || name === 'traffic_light') worldWidth = carWorldWidth * 4.7;
-        else if (name?.includes('truck')) worldWidth = carWorldWidth * 1.1; // Truk sedikit lebih besar dari mobil
-        else if (name?.includes('car_rival') || name === 'foward-opponent') worldWidth = carWorldWidth * 0.75; // Rival sama dengan NPC
-        else if (name?.includes('odong') || name?.includes('taxi')) worldWidth = carWorldWidth * 0.8;
-        else if (name?.includes('kiri_') || name?.includes('kanan_')) worldWidth = carWorldWidth * 20.0; // Big buildings for city canyon
-        else if (name?.includes('pohon')) worldWidth = carWorldWidth * 8.0; // Trees between buildings
-        else if (name?.includes('bush') || name?.includes('semak')) worldWidth = carWorldWidth * 2.35;
-        else if (name?.includes('bench') || name?.includes('bangku')) worldWidth = carWorldWidth * 2.8;
-        else if (name?.includes('barrier') || name?.includes('pembatas_jalan')) worldWidth = carWorldWidth * 2.8;
-        else if (name?.includes('cone') || name?.includes('penghalang')) worldWidth = carWorldWidth * 0.95;
-        else if (name?.includes('obstacle') || name?.includes('construction')) worldWidth = carWorldWidth * 1.1;
+        let worldWidth = carWorldWidth * 1.0; // NPC default = same as player character
+        if (name?.includes('lampulalulintas') || name === 'traffic_light') worldWidth = carWorldWidth * 5.5;
+        else if (name?.includes('truck')) worldWidth = carWorldWidth * 1.3;
+        else if (name?.includes('car_rival') || name === 'foward-opponent') worldWidth = carWorldWidth * 1.0;
+        else if (name?.includes('odong') || name?.includes('taxi')) worldWidth = carWorldWidth * 1.0;
+        else if (name?.includes('jne')) worldWidth = carWorldWidth * 1.1;
+        else if (name?.includes('kiri_') || name?.includes('kanan_')) worldWidth = carWorldWidth * 24.0;
+        else if (name?.includes('pohon')) worldWidth = carWorldWidth * 14.0;
+        else if (name?.includes('bush') || name?.includes('semak')) worldWidth = carWorldWidth * 3.5;
+        else if (name?.includes('bench') || name?.includes('bangku')) worldWidth = carWorldWidth * 3.5;
+        else if (name?.includes('barrier') || name?.includes('pembatas_jalan')) worldWidth = carWorldWidth * 3.5;
+        else if (name?.includes('cone') || name?.includes('penghalang')) worldWidth = carWorldWidth * 1.2;
+        else if (name?.includes('obstacle') || name?.includes('construction')) worldWidth = carWorldWidth * 1.3;
 
         const destW = scale * worldWidth * (width / 2);
         const destH = destW * (sprite.height / sprite.width);

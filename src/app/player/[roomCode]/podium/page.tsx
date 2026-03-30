@@ -32,11 +32,11 @@ const carImageMap: Record<string, string> = {
 };
 
 const logoImageMap: Record<string, string> = {
-  purple: "/assets/characters/scloski/logo/logo1.png",
-  white: "/assets/characters/scloski/logo/logo1.png",
-  black: "/assets/characters/scloski/logo/logo1.png",
-  aqua: "/assets/characters/scloski/logo/logo1.png",
-  blue: "/assets/characters/scloski/logo/logo1.png",
+  purple: "/assets/characters/rico/logo/logo1.png",
+  white: "/assets/characters/rico/logo/logo1.png",
+  black: "/assets/characters/rico/logo/logo1.png",
+  aqua: "/assets/characters/rico/logo/logo1.png",
+  blue: "/assets/characters/rico/logo/logo1.png",
 };
 
 interface Participant {

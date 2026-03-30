@@ -6,11 +6,11 @@ import { useParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
 const logoImageMap: Record<string, string> = {
-  purple: "/assets/characters/scloski/logo/logo1.png",
-  white: "/assets/characters/scloski/logo/logo1.png",
-  black: "/assets/characters/scloski/logo/logo1.png",
-  aqua: "/assets/characters/scloski/logo/logo1.png",
-  blue: "/assets/characters/scloski/logo/logo1.png",
+  purple: "/assets/characters/rico/logo/logo1.png",
+  white: "/assets/characters/rico/logo/logo1.png",
+  black: "/assets/characters/rico/logo/logo1.png",
+  aqua: "/assets/characters/rico/logo/logo1.png",
+  blue: "/assets/characters/rico/logo/logo1.png",
 };
 
 interface Participant {
@@ -79,7 +79,7 @@ function PlayerCard({
   const avatarSrc =
     player.avatar_url ||
     logoImageMap[baseCar] ||
-    "/assets/characters/scloski/logo/logo1.png";
+    "/assets/characters/rico/logo/logo1.png";
 
   const isFinished =
     player.finished_at !== null || player.current_question >= totalQuestions;
@@ -223,7 +223,7 @@ function PlayerCard({
               }}
             >
               <img
-                src={logoImageMap[baseCar] || "/assets/characters/scloski/logo/logo1.png"}
+                src={logoImageMap[baseCar] || "/assets/characters/rico/logo/logo1.png"}
                 alt={player.nickname}
                 style={{
                   width: "100%",
