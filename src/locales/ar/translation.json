@@ -40,5 +40,203 @@
             "desc": "أجب على الأسئلة بأسرع ما يمكن! تُمنح النقاط بناءً على السرعة والدقة. أسرع إجابة صحيحة تفوز!"
         }
     }
+  },
+  "login": {
+    "title": "تسجيل الدخول",
+    "google": {
+      "continue": "المتابعة باستخدام Google",
+      "redirecting": "جاري التوجيه...",
+      "failed": "فشل تسجيل الدخول. يرجى المحاولة مرة أخرى."
+    },
+    "or": "أو",
+    "form": {
+      "identifier_label": "اسم المستخدم أو البريد الإلكتروني",
+      "identifier_placeholder": "اسم المستخدم أو البريد...",
+      "identifier_error_min": "على الأقل 3 أحرف",
+      "password_label": "كلمة المرور",
+      "password_placeholder": "••••••••",
+      "password_error_min": "على الأقل 6 أحرف",
+      "forgot_password": "هل نسيت كلمة المرور؟",
+      "button": "دخول",
+      "authenticating": "جاري التحقق...",
+      "username_not_found": "اسم المستخدم غير موجود!",
+      "generic_error": "حدث خطأ، يرجى المحاولة مرة أخرى!"
+    },
+    "register": {
+      "text": "ليس لديك حساب؟",
+      "link": "تسجيل"
+    },
+    "footer": "© 2026 NitroQuiz — جميع المحركات تعمل"
+  },
+  "select_quiz": {
+    "search_placeholder": "ابحث عن عنوان الاختبار...",
+    "category_placeholder": "الفئة",
+    "all_categories": "كل الفئات",
+    "tabs": {
+      "quizzes": "الاختبارات",
+      "favorites": "المفضلة",
+      "my_quiz": "اختباراتي"
+    },
+    "start_button": "ابدأ",
+    "empty_states": {
+      "favorites_title": "لا توجد مفضلة بعد",
+      "favorites_desc": "اضغط على أيقونة القلب على أي اختبار لحفظه هنا",
+      "browse_quizzes": "تصفح الاختبارات",
+      "myquiz_title": "لا توجد اختبارات منشأة",
+      "myquiz_desc": "الاختبارات التي تنشؤها ستظهر هنا. قم بالتحديث إذا قمت بإنشاء واحد للتو.",
+      "refresh": "تحديث",
+      "browse_all": "تصفح الكل",
+      "search_title": "لم يتم العثور على اختبارات",
+      "search_desc": "حاول تعديل فلاتر البحث أو الكلمات الرئيسية",
+      "reset_filters": "إعادة ضبط الفلاتر"
+    },
+    "pagination": {
+      "prev": "السابق",
+      "next": "التالي",
+      "page": "صفحة"
+    }
+  },
+  "categories": {
+    "general": "عام",
+    "umum": "عام",
+    "math": "رياضيات",
+    "matematika": "رياضيات",
+    "history": "تاريخ",
+    "sejarah": "تاريخ",
+    "science": "علوم",
+    "ipa": "علوم",
+    "geography": "جغرافيا",
+    "ips": "علوم اجتماعية",
+    "language": "لغة",
+    "bahasa": "لغة",
+    "sport": "رياضة",
+    "olahraga": "رياضة",
+    "sports": "رياضة",
+    "technology": "تكنولوجيا",
+    "teknologi": "تكنولوجيا",
+    "art": "فن",
+    "music": "موسيقى",
+    "business": "أعمال",
+    "bisnis": "أعمال"
+  },
+  "room_settings": {
+    "loading": "جاري إنشاء الإشارة...",
+    "duration": "المدة",
+    "min": "دقيقة",
+    "questions": "الأسئلة",
+    "sound": "الصوت",
+    "difficulty": {
+      "title": "الصعوبة",
+      "easy": "سهل",
+      "normal": "عادي",
+      "hard": "صعب"
+    },
+    "button": {
+      "loading": "جاري التحميل...",
+      "continue": "متابعة"
+    },
+    "delete_dialog": {
+      "title": "حذف الجلسة؟",
+      "description": "سيؤدي هذا إلى حذف هذه الجلسة بشكل دائم.",
+      "cancel": "إلغاء",
+      "deleting": "جاري الحذف...",
+      "delete": "حذف"
+    }
+  },
+  "host_lobby": {
+    "loading": "جاري إنشاء الإشارة...",
+    "start": "ابدأ",
+    "starting": "جاري البدء...",
+    "exit": "خروج",
+    "invite": "دعوة",
+    "players_count": "اللاعبون: {{count}}",
+    "bot": "روبوت",
+    "deselect": "إلغاء التحديد",
+    "all": "الكل",
+    "waiting": "في انتظار اللاعبين...",
+    "kick": "طرد",
+    "players": "اللاعبين",
+    "cancel": "إلغاء",
+    "kick_button": "طرد",
+    "invite_title": "دعوة المتسابقين",
+    "invite_desc": "شارك هذه الغرفة عبر منصات التواصل الاجتماعي",
+    "copied": "تم النسخ",
+    "copy": "نسخ",
+    "share_text1": "هيا نتسابق في الاختبارات معًا على NitroQuiz! انضم للغرفة: ",
+    "share_text2": "هيا نتسابق في الاختبارات معًا على NitroQuiz! انضم للغرفة {{code}} الآن: ",
+    "share_text3": "هيا نتسابق في الاختبارات معًا على NitroQuiz!"
+  },
+  "host_monitor": {
+    "new": "جديد",
+    "racing": "سباق",
+    "finish": "نهاية",
+    "crashed": "تحطم",
+    "quiz": "اختبار",
+    "lap": "جولة",
+    "score": "النتيجة",
+    "ending": "جاري الإنهاء...",
+    "end_race": "إنهاء السباق",
+    "leaderboard": "لوحة الصدارة",
+    "waiting": "في انتظار المتسابقين..."
+  },
+  "host_leaderboard": {
+    "loading": "جاري إنشاء الإشارة...",
+    "home_tooltip": "الرئيسية",
+    "play_again_tooltip": "العب مرة أخرى",
+    "stats_tooltip": "الإحصائيات",
+    "rank": "الترتيب",
+    "player": "اللاعب",
+    "score": "النتيجة",
+    "time": "الوقت"
+  },
+  "player_waiting": {
+    "connecting": "جاري الاتصال...",
+    "connection_lost": "انقطع الاتصال",
+    "back_home": "العودة للرئيسية",
+    "you": "أنت",
+    "waiting_host": "في انتظار بدء المضيف...",
+    "choose_character": "اختيار الشخصية",
+    "waiting_host_desktop": "في انتظار المضيف لبدء السباق...",
+    "player": "لاعب ({{count}})",
+    "connected_info": "المشاركون المتصلون والمركبات",
+    "waiting_player": "في انتظار اللاعبين...",
+    "choose_racer": "اختر متسابقك",
+    "speed": "السرعة",
+    "accel": "التسارع",
+    "handling": "التحكم",
+    "back": "رجوع",
+    "select": "تحديد",
+    "ready": "استعد",
+    "steady": "تأهب",
+    "go_race": "انطلق",
+    "go": "انطلق!",
+    "launching": "إطلاق السباق..."
+  },
+  "player_quiz": {
+    "round_complete": "اكتملت الجولة!",
+    "quiz_finished": "انتهى الاختبار!",
+    "establishing_signal": "جاري إنشاء الإشارة...",
+    "question": "السؤال {{current}}",
+    "score": "النتيجة:"
+  },
+  "player_result": {
+    "establishing_signal": "جاري إنشاء الإشارة...",
+    "waiting_others": "في انتظار الآخرين...",
+    "rank": "الترتيب",
+    "score": "النتيجة",
+    "correct": "صحيح",
+    "time": "الوقت",
+    "home": "الرئيسية",
+    "stats": "الإحصائيات",
+    "leaderboard": "لوحة الصدارة",
+    "you": " (أنت)",
+    "race_complete": "اكتمل السباق",
+    "racer_profile": "الملف الشخصي للمتسابق",
+    "player_fallback": "اللاعب",
+    "eliminated": "مستبعد",
+    "waiting": "في الانتظار",
+    "champion": "🏆 بطل",
+    "finished": "اكتمل",
+    "wait_for_host": "انتظر المضيف"
   }
 }

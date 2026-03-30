@@ -22,6 +22,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/lib/supabase";
 import confetti from "canvas-confetti";
 import { getUser } from "@/lib/storage";
+import { useTranslation } from "react-i18next";
 
 const carImageMap: Record<string, string> = {
   rico: "/assets/characters/rico/showroom/showroom1.png",
@@ -91,6 +92,7 @@ const InitialsAvatar = ({ name, size = 'md' }: { name: string; size?: 'sm' | 'md
 export default function PlayerResultPage() {
   const params = useParams();
   const router = useRouter();
+  const { t } = useTranslation();
   const roomCode = params.roomCode as string;
 
   const [participants, setParticipants] = useState<Participant[]>([]);
@@ -341,7 +343,7 @@ export default function PlayerResultPage() {
         <div className="text-center z-10">
           <div className="w-16 h-16 border-4 border-[#2d6af2]/30 border-t-[#2d6af2] rounded-full animate-spin mx-auto mb-6" />
           <p className="mt-4 text-[#2d6af2] text-xl tracking-[0.2em] uppercase animate-pulse">
-            Establishing Signal...
+            {t("player_result.establishing_signal")}
           </p>
         </div>
       </div>
@@ -413,11 +415,11 @@ export default function PlayerResultPage() {
                   className="font-display text-[#00d4ff] text-xl font-bold tracking-[0.18em] uppercase"
                   style={{ textShadow: "0 0 12px rgba(0,212,255,0.55)" }}
                 >
-                  {currentUser?.username || "PLAYER"}
+                  {currentUser?.username || t("player_result.player_fallback")}
                 </p>
                 {!allFinished && (
                   <p className="text-[#00ff9d]/70 text-[10px] uppercase tracking-[0.2em] font-mono mt-1 animate-pulse">
-                    Waiting for others...
+                    {t("player_result.waiting_others")}
                   </p>
                 )}
               </div>
@@ -439,7 +441,7 @@ export default function PlayerResultPage() {
                   </span>
                 </div>
                 <span className="text-gray-400 text-[9px] uppercase tracking-widest mt-1.5 font-mono">
-                  RANK
+                  {t("player_result.rank")}
                 </span>
               </MobileStatCard>
               <MobileStatCard>
@@ -447,7 +449,7 @@ export default function PlayerResultPage() {
                   {currentPlayerData?.score ?? 0}
                 </span>
                 <span className="text-gray-400 text-[9px] uppercase tracking-widest mt-1.5 font-mono">
-                  SCORE
+                  {t("player_result.score")}
                 </span>
               </MobileStatCard>
               <MobileStatCard>
@@ -457,7 +459,7 @@ export default function PlayerResultPage() {
                     : (currentPlayerData?.current_question ?? 0)}
                 </span>
                 <span className="text-gray-400 text-[9px] uppercase tracking-widest mt-1.5 font-mono">
-                  CORRECT
+                  {t("player_result.correct")}
                 </span>
               </MobileStatCard>
               <MobileStatCard>
@@ -465,7 +467,7 @@ export default function PlayerResultPage() {
                   {formatDuration(currentPlayerData?.duration)}
                 </span>
                 <span className="text-gray-400 text-[9px] uppercase tracking-widest mt-1.5 font-mono">
-                  TIME
+                  {t("player_result.time")}
                 </span>
               </MobileStatCard>
             </motion.div>
@@ -484,7 +486,7 @@ export default function PlayerResultPage() {
                   boxShadow: "0 0 24px rgba(0,188,212,0.38)",
                 }}
               >
-                <House className="w-5 h-5" /> HOME
+                <House className="w-5 h-5" /> {t("player_result.home")}
               </button>
               <button
                 onClick={() => sessionId && (window.location.href = `https://gameforsmartnewui.vercel.app/stat/${sessionId}`)}
@@ -494,7 +496,7 @@ export default function PlayerResultPage() {
                   boxShadow: "0 0 24px rgba(245,158,11,0.38)",
                 }}
               >
-                <BarChart2 className="w-5 h-5" /> STATISTIK
+                <BarChart2 className="w-5 h-5" /> {t("player_result.stats")}
               </button>
             </motion.div>
           </motion.div>
@@ -513,7 +515,7 @@ export default function PlayerResultPage() {
                 ←
               </button>
               <h2 className="font-display text-lg font-black uppercase tracking-widest text-white">
-                Leaderboard
+                {t("player_result.leaderboard")}
               </h2>
             </div>
             <div className="relative flex items-end justify-center w-full h-[200px] mb-4 flex-shrink-0">
@@ -533,7 +535,7 @@ export default function PlayerResultPage() {
                       >
                         {secondPlace.nickname}
                         {secondPlace.nickname === currentUser?.username &&
-                          " (YOU)"}
+                          t("player_result.you")}
                       </p>
                       <p className="font-mono text-slate-400 text-[8px]">
                         {secondPlace.score.toLocaleString()}
@@ -585,7 +587,7 @@ export default function PlayerResultPage() {
                       >
                         {firstPlace.nickname}
                         {firstPlace.nickname === currentUser?.username &&
-                          " (YOU)"}
+                          t("player_result.you")}
                       </p>
                       <p className="font-mono text-white text-[8px] mt-0.5 font-bold">
                         {firstPlace.score.toLocaleString()}
@@ -631,7 +633,7 @@ export default function PlayerResultPage() {
                       >
                         {thirdPlace.nickname}
                         {thirdPlace.nickname === currentUser?.username &&
-                          " (YOU)"}
+                          t("player_result.you")}
                       </p>
                       <p className="font-mono text-orange-400 text-[8px]">
                         {thirdPlace.score.toLocaleString()}
@@ -694,7 +696,7 @@ export default function PlayerResultPage() {
                         <p
                           className={`font-display text-[10px] tracking-wider uppercase truncate ${isMe ? "text-[#00ff9d] font-bold" : index === 0 ? "text-yellow-400" : "text-gray-300"}`}
                         >
-                          {player.nickname} {isMe && "(YOU)"}
+                          {player.nickname} {isMe && t("player_result.you")}
                         </p>
                       </div>
                       <span
@@ -714,7 +716,7 @@ export default function PlayerResultPage() {
               onClick={() => sessionId && (window.location.href = `https://gameforsmartnewui.vercel.app/stat/${sessionId}`)}
               className="w-full h-12 flex items-center justify-center gap-2 rounded-full border border-[#f59e0b]/50 text-[#f59e0b] font-display text-sm uppercase tracking-widest hover:bg-[#f59e0b]/10 active:scale-95 transition-all flex-shrink-0"
             >
-              <BarChart2 className="w-4 h-4" /> STATISTIK
+              <BarChart2 className="w-4 h-4" /> {t("player_result.stats")}
             </button>
           </motion.div>
         )}
@@ -783,7 +785,7 @@ export default function PlayerResultPage() {
             className="font-display text-2xl font-black text-white uppercase tracking-[0.2em] absolute left-1/2 -translate-x-1/2"
             style={{ textShadow: "0 0 30px rgba(255,255,255,0.2)" }}
           >
-            RACE COMPLETE
+            {t("player_result.race_complete")}
           </h1>
           <img
             src="/assets/logo/logo2.png"
@@ -850,14 +852,14 @@ export default function PlayerResultPage() {
                   </div>
                   <div className="bg-[#2d6af2]/20 px-3 py-1 rounded-full border border-[#2d6af2]/40">
                     <p className="text-[10px] font-bold text-[#00d4ff] uppercase tracking-widest">
-                      RACER PROFILE
+                      {t("player_result.racer_profile")}
                     </p>
                   </div>
                 </div>
                 {/* Player name + Status — transparent, no divider between them */}
                 <div className="flex flex-col items-center justify-center gap-6 px-6 py-10 flex-1">
                   <p className="font-display text-white text-xl font-bold uppercase tracking-widest text-center leading-tight">
-                    {currentUser?.username || "PLAYER"}
+                    {currentUser?.username || t("player_result.player_fallback")}
                   </p>
                   {currentPlayerData?.eliminated ? (
                     <span
@@ -867,7 +869,7 @@ export default function PlayerResultPage() {
                         textShadow: "0 0 16px rgba(239,68,68,0.7)",
                       }}
                     >
-                      ELIMINATED
+                      {t("player_result.eliminated")}
                     </span>
                   ) : !allFinished ? (
                     <span
@@ -877,7 +879,7 @@ export default function PlayerResultPage() {
                         textShadow: "0 0 14px rgba(96,165,250,0.5)",
                       }}
                     >
-                      WAITING
+                      {t("player_result.waiting")}
                     </span>
                   ) : currentPlayerRank === 1 ? (
                     <span
@@ -887,7 +889,7 @@ export default function PlayerResultPage() {
                         textShadow: "0 0 14px rgba(250,204,21,0.6)",
                       }}
                     >
-                      🏆 CHAMPION
+                      {t("player_result.champion")}
                     </span>
                   ) : (
                     <span
@@ -897,7 +899,7 @@ export default function PlayerResultPage() {
                         textShadow: "0 0 14px rgba(0,255,157,0.5)",
                       }}
                     >
-                      FINISHED
+                      {t("player_result.finished")}
                     </span>
                   )}
                 </div>
@@ -966,7 +968,7 @@ export default function PlayerResultPage() {
               }}
             >
               <div className="w-full h-full flex flex-col justify-between gap-4">
-                <DesktopStatCard label="RANK">
+                <DesktopStatCard label={t("player_result.rank")}>
                   <p
                     className="font-display font-black text-white leading-none"
                     style={{ fontSize: "52px", textShadow: "0 0 20px rgba(255,255,255,0.4)" }}
@@ -977,10 +979,10 @@ export default function PlayerResultPage() {
                     className="font-display font-bold text-[#facc15]"
                     style={{ fontSize: "16px", letterSpacing: "0.2em" }}
                   >
-                    {allFinished ? getRankSuffix(currentPlayerRank) : "WAIT FOR HOST"}
+                    {allFinished ? getRankSuffix(currentPlayerRank) : t("player_result.wait_for_host")}
                   </p>
                 </DesktopStatCard>
-                <DesktopStatCard label="SCORE">
+                <DesktopStatCard label={t("player_result.score")}>
                   <p
                     className="font-display font-black text-white leading-none"
                     style={{ fontSize: "clamp(32px,3.2vw,46px)" }}
@@ -988,7 +990,7 @@ export default function PlayerResultPage() {
                     {currentPlayerData?.score ?? 0}
                   </p>
                 </DesktopStatCard>
-                <DesktopStatCard label="CORRECT">
+                <DesktopStatCard label={t("player_result.correct")}>
                   <p
                     className="font-display font-black text-white leading-none"
                     style={{ fontSize: "clamp(26px,2.8vw,40px)" }}
@@ -998,7 +1000,7 @@ export default function PlayerResultPage() {
                       : (currentPlayerData?.current_question ?? 0)}
                   </p>
                 </DesktopStatCard>
-                <DesktopStatCard label="TIME">
+                <DesktopStatCard label={t("player_result.time")}>
                   <p
                     className="font-display font-black text-white leading-none font-mono"
                     style={{ fontSize: "clamp(26px,2.8vw,40px)" }}

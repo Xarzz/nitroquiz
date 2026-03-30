@@ -19,6 +19,7 @@ import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/lib/supabase";
 import confetti from "canvas-confetti";
+import { useTranslation } from "react-i18next";
 
 const carImageMap: Record<string, string> = {
   purple: "/assets/characters/rico/showroom/showroom1.png",
@@ -51,6 +52,7 @@ interface Participant {
 export default function LeaderboardPage() {
   const params = useParams();
   const router = useRouter();
+  const { t } = useTranslation();
   const roomCode = params.roomCode as string;
 
   const [participants, setParticipants] = useState<Participant[]>([]);
@@ -164,7 +166,7 @@ export default function LeaderboardPage() {
         <div className="text-center z-10">
           <div className="w-16 h-16 border-4 border-[#2d6af2]/30 border-t-[#2d6af2] rounded-full animate-spin mx-auto mb-6"></div>
           <p className="mt-4 text-[#2d6af2] text-xl tracking-[0.2em] uppercase animate-pulse">
-            Establishing Signal...
+            {t("host_leaderboard.loading")}
           </p>
         </div>
       </div>
@@ -204,14 +206,14 @@ export default function LeaderboardPage() {
           <Button
             onClick={() => router.push("/host/select-quiz")}
             className="w-12 h-12 rounded-full p-0 bg-black/60 backdrop-blur-md border border-[#2d6af2]/50 hover:bg-[#2d6af2]/20 hover:scale-110 flex items-center justify-center text-[#2d6af2] shadow-[0_0_15px_rgba(45,106,242,0.4)] transition-all"
-            title="Home"
+            title={t("host_leaderboard.home_tooltip")}
           >
             <House size={20} />
           </Button>
           <Button
             onClick={() => router.push(`/host/${roomCode}/lobby`)}
             className="w-12 h-12 rounded-full p-0 bg-black/60 backdrop-blur-md border border-[#00ff9d]/50 hover:bg-[#00ff9d]/20 hover:scale-110 flex items-center justify-center text-[#00ff9d] shadow-[0_0_15px_rgba(0,255,157,0.4)] transition-all"
-            title="Play Again"
+            title={t("host_leaderboard.play_again_tooltip")}
           >
             <RotateCcw size={20} />
           </Button>
@@ -227,7 +229,7 @@ export default function LeaderboardPage() {
               )
             }
             className="w-12 h-12 rounded-full p-0 bg-black/60 backdrop-blur-md border border-[#f59e0b]/50 hover:bg-[#f59e0b]/20 hover:scale-110 flex items-center justify-center text-[#f59e0b] shadow-[0_0_15px_rgba(245,158,11,0.4)] transition-all"
-            title="Statistik"
+            title={t("host_leaderboard.stats_tooltip")}
           >
             <BarChart2 size={20} />
           </Button>
@@ -463,11 +465,11 @@ export default function LeaderboardPage() {
                 <thead>
                   <tr className="border-b border-[#2d6af2]/20 text-gray-400 font-display text-[10px] sm:text-xs tracking-wider">
                     <th className="px-2 sm:px-4 py-3 w-12 sm:w-16 text-center">
-                      RANK
+                      {t("host_leaderboard.rank")}
                     </th>
-                    <th className="px-2 sm:px-4 py-3">PLAYER</th>
-                    <th className="px-2 sm:px-4 py-3 text-right">SCORE</th>
-                    <th className="px-2 sm:px-4 py-3 text-center">TIME</th>
+                    <th className="px-2 sm:px-4 py-3">{t("host_leaderboard.player")}</th>
+                    <th className="px-2 sm:px-4 py-3 text-right">{t("host_leaderboard.score")}</th>
+                    <th className="px-2 sm:px-4 py-3 text-center">{t("host_leaderboard.time")}</th>
                   </tr>
                 </thead>
                 <tbody>

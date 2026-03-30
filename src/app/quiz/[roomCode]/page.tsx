@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, X, Timer, Trophy, ArrowRight, Loader2, Sparkles } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import { useTranslation } from "react-i18next";
 
 // Reuse QuizQuestion type
 export interface QuizQuestion {
@@ -17,6 +18,7 @@ export interface QuizQuestion {
 export default function QuizPage() {
     const router = useRouter();
     const params = useParams();
+    const { t } = useTranslation();
     const roomCodeFromParams = params?.roomCode as string;
     const [mounted, setMounted] = useState(false);
     const [questions, setQuestions] = useState<QuizQuestion[]>([]);
@@ -28,7 +30,7 @@ export default function QuizPage() {
     const [timeLeft, setTimeLeft] = useState(15);
     const [roomCode, setRoomCode] = useState<string | null>(roomCodeFromParams || null);
     const [sessionId, setSessionId] = useState<string | null>(null);
-    const [statusText, setStatusText] = useState("ROUND COMPLETE!");
+    const [statusText, setStatusText] = useState(t("player_quiz.round_complete"));
 
     const timerRef = useRef<NodeJS.Timeout | null>(null);
     const QUESTIONS_PER_ROUND = 3;
@@ -152,9 +154,9 @@ export default function QuizPage() {
 
         if (nextRoundCount >= QUESTIONS_PER_ROUND || nextIdx >= questions.length) {
             if (nextIdx >= questions.length) {
-                setStatusText("QUIZ FINISHED!");
+                setStatusText(t("player_quiz.quiz_finished"));
             } else {
-                setStatusText("ROUND COMPLETE!");
+                setStatusText(t("player_quiz.round_complete"));
             }
         }
     };
@@ -209,7 +211,7 @@ export default function QuizPage() {
                          <Trophy className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 text-[#2d6af2]/40" />
                     </div>
                     <p className="text-[#2d6af2] text-base font-bold uppercase tracking-[0.4em] animate-pulse">
-                        ESTABLISHING SIGNAL...
+                        {t("player_quiz.establishing_signal")}
                     </p>
                 </div>
             </div>
@@ -235,7 +237,7 @@ export default function QuizPage() {
                     {/* Card Header: Question X/Y | Timer | SCORE */}
                     <div className="flex items-center justify-between px-6 py-4">
                         <div className="flex items-baseline gap-1.5">
-                            <span className="text-white text-lg font-bold">Question {currentIndex + 1}</span>
+                            <span className="text-white text-lg font-bold">{t("player_quiz.question", { current: currentIndex + 1 })}</span>
                             <span className="text-gray-500 text-lg font-bold">/{questions.length}</span>
                         </div>
                         
@@ -247,7 +249,7 @@ export default function QuizPage() {
                         </div>
 
                         <div className="flex items-baseline gap-1.5">
-                            <span className="text-[#ef4444] text-lg font-bold uppercase tracking-wider">Score:</span>
+                            <span className="text-[#ef4444] text-lg font-bold uppercase tracking-wider">{t("player_quiz.score")}</span>
                             <span className="text-[#ef4444] text-lg font-bold">{score}</span>
                         </div>
                     </div>

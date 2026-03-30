@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import { Users, Skull } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { useTranslation } from "react-i18next";
 
 const logoImageMap: Record<string, string> = {
   purple: "/assets/characters/rico/logo/logo1.png",
@@ -114,6 +115,7 @@ function PlayerCard({
   rank: number;
   totalQuestions: number;
 }) {
+  const { t } = useTranslation();
   const baseCar = (player.car_character || "purple").replace("-bot", "");
 
   const isFinished =
@@ -127,24 +129,24 @@ function PlayerCard({
   };
   const rankColor = rankColors[rank] ?? "rgba(255,255,255,0.15)";
 
-  let statusLabel = "RACING";
+  let statusLabel = t("host_monitor.racing");
   let statusBg = "rgba(255,255,255,0.05)";
   let statusBorder = "rgba(255,255,255,0.12)";
   let statusText = "rgba(255,255,255,0.45)";
   let statusPulse = false;
 
   if (isFinished) {
-    statusLabel = "FINISH";
+    statusLabel = t("host_monitor.finish");
     statusBg = "rgba(16,185,129,0.12)";
     statusBorder = "rgba(16,185,129,0.5)";
     statusText = "#34d399";
   } else if (player.eliminated) {
-    statusLabel = "CRASHED";
+    statusLabel = t("host_monitor.crashed");
     statusBg = "rgba(239,68,68,0.12)";
     statusBorder = "rgba(239,68,68,0.5)";
     statusText = "#f87171";
   } else if (player.minigame) {
-    statusLabel = "QUIZ";
+    statusLabel = t("host_monitor.quiz");
     statusBg = "rgba(59,130,246,0.12)";
     statusBorder = "rgba(59,130,246,0.5)";
     statusText = "#93c5fd";
@@ -219,7 +221,7 @@ function PlayerCard({
                 textTransform: "uppercase",
               }}
             >
-              NEW
+              {t("host_monitor.new")}
             </div>
           )}
           {player.eliminated ? (
@@ -295,7 +297,7 @@ function PlayerCard({
               borderRadius: "6px",
             }}
           >
-            LAP {player.current_question}/{totalQuestions}
+            {t("host_monitor.lap")} {player.current_question}/{totalQuestions}
           </span>
         </div>
 
@@ -322,7 +324,7 @@ function PlayerCard({
                 textTransform: "uppercase",
               }}
             >
-              SCORE
+              {t("host_monitor.score")}
             </span>
             <span
               style={{
@@ -410,6 +412,7 @@ function PlayerCard({
 export default function GameMonitorPage() {
   const params = useParams();
   const router = useRouter();
+  const { t } = useTranslation();
   const roomCode = params.roomCode as string;
 
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -687,7 +690,7 @@ export default function GameMonitorPage() {
               opacity: isEnding ? 0.5 : 1,
             }}
           >
-            {isEnding ? "ENDING..." : "END RACE"}
+            {isEnding ? t("host_monitor.ending") : t("host_monitor.end_race")}
           </button>
         </div>
       </div>
@@ -705,7 +708,7 @@ export default function GameMonitorPage() {
         {/* Label */}
         <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "8px", paddingRight: "4px" }}>
           <span style={{ fontFamily: "Orbitron, monospace", fontSize: "9px", letterSpacing: "0.35em", color: "rgba(147,197,253,0.45)", textTransform: "uppercase" }}>
-            LEADERBOARD
+            {t("host_monitor.leaderboard")}
           </span>
         </div>
 
@@ -735,7 +738,7 @@ export default function GameMonitorPage() {
             >
               <Users size={36} style={{ opacity: 0.2, marginBottom: "12px" }} />
               <p style={{ fontFamily: "Orbitron, monospace", fontSize: "11px", letterSpacing: "0.4em", textTransform: "uppercase", opacity: 0.25 }}>
-                Waiting for Grid...
+                {t("host_monitor.waiting")}
               </p>
             </div>
           )}

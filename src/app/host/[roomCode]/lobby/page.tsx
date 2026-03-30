@@ -33,21 +33,7 @@ import {
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { supabase } from "@/lib/supabase";
 import { Logo } from "@/components/ui/logo";
-
-// Mock Translation (same as before)
-const t = (key: string, params?: any) => {
-  const translations: Record<string, string> = {
-    "hostroom.title": "LOBBY",
-    "hostroom.start": "START",
-    "hostroom.playerCount": `PLAYERS: ${params?.count || 0}`,
-    "hostroom.waiting": "WAITING FOR PLAYERS...",
-    "hostroom.kickconfirmation": `KICK ${params?.name}?`,
-    "hostroom.cancel": "CANCEL",
-    "hostroom.kick": "KICK",
-    "hostroom.loadingMore": "LOADING DATA...",
-  };
-  return translations[key] || key;
-};
+import { useTranslation } from "react-i18next";
 
 // Utils inline
 const breakOnCaps = (str: string) => str;
@@ -102,6 +88,7 @@ const InitialsAvatar = ({ name, size = 'md' }: { name: string; size?: 'sm' | 'md
 export default function HostRoomPage() {
   const params = useParams();
   const router = useRouter();
+  const { t } = useTranslation();
   const roomCode = params.roomCode as string;
 
   const [participants, setParticipants] = useState<Participant[]>([]);
@@ -465,7 +452,7 @@ export default function HostRoomPage() {
         <div className="text-center z-10">
           <div className="w-16 h-16 border-4 border-[#2d6af2]/30 border-t-[#2d6af2] rounded-full animate-spin mx-auto mb-6"></div>
           <p className="mt-4 text-[#2d6af2] text-xl tracking-[0.2em] uppercase animate-pulse">
-            Establishing Signal...
+            {t('host_lobby.loading')}
           </p>
         </div>
       </div>
@@ -581,7 +568,7 @@ export default function HostRoomPage() {
                   <div className="absolute inset-0 bg-[#00ff9d]/20 blur-xl opacity-0 hover:opacity-100 transition-opacity"></div>
                   <span className="relative z-10 flex items-center justify-center gap-2">
                     <Play className="fill-current w-5 h-5" />
-                    {countdown !== null ? "STARTING..." : t("hostroom.start")}
+                    {countdown !== null ? t("host_lobby.starting") : t("host_lobby.start")}
                   </span>
                 </Button>
 
@@ -591,7 +578,7 @@ export default function HostRoomPage() {
                     className="flex-1 bg-transparent border border-red-500/50 text-red-500 hover:bg-red-500/10 hover:border-red-500 font-display text-[10px] uppercase tracking-wider h-10 rounded-xl transition-all shadow-[0_0_10px_rgba(239,68,68,0.1)]"
                   >
                     <LogOut className="mr-1.5 h-3.5 w-3.5" />
-                    Exit
+                    {t('host_lobby.exit')}
                   </Button>
 
                   <Button
@@ -599,7 +586,7 @@ export default function HostRoomPage() {
                     className="flex-1 bg-[#2d6af2]/10 border border-[#2d6af2]/30 text-[#2d6af2] hover:bg-[#2d6af2]/20 hover:text-white font-display text-[10px] uppercase tracking-wider h-10 rounded-xl transition-all shadow-[0_0_10px_rgba(45,106,242,0.2)]"
                   >
                     <Share2 className="mr-1.5 h-3.5 w-3.5" />
-                    Invite
+                    {t('host_lobby.invite')}
                   </Button>
                 </div>
               </div>
@@ -628,7 +615,7 @@ export default function HostRoomPage() {
                     <Users size={30} className="text-[#00ff9d]" />
                   </div>
                   <h2 className="font-display text-3xl text-white tracking-wide">
-                    Players: {participants.length}
+                    {t('host_lobby.players_count', { count: participants.length })}
                   </h2>
                 </div>
 
@@ -640,7 +627,7 @@ export default function HostRoomPage() {
                     size="sm"
                     className="bg-[#00ff9d]/5 border-[#00ff9d]/30 text-[#00ff9d] hover:bg-[#00ff9d]/10 font-display text-[10px] uppercase tracking-wider rounded-lg h-8 px-3"
                   >
-                    <Plus className="mr-1 h-3 w-3" /> Bot
+                    <Plus className="mr-1 h-3 w-3" /> {t('host_lobby.bot')}
                   </Button>
 
                   {selectedPlayerIds.length > 0 && (
@@ -654,11 +641,11 @@ export default function HostRoomPage() {
                         {selectedPlayerIds.length === participants.length ? (
                           <>
                             <CheckSquare className="mr-1 h-3 w-3 text-[#00ff9d]" />{" "}
-                            Deselect
+                            {t('host_lobby.deselect')}
                           </>
                         ) : (
                           <>
-                            <Square className="mr-1 h-3 w-3" /> All
+                            <Square className="mr-1 h-3 w-3" /> {t('host_lobby.all')}
                           </>
                         )}
                       </Button>
@@ -699,7 +686,7 @@ export default function HostRoomPage() {
                     </div>
                     <div className="text-center">
                       <p className="font-display tracking-[0.2em] text-sm uppercase text-[#00ff9d]">
-                        {t("hostroom.waiting")}
+                        {t('host_lobby.waiting')}
                       </p>
                     </div>
                   </div>
@@ -788,15 +775,15 @@ export default function HostRoomPage() {
             <DialogTitle className="font-display text-xl uppercase tracking-widest text-white text-center drop-shadow-[0_0_10px_rgba(45,106,242,0.5)]">
               {isBulkKickMode ? (
                 <>
-                  KICK{" "}
+                  {t('host_lobby.kick')}{" "}
                   <span className="text-[#00ff9d] font-bold text-xl font-display tracking-wider drop-shadow-[0_0_8px_rgba(0,255,157,0.5)]">
-                    {selectedPlayerIds.length} PLAYERS
+                    {selectedPlayerIds.length} {t('host_lobby.players')}
                   </span>
                   ?
                 </>
               ) : (
                 <>
-                  KICK{" "}
+                  {t('host_lobby.kick')}{" "}
                   <span className="text-[#00ff9d] font-bold text-xl font-display tracking-wider drop-shadow-[0_0_8px_rgba(0,255,157,0.5)]">
                     {selectedPlayer?.nickname}
                   </span>
@@ -812,13 +799,13 @@ export default function HostRoomPage() {
                 variant="ghost"
                 className="flex-1 bg-transparent border border-white/10 text-gray-400 hover:bg-white/5 hover:text-white font-display text-xs uppercase tracking-wider h-12 rounded-xl transition-all"
               >
-                Cancel
+                {t('host_lobby.cancel')}
               </Button>
               <Button
                 onClick={confirmKick}
                 className="flex-1 bg-gradient-to-r from-[#2d6af2] to-[#00ff9d] hover:from-[#3b7bf5] hover:to-[#33ffb0] text-black border-none font-display text-xs uppercase tracking-wider shadow-[0_0_15px_rgba(45,106,242,0.4)] h-12 rounded-xl transition-all"
               >
-                Kick
+                {t('host_lobby.kick_button')}
               </Button>
             </div>
           </div>
@@ -855,10 +842,10 @@ export default function HostRoomPage() {
             <div className="flex justify-between items-start mb-6">
               <div>
                 <h3 className="text-xl font-display text-white tracking-widest uppercase">
-                  INVITE RACERS
+                  {t('host_lobby.invite_title')}
                 </h3>
                 <p className="text-sm text-gray-400 font-body">
-                  Share this room via social platforms
+                  {t('host_lobby.invite_desc')}
                 </p>
               </div>
               <Button
@@ -873,7 +860,7 @@ export default function HostRoomPage() {
 
             <div className="grid grid-cols-3 gap-4 mb-6">
               <a
-                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`Ayo balap quiz bareng di NitroQuiz! Join room: ${joinLink}`)}`}
+                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(t('host_lobby.share_text1') + joinLink)}`}
                 target="_blank"
                 rel="noreferrer"
                 className="flex flex-col items-center justify-center p-4 bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/30 rounded-xl transition-all group"
@@ -887,7 +874,7 @@ export default function HostRoomPage() {
               </a>
 
               <a
-                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Ayo balap quiz bareng di NitroQuiz! Join room ${roomCode} sekarang: ${joinLink}`)}`}
+                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(t('host_lobby.share_text2', { code: roomCode }) + joinLink)}`}
                 target="_blank"
                 rel="noreferrer"
                 className="flex flex-col items-center justify-center p-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all group"
@@ -901,7 +888,7 @@ export default function HostRoomPage() {
               </a>
 
               <a
-                href={`https://t.me/share/url?url=${encodeURIComponent(joinLink)}&text=${encodeURIComponent("Ayo balap quiz bareng di NitroQuiz!")}`}
+                href={`https://t.me/share/url?url=${encodeURIComponent(joinLink)}&text=${encodeURIComponent(t('host_lobby.share_text3'))}`}
                 target="_blank"
                 rel="noreferrer"
                 className="flex flex-col items-center justify-center p-4 bg-[#0088cc]/10 hover:bg-[#0088cc]/20 border border-[#0088cc]/30 rounded-xl transition-all group"
@@ -929,7 +916,7 @@ export default function HostRoomPage() {
                   onClick={() => copyToClipboard(joinLink, setCopiedJoin)}
                   className="h-full bg-[#2d6af2] hover:bg-[#4da6ff] text-white font-display text-xs px-4 rounded-md uppercase tracking-wider"
                 >
-                  {copiedJoin ? "Copied" : "Copy"}
+                  {copiedJoin ? t('host_lobby.copied') : t('host_lobby.copy')}
                 </Button>
               </div>
             </div>
