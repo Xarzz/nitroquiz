@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getQuizSession, getUser, saveGameHistory, saveUser, removeQuizSession } from '@/lib/storage';
 import { QuizSession, User, GameHistory, LeaderboardEntry } from '@/types';
-import { CATEGORY_NAMES as categoryNames, CATEGORY_ICONS as categoryIcons } from '@/lib/constants';
+
 import { botNames } from '@/lib/characters';
 
 export default function ResultsPage() {
@@ -114,7 +114,7 @@ export default function ResultsPage() {
                         </span>
                     </h1>
                     <p className="text-gray-400 text-lg">
-                        {categoryIcons[session.category]} {categoryNames[session.category]}
+                        🎮 {session.category}
                     </p>
                 </div>
 
