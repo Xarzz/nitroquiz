@@ -39,6 +39,35 @@ const logoImageMap: Record<string, string> = {
   blue: "/assets/characters/rico/logo/logo1.png",
 };
 
+// Helper: Generate initials from a name
+const getInitials = (name: string): string => {
+  if (!name) return "?";
+  const parts = name.trim().split(/\s+/);
+  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+  return name.slice(0, 2).toUpperCase();
+};
+
+// Initials avatar colors based on nickname hash
+const AVATAR_COLORS = ['#3b82f6', '#ef4444', '#f59e0b', '#8b5cf6', '#10b981', '#ec4899', '#06b6d4', '#f97316'];
+const getAvatarColor = (name: string): string => {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+};
+
+// Reusable InitialsAvatar component
+const InitialsAvatar = ({ name, size = 'md' }: { name: string; size?: 'sm' | 'md' | 'lg' }) => {
+  const fontSize = size === 'lg' ? 'text-3xl' : size === 'md' ? 'text-xl' : 'text-xs';
+  return (
+    <div 
+      className={`w-full h-full rounded-full flex items-center justify-center ${fontSize} font-black text-white`}
+      style={{ backgroundColor: getAvatarColor(name) }}
+    >
+      {getInitials(name)}
+    </div>
+  );
+};
+
 interface Participant {
   id: string;
   nickname: string;
@@ -516,11 +545,7 @@ export default function PlayerLeaderboardPage() {
                     {currentPlayerData?.avatar_url ? (
                       <img src={currentPlayerData.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
                     ) : (
-                      <img 
-                        src={currentPlayerAvatar} 
-                        alt="Logo" 
-                        className="w-full h-full object-contain p-0 scale-[2.1]" 
-                      />
+                      <InitialsAvatar name={currentUser?.username || 'P'} size="lg" />
                     )}
                   </motion.div>
                   <motion.div
@@ -664,11 +689,7 @@ export default function PlayerLeaderboardPage() {
                       {secondPlace.avatar_url ? (
                         <img src={secondPlace.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
                       ) : (
-                        <img 
-                          src={logoImageMap[(secondPlace.car_character || "white").replace("-bot", "")] || logoImageMap["purple"]} 
-                          alt="Logo" 
-                          className="w-full h-full object-contain p-0 scale-[2.1]" 
-                        />
+                        <InitialsAvatar name={secondPlace.nickname} size="md" />
                       )}
                     </div>
                     <div className="absolute -right-2 -bottom-1 w-10 h-10 bg-black/60 rounded-full border border-white/20 p-1 flex items-center justify-center z-20 shadow-xl">
@@ -720,11 +741,7 @@ export default function PlayerLeaderboardPage() {
                       {firstPlace.avatar_url ? (
                         <img src={firstPlace.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
                       ) : (
-                        <img 
-                          src={logoImageMap[(firstPlace.car_character || "purple").replace("-bot", "")] || logoImageMap["purple"]} 
-                          alt="Logo" 
-                          className="w-full h-full object-contain p-0 scale-[2.1]" 
-                        />
+                        <InitialsAvatar name={firstPlace.nickname} size="lg" />
                       )}
                     </div>
                     <div className="absolute -right-3 -bottom-1 w-12 h-12 bg-black/60 rounded-full border border-yellow-500/40 p-1.5 flex items-center justify-center z-20 shadow-xl">
@@ -770,11 +787,7 @@ export default function PlayerLeaderboardPage() {
                       {thirdPlace.avatar_url ? (
                         <img src={thirdPlace.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
                       ) : (
-                        <img 
-                          src={logoImageMap[(thirdPlace.car_character || "black").replace("-bot", "")] || logoImageMap["purple"]} 
-                          alt="Logo" 
-                          className="w-full h-full object-contain p-0 scale-[2.1]" 
-                        />
+                        <InitialsAvatar name={thirdPlace.nickname} size="md" />
                       )}
                     </div>
                     <div className="absolute -right-2 -bottom-1 w-9 h-9 bg-black/60 rounded-full border border-white/20 p-1 flex items-center justify-center z-20 shadow-xl">
@@ -818,11 +831,7 @@ export default function PlayerLeaderboardPage() {
                           : player.avatar_url ? (
                             <img src={player.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
                           ) : (
-                            <img 
-                              src={logoImageMap[(player.car_character || "white").replace("-bot", "")] || logoImageMap["purple"]} 
-                              alt="Logo" 
-                              className="w-full h-full object-contain p-0 scale-[2.1]" 
-                            />
+                            <InitialsAvatar name={player.nickname} size="sm" />
                           )}
                       </div>
                       <div className="flex-1 min-w-0">

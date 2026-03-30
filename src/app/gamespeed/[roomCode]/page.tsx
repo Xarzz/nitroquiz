@@ -698,17 +698,17 @@ export default function GameSpeedPage() {
         const name = (sprite as any).assetName;
 
         // Use a fixed reference width so asset sizes stay consistent regardless of player sprite dimensions
-        const playerRefWidth = 300;
-        const carWorldWidth = playerRefWidth * 1.0;
+        const playerRefWidth = 450;
+        const carWorldWidth = playerRefWidth * 1.5; // Larger base for vehicles to match character size
 
-        let worldWidth = carWorldWidth * 1.0; // NPC default = same as player character
+        let worldWidth = carWorldWidth * 1.0; 
         if (name?.includes('lampulalulintas') || name === 'traffic_light') worldWidth = carWorldWidth * 5.5;
-        else if (name?.includes('truck')) worldWidth = carWorldWidth * 1.3; // Truk lebih besar dari mobil
-        else if (name?.includes('car_rival') || name === 'foward-opponent') worldWidth = carWorldWidth * 1.0; // Rival sama dengan player
-        else if (name?.includes('odong') || name?.includes('taxi')) worldWidth = carWorldWidth * 1.0; // Sama dengan player
+        else if (name?.includes('truck')) worldWidth = carWorldWidth * 1.4; 
+        else if (name?.includes('car_rival') || name === 'foward-opponent') worldWidth = carWorldWidth * 1.0; 
+        else if (name?.includes('odong') || name?.includes('taxi')) worldWidth = carWorldWidth * 1.0; 
         else if (name?.includes('jne')) worldWidth = carWorldWidth * 1.1;
-        else if (name?.includes('kiri_') || name?.includes('kanan_')) worldWidth = carWorldWidth * 24.0; // Bangunan besar
-        else if (name?.includes('pohon')) worldWidth = carWorldWidth * 14.0; // Pohon besar
+        else if (name?.includes('kiri_') || name?.includes('kanan_')) worldWidth = carWorldWidth * 18.0; // Building multiplier slightly adjusted down since playerRefWidth is up
+        else if (name?.includes('pohon')) worldWidth = carWorldWidth * 11.0; // Tree multiplier slightly adjusted down
         else if (name?.includes('bush') || name?.includes('semak')) worldWidth = carWorldWidth * 3.5;
         else if (name?.includes('bench') || name?.includes('bangku')) worldWidth = carWorldWidth * 3.5;
         else if (name?.includes('barrier') || name?.includes('pembatas_jalan')) worldWidth = carWorldWidth * 3.5;

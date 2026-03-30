@@ -36,6 +36,35 @@ const logoImageMap: Record<string, string> = {
   blue: "/assets/characters/rico/logo/logo1.png",
 };
 
+// Helper: Generate initials from a name
+const getInitials = (name: string): string => {
+  if (!name) return "?";
+  const parts = name.trim().split(/\s+/);
+  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+  return name.slice(0, 2).toUpperCase();
+};
+
+// Initials avatar colors based on nickname hash
+const AVATAR_COLORS = ['#3b82f6', '#ef4444', '#f59e0b', '#8b5cf6', '#10b981', '#ec4899', '#06b6d4', '#f97316'];
+const getAvatarColor = (name: string): string => {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+};
+
+// Reusable InitialsAvatar component
+const InitialsAvatar = ({ name, size = 'md' }: { name: string; size?: 'sm' | 'md' | 'lg' }) => {
+  const fontSize = size === 'lg' ? 'text-3xl' : size === 'md' ? 'text-xl' : 'text-xs';
+  return (
+    <div 
+      className={`w-full h-full rounded-full flex items-center justify-center ${fontSize} font-black text-white`}
+      style={{ backgroundColor: getAvatarColor(name) }}
+    >
+      {getInitials(name)}
+    </div>
+  );
+};
+
 interface Participant {
   id: string;
   nickname: string;
@@ -266,18 +295,7 @@ export default function LeaderboardPage() {
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <img
-                        src={
-                          logoImageMap[
-                            (secondPlace.car_character || "white").replace(
-                              "-bot",
-                              "",
-                            )
-                          ] || "/assets/characters/rico/logo/logo1.png"
-                        }
-                        alt="Logo"
-                        className="w-full h-full object-contain p-0 scale-[2.1]"
-                      />
+                      <InitialsAvatar name={secondPlace.nickname} size="md" />
                     )}
                   </div>
                   <span className="font-display text-3xl sm:text-5xl text-slate-600/50 font-bold">
@@ -324,18 +342,7 @@ export default function LeaderboardPage() {
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <img
-                        src={
-                          logoImageMap[
-                            (firstPlace.car_character || "purple").replace(
-                              "-bot",
-                              "",
-                            )
-                          ] || "/assets/characters/rico/logo/logo1.png"
-                        }
-                        alt="Logo"
-                        className="w-full h-full object-contain p-0 scale-[2.1]"
-                      />
+                      <InitialsAvatar name={firstPlace.nickname} size="lg" />
                     )}
                   </div>
                   <span className="font-display text-5xl sm:text-7xl text-yellow-600/40 font-bold relative z-10">
@@ -373,18 +380,7 @@ export default function LeaderboardPage() {
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <img
-                        src={
-                          logoImageMap[
-                            (thirdPlace.car_character || "black").replace(
-                              "-bot",
-                              "",
-                            )
-                          ] || "/assets/characters/rico/logo/logo1.png"
-                        }
-                        alt="Logo"
-                        className="w-full h-full object-contain p-0 scale-[2.1]"
-                      />
+                      <InitialsAvatar name={thirdPlace.nickname} size="md" />
                     )}
                   </div>
                   <span className="font-display text-2xl sm:text-4xl text-orange-700/40 font-bold">
@@ -473,18 +469,8 @@ export default function LeaderboardPage() {
                                           />
                                         );
                                       }
-                                      const baseCar = (
-                                        player.car_character || "purple"
-                                      ).replace("-bot", "");
-                                      const logoSrc =
-                                        logoImageMap[baseCar] ||
-                                        "/assets/logo/logo1.png";
                                       return (
-                                        <img
-                                          src={logoSrc}
-                                          alt="car"
-                                          className="w-full h-full object-contain p-0 scale-[2.1]"
-                                        />
+                                        <InitialsAvatar name={player.nickname} size="sm" />
                                       );
                                     })()}
                               </div>

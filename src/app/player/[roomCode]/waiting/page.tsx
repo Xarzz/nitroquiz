@@ -29,6 +29,35 @@ export const PLAYER_CHARACTERS = [
     }
 ];
 
+// Helper: Generate initials from a name
+const getInitials = (name: string): string => {
+    if (!name) return "?";
+    const parts = name.trim().split(/\s+/);
+    if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+    return name.slice(0, 2).toUpperCase();
+};
+
+// Initials avatar colors based on nickname hash
+const AVATAR_COLORS = ['#3b82f6', '#ef4444', '#f59e0b', '#8b5cf6', '#10b981', '#ec4899', '#06b6d4', '#f97316'];
+const getAvatarColor = (name: string): string => {
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+};
+
+// Reusable InitialsAvatar component
+const InitialsAvatar = ({ name, size = 'md' }: { name: string; size?: 'sm' | 'md' | 'lg' }) => {
+    const fontSize = size === 'lg' ? 'text-xl' : size === 'md' ? 'text-base' : 'text-[10px]';
+    return (
+        <div 
+            className={`w-full h-full rounded-full flex items-center justify-center ${fontSize} font-black text-white`}
+            style={{ backgroundColor: getAvatarColor(name) }}
+        >
+            {getInitials(name)}
+        </div>
+    );
+};
+
 export default function PlayerWaitingPage() {
     const router = useRouter();
     const params = useParams();
@@ -44,13 +73,15 @@ export default function PlayerWaitingPage() {
     const [sessionId, setSessionId] = useState<string | null>(null);
     const [participantCount, setParticipantCount] = useState(1);
     const [username, setUsername] = useState("");
-    const [allParticipants, setAllParticipants] = useState<{ nickname: string; car_character: string }[]>([]);
+    const [userAvatar, setUserAvatar] = useState<string | null>(null);
+    const [allParticipants, setAllParticipants] = useState<{ nickname: string; car_character: string; avatar_url?: string | null }[]>([]);
     const [isLoadingVisual, setIsLoadingVisual] = useState(true);
 
     useEffect(() => {
         const user = getUser();
         if (!user) { router.push(`/player/${roomCode}/login`); return; }
         setUsername(user.username || "");
+        setUserAvatar(user.avatar || null);
         let cleanup: (() => void) | undefined;
 
         const joinRoom = async () => {
@@ -87,7 +118,7 @@ export default function PlayerWaitingPage() {
                 }
 
                 const { data: pList, count } = await supabase.from("participants")
-                    .select("nickname, car_character", { count: "exact" }).eq("session_id", sessionData.id);
+                    .select("nickname, car_character, avatar_url", { count: "exact" }).eq("session_id", sessionData.id);
                 if (count !== null) setParticipantCount(count);
                 if (pList) setAllParticipants(pList);
 
@@ -100,7 +131,7 @@ export default function PlayerWaitingPage() {
                     .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'participants', filter: `session_id=eq.${sessionData.id}` },
                         async () => {
                             const { data: pList, count } = await supabase.from("participants")
-                                .select("nickname, car_character", { count: "exact" }).eq("session_id", sessionData.id);
+                                .select("nickname, car_character, avatar_url", { count: "exact" }).eq("session_id", sessionData.id);
                             if (count !== null) setParticipantCount(count);
                             if (pList) setAllParticipants(pList);
                         })
@@ -351,6 +382,14 @@ export default function PlayerWaitingPage() {
                                                 border: '1.5px solid rgba(60,110,220,0.6)',
                                                 boxShadow: 'inset 0 0 24px rgba(40,80,180,0.1)',
                                             }}>
+                                            {/* Profile avatar */}
+                                            <div className="absolute top-2 left-2 z-10 w-8 h-8 rounded-full border border-white/20 overflow-hidden bg-black/40">
+                                                {userAvatar ? (
+                                                    <img src={userAvatar} alt="Avatar" className="w-full h-full object-cover" />
+                                                ) : (
+                                                    <InitialsAvatar name={username} size="sm" />
+                                                )}
+                                            </div>
                                             {/* YOU badge */}
                                             <div className="absolute top-2 right-2 z-10 font-display font-black text-[10px] tracking-widest px-2 py-0.5 rounded"
                                                 style={{ background: '#00d4ff', color: '#000' }}>
@@ -380,6 +419,14 @@ export default function PlayerWaitingPage() {
                                                         background: 'linear-gradient(160deg, rgba(24,34,62,0.92), rgba(18,26,50,0.95))',
                                                         border: '1px solid rgba(50,80,160,0.45)',
                                                     }}>
+                                                    {/* Profile avatar */}
+                                                    <div className="absolute top-2 left-2 z-10 w-8 h-8 rounded-full border border-white/20 overflow-hidden bg-black/40">
+                                                        {p.avatar_url ? (
+                                                            <img src={p.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
+                                                        ) : (
+                                                            <InitialsAvatar name={p.nickname} size="sm" />
+                                                        )}
+                                                    </div>
                                                     <div className="flex items-center justify-center px-6 py-5" style={{ minHeight: '150px' }}>
                                                         <img src={carSrc} alt="car" className="w-full max-h-[110px] object-contain drop-shadow-[0_6px_20px_rgba(0,0,0,0.8)]" />
                                                     </div>

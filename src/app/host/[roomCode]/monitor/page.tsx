@@ -13,6 +13,45 @@ const logoImageMap: Record<string, string> = {
   blue: "/assets/characters/rico/logo/logo1.png",
 };
 
+// Helper: Generate initials from a name
+const getInitials = (name: string): string => {
+  if (!name) return "?";
+  const parts = name.trim().split(/\s+/);
+  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+  return name.slice(0, 2).toUpperCase();
+};
+
+// Initials avatar colors based on nickname hash
+const AVATAR_COLORS = ['#3b82f6', '#ef4444', '#f59e0b', '#8b5cf6', '#10b981', '#ec4899', '#06b6d4', '#f97316'];
+const getAvatarColor = (name: string): string => {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+};
+
+// Reusable InitialsAvatar component
+const InitialsAvatar = ({ name, size = 'md' }: { name: string; size?: 'sm' | 'md' | 'lg' }) => {
+  const fontSize = size === 'lg' ? 'text-[20px]' : size === 'md' ? 'text-[16px]' : 'text-[10px]';
+  return (
+    <div 
+      style={{
+        width: '100%',
+        height: '100%',
+        borderRadius: '50%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize,
+        fontWeight: 900,
+        color: 'white',
+        backgroundColor: getAvatarColor(name)
+      }}
+    >
+      {getInitials(name)}
+    </div>
+  );
+};
+
 interface Participant {
   id: string;
   nickname: string;
@@ -76,10 +115,6 @@ function PlayerCard({
   totalQuestions: number;
 }) {
   const baseCar = (player.car_character || "purple").replace("-bot", "");
-  const avatarSrc =
-    player.avatar_url ||
-    logoImageMap[baseCar] ||
-    "/assets/characters/rico/logo/logo1.png";
 
   const isFinished =
     player.finished_at !== null || player.current_question >= totalQuestions;
@@ -212,27 +247,7 @@ function PlayerCard({
               }}
             />
           ) : (
-            <div
-              style={{
-                width: "100%",
-                height: "100%",
-                background: "rgba(0,0,0,0.4)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <img
-                src={logoImageMap[baseCar] || "/assets/characters/rico/logo/logo1.png"}
-                alt={player.nickname}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "contain",
-                  transform: "scale(2.1)",
-                }}
-              />
-            </div>
+            <InitialsAvatar name={player.nickname} size="lg" />
           )}
         </div>
       </div>
