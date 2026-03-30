@@ -211,17 +211,28 @@ export default function Home() {
       <div className="fixed inset-0 z-0 bg-gradient-to-t from-[#04060f] via-[#04060f]/60 to-[#2d6af2]/10 pointer-events-none"></div>
       <div className="scanlines"></div>
 
-      {/* Top Bar: Always render Left-to-Right so the component stays on the left */}
-      <div dir="ltr" className="fixed top-0 left-0 right-0 z-[90] px-4 md:px-6 py-3 flex items-center justify-between pointer-events-none">
-        
-        {/* Logo Kiri */}
+      {/* Top Bar: Corner Logos */}
+      <div className="fixed top-0 left-0 right-0 z-[90] px-4 md:px-8 py-5 flex items-start justify-between pointer-events-none">
+        {/* Logo 1 (Top Left) */}
         <div className="pointer-events-auto">
           <Image
+            src="/assets/logo/logo1.png"
+            alt="Logo"
+            width={180}
+            height={50}
+            className="h-10 md:h-12 w-auto object-contain drop-shadow-[0_0_15px_rgba(45,106,242,0.4)]"
+            priority
+          />
+        </div>
+        
+        {/* Logo 2 (Top Right) - positioned to left of the menu button */}
+        <div className="pointer-events-auto mr-14 md:mr-16">
+          <Image
             src="/assets/logo/logo2.png"
-            alt="GameForSmart.com"
-            width={240}
-            height={60}
-            className="object-contain opacity-70 hover:opacity-100 transition-opacity duration-300 drop-shadow-[0_0_10px_rgba(169,141,197,0.4)]"
+            alt="NitroQuiz"
+            width={160}
+            height={40}
+            className="h-7 md:h-9 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]"
             priority
           />
         </div>
@@ -230,12 +241,12 @@ export default function Home() {
       {/* Top Right Dropdown Menu */}
       {user && (
         <div
-          className="fixed top-3 right-4 md:top-3 md:right-6 z-[100]"
+          className="fixed top-5 right-4 md:right-8 z-[100]"
           ref={dropdownRef}
         >
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className={`w-11 h-11 flex items-center justify-center rounded-2xl transition-all duration-300 border ${isDropdownOpen
+            className={`w-10 h-10 md:w-11 md:h-11 flex items-center justify-center rounded-2xl transition-all duration-300 border ${isDropdownOpen
               ? "bg-[#2d6af2] border-[#2d6af2] text-white shadow-[0_0_20px_rgba(45,106,242,0.5)]"
               : "bg-black/40 backdrop-blur-md border-white/10 text-gray-400 hover:text-white hover:border-white/20"
               }`}
@@ -395,7 +406,7 @@ export default function Home() {
             )}
           </AnimatePresence>
         </div>
-      )}
+        )}
 
       {/* How to Play Modal */}
       <AnimatePresence>
@@ -514,15 +525,48 @@ export default function Home() {
       </AnimatePresence>
 
       <main className="relative z-20 flex flex-col items-center justify-center min-h-screen w-full max-w-7xl mx-auto p-4 md:p-8">
-        <header className="text-center mb-7 relative z-30 w-full flex flex-col items-center">
-          <Image
-            src="/assets/logo/logo1.png"
-            alt="GameForSmart Logo"
-            width={400}
-            height={120}
-            className="object-contain"
-            priority
-          />
+        <header className="text-center mb-10 md:mb-14 relative z-30 w-full flex flex-col items-center">
+          <div className="relative group">
+            <Image
+              src="/assets/logo/logo1.png"
+              alt="GameForSmart Logo"
+              width={500}
+              height={150}
+              className="object-contain w-[280px] md:w-[450px] drop-shadow-[0_0_30px_rgba(45,106,242,0.6)] group-hover:drop-shadow-[0_0_40px_rgba(45,106,242,0.8)] transition-all duration-500 scale-95 group-hover:scale-100"
+              priority
+            />
+          </div>
+          
+          {/* Interactive Slogan */}
+          <div className="mt-2 md:mt-6">
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+              className="flex items-center justify-center gap-2 md:gap-5"
+            >
+              {[
+                { word: "RACE", color: "white" },
+                { word: "LEARN", color: "#00ff9d" },
+                { word: "DOMINATE", color: "white" }
+              ].map((item, idx) => (
+                <div key={item.word} className="flex items-center">
+                  <span 
+                    className="font-display text-[10px] sm:text-lg md:text-2xl font-black italic tracking-[0.15em] sm:tracking-[0.2em] md:tracking-[0.4em] transition-all duration-300 cursor-default hover:text-[#00ff9d] hover:scale-110 hover:skew-x-[-12deg] active:scale-95"
+                    style={{ 
+                      color: item.color,
+                      textShadow: '0 0 15px rgba(255,255,255,0.2)'
+                    }}
+                  >
+                    {item.word}
+                  </span>
+                  {idx < 2 && (
+                    <div className="mx-1.5 sm:mx-3 md:mx-4 w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-[#2d6af2] shadow-[0_0_10px_#2d6af2]" />
+                  )}
+                </div>
+              ))}
+            </motion.div>
+          </div>
         </header>
 
         <div className="flex flex-col md:flex-row gap-8 lg:gap-16 w-full justify-center items-stretch max-w-5xl">

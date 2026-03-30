@@ -3,7 +3,6 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getSelectedCharacter, saveGameSettings, saveQuizSession } from '@/lib/storage';
-import { getRandomQuestions, categoryNames, categoryIcons } from '@/lib/questions';
 import { Character, QuizCategory, GameSettings, QuizSession } from '@/types';
 
 const timeOptions = [
@@ -55,7 +54,7 @@ function GameSettingsContent() {
         localStorage.setItem('nitroquiz_game_difficulty', selectedDifficulty);
 
         // Generate quiz session
-        const questions = getRandomQuestions(category, 5);
+        const questions: any[] = []; 
         const session: QuizSession = {
             id: `quiz-${Date.now()}`,
             category,
@@ -129,8 +128,10 @@ function GameSettingsContent() {
                     </button>
 
                     <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-[#2d6af2]/10 border border-[#2d6af2]/30 mb-6 shadow-[0_0_20px_rgba(45,106,242,0.2)]">
-                        <span className="text-2xl">{categoryIcons[category]}</span>
-                        <span className="font-semibold text-[#64b5f6] font-display tracking-widest uppercase">{categoryNames[category]}</span>
+                        <span className="text-2xl">📝</span>
+                        <span className="font-semibold text-[#64b5f6] font-display tracking-widest uppercase">
+                            {category?.replace(/-/g, ' ')}
+                        </span>
                     </div>
 
                     <h1 className="text-4xl md:text-5xl font-display font-bold mb-4">

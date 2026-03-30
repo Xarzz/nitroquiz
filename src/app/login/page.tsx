@@ -14,6 +14,7 @@ import { Logo } from "@/components/ui/logo";
 import { useAuth } from "@/contexts/AuthContext";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
+import Image from "next/image";
 
 const loginSchema = z.object({
   identifier: z.string().min(3, "login.form.identifier_error_min"),
@@ -176,10 +177,29 @@ export default function LoginPage() {
       {/* === CARD === */}
       <div className="relative z-10 w-full max-w-[380px] mx-4">
 
-        {/* Logo */}
-        <div className="mb-8">
-          <Logo width={280} height={80} />
+        {/* Top Bar for Login */}
+        <div className="fixed top-0 left-0 right-0 z-[90] px-4 md:px-8 py-5 flex items-start justify-between pointer-events-none">
+          <div className="pointer-events-auto">
+            <Image
+              src="/assets/logo/logo1.png"
+              alt="Logo"
+              width={180}
+              height={50}
+              className="h-9 md:h-11 w-auto object-contain drop-shadow-[0_0_15px_rgba(45,106,242,0.4)]"
+            />
+          </div>
+          <div className="pointer-events-auto">
+            <Image
+              src="/assets/logo/logo2.png"
+              alt="NitroQuiz"
+              width={160}
+              height={40}
+              className="h-6 md:h-8 w-auto object-contain opacity-80 drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]"
+            />
+          </div>
         </div>
+
+        {/* Removed redundant logo from above the card */}
 
         {/* Card */}
         <motion.div

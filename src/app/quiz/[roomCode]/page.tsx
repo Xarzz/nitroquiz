@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Check, X, Timer, Trophy, ArrowRight, Loader2 } from 'lucide-react';
+import { Check, X, Timer, Trophy, ArrowRight, Loader2, Sparkles } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
 // Reuse QuizQuestion type
@@ -24,14 +24,13 @@ export default function QuizPage() {
     const [score, setScore] = useState(0);
     const [questionsAnsweredInRound, setQuestionsAnsweredInRound] = useState(0);
     const [selectedOption, setSelectedOption] = useState<number | null>(null);
-    const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
     const [isAnswered, setIsAnswered] = useState(false);
-    // const [timeLeft, setTimeLeft] = useState(15);
+    const [timeLeft, setTimeLeft] = useState(15);
     const [roomCode, setRoomCode] = useState<string | null>(roomCodeFromParams || null);
     const [sessionId, setSessionId] = useState<string | null>(null);
     const [statusText, setStatusText] = useState("ROUND COMPLETE!");
 
-    // const timerRef = useRef<NodeJS.Timeout | null>(null);
+    const timerRef = useRef<NodeJS.Timeout | null>(null);
     const QUESTIONS_PER_ROUND = 3;
 
     useEffect(() => {
@@ -45,7 +44,6 @@ export default function QuizPage() {
         if (storedQuestions) {
             try {
                 const parsed = JSON.parse(storedQuestions);
-                // The questions might need normalization if they are in the DB format
                 const normalized: QuizQuestion[] = parsed.map((q: any, idx: number) => {
                     if (q.options && typeof q.correctAnswer === 'number') return q as QuizQuestion;
                     
@@ -80,13 +78,12 @@ export default function QuizPage() {
         setRoomCode(storedRoom);
         setSessionId(storedSession);
 
-        // Preload the game route so going back is instant
         const customDiff = localStorage.getItem('nitroquiz_game_difficulty') || 'easy';
         const route = (customDiff === 'normal' || customDiff === 'medium') ? '/gamespeed-medium' : '/gamespeed';
         router.prefetch(route);
     }, [router]);
 
-    /* const startTimer = useCallback(() => {
+    const startTimer = useCallback(() => {
         if (timerRef.current) clearInterval(timerRef.current);
         setTimeLeft(15);
         timerRef.current = setInterval(() => {
@@ -99,34 +96,31 @@ export default function QuizPage() {
                 return prev - 1;
             });
         }, 1000);
-    }, []); */
+    }, []);
 
-    /* useEffect(() => {
+    useEffect(() => {
         if (questions.length > 0 && !isAnswered && questionsAnsweredInRound < QUESTIONS_PER_ROUND && currentIndex < questions.length) {
             startTimer();
         }
         return () => { if (timerRef.current) clearInterval(timerRef.current); };
-    }, [questions.length, currentIndex, isAnswered, questionsAnsweredInRound, startTimer]); */
+    }, [questions.length, currentIndex, isAnswered, questionsAnsweredInRound, startTimer]);
 
     const handleAnswer = async (optionIndex: number) => {
         if (isAnswered) return;
-        // if (timerRef.current) clearInterval(timerRef.current);
+        if (timerRef.current) clearInterval(timerRef.current);
 
         const currentQ = questions[currentIndex];
         const correct = optionIndex === currentQ.correctAnswer;
         
         setSelectedOption(optionIndex);
-        setIsCorrect(correct);
         setIsAnswered(true);
 
-        const earnedPoints = correct ? 10 : 0;
+        const earnedPoints = correct ? (10 + Math.floor(timeLeft / 2)) : 0;
         const newScore = score + earnedPoints;
         setScore(newScore);
         
-        // Save score immediately to localStorage
         localStorage.setItem('nitroquiz_game_score', newScore.toString());
 
-        // Update participant score in Supabase
         if (sessionId && localStorage.getItem('nitroquiz_user')) {
             try {
                 const user = JSON.parse(localStorage.getItem('nitroquiz_user') || '{}');
@@ -142,7 +136,7 @@ export default function QuizPage() {
 
         setTimeout(() => {
             nextQuestion();
-        }, 1500);
+        }, 800); // Shorter transition for more competitive feel
     };
 
     const nextQuestion = () => {
@@ -153,11 +147,9 @@ export default function QuizPage() {
         setQuestionsAnsweredInRound(nextRoundCount);
         setIsAnswered(false);
         setSelectedOption(null);
-        setIsCorrect(null);
         
         localStorage.setItem('nitroquiz_game_questionIndex', nextIdx.toString());
 
-        // Check if round or game is finished
         if (nextRoundCount >= QUESTIONS_PER_ROUND || nextIdx >= questions.length) {
             if (nextIdx >= questions.length) {
                 setStatusText("QUIZ FINISHED!");
@@ -167,7 +159,7 @@ export default function QuizPage() {
         }
     };
 
-    // Auto-redirect effect when round or quiz is ended
+    // Auto-redirect
     useEffect(() => {
         if (!mounted || questions.length === 0) return;
 
@@ -198,138 +190,138 @@ export default function QuizPage() {
                     }
                     router.push(route);
                 }
-            }, 2500); // Wait 2.5 seconds to show the status screen
+            }, 800);
 
             return () => clearTimeout(timer);
         }
     }, [questionsAnsweredInRound, currentIndex, questions.length, mounted, router, roomCode, roomCodeFromParams]);
 
-    const handleBackToGame = () => {
-        // Redirection now handled by useEffect
-    };
-
     if (!mounted || questions.length === 0 || currentIndex >= questions.length && questionsAnsweredInRound < QUESTIONS_PER_ROUND) {
-        if (currentIndex >= questions.length && questions.length > 0) {
-            // Handled by the check below
-        } else {
-            // Render a simple blank dark background instead of a spinning loader.
-            // This prevents a jarring "loading" flash during the split-second Next.js hydration, 
-            // making the transition from the racing screen feel instant.
-            return <div className="min-h-screen bg-[#020617]" />;
-        }
+        return <div className="min-h-screen bg-[#04060f]" />;
     }
 
-    // Round or Game complete screen
     if (questionsAnsweredInRound >= QUESTIONS_PER_ROUND || currentIndex >= questions.length) {
         return (
-            <div className="min-h-screen bg-[#020617] flex flex-col items-center justify-center text-white px-6 font-rajdhani">
-                <motion.div 
-                    initial={{ scale: 0.9, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    className="w-full max-w-md bg-[#0f172a] border border-blue-500/30 rounded-3xl p-8 text-center shadow-[0_0_50px_rgba(59,130,246,0.2)]"
-                >
-                    <Trophy className="w-20 h-20 text-yellow-400 mx-auto mb-6" />
-                    <h1 className="text-4xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">
-                        {statusText}
-                    </h1>
-                    <p className="text-gray-400 mb-8 uppercase tracking-[0.2em]">Total Score: {score}</p>
-                    
-                    <div className="flex flex-col items-center gap-4">
-                      <div className="w-10 h-10 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin"></div>
-                      <p className="text-blue-400 text-sm font-bold uppercase tracking-widest animate-pulse">
-                        {currentIndex >= questions.length ? "PREPARING RESULTS..." : "RETURNING TO RACE..."}
-                      </p>
+            <div className="min-h-screen bg-[#04060f] flex items-center justify-center text-white font-rajdhani">
+                <div className="flex flex-col items-center gap-6">
+                    <div className="relative">
+                         <div className="w-16 h-16 border-4 border-[#2d6af2]/10 border-t-[#2d6af2] rounded-full animate-spin" />
+                         <Trophy className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 text-[#2d6af2]/40" />
                     </div>
-                </motion.div>
+                    <p className="text-[#2d6af2] text-base font-bold uppercase tracking-[0.4em] animate-pulse">
+                        ESTABLISHING SIGNAL...
+                    </p>
+                </div>
             </div>
         );
     }
 
     const currentQ = questions[currentIndex];
+    const timerColor = timeLeft > 10 ? '#00ff9d' : timeLeft > 5 ? '#fbbf24' : '#ef4444';
+    const timerPercent = (timeLeft / 15) * 100;
+
+    const OPTION_COLORS = ['#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6']; // A=blue, B=amber, C=red, D=purple
 
     return (
-        <div className="min-h-screen bg-[#020617] text-white font-rajdhani overflow-hidden relative flex flex-col items-center justify-center p-6">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,_rgba(59,130,246,0.15),_transparent_50%)]" />
+        <div className="min-h-screen bg-[#04060f] text-white font-rajdhani overflow-hidden relative flex flex-col items-center justify-center p-4">
+            {/* Background Effects */}
+            <div className="absolute inset-0 z-0 bg-[linear-gradient(rgba(45,106,242,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(45,106,242,0.05)_1px,transparent_1px)] bg-[length:50px_50px]" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
             
-            <div className="w-full max-w-2xl relative z-10">
-                {/* Header Info */}
-                <div className="flex justify-between items-end mb-8 px-2">
-                    <div>
-                        <p className="text-blue-400 text-sm uppercase tracking-widest mb-1">Question</p>
-                        <h2 className="text-3xl font-black italic">{currentIndex + 1}<span className="text-blue-500/50 not-italic mx-1">/</span>{questions.length}</h2>
+            <div className="w-full max-w-3xl relative z-10 flex flex-col gap-4">
+                {/* Main Card */}
+                <div className="bg-[#0c1225]/90 backdrop-blur-2xl border border-[#1e2d4d] rounded-2xl overflow-hidden shadow-[0_25px_50px_-12px_rgba(0,0,0,0.8)]">
+                    
+                    {/* Card Header: Question X/Y | Timer | SCORE */}
+                    <div className="flex items-center justify-between px-6 py-4">
+                        <div className="flex items-baseline gap-1.5">
+                            <span className="text-white text-lg font-bold">Question {currentIndex + 1}</span>
+                            <span className="text-gray-500 text-lg font-bold">/{questions.length}</span>
+                        </div>
+                        
+                        <div className="flex items-center gap-2 px-4 py-1.5 bg-[#0a0f1e] border border-[#1e2d4d] rounded-full">
+                            <Timer className="w-4 h-4 text-gray-400" />
+                            <span className={`text-base font-bold font-mono ${timeLeft <= 5 ? 'text-red-400' : 'text-white'}`}>
+                                {String(Math.floor(timeLeft / 60)).padStart(2, '0')}:{String(timeLeft % 60).padStart(2, '0')}
+                            </span>
+                        </div>
+
+                        <div className="flex items-baseline gap-1.5">
+                            <span className="text-[#ef4444] text-lg font-bold uppercase tracking-wider">Score:</span>
+                            <span className="text-[#ef4444] text-lg font-bold">{score}</span>
+                        </div>
                     </div>
-                    <div className="text-right">
-                        <p className="text-emerald-400 text-sm uppercase tracking-widest mb-1">Current Score</p>
-                        <h2 className="text-3xl font-black italic">{score}</h2>
+
+                    {/* Progress Bar */}
+                    <div className="w-full h-1.5 bg-[#0a0f1e]">
+                        <motion.div 
+                            className="h-full bg-[#3b82f6]"
+                            style={{ boxShadow: '0 0 10px rgba(59,130,246,0.5)' }}
+                            initial={{ width: '100%' }}
+                            animate={{ width: `${timerPercent}%` }}
+                            transition={{ duration: 1, ease: "linear" }}
+                        />
                     </div>
-                </div>
 
-                {/* Question Box */}
-                <motion.div 
-                    key={currentIndex}
-                    initial={{ x: 50, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    className="bg-[#0f172a] border-l-4 border-blue-500 p-8 rounded-2xl mb-8 shadow-xl"
-                >
-                    <h3 className="text-2xl font-bold leading-tight">{currentQ.question}</h3>
-                </motion.div>
+                    <div className="p-6 md:p-8">
+                        {/* Question Text */}
+                        <AnimatePresence mode="wait">
+                            <motion.div 
+                                key={currentIndex}
+                                initial={{ y: 15, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                exit={{ y: -15, opacity: 0 }}
+                                className="mb-8"
+                            >
+                                <h3 className="text-xl md:text-2xl font-semibold leading-relaxed text-gray-200">
+                                    {currentQ.question}
+                                </h3>
+                            </motion.div>
+                        </AnimatePresence>
 
-                {/* Timer Bar */}
-                {/* <div className="w-full h-1.5 bg-gray-800 rounded-full mb-8 overflow-hidden">
-                    <motion.div 
-                        className={`h-full ${timeLeft <= 5 ? 'bg-red-500' : 'bg-blue-500'}`}
-                        initial={{ width: '100%' }}
-                        animate={{ width: `${(timeLeft / 15) * 100}%` }}
-                        transition={{ duration: 1, ease: "linear" }}
-                    />
-                </div> */}
-
-                {/* Options */}
-                <div className="grid grid-cols-1 gap-4">
-                    <AnimatePresence mode="wait">
-                        {currentQ.options.map((option, idx) => {
-                            const isSelected = selectedOption === idx;
-                            const isCorrectOption = idx === currentQ.correctAnswer;
-                            
-                            let bgColor = "bg-[#1e293b]";
-                            let borderColor = "border-transparent";
-                            
-                            if (isAnswered) {
-                                if (isCorrectOption) {
-                                    bgColor = "bg-emerald-500/20";
-                                    borderColor = "border-emerald-500";
-                                } else if (isSelected) {
-                                    bgColor = "bg-red-500/20";
-                                    borderColor = "border-red-500";
-                                }
-                            } else {
-                                bgColor = "hover:bg-blue-500/10 hover:border-blue-500/50";
-                            }
-
-                            return (
-                                <motion.button
-                                    key={`${currentIndex}-${idx}`}
-                                    whileHover={!isAnswered ? { x: 10 } : {}}
-                                    whileTap={!isAnswered ? { scale: 0.98 } : {}}
-                                    onClick={() => handleAnswer(idx)}
-                                    disabled={isAnswered}
-                                    className={`w-full p-5 rounded-xl border-2 text-left flex items-center gap-4 transition-all ${bgColor} ${borderColor}`}
-                                >
-                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-lg ${isSelected ? 'bg-blue-500 text-white' : 'bg-black/20 text-blue-400'}`}>
-                                        {String.fromCharCode(65 + idx)}
-                                    </div>
-                                    <span className="text-lg font-medium flex-1">{option}</span>
-                                    {isAnswered && isCorrectOption && <Check className="text-emerald-500 w-6 h-6" />}
-                                    {isAnswered && isSelected && !isCorrectOption && <X className="text-red-500 w-6 h-6" />}
-                                </motion.button>
-                            );
-                        })}
-                    </AnimatePresence>
+                        {/* Options Grid - 2x2 */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {currentQ.options.map((option, idx) => {
+                                const isSelected = selectedOption === idx;
+                                const optionColor = OPTION_COLORS[idx] || OPTION_COLORS[0];
+                                const letter = String.fromCharCode(65 + idx);
+                                
+                                return (
+                                    <motion.button
+                                        key={`${currentIndex}-${idx}`}
+                                        whileHover={!isAnswered ? { scale: 1.02 } : {}}
+                                        whileTap={!isAnswered ? { scale: 0.98 } : {}}
+                                        onClick={() => handleAnswer(idx)}
+                                        disabled={isAnswered}
+                                        className={`w-full group relative py-4 px-5 rounded-xl border text-left flex items-center gap-4 transition-all duration-200 ${
+                                            isSelected 
+                                            ? 'bg-[#1a2744] border-[#3b82f6] shadow-[0_0_15px_rgba(59,130,246,0.15)]' 
+                                            : 'bg-[#111a2e] border-[#1e2d4d] hover:border-[#2d4060] hover:bg-[#152035]'
+                                        }`}
+                                    >
+                                        {/* Letter Badge */}
+                                        <div 
+                                            className="w-10 h-10 rounded-lg flex items-center justify-center font-bold text-base flex-shrink-0 text-white"
+                                            style={{ backgroundColor: optionColor }}
+                                        >
+                                            {letter}
+                                        </div>
+                                        
+                                        {/* Option Text */}
+                                        <span className={`text-base font-medium flex-1 ${isSelected ? 'text-white' : 'text-gray-300'}`}>
+                                            {option}
+                                        </span>
+                                    </motion.button>
+                                );
+                            })}
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            {/* Background elements */}
-            <div className="fixed bottom-0 left-0 w-full h-1/2 bg-[linear-gradient(transparent_0%,rgba(59,130,246,0.05)_1px,transparent_1px),linear-gradient(90deg,transparent_0%,rgba(59,130,246,0.05)_1px,transparent_1px)] bg-[length:50px_50px] [transform:perspective(500px)_rotateX(60deg)] origin-bottom -z-10" />
+            {/* Bottom Perspective Grid */}
+            <div className="fixed bottom-0 left-0 w-full h-[30vh] bg-[linear-gradient(transparent_0%,rgba(45,106,242,0.1)_1px,transparent_1px),linear-gradient(90deg,transparent_0%,rgba(45,106,242,0.1)_1px,transparent_1px)] bg-[length:60px_60px] [transform:perspective(500px)_rotateX(60deg)] origin-bottom -z-10" />
         </div>
     );
 }
+
