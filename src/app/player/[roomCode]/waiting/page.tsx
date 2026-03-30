@@ -45,6 +45,7 @@ export default function PlayerWaitingPage() {
     const [participantCount, setParticipantCount] = useState(1);
     const [username, setUsername] = useState("");
     const [allParticipants, setAllParticipants] = useState<{ nickname: string; car_character: string }[]>([]);
+    const [isLoadingVisual, setIsLoadingVisual] = useState(true);
 
     useEffect(() => {
         const user = getUser();
@@ -197,6 +198,10 @@ export default function PlayerWaitingPage() {
     const assignedChar = PLAYER_CHARACTERS.find(c => c.id === assignedCarId) || PLAYER_CHARACTERS[0];
     const displayVisual = assignedChar.gifSrc || assignedChar.imageSrc;
 
+    useEffect(() => {
+        setIsLoadingVisual(true);
+    }, [displayVisual]);
+
     return (
         <div className="bg-[#0b101a] text-white min-h-screen relative overflow-hidden font-body flex flex-col items-center justify-center p-4">
             <div className="fixed inset-0 z-0 bg-gradient-to-t from-[#0b101a] via-transparent to-[#2d6af2]/10 pointer-events-none" />
@@ -336,11 +341,11 @@ export default function PlayerWaitingPage() {
                                     </div>
 
                                     {/* Scrollable cards */}
-                                    <div className="flex-1 overflow-y-auto p-3 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3 content-start"
+                                    <div className="flex-1 overflow-y-auto p-3 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3 auto-rows-max"
                                         style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(45,106,242,0.25) transparent' }}>
 
                                         {/* YOU card */}
-                                        <div className="relative rounded-xl overflow-hidden flex-shrink-0"
+                                        <div className="relative rounded-xl overflow-hidden h-[190px] w-full"
                                             style={{
                                                 background: 'linear-gradient(160deg, rgba(28,42,80,0.95), rgba(22,34,68,0.98))',
                                                 border: '1.5px solid rgba(60,110,220,0.6)',
@@ -370,7 +375,7 @@ export default function PlayerWaitingPage() {
                                             const pCarName = charObj.name;
                                             const carSrc = charObj.imageSrc;
                                             return (
-                                                <div key={i} className="relative rounded-xl overflow-hidden flex-shrink-0"
+                                                <div key={i} className="relative rounded-xl overflow-hidden h-[190px] w-full"
                                                     style={{
                                                         background: 'linear-gradient(160deg, rgba(24,34,62,0.92), rgba(18,26,50,0.95))',
                                                         border: '1px solid rgba(50,80,160,0.45)',
@@ -387,7 +392,7 @@ export default function PlayerWaitingPage() {
                                         })}
 
                                         {/* Empty slot */}
-                                        <div className="relative rounded-xl overflow-hidden flex-shrink-0"
+                                        <div className="relative rounded-xl overflow-hidden h-[190px] w-full"
                                             style={{
                                                 background: 'rgba(18,26,50,0.5)',
                                                 border: '1px dashed rgba(50,80,160,0.3)',
@@ -514,12 +519,16 @@ export default function PlayerWaitingPage() {
 
                                     <div className="absolute z-10 flex flex-col gap-6 items-center justify-center right-0 md:left-[340px] lg:left-[500px] xl:left-[700px]"
                                         style={{ top: '60px', bottom: '64px' }}>
-                                        <motion.div className="relative"
+                                        <motion.div className="relative flex items-center justify-center"
+                                            style={{ width: 'clamp(300px, 45vw, 560px)', height: '52vh' }}
                                             animate={{ y: [0, -14, 0] }}
                                             transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut" }}>
+                                            {isLoadingVisual && <Loader2 className="absolute z-0 w-12 h-12 text-[#00ff9d] animate-spin drop-shadow-[0_0_15px_rgba(0,255,157,0.5)]" />}
                                             <img src={displayVisual} alt="Your Car"
-                                                className="object-contain drop-shadow-[0_28px_60px_rgba(40,70,200,0.22)]"
-                                                style={{ width: 'clamp(300px, 45vw, 560px)', maxHeight: '52vh' }} />
+                                                className={`object-contain drop-shadow-[0_28px_60px_rgba(40,70,200,0.22)] transition-opacity duration-300 relative z-10 ${isLoadingVisual ? 'opacity-0' : 'opacity-100'}`}
+                                                style={{ width: '100%', maxHeight: '100%' }} 
+                                                onLoad={() => setIsLoadingVisual(false)}
+                                                />
                                             {/* Ground shadow */}
                                             <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-3/4 h-3 bg-black/40 blur-xl rounded-full" />
                                         </motion.div>
