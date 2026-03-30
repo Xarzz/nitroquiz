@@ -4,18 +4,30 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { getUser } from '@/lib/storage';
 import { supabase } from '@/lib/supabase';
-import { Loader2, Zap, Users, LogOut } from 'lucide-react';
+import { Loader2, Zap, Users, LogOut, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const carGifs = [
-    "/assets/characters/scloski/showroom/showroom1.png",
-    "/assets/characters/scloski/showroom/showroom2.png",
-    "/assets/characters/scloski/showroom/showroom1.png",
-    "/assets/characters/scloski/showroom/showroom2.png",
-    "/assets/characters/scloski/showroom/showroom1.png",
+export const PLAYER_CHARACTERS = [
+    {
+        id: 'rico',
+        name: 'SCHLOSKI RACER',
+        imageSrc: '/assets/characters/rico/showroom/showroom1.png',
+        stats: { speed: 80, accel: 60, handling: 70 }
+    },
+    {
+        id: 'gecho',
+        name: 'NINJA GECKO',
+        imageSrc: '/assets/characters/gecho/showroom/showroom1.png',
+        stats: { speed: 70, accel: 90, handling: 80 }
+    },
+    {
+        id: 'roadhog',
+        name: 'TUSK CHOPPER',
+        imageSrc: '/assets/characters/roadhog/showroom/showroom1.png',
+        gifSrc: '/assets/characters/roadhog/showroom/pose1.gif',
+        stats: { speed: 60, accel: 80, handling: 50 }
+    }
 ];
-const carNames = ["SCHLOSKI RACER", "SCHLOSKI ELITE", "SCHLOSKI RACER", "SCHLOSKI ELITE", "SCHLOSKI RACER"];
-const carMap = ["purple", "white", "black", "aqua", "blue"];
 
 export default function PlayerWaitingPage() {
     const router = useRouter();
@@ -24,9 +36,11 @@ export default function PlayerWaitingPage() {
 
     const [status, setStatus] = useState<"loading" | "waiting" | "countdown" | "go" | "error">("loading");
     const [errorMessage, setErrorMessage] = useState("");
-    const [assignedCar, setAssignedCar] = useState<string>("/assets/characters/scloski/showroom/showroom1.png");
-    const [assignedCarIndex, setAssignedCarIndex] = useState<number>(0);
+    const [assignedCarId, setAssignedCarId] = useState<string>("rico");
+    const [isSelectingCharacter, setIsSelectingCharacter] = useState(false);
+    const [pendingCharacterId, setPendingCharacterId] = useState<string>("rico");
     const [countdownValue, setCountdownValue] = useState(3);
+    const [participantId, setParticipantId] = useState<string | null>(null);
     const [sessionId, setSessionId] = useState<string | null>(null);
     const [participantCount, setParticipantCount] = useState(1);
     const [username, setUsername] = useState("");
@@ -45,10 +59,10 @@ export default function PlayerWaitingPage() {
                 if (sessionError || !sessionData) { setStatus("error"); setErrorMessage("Room not found or invalid."); return; }
                 if (sessionData.status === "active") { setStatus("countdown"); return; }
 
-                const randIndex = Math.floor(Math.random() * carMap.length);
-                const carChoice = carMap[randIndex];
-                setAssignedCar(carGifs[randIndex]);
-                setAssignedCarIndex(randIndex);
+                const randIndex = Math.floor(Math.random() * PLAYER_CHARACTERS.length);
+                const carChoice = PLAYER_CHARACTERS[randIndex].id;
+                setAssignedCarId(carChoice);
+                setPendingCharacterId(carChoice);
 
                 const { data: existingP } = await supabase.from("participants").select("id")
                     .eq("session_id", sessionData.id).eq("nickname", user.username).maybeSingle();
@@ -68,6 +82,7 @@ export default function PlayerWaitingPage() {
 
                 if (currentParticipantId) {
                     localStorage.setItem('nitroquiz_game_participantId', currentParticipantId);
+                    setParticipantId(currentParticipantId);
                 }
 
                 const { data: pList, count } = await supabase.from("participants")
@@ -169,19 +184,18 @@ export default function PlayerWaitingPage() {
         return "text-[#00ff9d]";
     };
 
-    const carImageMap: Record<string, string> = {
-        purple: "/assets/characters/scloski/showroom/showroom1.png", 
-        white: "/assets/characters/scloski/showroom/showroom2.png",
-        black: "/assets/characters/scloski/showroom/showroom1.png", 
-        aqua: "/assets/characters/scloski/showroom/showroom2.png", 
-        blue: "/assets/characters/scloski/showroom/showroom1.png",
+    const handleSelectCharacter = async () => {
+        if (participantId && sessionId && pendingCharacterId !== assignedCarId) {
+            await supabase.from("participants")
+                .update({ car_character: pendingCharacterId })
+                .eq("id", participantId);
+        }
+        setAssignedCarId(pendingCharacterId);
+        setIsSelectingCharacter(false);
     };
 
-    const changeCar = () => {
-        const randIndex = Math.floor(Math.random() * carMap.length);
-        setAssignedCar(carGifs[randIndex]);
-        setAssignedCarIndex(randIndex);
-    };
+    const assignedChar = PLAYER_CHARACTERS.find(c => c.id === assignedCarId) || PLAYER_CHARACTERS[0];
+    const displayVisual = assignedChar.gifSrc || assignedChar.imageSrc;
 
     return (
         <div className="bg-[#0b101a] text-white min-h-screen relative overflow-hidden font-body flex flex-col items-center justify-center p-4">
@@ -232,7 +246,7 @@ export default function PlayerWaitingPage() {
                                         <div className="absolute -top-3 right-0 z-10 bg-[#00ff9d] text-black text-xs font-display font-black px-3 py-1 rounded-md tracking-widest shadow-[0_0_15px_rgba(0,255,157,0.5)]">YOU</div>
                                         <div className="bg-[#080e1a] border border-[#00ff9d]/40 rounded-2xl p-4 flex flex-col items-center" style={{ minHeight: '220px' }}>
                                             <div className="flex-1 flex items-center justify-center w-full py-6">
-                                                <img src={assignedCar} alt="Your Car" className="w-[130px] object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.6)]" />
+                                                <img src={assignedChar.imageSrc} alt="Your Car" className="w-[130px] object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.6)]" />
                                             </div>
                                             <p className="font-display text-white text-sm uppercase tracking-widest font-bold mt-1">{username}</p>
                                         </div>
@@ -248,8 +262,8 @@ export default function PlayerWaitingPage() {
                                 <button onClick={() => router.push('/')} className="w-14 h-14 flex items-center justify-center rounded-full bg-[#1a0a12] border border-red-500/50 text-red-400 hover:bg-red-500/20 active:scale-95 transition-all flex-shrink-0 shadow-[0_0_15px_rgba(239,68,68,0.2)]">
                                     <LogOut className="w-5 h-5" />
                                 </button>
-                                <button onClick={changeCar} className="flex-1 h-14 flex items-center justify-center rounded-full border border-[#00ff9d]/60 text-[#00ff9d] font-display text-sm uppercase tracking-widest hover:bg-[#00ff9d]/10 active:scale-95 transition-all shadow-[0_0_20px_rgba(0,255,157,0.1)]">
-                                    CHANGE CAR
+                                <button onClick={() => setIsSelectingCharacter(true)} className="flex-1 h-14 flex items-center justify-center rounded-full border border-[#00ff9d]/60 text-[#00ff9d] font-display text-sm uppercase tracking-widest hover:bg-[#00ff9d]/10 active:scale-95 transition-all shadow-[0_0_20px_rgba(0,255,157,0.1)]">
+                                    CHOOSE CHARACTER
                                 </button>
                             </div>
                         </motion.div>
@@ -340,22 +354,21 @@ export default function PlayerWaitingPage() {
                                             {/* Car image */}
                                             <div className="flex items-center justify-center px-6 py-5"
                                                 style={{ minHeight: '150px' }}>
-                                                <img src={assignedCar} alt="car"
+                                                <img src={assignedChar.imageSrc} alt="car"
                                                     className="w-full max-h-[110px] object-contain drop-shadow-[0_6px_20px_rgba(0,0,0,0.8)]" />
                                             </div>
                                             {/* Name */}
                                             <div className="text-center pb-3 px-3">
                                                 <p className="font-display text-white text-xs font-bold uppercase tracking-[0.18em] truncate">{username}</p>
-                                                <p className="font-display text-[#00ff9d] text-[9px] uppercase tracking-widest mt-1 opacity-80">{carNames[assignedCarIndex]}</p>
+                                                <p className="font-display text-[#00ff9d] text-[9px] uppercase tracking-widest mt-1 opacity-80">{assignedChar.name}</p>
                                             </div>
                                         </div>
 
                                         {/* Other players */}
                                         {allParticipants.filter(p => p.nickname !== username).map((p, i) => {
-                                            const key = p.car_character?.replace('-bot', '') || 'purple';
-                                            const carSrc = carImageMap[key] || carGifs[0];
-                                            const carIdx = carMap.indexOf(key);
-                                            const pCarName = carIdx >= 0 ? carNames[carIdx] : "RACER";
+                                            const charObj = PLAYER_CHARACTERS.find(c => c.id === p.car_character) || PLAYER_CHARACTERS[0];
+                                            const pCarName = charObj.name;
+                                            const carSrc = charObj.imageSrc;
                                             return (
                                                 <div key={i} className="relative rounded-xl overflow-hidden flex-shrink-0"
                                                     style={{
@@ -399,37 +412,89 @@ export default function PlayerWaitingPage() {
                                 </div>
                             </div>
 
-                            {/* ── Car name (right side) ── */}
-                            <div className="absolute z-10 text-left md:left-[360px] lg:left-[520px] xl:left-[720px]"
-                                style={{ top: '80px' }}>
-                                <h2 className="font-display text-2xl font-black text-white uppercase tracking-wider leading-none">
-                                    {carNames[assignedCarIndex]}
-                                </h2>
-                                <p className="text-[#8899bb] text-xs font-mono mt-1 tracking-widest">{carNames[assignedCarIndex]}</p>
-                            </div>
+                            {/* ── Right Panel Area ── */}
+                            {isSelectingCharacter ? (
+                                <div className="absolute z-10 flex flex-col items-center justify-center right-0 md:left-[340px] lg:left-[500px] xl:left-[700px]" style={{ top: '60px', bottom: '64px', right: '20px' }}>
+                                    <h2 className="font-display text-3xl font-black text-white uppercase tracking-wider mb-8 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+                                        CHOOSE YOUR RACER
+                                    </h2>
+                                    <div className="flex items-center gap-4 w-full justify-center px-4 overflow-hidden relative">
+                                        <button className="z-20 p-3 bg-[#2d6af2]/20 rounded-full hover:bg-[#2d6af2]/40 transition-all border border-[#2d6af2]/50 hover:shadow-[0_0_15px_rgba(45,106,242,0.5)]">
+                                            <ChevronLeft className="w-6 h-6 text-[#64b5f6]" />
+                                        </button>
+                                        <div className="flex justify-center gap-6 items-center overflow-x-auto no-scrollbar py-4 px-2" style={{ maxWidth: '100vw' }}>
+                                            {PLAYER_CHARACTERS.map((c) => {
+                                                const isSel = pendingCharacterId === c.id;
+                                                return (
+                                                    <div key={c.id} onClick={() => setPendingCharacterId(c.id)} className={`relative flex flex-col items-center p-5 rounded-2xl border-2 transition-all cursor-pointer overflow-hidden ${isSel ? 'border-[#00ff9d] bg-[#00ff9d]/10 transform scale-105 shadow-[0_0_30px_rgba(0,255,157,0.25)]' : 'border-[#2d6af2]/30 bg-[#0b101a]/80 hover:border-[#2d6af2]/60'}`} style={{ width: '240px', height: '320px', backdropFilter: 'blur(10px)' }}>
+                                                        {isSel && <div className="absolute inset-0 bg-gradient-to-t from-[#00ff9d]/20 to-transparent pointer-events-none" />}
+                                                        <img src={c.imageSrc} alt={c.name} className="w-[180px] h-[140px] object-contain drop-shadow-[0_10px_15px_rgba(0,0,0,0.6)] mb-6 mt-2 transition-transform duration-300 hover:scale-110" />
+                                                        <h3 className="font-display text-[15px] font-bold text-white uppercase tracking-widest mb-4 z-10 text-center">{c.name}</h3>
+                                                        <div className="w-full space-y-3 z-10 p-2 bg-black/40 rounded-lg">
+                                                            <div className="flex items-center gap-3">
+                                                                <span className="text-[9px] text-gray-400 w-12 text-right tracking-widest font-mono">SPEED</span>
+                                                                <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden"><div className="h-full bg-[#00ff9d]" style={{ width: `${c.stats.speed}%`}}></div></div>
+                                                            </div>
+                                                            <div className="flex items-center gap-3">
+                                                                <span className="text-[9px] text-gray-400 w-12 text-right tracking-widest font-mono">ACCEL</span>
+                                                                <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden"><div className="h-full bg-[#2d6af2]" style={{ width: `${c.stats.accel}%`}}></div></div>
+                                                            </div>
+                                                            <div className="flex items-center gap-3">
+                                                                <span className="text-[9px] text-gray-400 w-12 text-right tracking-widest font-mono">HANDLING</span>
+                                                                <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden"><div className="h-full bg-pink-500" style={{ width: `${c.stats.handling}%`}}></div></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                        <button className="z-20 p-3 bg-[#2d6af2]/20 rounded-full hover:bg-[#2d6af2]/40 transition-all border border-[#2d6af2]/50 hover:shadow-[0_0_15px_rgba(45,106,242,0.5)]">
+                                            <ChevronRight className="w-6 h-6 text-[#64b5f6]" />
+                                        </button>
+                                    </div>
+                                    <div className="flex gap-8 mt-10">
+                                        <button onClick={() => { setIsSelectingCharacter(false); setPendingCharacterId(assignedCarId); }} className="px-10 py-3.5 rounded-full font-display text-[13px] font-bold uppercase tracking-[0.2em] text-[#64b5f6] border border-[#2d6af2]/50 bg-[#2d6af2]/10 hover:bg-[#2d6af2]/20 hover:text-white transition-all">
+                                            BACK
+                                        </button>
+                                        <button onClick={handleSelectCharacter} className="px-12 py-3.5 rounded-full font-display text-[13px] font-bold uppercase tracking-[0.2em] text-[#0b101a] bg-gradient-to-r from-[#00ff9d] to-[#00d4ff] hover:from-[#00e68e] hover:to-[#00bcee] shadow-[0_0_20px_rgba(0,255,157,0.4)] hover:shadow-[0_0_30px_rgba(0,255,157,0.6)] transition-all">
+                                            SELECT
+                                        </button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <>
+                                    <div className="absolute z-10 text-left md:left-[360px] lg:left-[520px] xl:left-[720px]"
+                                        style={{ top: '80px' }}>
+                                        <h2 className="font-display text-2xl font-black text-white uppercase tracking-wider leading-none">
+                                            {assignedChar.name}
+                                        </h2>
+                                        <p className="text-[#8899bb] text-xs font-mono mt-1 tracking-widest">{assignedChar.name}</p>
+                                    </div>
 
-                            {/* ── Big car showcase (right, vertical center) ── */}
-                            <div className="absolute z-10 flex flex-col gap-6 items-center justify-center right-0 md:left-[340px] lg:left-[500px] xl:left-[700px]"
-                                style={{ top: '60px', bottom: '64px' }}>
-                                <motion.div className="relative"
-                                    animate={{ y: [0, -14, 0] }}
-                                    transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut" }}>
-                                    <img src={assignedCar} alt="Your Car"
-                                        className="object-contain drop-shadow-[0_28px_60px_rgba(40,70,200,0.22)]"
-                                        style={{ width: 'clamp(300px, 45vw, 560px)', maxHeight: '52vh' }} />
-                                    {/* Ground shadow */}
-                                    <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-3/4 h-3 bg-black/40 blur-xl rounded-full" />
-                                </motion.div>
+                                    <div className="absolute z-10 flex flex-col gap-6 items-center justify-center right-0 md:left-[340px] lg:left-[500px] xl:left-[700px]"
+                                        style={{ top: '60px', bottom: '64px' }}>
+                                        <motion.div className="relative"
+                                            animate={{ y: [0, -14, 0] }}
+                                            transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut" }}>
+                                            <img src={displayVisual} alt="Your Car"
+                                                className="object-contain drop-shadow-[0_28px_60px_rgba(40,70,200,0.22)]"
+                                                style={{ width: 'clamp(300px, 45vw, 560px)', maxHeight: '52vh' }} />
+                                            {/* Ground shadow */}
+                                            <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-3/4 h-3 bg-black/40 blur-xl rounded-full" />
+                                        </motion.div>
 
-                                <button onClick={changeCar}
-                                    className="flex items-center gap-2 px-10 py-2.5 rounded-full font-display text-sm font-bold uppercase tracking-widest text-white active:scale-95 transition-all"
-                                    style={{
-                                        background: 'linear-gradient(135deg, #0fa8c4, #0880b8)',
-                                        boxShadow: '0 0 22px rgba(15,168,196,0.35)',
-                                    }}>
-                                    CHANGE CAR
-                                </button>
-                            </div>
+                                        <button onClick={() => { setPendingCharacterId(assignedCarId); setIsSelectingCharacter(true); }}
+                                            className="flex items-center gap-2 px-10 py-3 rounded-full font-display text-[13px] font-bold uppercase tracking-[0.2em] text-white active:scale-95 transition-all outline-none"
+                                            style={{
+                                                background: 'linear-gradient(135deg, #0fa8c4, #0880b8)',
+                                                boxShadow: '0 0 22px rgba(15,168,196,0.4)',
+                                                border: '1px solid rgba(0,255,255,0.2)',
+                                            }}>
+                                            CHOOSE CHARACTER
+                                        </button>
+                                    </div>
+                                </>
+                            )}
 
                             {/* ── Bottom bar ── */}
                             <div className="absolute bottom-0 inset-x-0 z-20 flex items-center px-6 py-3"
