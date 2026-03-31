@@ -13,7 +13,7 @@ export const PLAYER_CHARACTERS = [
         id: 'rico',
         name: 'SCHLOSKI RACER',
         imageSrc: '/assets/characters/rico/showroom/showroom1.png',
-        sequenceFolder: '/assets/characters/rico/showroom/pose1',
+        sequenceFolder: '/assets/characters/rico/showroom/pose',
         sequenceCount: 120,
         stats: { speed: 80, accel: 60, handling: 70 }
     },
@@ -103,7 +103,7 @@ export default function PlayerWaitingPage() {
 
     useEffect(() => {
         const user = getUser();
-        if (!user) { router.push(`/player/${roomCode}/login`); return; }
+        if (!user) { router.push(`/player/${roomCode}/join`); return; }
         setUsername(user.username || "");
         setUserAvatar(user.avatar || null);
         let cleanup: (() => void) | undefined;
