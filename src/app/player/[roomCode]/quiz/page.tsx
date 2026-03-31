@@ -80,8 +80,7 @@ export default function QuizPage() {
         setRoomCode(storedRoom);
         setSessionId(storedSession);
 
-        const customDiff = localStorage.getItem('nitroquiz_game_difficulty') || 'easy';
-        const route = (customDiff === 'normal' || customDiff === 'medium') ? '/gamespeed-medium' : '/gamespeed';
+        const route = `/player/${roomCode || roomCodeFromParams}/game`;
         router.prefetch(route);
     }, [router]);
 
@@ -173,24 +172,7 @@ export default function QuizPage() {
                 if (isFinished) {
                     router.push(`/player/${roomCode || roomCodeFromParams}/result`);
                 } else {
-                    let customDiff = localStorage.getItem('nitroquiz_game_difficulty');
-                    if (!customDiff) {
-                        try {
-                            const settingsStr = localStorage.getItem('edurace_game_settings');
-                            if (settingsStr) {
-                                const settings = JSON.parse(settingsStr);
-                                customDiff = settings.difficulty;
-                            }
-                        } catch (e) {}
-                    }
-                    const diff = customDiff || 'easy';
-                    let route = `/gamespeed/${roomCode || roomCodeFromParams}`;
-                    if (diff === 'normal' || diff === 'medium') {
-                        route = `/gamespeed-medium/${roomCode || roomCodeFromParams}`;
-                    } else if (diff === 'coba') {
-                        route = `/gamespeed-coba/${roomCode || roomCodeFromParams}`;
-                    }
-                    router.push(route);
+                    router.push(`/player/${roomCode || roomCodeFromParams}/game`);
                 }
             }, 800);
 

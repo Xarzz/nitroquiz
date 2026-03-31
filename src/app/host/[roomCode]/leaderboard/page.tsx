@@ -254,9 +254,6 @@ export default function LeaderboardPage() {
                     <p className="font-display text-slate-200 text-xs sm:text-sm tracking-wider truncate max-w-[100px]">
                       {secondPlace.nickname}
                     </p>
-                    <p className="font-mono text-slate-400 text-[10px] mt-0.5">
-                      {secondPlace.score.toLocaleString()}
-                    </p>
                   </div>
                 </div>
                 <div className="w-[85px] sm:w-[120px] h-[110px] sm:h-[140px] bg-gradient-to-b from-[#1a2235] to-[#0a0f1a] border-t-4 border-l border-r border-[#64748b] rounded-t-xl flex flex-col items-center justify-between py-2 sm:py-3">
@@ -283,23 +280,9 @@ export default function LeaderboardPage() {
                         />
                       )}
                     </div>
-                    <div className="absolute -right-2 -bottom-1 w-10 h-10 bg-black/60 rounded-full border border-white/20 p-1 flex items-center justify-center z-20 shadow-xl">
-                      <img
-                        src={
-                          carImageMap[
-                            (secondPlace.car_character || "white").replace(
-                              "-bot",
-                              "",
-                            )
-                          ] || carImageMap["white"]
-                        }
-                        alt="Car"
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
                   </div>
-                  <span className="font-display text-3xl sm:text-5xl text-slate-600/50 font-bold mb-1">
-                    2
+                  <span className="font-display text-2xl sm:text-4xl text-slate-300 font-bold mb-1 drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]">
+                    {secondPlace.score.toLocaleString()}
                   </span>
                 </div>
               </motion.div>
@@ -325,9 +308,6 @@ export default function LeaderboardPage() {
                   <div className="bg-[#1a1500]/80 border border-yellow-500/60 backdrop-blur-md px-4 sm:px-5 py-2 rounded-xl shadow-[0_0_25px_rgba(250,204,21,0.3)]">
                     <p className="font-display text-yellow-500 text-sm sm:text-lg font-bold tracking-widest uppercase truncate max-w-[130px]">
                       {firstPlace.nickname}
-                    </p>
-                    <p className="font-mono text-white text-xs sm:text-sm mt-0.5 font-bold">
-                      {firstPlace.score.toLocaleString()}
                     </p>
                   </div>
                 </div>
@@ -357,23 +337,9 @@ export default function LeaderboardPage() {
                         />
                       )}
                     </div>
-                    <div className="absolute -right-3 -bottom-1 w-12 h-12 bg-black/60 rounded-full border border-yellow-500/40 p-1.5 flex items-center justify-center z-20 shadow-xl">
-                      <img
-                        src={
-                          carImageMap[
-                            (firstPlace.car_character || "purple").replace(
-                              "-bot",
-                              "",
-                            )
-                          ] || carImageMap["purple"]
-                        }
-                        alt="Car"
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
                   </div>
-                  <span className="font-display text-5xl sm:text-7xl text-yellow-600/40 font-bold relative z-10 pb-0">
-                    1
+                  <span className="font-display text-3xl sm:text-5xl text-yellow-400 font-bold relative z-10 pb-0 drop-shadow-[0_0_15px_rgba(250,204,21,0.8)]">
+                    {firstPlace.score.toLocaleString()}
                   </span>
                 </div>
               </motion.div>
@@ -392,9 +358,6 @@ export default function LeaderboardPage() {
                   <div className="bg-black/60 border border-orange-700/40 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-[0_4px_15px_rgba(0,0,0,0.5)]">
                     <p className="font-display text-orange-200 text-xs sm:text-sm tracking-wider truncate max-w-[100px]">
                       {thirdPlace.nickname}
-                    </p>
-                    <p className="font-mono text-orange-400 text-[10px] mt-0.5">
-                      {thirdPlace.score.toLocaleString()}
                     </p>
                   </div>
                 </div>
@@ -422,23 +385,9 @@ export default function LeaderboardPage() {
                         />
                       )}
                     </div>
-                    <div className="absolute -right-2 -bottom-1 w-9 h-9 bg-black/60 rounded-full border border-white/20 p-1 flex items-center justify-center z-20 shadow-xl">
-                      <img
-                        src={
-                          carImageMap[
-                            (thirdPlace.car_character || "black").replace(
-                              "-bot",
-                              "",
-                            )
-                          ] || carImageMap["black"]
-                        }
-                        alt="Car"
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
                   </div>
-                  <span className="font-display text-2xl sm:text-4xl text-orange-700/40 font-bold mb-1">
-                    3
+                  <span className="font-display text-xl sm:text-3xl text-orange-300 font-bold mb-1 drop-shadow-[0_0_10px_rgba(251,146,60,0.4)]">
+                    {thirdPlace.score.toLocaleString()}
                   </span>
                 </div>
               </motion.div>
