@@ -13,7 +13,8 @@ export const PLAYER_CHARACTERS = [
         id: 'rico',
         name: 'SCHLOSKI RACER',
         imageSrc: '/assets/characters/rico/showroom/showroom1.png',
-        gifSrc: '/assets/characters/rico/showroom/pose1.gif',
+        sequenceFolder: '/assets/characters/rico/showroom/pose1',
+        sequenceCount: 120,
         stats: { speed: 80, accel: 60, handling: 70 }
     },
     {
@@ -58,6 +59,25 @@ const InitialsAvatar = ({ name, size = 'md' }: { name: string; size?: 'sm' | 'md
         >
             {getInitials(name)}
         </div>
+    );
+};
+
+const SequencePlayer = ({ folder, count, isLoading, onLoad }: { folder: string, count: number, isLoading: boolean, onLoad: () => void }) => {
+    const [frame, setFrame] = useState(0);
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setFrame(f => (f + 1) % count);
+        }, 30);
+        return () => clearInterval(interval);
+    }, [count]);
+
+    return (
+        <img src={`${folder}/${frame}.png`} 
+            alt="Your Car"
+            className={`object-contain drop-shadow-[0_28px_60px_rgba(40,70,200,0.22)] transition-opacity duration-300 relative z-10 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+            style={{ width: '100%', maxHeight: '100%' }}
+            onLoad={onLoad}
+        />
     );
 };
 
@@ -531,11 +551,15 @@ export default function PlayerWaitingPage() {
                                             animate={{ y: [0, -14, 0] }}
                                             transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut" }}>
                                             {isLoadingVisual && <Loader2 className="absolute z-0 w-12 h-12 text-[#00ff9d] animate-spin drop-shadow-[0_0_15px_rgba(0,255,157,0.5)]" />}
-                                            <img src={displayVisual} alt="Your Car"
-                                                className={`object-contain drop-shadow-[0_28px_60px_rgba(40,70,200,0.22)] transition-opacity duration-300 relative z-10 ${isLoadingVisual ? 'opacity-0' : 'opacity-100'}`}
-                                                style={{ width: '100%', maxHeight: '100%' }}
-                                                onLoad={() => setIsLoadingVisual(false)}
-                                            />
+                                            {(assignedChar as any).sequenceFolder ? (
+                                                <SequencePlayer folder={(assignedChar as any).sequenceFolder} count={(assignedChar as any).sequenceCount} isLoading={isLoadingVisual} onLoad={() => setIsLoadingVisual(false)} />
+                                            ) : (
+                                                <img src={displayVisual} alt="Your Car"
+                                                    className={`object-contain drop-shadow-[0_28px_60px_rgba(40,70,200,0.22)] transition-opacity duration-300 relative z-10 ${isLoadingVisual ? 'opacity-0' : 'opacity-100'}`}
+                                                    style={{ width: '100%', maxHeight: '100%' }} 
+                                                    onLoad={() => setIsLoadingVisual(false)}
+                                                />
+                                            )}
                                             {/* Ground shadow */}
                                             <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-3/4 h-3 bg-black/40 blur-xl rounded-full" />
                                         </motion.div>

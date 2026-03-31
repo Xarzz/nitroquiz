@@ -95,7 +95,7 @@ export default function SelectQuizPage() {
     const [isFetching, setIsFetching] = useState(true);
     const [isReturning, setIsReturning] = useState(false);
 
-    const itemsPerPage = 6;
+    const itemsPerPage = 8;
 
     useEffect(() => {
         const user = getUser();
@@ -235,10 +235,10 @@ export default function SelectQuizPage() {
                         className="object-contain opacity-70 hover:opacity-100 transition-opacity duration-300 drop-shadow-[0_0_8px_rgba(169,141,197,0.4)]" />
                 </div>
 
-                <div className="flex-1 overflow-y-auto relative container mx-auto px-6 pb-2 max-w-4xl pt-0.5">
+                <div className="flex-1 overflow-y-auto relative container mx-auto px-6 pb-2 max-w-6xl pt-0.5">
                     {/* Search & Filter Bar */}
                     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}
-                        className="bg-[#080d1a]/80 border border-[#2d6af2]/30 rounded-2xl overflow-hidden mb-3 backdrop-blur-2xl shadow-[0_0_50px_rgba(45,106,242,0.12),inset_0_1px_0_rgba(255,255,255,0.06)] flex-shrink-0">
+                        className="max-w-4xl mx-auto w-full bg-[#080d1a]/80 border border-[#2d6af2]/30 rounded-2xl overflow-hidden mb-3 backdrop-blur-2xl shadow-[0_0_50px_rgba(45,106,242,0.12),inset_0_1px_0_rgba(255,255,255,0.06)] flex-shrink-0">
                         {/* ── Cyan accent bar ── */}
                         <div className="h-[2px] w-full" style={{ background: 'linear-gradient(90deg,#1a45c4,#2d6af2,#00ff9d,#2d6af2,#1a45c4)' }} />
                         <div className="p-2 sm:p-3">
@@ -289,8 +289,8 @@ export default function SelectQuizPage() {
                     <AnimatePresence mode="wait">
                         {(isFetching || isReturning || creating) ? (
                             <motion.div key="skeleton" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                                {Array.from({ length: 6 }).map((_, i) => (
+                                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+                                {Array.from({ length: 8 }).map((_, i) => (
                                     <div key={i} className="bg-[#080d1a]/80 border border-[#2d6af2]/15 rounded-xl overflow-hidden animate-pulse">
                                         <div className="h-1 w-full bg-[#2d6af2]/10" />
                                         <div className="w-full h-24 bg-gradient-to-br from-[#2d6af2]/10 to-[#04060f]" />
@@ -303,7 +303,7 @@ export default function SelectQuizPage() {
                             </motion.div>
                         ) : paginatedQuizzes.length > 0 ? (
                             <motion.div key={`grid-${currentPage}-${activeTab}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                                 {paginatedQuizzes.map((quiz, index) => {
                                     const isFavorited = favorites.includes(quiz.id);
                                     const colors = getCategoryColor(quiz.category);
@@ -347,10 +347,10 @@ export default function SelectQuizPage() {
                                                     <Heart size={14} className={isFavorited ? 'fill-pink-400' : ''} />
                                                 </button>
 
-                                                <CardHeader className="pb-2.5 relative z-20 flex-1 flex flex-col pt-3.5">
+                                                <CardHeader className="pb-1.5 relative z-20 flex-1 flex flex-col pt-2">
                                                     {/* ── Category badge with category color ── */}
-                                                    <div className="flex items-start mb-1.5 pr-10">
-                                                        <div className="px-2 py-0.5 rounded text-[8px] font-display font-bold uppercase tracking-wider backdrop-blur-sm shadow-sm"
+                                                    <div className="flex items-start mb-1 pr-10">
+                                                        <div className="px-1.5 py-[1px] rounded text-[7px] font-display font-bold uppercase tracking-wider backdrop-blur-sm shadow-sm"
                                                             style={{
                                                                 background: colors.badge,
                                                                 border: `1px solid ${colors.badgeBorder}`,
@@ -359,18 +359,18 @@ export default function SelectQuizPage() {
                                                             {getCategoryDisplayName(quiz.category)}
                                                         </div>
                                                     </div>
-                                                    <CardTitle className="text-sm md:text-base text-white font-display uppercase tracking-wide leading-tight transition-colors drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] line-clamp-2"
+                                                    <CardTitle className="text-xs text-white font-display uppercase tracking-wide leading-tight transition-colors drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] line-clamp-1"
                                                         style={{ color: '#fff' }}
                                                         onMouseEnter={e => (e.currentTarget.style.color = colors.badgeText)}
                                                         onMouseLeave={e => (e.currentTarget.style.color = '#fff')}
                                                         title={quiz.title}>
                                                         {quiz.title}
                                                     </CardTitle>
-                                                    <div className="text-[10px] text-gray-400 font-body line-clamp-1 mt-1 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] flex-1" title={quiz.description}>
+                                                    <div className="text-[9px] text-gray-400 font-body line-clamp-1 mt-0.5 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] flex-1" title={quiz.description}>
                                                         {quiz.description}
                                                     </div>
                                                 </CardHeader>
-                                                <CardFooter className="mt-auto pt-2.5 border-t border-white/5 flex justify-between items-center text-[9px] text-gray-400 font-display tracking-wider relative z-20 bg-black/40 backdrop-blur-sm">
+                                                <CardFooter className="mt-auto pt-1.5 pb-1.5 px-3 border-t border-white/5 flex justify-between items-center text-[8px] text-gray-400 font-display tracking-wider relative z-20 bg-black/40 backdrop-blur-sm">
                                                     <div className="flex items-center gap-4 drop-shadow-md">
                                                         <div className="flex items-center gap-1.5">
                                                             <HelpCircle size={14} style={{ color: colors.bar }} />
@@ -436,14 +436,14 @@ export default function SelectQuizPage() {
 
                     {/* Pagination */}
                     {totalPages > 1 && (
-                        <div className="flex justify-center mt-3 mb-1 gap-2 flex-shrink-0">
+                        <div className="flex justify-center mt-2 mb-1 gap-2 flex-shrink-0">
                             <Button variant="outline" onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                                 disabled={currentPage === 1 || isFetching || creating || isReturning}
-                                className="h-10 px-4 bg-white/[0.03] border border-[#2d6af2]/30 text-white font-display text-xs disabled:opacity-30 hover:bg-[#2d6af2]/20 hover:border-[#00ff9d] transition-all uppercase tracking-wider">{t('select_quiz.pagination.prev')}</Button>
-                            <div className="flex items-center px-4 bg-[#2d6af2]/15 border border-[#2d6af2]/30 rounded-md text-[#00ff9d] font-display text-xs">{t('select_quiz.pagination.page')} {currentPage} / {totalPages}</div>
+                                className="h-8 px-3 bg-white/[0.03] border border-[#2d6af2]/30 text-white font-display text-[9px] disabled:opacity-30 hover:bg-[#2d6af2]/20 hover:border-[#00ff9d] transition-all uppercase tracking-wider">{t('select_quiz.pagination.prev')}</Button>
+                            <div className="flex items-center px-4 bg-[#2d6af2]/15 border border-[#2d6af2]/30 rounded-md text-[#00ff9d] font-display text-[9px]">{t('select_quiz.pagination.page')} {currentPage} / {totalPages}</div>
                             <Button variant="outline" onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                                 disabled={currentPage === totalPages || isFetching || creating || isReturning}
-                                className="h-10 px-4 bg-white/[0.03] border border-[#2d6af2]/30 text-white font-display text-xs disabled:opacity-30 hover:bg-[#2d6af2]/20 hover:border-[#00ff9d] transition-all uppercase tracking-wider">{t('select_quiz.pagination.next')}</Button>
+                                className="h-8 px-3 bg-white/[0.03] border border-[#2d6af2]/30 text-white font-display text-[9px] disabled:opacity-30 hover:bg-[#2d6af2]/20 hover:border-[#00ff9d] transition-all uppercase tracking-wider">{t('select_quiz.pagination.next')}</Button>
                         </div>
                     )}
                 </div>
