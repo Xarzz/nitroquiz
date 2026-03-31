@@ -238,21 +238,21 @@ export default function SelectQuizPage() {
                 <div className="flex-1 overflow-y-auto relative container mx-auto px-6 pb-2 max-w-6xl pt-0.5">
                     {/* Search & Filter Bar */}
                     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}
-                        className="bg-[#080d1a]/80 border border-[#2d6af2]/30 rounded-xl overflow-hidden mb-2 backdrop-blur-2xl shadow-[0_0_50px_rgba(45,106,242,0.12),inset_0_1px_0_rgba(255,255,255,0.06)] flex-shrink-0">
+                        className="bg-[#080d1a]/80 border border-[#2d6af2]/30 rounded-2xl overflow-hidden mb-3 backdrop-blur-2xl shadow-[0_0_50px_rgba(45,106,242,0.12),inset_0_1px_0_rgba(255,255,255,0.06)] flex-shrink-0">
                         {/* ── Cyan accent bar ── */}
                         <div className="h-[2px] w-full" style={{ background: 'linear-gradient(90deg,#1a45c4,#2d6af2,#00ff9d,#2d6af2,#1a45c4)' }} />
-                        <div className="p-1.5 sm:p-2">
-                        <div className="flex flex-col sm:flex-row gap-1.5 mb-2 relative">
+                        <div className="p-2 sm:p-3">
+                        <div className="flex flex-col sm:flex-row gap-2.5 mb-3 relative">
                             <div className="flex-1">
                                 <div className="relative group/search">
-                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4 group-focus-within/search:text-[#00ff9d] transition-colors" />
+                                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5 group-focus-within/search:text-[#00ff9d] transition-colors" />
                                     <Input type="text" placeholder={t('select_quiz.search_placeholder')} value={searchInput}
                                         onChange={(e) => { setSearchInput(e.target.value); setSearchQuery(e.target.value); setCurrentPage(1); }}
-                                        className="w-full bg-white/[0.03] border border-white/[0.07] pl-9 h-8 text-white font-display text-[9px] uppercase tracking-widest placeholder:text-gray-600 rounded-lg focus-visible:ring-1 focus-visible:ring-[#00ff9d]/50 focus-visible:border-[#00ff9d]/50 focus-visible:bg-white/[0.05] transition-all" />
+                                        className="w-full bg-white/[0.03] border border-white/[0.07] pl-10 h-9 text-white font-display text-[10px] uppercase tracking-widest placeholder:text-gray-600 rounded-lg focus-visible:ring-1 focus-visible:ring-[#00ff9d]/50 focus-visible:border-[#00ff9d]/50 focus-visible:bg-white/[0.05] transition-all" />
                                 </div>
                             </div>
                             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                                <SelectTrigger className="w-full sm:w-48 h-8 bg-white/[0.03] border border-white/[0.07] text-white focus:border-[#00ff9d]/50 focus:ring-1 focus:ring-[#00ff9d]/50 rounded-lg font-display text-[9px] tracking-wider uppercase">
+                                <SelectTrigger className="w-full sm:w-52 h-12 bg-white/[0.03] border border-white/[0.07] text-white focus:border-[#00ff9d]/50 focus:ring-1 focus:ring-[#00ff9d]/50 rounded-xl font-display text-xs tracking-wider uppercase">
                                     <SelectValue placeholder={t('select_quiz.category_placeholder')} />
                                 </SelectTrigger>
                                 <SelectContent className="bg-[#04060f] border border-[#2d6af2]/30 text-white font-display text-[10px] uppercase tracking-wider backdrop-blur-3xl">
@@ -264,22 +264,22 @@ export default function SelectQuizPage() {
                                 </SelectContent>
                             </Select>
                         </div>
-                        <div className="flex items-center justify-center gap-1.5">
+                        <div className="flex items-center justify-center gap-2">
                             <button onClick={() => setActiveTab('all')}
-                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-display text-[9px] tracking-wider uppercase transition-all duration-200 ${activeTab === 'all' ? 'bg-[#2d6af2] text-white shadow-[0_0_15px_rgba(45,106,242,0.5)]' : 'bg-white/[0.03] border border-white/[0.07] text-gray-400 hover:text-white hover:border-[#00ff9d]/50'}`}>
-                                <Search size={12} />{t('select_quiz.tabs.quizzes')}
+                                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-display text-xs tracking-wider uppercase transition-all duration-200 ${activeTab === 'all' ? 'bg-[#2d6af2] text-white shadow-[0_0_15px_rgba(45,106,242,0.5)]' : 'bg-white/[0.03] border border-white/[0.07] text-gray-400 hover:text-white hover:border-[#00ff9d]/50'}`}>
+                                <Search size={14} />{t('select_quiz.tabs.quizzes')}
                             </button>
                             <button onClick={() => setActiveTab('favorites')}
-                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-display text-[9px] tracking-wider uppercase transition-all duration-200 ${activeTab === 'favorites' ? 'bg-gradient-to-r from-pink-600 to-red-500 text-white shadow-[0_0_15px_rgba(236,72,153,0.4)]' : 'bg-black/40 border border-pink-500/20 text-gray-400 hover:text-pink-400 hover:border-pink-500/50'}`}>
-                                <Heart size={12} className={activeTab === 'favorites' ? 'fill-white' : ''} />
+                                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-display text-xs tracking-wider uppercase transition-all duration-200 ${activeTab === 'favorites' ? 'bg-gradient-to-r from-pink-600 to-red-500 text-white shadow-[0_0_15px_rgba(236,72,153,0.4)]' : 'bg-black/40 border border-pink-500/20 text-gray-400 hover:text-pink-400 hover:border-pink-500/50'}`}>
+                                <Heart size={14} className={activeTab === 'favorites' ? 'fill-white' : ''} />
                                 {t('select_quiz.tabs.favorites')}
                                 {favorites.length > 0 && (
-                                    <span className={`ml-1 px-1.5 py-0.5 rounded-full text-[8px] font-bold ${activeTab === 'favorites' ? 'bg-white/20' : 'bg-pink-500/20 text-pink-400'}`}>{favorites.length}</span>
+                                    <span className={`ml-1 px-1.5 py-0.5 rounded-full text-[10px] font-bold ${activeTab === 'favorites' ? 'bg-white/20' : 'bg-pink-500/20 text-pink-400'}`}>{favorites.length}</span>
                                 )}
                             </button>
                             <button onClick={() => setActiveTab('myquiz')}
-                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-display text-[9px] tracking-wider uppercase transition-all duration-200 ${activeTab === 'myquiz' ? 'bg-gradient-to-r from-[#00ff9d] to-[#04060f] text-white font-bold shadow-[0_0_15px_rgba(0,255,157,0.5)]' : 'bg-white/[0.03] border border-white/[0.07] text-gray-400 hover:text-[#00ff9d] hover:border-[#00ff9d]/50'}`}>
-                                <FileText size={12} />{t('select_quiz.tabs.my_quiz')}
+                                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-display text-xs tracking-wider uppercase transition-all duration-200 ${activeTab === 'myquiz' ? 'bg-gradient-to-r from-[#00ff9d] to-[#04060f] text-white font-bold shadow-[0_0_15px_rgba(0,255,157,0.5)]' : 'bg-white/[0.03] border border-white/[0.07] text-gray-400 hover:text-[#00ff9d] hover:border-[#00ff9d]/50'}`}>
+                                <FileText size={14} />{t('select_quiz.tabs.my_quiz')}
                             </button>
                         </div>
                         </div>
