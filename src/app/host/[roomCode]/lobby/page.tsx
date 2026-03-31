@@ -498,9 +498,9 @@ export default function HostRoomPage() {
               initial={{ opacity: 0, scale: 0.9, y: 30 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="flex flex-col bg-black/65 backdrop-blur-md rounded-[2.5rem] p-5 lg:p-6 shadow-[0_0_40px_rgba(45,106,242,0.2)] border border-[#2d6af2]/60 relative overflow-y-auto custom-scrollbar group h-full justify-between"
+              className="flex flex-col bg-black/65 backdrop-blur-md rounded-3xl p-5 lg:p-6 shadow-[0_0_40px_rgba(45,106,242,0.15)] border border-white/10 relative group h-full justify-between overflow-hidden"
             >
-              <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-[#2d6af2]/25 to-transparent rounded-bl-full pointer-events-none"></div>
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#2d6af2]/10 to-transparent rounded-bl-full pointer-events-none"></div>
 
               <div className="flex flex-col gap-2 relative z-10 flex-1 px-1 overflow-y-auto custom-scrollbar">
                 {/* ROOM CODE */}
@@ -523,9 +523,9 @@ export default function HostRoomPage() {
                 </div>
 
                 {/* QR CODE - Take up remaining space gracefully */}
-                <div className="flex-1 w-full flex items-center justify-center shrink-0 min-h-0 py-1">
+                <div className="flex-1 w-full flex items-center justify-center shrink-0 min-h-0 py-2">
                   <div
-                    className="p-2.5 rounded-xl max-w-[160px] w-full aspect-square relative group/qr cursor-pointer border border-white/10 backdrop-blur-sm transition-transform hover:scale-[1.02]"
+                    className="p-1 rounded-xl max-w-[220px] w-full aspect-square relative group/qr cursor-pointer transition-transform hover:scale-[1.02]"
                     onClick={() => setOpen(true)}
                   >
                     <QRCode
@@ -534,7 +534,7 @@ export default function HostRoomPage() {
                       bgColor="transparent"
                       fgColor="white"
                     />
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/qr:opacity-100 transition-opacity bg-black/40 rounded-3xl backdrop-blur-sm">
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/qr:opacity-100 transition-opacity bg-black/40 rounded-xl backdrop-blur-sm">
                       <Maximize2 size={28} className="text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]" />
                     </div>
                   </div>
@@ -605,7 +605,7 @@ export default function HostRoomPage() {
                 stiffness: 100,
                 damping: 14,
               }}
-              className="bg-black/65 backdrop-blur-md rounded-[2.5rem] p-5 h-full shadow-[0_0_40px_rgba(0,255,157,0.15)] border border-[#00ff9d]/40 relative overflow-hidden flex flex-col min-h-0"
+              className="bg-black/65 backdrop-blur-md rounded-3xl p-5 h-full shadow-[0_0_40px_rgba(0,255,157,0.1)] border border-white/10 relative overflow-hidden flex flex-col min-h-0"
           >
               <div className="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-[#00ff9d]/10 to-transparent rounded-br-full pointer-events-none"></div>
 
