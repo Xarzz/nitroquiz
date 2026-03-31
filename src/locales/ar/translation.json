@@ -164,7 +164,12 @@
     "copy": "نسخ",
     "share_text1": "هيا نتسابق في الاختبارات معًا على NitroQuiz! انضم للغرفة: ",
     "share_text2": "هيا نتسابق في الاختبارات معًا على NitroQuiz! انضم للغرفة {{code}} الآن: ",
-    "share_text3": "هيا نتسابق في الاختبارات معًا على NitroQuiz!"
+    "share_text3": "هيا نتسابق في الاختبارات معًا على NitroQuiz!",
+    "ready": "استعد",
+    "steady": "تأهب",
+    "go_race": "انطلق",
+    "go": "انطلق!",
+    "launching": "إطلاق السباق..."
   },
   "host_monitor": {
     "new": "جديد",
@@ -238,5 +243,22 @@
     "champion": "🏆 بطل",
     "finished": "اكتمل",
     "wait_for_host": "انتظر المضيف"
+  },
+  "player_game": {
+    "establishing_signal": "جاري إنشاء الإشارة...",
+    "race_starting": "السباق يبدأ",
+    "go": "انطلق!",
+    "race_finished": "انتهى السباق!",
+    "redirecting": "جاري تحضير النتائج...",
+    "select_view": "اختر الرؤية",
+    "choose_perspective": "اخter منظور السباق الخاص بك",
+    "portrait": "رأسي",
+    "swipe_to_steer": "اسحب للتوجيه",
+    "landscape": "أفقي",
+    "button_controls": "أزرار التحكم",
+    "speedometer": "عداد السرعة",
+    "nos": "نيترو",
+    "lap": "جولة",
+    "pov_hint": "تغيير (T)"
   }
 }

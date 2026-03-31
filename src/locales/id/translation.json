@@ -164,7 +164,12 @@
     "copy": "Salin",
     "share_text1": "Ayo balap kuis bareng di NitroQuiz! Join room: ",
     "share_text2": "Ayo balap kuis bareng di NitroQuiz! Join room {{code}} sekarang: ",
-    "share_text3": "Ayo balap kuis bareng di NitroQuiz!"
+    "share_text3": "Ayo balap kuis bareng di NitroQuiz!",
+    "ready": "SEDIA",
+    "steady": "SIAP",
+    "go_race": "BALAP",
+    "go": "GAS!",
+    "launching": "MELUNCURKAN BALAPAN..."
   },
   "host_monitor": {
     "new": "BARU",
@@ -238,5 +243,22 @@
     "champion": "🏆 JUARA",
     "finished": "SELESAI",
     "wait_for_host": "MENUNGGU HOST"
+  },
+  "player_game": {
+    "establishing_signal": "MEMANTAPKAN SINYAL...",
+    "race_starting": "BALAPAN DIMULAI",
+    "go": "GAS!",
+    "race_finished": "BALAPAN SELESAI!",
+    "redirecting": "Menyiapkan klasemen dan mengarahkan...",
+    "select_view": "PILIH TAMPILAN",
+    "choose_perspective": "Pilih sudut pandang balapanmu",
+    "portrait": "Potret",
+    "swipe_to_steer": "GESER UNTUK KEMUDI",
+    "landscape": "Lanskap",
+    "button_controls": "KONTROL TOMBOL",
+    "speedometer": "SPEEDOMETER",
+    "nos": "NOS",
+    "lap": "PUTARAN",
+    "pov_hint": "POV (T)"
   }
 }

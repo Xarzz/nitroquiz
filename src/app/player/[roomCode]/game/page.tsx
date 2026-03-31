@@ -3,6 +3,9 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { ASSET_LIST, TRACK_ASSETS, getAssetOffset } from '@/lib/gameAssets';
+import { useTranslation } from 'react-i18next';
+import { getI18nInstance } from '@/lib/i18n';
+getI18nInstance(); // initialize i18n
 interface QuizQuestion {
     id: string;
     question: string;
@@ -146,6 +149,7 @@ const COLORS = {
 };
 
 export default function GameSpeedPage() {
+    const { t } = useTranslation();
     const router = useRouter();
     const params = useParams();
     const roomCode = params?.roomCode as string;
@@ -2134,7 +2138,7 @@ export default function GameSpeedPage() {
                             fontWeight: 700,
                             animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
                         }}>
-                            Establishing Signal...
+                            {t('player_game.establishing_signal')}
                         </p>
                     </div>
                     <style>{`
@@ -2176,9 +2180,9 @@ export default function GameSpeedPage() {
                             fontSize: '1.5rem', fontWeight: 900, textTransform: 'uppercase',
                             letterSpacing: '0.3em', color: 'white', margin: 0,
                             textShadow: '0 0 20px rgba(45,106,242,0.5)',
-                        }}>SELECT VIEW</h2>
+                        }}>{t('player_game.select_view')}</h2>
                         <p style={{ fontSize: '0.7rem', color: '#64748b', letterSpacing: '0.2em', textTransform: 'uppercase', marginTop: '0.5rem' }}>
-                            Choose your racing perspective
+                            {t('player_game.choose_perspective')}
                         </p>
                     </div>
 
@@ -2206,8 +2210,8 @@ export default function GameSpeedPage() {
                             }}>
                                 <span style={{ fontSize: '1.25rem' }}>📱</span>
                             </div>
-                            <span style={{ fontSize: '0.9rem', fontWeight: 900, letterSpacing: '0.15em', textTransform: 'uppercase' }}>Portrait</span>
-                            <span style={{ fontSize: '0.6rem', color: '#64748b', letterSpacing: '0.1em' }}>SWIPE TO STEER</span>
+                            <span style={{ fontSize: '0.9rem', fontWeight: 900, letterSpacing: '0.15em', textTransform: 'uppercase' }}>{t('player_game.portrait')}</span>
+                            <span style={{ fontSize: '0.6rem', color: '#64748b', letterSpacing: '0.1em' }}>{t('player_game.swipe_to_steer')}</span>
                         </button>
 
                         {/* Landscape Card */}
@@ -2240,8 +2244,8 @@ export default function GameSpeedPage() {
                             }}>
                                 <span style={{ fontSize: '1.25rem', transform: 'rotate(90deg)' }}>📱</span>
                             </div>
-                            <span style={{ fontSize: '0.9rem', fontWeight: 900, letterSpacing: '0.15em', textTransform: 'uppercase' }}>Landscape</span>
-                            <span style={{ fontSize: '0.6rem', color: '#64748b', letterSpacing: '0.1em' }}>BUTTON CONTROLS</span>
+                            <span style={{ fontSize: '0.9rem', fontWeight: 900, letterSpacing: '0.15em', textTransform: 'uppercase' }}>{t('player_game.landscape')}</span>
+                            <span style={{ fontSize: '0.6rem', color: '#64748b', letterSpacing: '0.1em' }}>{t('player_game.button_controls')}</span>
                         </button>
                     </div>
                 </div>
@@ -2279,7 +2283,7 @@ export default function GameSpeedPage() {
                                     flex: usePCLayout ? 'none' : 1,
                                     textAlign: usePCLayout ? 'left' : 'center'
                                 }}>
-                                    <div style={{ fontSize: isMobileLandscape ? '8px' : (usePCLayout ? '10px' : '7px'), color: 'rgba(255, 255, 255, 0.5)', textTransform: 'uppercase', letterSpacing: '0.3em', fontWeight: 900, marginBottom: '0.1rem' }}>Speedometer</div>
+                                    <div style={{ fontSize: isMobileLandscape ? '8px' : (usePCLayout ? '10px' : '7px'), color: 'rgba(255, 255, 255, 0.5)', textTransform: 'uppercase', letterSpacing: '0.3em', fontWeight: 900, marginBottom: '0.1rem' }}>{t('player_game.speedometer')}</div>
                                     <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.25rem', justifyContent: usePCLayout ? 'flex-start' : 'center' }}>
                                         <span style={{
                                             fontSize: isMobileLandscape ? '1.8rem' : (usePCLayout ? '4.5rem' : '1.75rem'),
@@ -2322,7 +2326,7 @@ export default function GameSpeedPage() {
                                     <span style={{ fontSize: isMobileLandscape ? '1.2rem' : (usePCLayout ? '1.8rem' : '1rem'), filter: 'drop-shadow(0 0 5px rgba(255,255,255,0.5))' }}>
                                         {viewMode === 'first' ? '🎥' : '👤'}
                                     </span>
-                                    {usePCLayout && <span style={{ fontSize: '8px', fontWeight: 900, textTransform: 'uppercase', opacity: 0.8 }}>POV (T)</span>}
+                                    {usePCLayout && <span style={{ fontSize: '8px', fontWeight: 900, textTransform: 'uppercase', opacity: 0.8 }}>{t('player_game.pov_hint')}</span>}
                                 </button>
                             </div>
 
@@ -2338,7 +2342,7 @@ export default function GameSpeedPage() {
                                     gap: usePCLayout ? '0.75rem' : '0.5rem',
                                     flex: usePCLayout ? 'none' : 1
                                 }}>
-                                    <span style={{ color: '#60a5fa', fontWeight: 900, fontSize: isMobileLandscape ? '0.7rem' : (usePCLayout ? '0.7rem' : '0.6rem'), textShadow: '0 0 10px rgba(59, 130, 246, 0.8)' }}>NOS</span>
+                                    <span style={{ color: '#60a5fa', fontWeight: 900, fontSize: isMobileLandscape ? '0.7rem' : (usePCLayout ? '0.7rem' : '0.6rem'), textShadow: '0 0 10px rgba(59, 130, 246, 0.8)' }}>{t('player_game.nos')}</span>
                                     <div style={{ flex: 1, minWidth: isMobileLandscape ? '70px' : (usePCLayout ? '80px' : '30px'), height: usePCLayout ? '6px' : '4px', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' }}>
                                         <div style={{ width: `${stats.nos}%`, height: '100%', backgroundColor: '#3b82f6', boxShadow: '0 0 10px #3b82f6' }} />
                                     </div>
@@ -2354,7 +2358,7 @@ export default function GameSpeedPage() {
                                     gap: '0.35rem',
                                     flex: 'none'
                                 }}>
-                                    <span style={{ color: '#4ade80', fontWeight: 900, fontSize: isMobileLandscape ? '0.7rem' : (usePCLayout ? '0.7rem' : '0.6rem'), textShadow: '0 0 10px rgba(74, 222, 128, 0.8)' }}>LAP</span>
+                                    <span style={{ color: '#4ade80', fontWeight: 900, fontSize: isMobileLandscape ? '0.7rem' : (usePCLayout ? '0.7rem' : '0.6rem'), textShadow: '0 0 10px rgba(74, 222, 128, 0.8)' }}>{t('player_game.lap')}</span>
                                     <span style={{ fontSize: isMobileLandscape ? '1rem' : (usePCLayout ? '1.25rem' : '0.8rem'), fontWeight: 900, color: '#fff' }}>{stats.lap}/{stats.totalLaps}</span>
                                 </div>
                             </div>
@@ -2617,7 +2621,7 @@ export default function GameSpeedPage() {
             {mounted && !assetsLoaded && (
                 <div style={{ position: 'fixed', inset: 0, zIndex: 2000, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#020617', color: 'white', fontFamily: 'var(--font-rajdhani)' }}>
                     <div style={{ width: '64px', height: '64px', border: '4px solid rgba(59,130,246,0.1)', borderTopColor: '#3b82f6', borderRadius: '50%', animation: 'spin 1s linear infinite', boxShadow: '0 0 20px rgba(59,130,246,0.2)' }} />
-                    <p style={{ marginTop: '2rem', fontSize: '1rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.4em', color: '#3b82f6', animation: 'pulse 2s ease-in-out infinite' }}>ESTABLISHING SIGNAL...</p>
+                    <p style={{ marginTop: '2rem', fontSize: '1rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.4em', color: '#3b82f6', animation: 'pulse 2s ease-in-out infinite' }}>{t('player_game.establishing_signal')}</p>
                     <style>{`@keyframes spin{to{transform:rotate(360deg)}} @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}`}</style>
                 </div>
             )}
@@ -2675,7 +2679,7 @@ export default function GameSpeedPage() {
                             willChange: 'transform, opacity',
                         }}
                     >
-                        {countdown > 0 ? countdown : 'GO!'}
+                        {countdown > 0 ? countdown : t('player_game.go')}
                     </div>
 
                     {/* Subtitle */}
@@ -2685,7 +2689,7 @@ export default function GameSpeedPage() {
                             letterSpacing: '0.3em', textTransform: 'uppercase',
                             color: '#64748b', fontWeight: 900,
                         }}>
-                            RACE STARTING
+                        {countdown > 0 ? t('player_game.race_starting') : ''}
                         </div>
                     )}
 
@@ -2708,10 +2712,10 @@ export default function GameSpeedPage() {
                     fontFamily: 'var(--font-rajdhani)', textAlign: 'center'
                 }}>
                     <div style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem', animation: 'pulse 1.5s infinite' }}>
-                        BALAPAN SELESAI!
+                        {t('player_game.race_finished')}
                     </div>
                     <div style={{ fontSize: '1rem', color: '#94a3b8', maxWidth: '300px' }}>
-                        Menyiapkan hasil klasemen dan mengarahkan...
+                        {t('player_game.redirecting')}
                     </div>
                 </div>
             )}

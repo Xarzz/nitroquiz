@@ -52,7 +52,7 @@ const getAvatarColor = (name: string): string => {
 const InitialsAvatar = ({ name, size = 'md' }: { name: string; size?: 'sm' | 'md' | 'lg' }) => {
     const fontSize = size === 'lg' ? 'text-xl' : size === 'md' ? 'text-base' : 'text-[10px]';
     return (
-        <div 
+        <div
             className={`w-full h-full rounded-full flex items-center justify-center ${fontSize} font-black text-white`}
             style={{ backgroundColor: getAvatarColor(name) }}
         >
@@ -102,7 +102,7 @@ export default function PlayerWaitingPage() {
 
                 const { data: existingP } = await supabase.from("participants").select("id")
                     .eq("session_id", sessionData.id).eq("nickname", user.username).maybeSingle();
-                
+
                 let currentParticipantId = existingP?.id;
 
                 if (!existingP) {
@@ -111,7 +111,7 @@ export default function PlayerWaitingPage() {
                         nickname: user.username, car_character: carChoice, score: 0, minigame: false,
                         avatar_url: user.avatar || null
                     }).select('id').single();
-                    
+
                     if (insertError) { setStatus("error"); setErrorMessage("Failed to enter room. " + insertError.message); return; }
                     currentParticipantId = newP?.id;
                 }
@@ -175,36 +175,36 @@ export default function PlayerWaitingPage() {
                 localStorage.removeItem('nitroquiz_game_score');
                 localStorage.removeItem('nitroquiz_game_questionIndex');
             }
-            
+
             const difficulty = data?.difficulty || 'easy';
             const route = `/player/${roomCode}/game`;
-            
+
             const link = document.createElement('link'); link.rel = 'prefetch'; link.href = route; document.head.appendChild(link);
         } catch (err) { console.error('Failed to preload quiz:', err); }
     };
 
     useEffect(() => {
         if (status !== "countdown") return;
-        if (countdownValue <= 0) { 
-            setStatus("go"); 
+        if (countdownValue <= 0) {
+            setStatus("go");
             setTimeout(() => {
                 router.push(`/player/${roomCode}/game`);
-            }, 800); 
-            return; 
+            }, 800);
+            return;
         }
         const timer = setTimeout(() => setCountdownValue(prev => prev - 1), 1000);
         return () => clearTimeout(timer);
     }, [status, countdownValue, router]);
 
     const getCountdownLabel = (val: number) => {
-        if (val === 3) return t("player_waiting.ready"); 
-        if (val === 2) return t("player_waiting.steady"); 
-        if (val === 1) return t("player_waiting.go_race"); 
+        if (val === 3) return t("player_waiting.ready");
+        if (val === 2) return t("player_waiting.steady");
+        if (val === 1) return t("player_waiting.go_race");
         return t("player_waiting.go");
     };
     const getCountdownColor = (val: number) => {
-        if (val === 3) return "text-red-500"; 
-        if (val === 2) return "text-yellow-400"; 
+        if (val === 3) return "text-red-500";
+        if (val === 2) return "text-yellow-400";
         return "text-[#00ff9d]";
     };
 
@@ -439,11 +439,11 @@ export default function PlayerWaitingPage() {
                                             <div className="flex items-center justify-center px-6 py-5" style={{ minHeight: '150px' }}>
                                                 {/* Ghost car SVG */}
                                                 <svg viewBox="0 0 180 80" className="w-[160px] h-[70px] opacity-15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <rect x="8" y="28" width="164" height="34" rx="12" stroke="#7090cc" strokeWidth="2"/>
-                                                    <rect x="42" y="12" width="96" height="28" rx="9" stroke="#7090cc" strokeWidth="2"/>
-                                                    <circle cx="42" cy="66" r="11" stroke="#7090cc" strokeWidth="2"/>
-                                                    <circle cx="138" cy="66" r="11" stroke="#7090cc" strokeWidth="2"/>
-                                                    <line x1="8" y1="42" x2="172" y2="42" stroke="#7090cc" strokeWidth="1" strokeDasharray="6 4"/>
+                                                    <rect x="8" y="28" width="164" height="34" rx="12" stroke="#7090cc" strokeWidth="2" />
+                                                    <rect x="42" y="12" width="96" height="28" rx="9" stroke="#7090cc" strokeWidth="2" />
+                                                    <circle cx="42" cy="66" r="11" stroke="#7090cc" strokeWidth="2" />
+                                                    <circle cx="138" cy="66" r="11" stroke="#7090cc" strokeWidth="2" />
+                                                    <line x1="8" y1="42" x2="172" y2="42" stroke="#7090cc" strokeWidth="1" strokeDasharray="6 4" />
                                                 </svg>
                                             </div>
                                             <div className="text-center pb-3 px-3">
@@ -467,29 +467,29 @@ export default function PlayerWaitingPage() {
                                         <button className="z-20 w-10 h-10 flex items-center justify-center bg-[#151f38] rounded-xl hover:bg-[#1c294a] transition-colors shadow-lg flex-shrink-0">
                                             <ChevronLeft className="w-5 h-5 text-white" />
                                         </button>
-                                        
+
                                         {/* Cards Container */}
                                         <div className="flex justify-center gap-5 items-center overflow-x-auto no-scrollbar py-6 px-4">
                                             {PLAYER_CHARACTERS.map((c) => {
                                                 const isSel = pendingCharacterId === c.id;
                                                 return (
-                                                    <div key={c.id} onClick={() => setPendingCharacterId(c.id)} 
-                                                        className={`relative flex flex-col items-center pt-10 pb-5 px-5 rounded-[16px] transition-all cursor-pointer ${isSel ? 'bg-[#182136] border-2 border-[#e6fdff]' : 'bg-[#111726] border border-[#2d4060]'}`} 
-                                                        style={{ 
-                                                            width: '280px', 
+                                                    <div key={c.id} onClick={() => setPendingCharacterId(c.id)}
+                                                        className={`relative flex flex-col items-center pt-10 pb-5 px-5 rounded-[16px] transition-all cursor-pointer ${isSel ? 'bg-[#182136] border-2 border-[#e6fdff]' : 'bg-[#111726] border border-[#2d4060]'}`}
+                                                        style={{
+                                                            width: '280px',
                                                             height: '380px',
                                                             boxShadow: isSel ? '0 0 25px rgba(120,240,255,0.4), inset 0 0 20px rgba(120,240,255,0.15)' : 'none'
                                                         }}>
-                                                        
+
                                                         {/* Car Image */}
-                                                        <img src={c.imageSrc} alt={c.name} 
+                                                        <img src={c.imageSrc} alt={c.name}
                                                             className="w-full aspect-[4/3] object-contain drop-shadow-[0_15px_15px_rgba(0,0,0,0.8)] mb-8" />
-                                                        
+
                                                         {/* Name */}
                                                         <h3 className="font-display text-[15px] font-bold text-white uppercase tracking-[0.1em] text-center mb-auto">
                                                             {c.name}
                                                         </h3>
-                                                        
+
 
                                                     </div>
                                                 );
@@ -504,11 +504,11 @@ export default function PlayerWaitingPage() {
 
                                     {/* Action Buttons */}
                                     <div className="flex gap-6 mt-8">
-                                        <button onClick={() => { setIsSelectingCharacter(false); setPendingCharacterId(assignedCarId); }} 
+                                        <button onClick={() => { setIsSelectingCharacter(false); setPendingCharacterId(assignedCarId); }}
                                             className="w-[160px] py-3.5 rounded-full font-display text-[14px] font-bold uppercase tracking-widest text-white bg-[#22b7ca] hover:bg-[#1fa1b2] transition-colors shadow-[0_4px_15px_rgba(34,183,202,0.4)]">
                                             {t("player_waiting.back")}
                                         </button>
-                                        <button onClick={handleSelectCharacter} 
+                                        <button onClick={handleSelectCharacter}
                                             className="w-[160px] py-3.5 rounded-full font-display text-[14px] font-bold uppercase tracking-widest text-white bg-[#22b7ca] hover:bg-[#1fa1b2] transition-colors shadow-[0_4px_15px_rgba(34,183,202,0.4)]">
                                             {t("player_waiting.select")}
                                         </button>
@@ -533,9 +533,9 @@ export default function PlayerWaitingPage() {
                                             {isLoadingVisual && <Loader2 className="absolute z-0 w-12 h-12 text-[#00ff9d] animate-spin drop-shadow-[0_0_15px_rgba(0,255,157,0.5)]" />}
                                             <img src={displayVisual} alt="Your Car"
                                                 className={`object-contain drop-shadow-[0_28px_60px_rgba(40,70,200,0.22)] transition-opacity duration-300 relative z-10 ${isLoadingVisual ? 'opacity-0' : 'opacity-100'}`}
-                                                style={{ width: '100%', maxHeight: '100%' }} 
+                                                style={{ width: '100%', maxHeight: '100%' }}
                                                 onLoad={() => setIsLoadingVisual(false)}
-                                                />
+                                            />
                                             {/* Ground shadow */}
                                             <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-3/4 h-3 bg-black/40 blur-xl rounded-full" />
                                         </motion.div>
@@ -597,11 +597,11 @@ export default function PlayerWaitingPage() {
                             })}
                         </div>
                         <span key={countdownValue}
-                            className={`font-display text-[120px] md:text-[160px] font-black leading-none tracking-tighter ${getCountdownColor(countdownValue)} drop-shadow-[0_0_40px_currentColor]`}
-                            style={{ animation: 'countdown-pop 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)', willChange: 'transform, opacity', display: 'block' }}>
+                            className={`font-display font-black py-4 ${getCountdownColor(countdownValue)} drop-shadow-[0_0_40px_currentColor]`}
+                            style={{ animation: 'countdown-pop 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)', willChange: 'transform, opacity', display: 'block', fontSize: 'clamp(80px, 16vw, 150px)', lineHeight: '1.2' }}>
                             {countdownValue > 0 ? countdownValue : t("player_waiting.go")}
                         </span>
-                        <p className="font-display text-lg tracking-[0.3em] uppercase text-gray-400 mt-6" style={{ animation: 'fadeInUp 0.3s ease-out' }}>
+                        <p className="font-display text-lg text-gray-400 mt-6" style={{ animation: 'fadeInUp 0.3s ease-out' }}>
                             {getCountdownLabel(countdownValue)}
                         </p>
                         <div className="absolute w-64 h-64 rounded-full border border-[#2d6af2]/20" style={{ animation: 'pulseRing 2s ease-in-out infinite' }} />
@@ -618,10 +618,11 @@ export default function PlayerWaitingPage() {
                 {status === "go" && (
                     <motion.div initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center">
                         <motion.h1 animate={{ scale: [1, 1.1, 1] }} transition={{ repeat: Infinity, duration: 0.5 }}
-                            className="font-display text-[100px] md:text-[140px] text-transparent bg-clip-text bg-gradient-to-b from-[#00ff9d] to-[#2d6af2] uppercase tracking-tighter leading-none font-black drop-shadow-[0_0_50px_rgba(0,255,157,0.6)]">
+                            className="font-display text-transparent bg-clip-text bg-gradient-to-b from-[#00ff9d] to-[#2d6af2] font-black drop-shadow-[0_0_50px_rgba(0,255,157,0.6)] py-4 px-2"
+                            style={{ fontSize: 'clamp(60px, 14vw, 120px)' }}>
                             {t("player_waiting.go")}
                         </motion.h1>
-                        <p className="font-display text-[#00ff9d] text-sm uppercase tracking-[0.3em] mt-4 animate-pulse">{t("player_waiting.launching")}</p>
+                        <p className="font-display text-[#00ff9d] text-sm mt-4 animate-pulse">{t("player_waiting.launching")}</p>
                     </motion.div>
                 )}
             </div>
