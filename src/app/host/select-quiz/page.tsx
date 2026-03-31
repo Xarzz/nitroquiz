@@ -95,7 +95,7 @@ export default function SelectQuizPage() {
     const [isFetching, setIsFetching] = useState(true);
     const [isReturning, setIsReturning] = useState(false);
 
-    const itemsPerPage = 6;
+    const itemsPerPage = 8;
 
     useEffect(() => {
         const user = getUser();
@@ -235,7 +235,7 @@ export default function SelectQuizPage() {
                         className="object-contain opacity-70 hover:opacity-100 transition-opacity duration-300 drop-shadow-[0_0_8px_rgba(169,141,197,0.4)]" />
                 </div>
 
-                <div className="flex-1 overflow-y-auto relative container mx-auto px-6 pb-2 max-w-4xl pt-0.5">
+                <div className="flex-1 overflow-y-auto relative container mx-auto px-6 pb-2 max-w-6xl pt-0.5">
                     {/* Search & Filter Bar */}
                     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}
                         className="bg-[#080d1a]/80 border border-[#2d6af2]/30 rounded-2xl overflow-hidden mb-3 backdrop-blur-2xl shadow-[0_0_50px_rgba(45,106,242,0.12),inset_0_1px_0_rgba(255,255,255,0.06)] flex-shrink-0">
@@ -289,8 +289,8 @@ export default function SelectQuizPage() {
                     <AnimatePresence mode="wait">
                         {(isFetching || isReturning || creating) ? (
                             <motion.div key="skeleton" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                                {Array.from({ length: 6 }).map((_, i) => (
+                                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+                                {Array.from({ length: 8 }).map((_, i) => (
                                     <div key={i} className="bg-[#080d1a]/80 border border-[#2d6af2]/15 rounded-xl overflow-hidden animate-pulse">
                                         <div className="h-1 w-full bg-[#2d6af2]/10" />
                                         <div className="w-full h-24 bg-gradient-to-br from-[#2d6af2]/10 to-[#04060f]" />
@@ -303,7 +303,7 @@ export default function SelectQuizPage() {
                             </motion.div>
                         ) : paginatedQuizzes.length > 0 ? (
                             <motion.div key={`grid-${currentPage}-${activeTab}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                                 {paginatedQuizzes.map((quiz, index) => {
                                     const isFavorited = favorites.includes(quiz.id);
                                     const colors = getCategoryColor(quiz.category);
