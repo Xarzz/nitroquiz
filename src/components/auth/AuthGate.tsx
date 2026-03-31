@@ -10,7 +10,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
 
   const publicRoutes = ["/login"];
-  const isPublic = publicRoutes.includes(pathname) || /^\/join\/[A-Z0-9]{6}$/.test(pathname);
+  const isPublic = publicRoutes.includes(pathname) || /^\/player\/[a-zA-Z0-9]+\/join$/.test(pathname);
   const isOAuthCallback =
     typeof window !== "undefined" && window.location.hash.includes("access_token")
 

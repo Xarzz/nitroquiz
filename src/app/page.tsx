@@ -141,8 +141,7 @@ export default function Home() {
         } catch (e) {
           console.error("Session check failed:", e);
         }
-
-        router.push(`/player/${code}/login`);
+        router.push(`/player/${code}/join`);
       }
     }
 
@@ -178,7 +177,7 @@ export default function Home() {
   const handleJoin = () => {
     if (roomCode.trim() && user) {
       router.push(
-        `/player/${roomCode.trim()}/login?nickname=${encodeURIComponent(user.username)}`,
+        `/player/${roomCode.trim()}/join`,
       );
     }
   };

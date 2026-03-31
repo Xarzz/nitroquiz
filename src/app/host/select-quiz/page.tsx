@@ -484,7 +484,7 @@ export default function SelectQuizPage() {
 
                     {/* Pagination */}
                     {totalPages > 1 && (
-                        <div className="flex justify-center mt-2 mb-1 gap-2 flex-shrink-0">
+                        <div className="flex justify-center mt-6 mb-2 gap-2 flex-shrink-0">
                             <Button variant="outline" onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                                 disabled={currentPage === 1 || isFetching || creating || isReturning}
                                 className="h-8 px-3 bg-white/[0.03] border border-[#2d6af2]/30 text-white font-display text-[9px] disabled:opacity-30 hover:bg-[#2d6af2]/20 hover:border-[#00ff9d] transition-all uppercase tracking-wider">{t('select_quiz.pagination.prev')}</Button>
