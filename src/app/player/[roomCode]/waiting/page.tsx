@@ -12,14 +12,14 @@ export const PLAYER_CHARACTERS = [
     {
         id: 'rico',
         name: 'SCHLOSKI RACER',
-        imageSrc: '/assets/characters/rico/showroom/pose1.png',
+        imageSrc: '/assets/characters/rico/showroom/showroom1.png',
         gifSrc: '/assets/characters/rico/showroom/pose1.gif',
         stats: { speed: 80, accel: 60, handling: 70 }
     },
     {
         id: 'gecho',
         name: 'NINJA GECKO',
-        imageSrc: '/assets/characters/gecho/showroom/pose1.png',
+        imageSrc: '/assets/characters/gecho/showroom/showroom1.png',
         gifSrc: '/assets/characters/gecho/showroom/pose1.gif',
         stats: { speed: 70, accel: 90, handling: 80 }
     },
@@ -27,7 +27,7 @@ export const PLAYER_CHARACTERS = [
         id: 'roadhog',
         name: 'TUSK CHOPPER',
         imageSrc: '/assets/characters/roadhog/showroom/showroom1.png',
-        gifSrc: '/assets/characters/roadhog/showroom/showroom1.png',
+        gifSrc: '/assets/characters/roadhog/showroom/pose.gif',
         stats: { speed: 60, accel: 80, handling: 50 }
     }
 ];
