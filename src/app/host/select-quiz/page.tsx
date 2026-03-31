@@ -245,14 +245,14 @@ export default function SelectQuizPage() {
                         <div className="flex flex-col sm:flex-row gap-4 mb-6 relative">
                             <div className="flex-1">
                                 <div className="relative group/search">
-                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4 group-focus-within/search:text-[#00ff9d] transition-colors" />
+                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-3.5 h-3.5 group-focus-within/search:text-[#00ff9d] transition-colors" />
                                     <Input type="text" placeholder={t('select_quiz.search_placeholder')} value={searchInput}
                                         onChange={(e) => { setSearchInput(e.target.value); setSearchQuery(e.target.value); setCurrentPage(1); }}
-                                        className="w-full bg-white/[0.03] border border-white/[0.07] pl-10 h-10 text-white font-display text-[10px] uppercase tracking-widest placeholder:text-gray-600 rounded-lg focus-visible:ring-1 focus-visible:ring-[#00ff9d]/50 focus-visible:border-[#00ff9d]/50 focus-visible:bg-white/[0.05] transition-all" />
+                                        className="w-full bg-white/[0.03] border border-white/[0.07] pl-8 h-8 text-white font-display text-[9px] uppercase tracking-widest placeholder:text-gray-600 rounded-lg focus-visible:ring-1 focus-visible:ring-[#00ff9d]/50 focus-visible:border-[#00ff9d]/50 focus-visible:bg-white/[0.05] transition-all" />
                                 </div>
                             </div>
                             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                                <SelectTrigger className="w-full sm:w-48 h-10 bg-white/[0.03] border border-white/[0.07] text-white focus:border-[#00ff9d]/50 focus:ring-1 focus:ring-[#00ff9d]/50 rounded-lg font-display text-[10px] tracking-wider uppercase">
+                                <SelectTrigger className="w-full sm:w-44 h-8 bg-white/[0.03] border border-white/[0.07] text-white focus:border-[#00ff9d]/50 focus:ring-1 focus:ring-[#00ff9d]/50 rounded-lg font-display text-[9px] tracking-wider uppercase">
                                     <SelectValue placeholder={t('select_quiz.category_placeholder')} />
                                 </SelectTrigger>
                                 <SelectContent className="bg-[#04060f] border border-[#2d6af2]/30 text-white font-display text-[10px] uppercase tracking-wider backdrop-blur-3xl">
@@ -436,7 +436,7 @@ export default function SelectQuizPage() {
 
                     {/* Pagination */}
                     {totalPages > 1 && (
-                        <div className="flex justify-center mt-2 mb-1 gap-2 flex-shrink-0">
+                        <div className="flex justify-center mt-6 mb-2 gap-2 flex-shrink-0">
                             <Button variant="outline" onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                                 disabled={currentPage === 1 || isFetching || creating || isReturning}
                                 className="h-8 px-3 bg-white/[0.03] border border-[#2d6af2]/30 text-white font-display text-[9px] disabled:opacity-30 hover:bg-[#2d6af2]/20 hover:border-[#00ff9d] transition-all uppercase tracking-wider">{t('select_quiz.pagination.prev')}</Button>
