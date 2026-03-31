@@ -1,60 +1,24 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import {
-  Copy,
-  Users,
-  Play,
-  ArrowLeft,
-  VolumeX,
-  Volume2,
-  Maximize2,
-  Check,
-  X,
-  Plus,
-  LogOut,
-  Share2,
-  CheckSquare,
-  Square,
-  Trash2,
+import { 
+  Users, Play, LogOut, Share2, Copy, Check, Maximize2, 
+  Trash2, Plus, Volume2, VolumeX, X, CheckSquare, Square 
 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase";
+import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
 import QRCode from "react-qr-code";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogOverlay,
   DialogHeader,
   DialogTitle,
+  DialogOverlay,
 } from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { supabase } from "@/lib/supabase";
-import { Logo } from "@/components/ui/logo";
-import { useTranslation } from "react-i18next";
-
-// Utils inline
-const breakOnCaps = (str: string) => str;
-const formatUrlBreakable = (url: string) => url.replace(/https?:\/\//, "");
-
-// Car mappings (Keep for now, maybe replace with avatars later if requested, but for now just style the container)
-const carGifMap: Record<string, string> = {
-  purple: "/assets/car/car1_v2.webp",
-  white: "/assets/car/car2_v2.webp",
-  black: "/assets/car/car3_v2.webp",
-  aqua: "/assets/car/car4_v2.webp",
-  blue: "/assets/car/car5_v2.webp",
-};
-
-interface Participant {
-  id: string;
-  nickname: string;
-  car: string;
-  joined_at: string;
-  avatar_url?: string | null;
-}
 
 // Helper: Generate initials from a name
 const getInitials = (name: string): string => {
@@ -64,7 +28,6 @@ const getInitials = (name: string): string => {
   return name.slice(0, 2).toUpperCase();
 };
 
-// Initials avatar colors based on nickname hash
 const AVATAR_COLORS = ['#3b82f6', '#ef4444', '#f59e0b', '#8b5cf6', '#10b981', '#ec4899', '#06b6d4', '#f97316'];
 const getAvatarColor = (name: string): string => {
   let hash = 0;
@@ -72,929 +35,410 @@ const getAvatarColor = (name: string): string => {
   return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
 };
 
-// Reusable InitialsAvatar component
 const InitialsAvatar = ({ name, size = 'md' }: { name: string; size?: 'sm' | 'md' | 'lg' }) => {
-  const fontSize = size === 'lg' ? 'text-2xl' : size === 'md' ? 'text-xl' : 'text-xs';
+  const fontSize = size === 'lg' ? 'text-[20px]' : size === 'md' ? 'text-[16px]' : 'text-[10px]';
   return (
     <div 
-      className={`w-full h-full rounded-full flex items-center justify-center ${fontSize} font-black text-white`}
-      style={{ backgroundColor: getAvatarColor(name) }}
+      className="w-full h-full rounded-full flex items-center justify-center font-black text-white"
+      style={{ backgroundColor: getAvatarColor(name), fontSize }}
     >
       {getInitials(name)}
     </div>
   );
 };
 
-export default function HostRoomPage() {
-  const params = useParams();
+export default function HostLobby() {
   const router = useRouter();
+  const params = useParams();
   const { t } = useTranslation();
   const roomCode = params.roomCode as string;
 
-  const [participants, setParticipants] = useState<Participant[]>([]);
-  const [sessionId, setSessionId] = useState<string | null>(null);
-  const [countdown, setCountdown] = useState<number | null>(null);
-  const [isLoadingRoom, setIsLoadingRoom] = useState(true);
-  const [logosLoaded, setLogosLoaded] = useState(false);
-  const [shareOpen, setShareOpen] = useState(false);
-
-  // Preload logos
-  useEffect(() => {
-    const logos = ["/assets/logo/logo1.png", "/assets/logo/logo2.png"];
-    let loaded = 0;
-    logos.forEach((src) => {
-      const img = new Image();
-      img.onload = img.onerror = () => {
-        loaded++;
-        if (loaded >= logos.length) setLogosLoaded(true);
-      };
-      img.src = src;
-    });
-  }, []);
-
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const [isMuted, setIsMuted] = useState(true);
-  const [hasInteracted, setHasInteracted] = useState(false);
-
-  const [open, setOpen] = useState(false);
-  const [joinLink, setJoinLink] = useState("https://nitroquiz.com");
+  const [participants, setParticipants] = useState<any[]>([]);
+  const [session, setSession] = useState<any>(null);
+  const [joinLink, setJoinLink] = useState("");
   const [copiedRoom, setCopiedRoom] = useState(false);
   const [copiedJoin, setCopiedJoin] = useState(false);
-
+  const [open, setOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
+  const [countdown, setCountdown] = useState<number | null>(null);
+  const [isMuted, setIsMuted] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
+  const [selectedPlayer, setSelectedPlayer] = useState<any>(null);
   const [kickDialogOpen, setKickDialogOpen] = useState(false);
-  const [selectedPlayer, setSelectedPlayer] = useState<Participant | null>(
-    null,
-  );
   const [selectedPlayerIds, setSelectedPlayerIds] = useState<string[]>([]);
   const [isBulkKickMode, setIsBulkKickMode] = useState(false);
 
   useEffect(() => {
-    const savedMuted = localStorage.getItem("settings_muted");
-    if (savedMuted !== null) {
-      setIsMuted(savedMuted === "true");
-    }
-
     if (typeof window !== "undefined") {
-      setJoinLink(`${window.location.origin}/player/${roomCode}/waiting`);
+      setJoinLink(`${window.location.origin}/player/${roomCode}/join`);
     }
 
-    // Fetch session ID and load initial participants
-    const loadSessionAndParticipants = async () => {
-      try {
-        // Get Session ID from roomCode (game_pin)
-        const { data: sessionData, error: sessionError } = await supabase
-          .from("sessions")
-          .select("id")
-          .eq("game_pin", roomCode)
-          .single();
+    const loadSession = async () => {
+      const { data, error } = await supabase
+        .from("sessions")
+        .select("*")
+        .eq("game_pin", roomCode)
+        .single();
+      if (error || !data) return;
+      setSession(data);
 
-        if (sessionError) {
-          console.error("Error fetching session:", sessionError);
-
-          // Fallback using LocalStorage if not completely synced
-          const localData = localStorage.getItem(`session_${roomCode}`);
-          if (localData) {
-            try {
-              const parsed = JSON.parse(localData);
-              if (parsed.sessionId) {
-                setSessionId(parsed.sessionId);
-              }
-            } catch (e) {}
-          }
-          return;
-        }
-
-        if (sessionData) {
-          setSessionId(sessionData.id);
-
-          // Fetch existing participants
-          const { data: participantsData, error: pError } = await supabase
-            .from("participants")
-            .select("id, nickname, car_character, joined_at, avatar_url")
-            .eq("session_id", sessionData.id);
-
-          if (!pError && participantsData) {
-            const mappedPlayers: Participant[] = participantsData.map((p) => ({
-              id: p.id,
-              nickname: p.nickname,
-              car: p.car_character || "purple",
-              joined_at: p.joined_at,
-              avatar_url: p.avatar_url,
-            }));
-            setParticipants(mappedPlayers);
-          }
-        }
-      } catch (err) {
-        console.error("Failed to initialize lobby realtime:", err);
-      } finally {
-        setIsLoadingRoom(false);
-      }
+      const { data: pData } = await supabase
+        .from("participants")
+        .select("*")
+        .eq("session_id", data.id);
+      if (pData) setParticipants(pData);
     };
 
-    loadSessionAndParticipants();
-  }, [roomCode]);
+    loadSession();
 
-  // Real-time subscription for new players + polling fallback
-  useEffect(() => {
-    if (!sessionId) return;
-
-    // Polling fallback: refresh participants every 3 seconds
-    const pollParticipants = async () => {
-      try {
-        const { data, error } = await supabase
-          .from("participants")
-          .select("id, nickname, car_character, joined_at, avatar_url")
-          .eq("session_id", sessionId);
-
-        if (!error && data) {
-          setParticipants(
-            data.map((p) => ({
-              id: p.id,
-              nickname: p.nickname,
-              car: p.car_character || "purple",
-              joined_at: p.joined_at,
-              avatar_url: p.avatar_url,
-            })),
-          );
-        }
-      } catch (e) {
-        console.error("Poll error:", e);
-      }
-    };
-
-    const pollInterval = setInterval(pollParticipants, 3000);
-
-    // Also set up realtime as primary (faster when it works)
     const channel = supabase
-      .channel(`lobby-participants-${sessionId}`)
+      .channel(`lobby-${roomCode}`)
       .on(
         "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "participants",
-          filter: `session_id=eq.${sessionId}`,
-        },
-        (payload) => {
-          const newP = payload.new;
-          setParticipants((prev) => {
-            // Avoid duplicates from polling
-            if (prev.some((p) => p.id === newP.id)) return prev;
-            return [
-              ...prev,
-              {
-                id: newP.id,
-                nickname: newP.nickname,
-                car: newP.car_character || "purple",
-                joined_at: newP.joined_at,
-                avatar_url: newP.avatar_url,
-              },
-            ];
-          });
-        },
+        { event: "*", schema: "public", table: "participants" },
+        async (payload) => {
+          const { data: sessionData } = await supabase
+            .from("sessions")
+            .select("id")
+            .eq("game_pin", roomCode)
+            .single();
+          if (!sessionData) return;
+          const { data: pData } = await supabase
+            .from("participants")
+            .select("*")
+            .eq("session_id", sessionData.id);
+          if (pData) setParticipants(pData);
+        }
       )
-      .on(
-        "postgres_changes",
-        {
-          event: "DELETE",
-          schema: "public",
-          table: "participants",
-          filter: `session_id=eq.${sessionId}`,
-        },
-        (payload) => {
-          const deletedId = payload.old.id;
-          setParticipants((prev) => prev.filter((p) => p.id !== deletedId));
-        },
-      )
-      .subscribe((status) => {
-        console.log(`[Host Lobby] Realtime status: ${status}`);
-      });
+      .subscribe();
 
     return () => {
-      clearInterval(pollInterval);
       supabase.removeChannel(channel);
     };
-  }, [sessionId]);
+  }, [roomCode]);
 
-  // Audio control
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    audio.volume = 0.5;
-
-    const playAudio = async () => {
-      try {
-        await audio.play();
-        setHasInteracted(true);
-      } catch (err) {
-        console.warn("Audio play blocked:", err);
-      }
-    };
-
-    if (isMuted) {
-      audio.pause();
-    } else {
-      playAudio();
-    }
-  }, [isMuted]);
-
-  const copyToClipboard = async (
-    text: string,
-    setFeedback: (val: boolean) => void,
-  ) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setFeedback(true);
-      setTimeout(() => setFeedback(false), 2000);
-    } catch (err) {
-      console.error("Copy failed:", err);
-    }
+  const copyToClipboard = (text: string, setCopied: any) => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   const startGame = async () => {
-    // 1. Update session status to "active" so players start their countdown
-    if (sessionId) {
-      try {
-        await supabase
-          .from("sessions")
-          .update({ status: "active", started_at: new Date().toISOString() })
-          .eq("id", sessionId);
-      } catch (err) {
-        console.error("Failed to update session status:", err);
-      }
-    }
-    // 2. Start host-side countdown
+    if (!session || participants.length === 0) return;
     setCountdown(3);
   };
 
   useEffect(() => {
-    if (countdown !== null && countdown > 0) {
-      const timer = setTimeout(() => {
-        setCountdown((prev) => (prev !== null ? prev - 1 : null));
+    if (countdown === null) return;
+    if (countdown === 0) {
+      setTimeout(async () => {
+        await supabase
+          .from("sessions")
+          .update({ status: "active", started_at: new Date().toISOString() })
+          .eq("id", session.id);
+        router.push(`/host/${roomCode}/monitor`);
       }, 1000);
-      return () => clearTimeout(timer);
-    } else if (countdown === 0) {
-      router.push(`/host/${roomCode}/monitor`);
+      return;
     }
-  }, [countdown, router, roomCode]);
+    const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [countdown, session, roomCode, router]);
 
   const confirmKick = async () => {
-    try {
-      if (isBulkKickMode && selectedPlayerIds.length > 0) {
-        await supabase
-          .from("participants")
-          .delete()
-          .in("id", selectedPlayerIds);
-        setParticipants((prev) =>
-          prev.filter((p) => !selectedPlayerIds.includes(p.id)),
-        );
-        setSelectedPlayerIds([]);
-      } else if (selectedPlayer) {
-        await supabase
-          .from("participants")
-          .delete()
-          .eq("id", selectedPlayer.id);
-        setParticipants((prev) =>
-          prev.filter((p) => p.id !== selectedPlayer.id),
-        );
-      }
-    } catch (e) {
-      console.error("Could not kick player(s)", e);
+    if (isBulkKickMode) {
+      await supabase.from("participants").delete().in("id", selectedPlayerIds);
+      setSelectedPlayerIds([]);
+    } else if (selectedPlayer) {
+      await supabase.from("participants").delete().eq("id", selectedPlayer.id);
     }
-
     setKickDialogOpen(false);
-    setSelectedPlayer(null);
-    setIsBulkKickMode(false);
   };
 
-  const toggleSelectPlayer = (id: string, e: React.MouseEvent) => {
+  const toggleSelectPlayer = (id: string, e: any) => {
     e.stopPropagation();
-    setSelectedPlayerIds((prev) =>
-      prev.includes(id) ? prev.filter((pid) => pid !== id) : [...prev, id],
-    );
+    setSelectedPlayerIds(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
   };
 
   const handleSelectAll = () => {
-    if (selectedPlayerIds.length === participants.length) {
-      setSelectedPlayerIds([]);
-    } else {
-      setSelectedPlayerIds(participants.map((p) => p.id));
-    }
+    if (selectedPlayerIds.length === participants.length) setSelectedPlayerIds([]);
+    else setSelectedPlayerIds(participants.map(p => p.id));
   };
 
   const simulateJoin = async () => {
-    if (!sessionId) {
-      alert("Session not ready yet. Please wait a moment and try again.");
-      console.warn("simulateJoin: sessionId is null, cannot insert bots.");
-      return;
-    }
-
-    const cars = Object.keys(carGifMap);
-    const indonesianNames = [
-      "Budi",
-      "Siti",
-      "Agus",
-      "Wati",
-      "Asep",
-      "Ani",
-      "Ucok",
-      "Ratna",
-      "Joko",
-      "Putri",
-      "Bambang",
-      "Rini",
-      "Rudi",
-      "Dewi",
-      "Tono",
-      "Sri",
-      "Hendra",
-      "Nurul",
-      "Rizky",
-      "Dian",
-      "Fajar",
-      "Ayu",
-      "Ilham",
-      "Intan",
-      "Yoga",
-      "Sari",
-      "Gilang",
-      "Lestari",
-      "Galih",
-      "Maya",
-    ];
-
-    const botsToInsert = [];
-    for (let i = 0; i < 10; i++) {
-      const randomCar = cars[Math.floor(Math.random() * cars.length)];
-      const randomName =
-        indonesianNames[Math.floor(Math.random() * indonesianNames.length)];
-      const nickname = `${randomName}${Math.floor(Math.random() * 999)}`;
-      botsToInsert.push({
-        session_id: sessionId,
-        nickname: nickname,
-        car_character: randomCar + "-bot",
-        score: 0,
-        minigame: false,
-      });
-    }
-
-    const { error } = await supabase.from("participants").insert(botsToInsert);
-
-    if (error) {
-      console.error("Simulation insert error:", JSON.stringify(error));
-      alert(`Failed to add bots: ${error.message || JSON.stringify(error)}`);
-    }
+    if (!session) return;
+    const botName = `Bot ${Math.floor(Math.random() * 1000)}`;
+    const cars = ['rico', 'gecho', 'roadhog'];
+    await supabase.from("participants").insert({
+      session_id: session.id,
+      nickname: botName,
+      car_character: cars[Math.floor(Math.random() * cars.length)],
+      score: 0,
+      minigame: false
+    });
   };
 
-  if (isLoadingRoom || !logosLoaded) {
+  const formatUrlBreakable = (url: string) => {
+    return url.replace('https://', '').replace('http://', '');
+  };
+
+  if (!session) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#0a0a0f] relative overflow-hidden font-display text-white">
-        <div className="text-center z-10">
+      <div className="flex items-center justify-center min-h-screen bg-[#0a0a0f] text-white">
+        <div className="text-center">
           <div className="w-16 h-16 border-4 border-[#2d6af2]/30 border-t-[#2d6af2] rounded-full animate-spin mx-auto mb-6"></div>
-          <p className="mt-4 text-[#2d6af2] text-xl tracking-[0.2em] uppercase animate-pulse">
-            {t('host_lobby.loading')}
-          </p>
+          <p className="text-[#2d6af2] text-xl tracking-widest uppercase animate-pulse">{t('host_lobby.loading')}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div
-      className="h-screen bg-[#0a0a0f] relative overflow-hidden font-body text-white flex flex-col"
-      onClick={() => setHasInteracted(true)}
-    >
-      {/* Background Layers */}
-      <div className="fixed inset-0 z-0 city-silhouette pointer-events-none"></div>
-      <div className="fixed inset-0 z-0 bg-gradient-to-t from-background-dark via-transparent to-blue-900/10 pointer-events-none"></div>
-      <div className="fixed bottom-0 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/10 via-background-dark/50 to-background-dark pointer-events-none z-0"></div>
-      <div className="fixed bottom-0 w-full h-1/2 bg-[linear-gradient(transparent_0%,rgba(45,106,242,0.1)_1px,transparent_1px),linear-gradient(90deg,transparent_0%,rgba(45,106,242,0.1)_1px,transparent_1px)] bg-[length:60px_60px] [transform:perspective(500px)_rotateX(60deg)] origin-bottom z-0 pointer-events-none opacity-20"></div>
-      <div className="scanlines"></div>
+    <div className="h-screen bg-[#06080d] relative overflow-hidden font-body text-white flex flex-col" onClick={() => setHasInteracted(true)}>
+      {/* Cityscape Background Layer */}
+      <div className="fixed inset-0 z-0 city-silhouette pointer-events-none opacity-40"></div>
+      <div className="fixed inset-0 z-0 bg-gradient-to-b from-blue-900/10 via-transparent to-black pointer-events-none"></div>
+      
+      {/* Grid Floor */}
+      <div className="fixed bottom-0 w-full h-[60%] bg-[linear-gradient(transparent_0%,rgba(45,106,242,0.1)_1px,transparent_1px),linear-gradient(90deg,transparent_0%,rgba(45,106,242,0.1)_1px,transparent_1px)] bg-[length:60px_60px] [transform:perspective(500px)_rotateX(60deg)] origin-bottom z-0 pointer-events-none opacity-20"></div>
 
-      {/* Main Content Wrapper - Fixed to viewport */}
-      <div className="relative z-20 flex flex-col h-full w-full max-w-[1750px] mx-auto px-6 md:px-10 xl:px-12 pb-4">
-        {/* Header - Logos in corners with improved visibility and balanced symmetry */}
-        <div className="w-full flex items-center justify-between pt-4 mb-4 shrink-0">
-          <img
-            src="/assets/logo/logo1.png"
-            alt="NitroQuiz Logo"
-            width={130}
-            height={36}
-            className="object-contain"
-          />
-          <img
-            src="/assets/logo/logo2.png"
-            alt="GameForSmart.com"
-            width={200}
-            height={50}
-            className="object-contain opacity-80 hover:opacity-100 transition-opacity duration-300 drop-shadow-[0_0_15px_rgba(45,106,242,0.4)]"
-          />
+      <div className="relative z-10 flex flex-col h-full w-full max-w-[1800px] mx-auto px-6 md:px-10 lg:px-16 pt-6 pb-10">
+        
+        {/* Header - Corner Logos */}
+        <div className="flex items-center justify-between mb-8 shrink-0">
+          <img src="/assets/logo/logo1.png" alt="Logo" className="h-12 object-contain" />
+          <div className="flex flex-col items-end">
+            <img src="/assets/logo/logo2.png" alt="NitroQuiz" className="h-12 object-contain brightness-125" />
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-stretch relative flex-1 min-h-0 overflow-hidden">
-          {/* Left Column: Room Details (4/12 split) */}
-          <div className="md:col-span-4 flex flex-col min-h-0 h-full p-2">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 30 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="flex flex-col bg-black/70 backdrop-blur-md rounded-[4rem] p-6 lg:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/10 relative group h-full justify-between overflow-hidden"
-            >
-              <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-bl from-[#2d6af2]/10 to-transparent rounded-bl-full pointer-events-none"></div>
-
-              <div className="flex flex-col gap-2 relative z-10 flex-1 px-1 overflow-y-auto custom-scrollbar">
-                {/* ROOM CODE */}
-                <div className="text-center w-full shrink-0">
-                  <div
-                    className="relative group/code cursor-pointer bg-white/5 rounded-2xl py-2 px-4 border border-white/10 hover:border-[#2d6af2]/50 transition-all flex flex-col items-center justify-center"
-                    onClick={() => copyToClipboard(roomCode, setCopiedRoom)}
-                  >
-                    <h1 className="font-display text-4xl sm:text-5xl lg:text-5xl leading-none text-white tracking-widest drop-shadow-[0_0_20px_rgba(255,255,255,0.6)]">
-                      {roomCode}
-                    </h1>
-                    <div className="absolute top-1/2 -translate-y-1/2 right-4">
-                      {copiedRoom ? (
-                        <Check size={16} className="text-[#00ff9d]" />
-                      ) : (
-                        <Copy size={16} className="text-gray-500 group-hover/code:text-[#2d6af2]" />
-                      )}
-                    </div>
+        {/* Main Grid: Split Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch flex-1 min-h-0">
+          
+          {/* Left: Registration Card */}
+          <motion.div 
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="md:col-span-5 lg:col-span-4 flex flex-col bg-black/60 backdrop-blur-3xl rounded-[4rem] border border-white/10 shadow-[0_40px_80px_rgba(45,106,242,0.15)] overflow-hidden relative group"
+          >
+            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-[#2d6af2]/10 to-transparent rounded-bl-full pointer-events-none"></div>
+            
+            {/* Scrollable Upper Area */}
+            <div className="flex-1 overflow-y-auto custom-scrollbar p-10 lg:p-12 relative z-10">
+              <div className="flex flex-col gap-10">
+                {/* ROOM PIN */}
+                <div 
+                  className="group/code cursor-pointer bg-white/5 rounded-[3rem] py-8 border border-white/10 hover:border-[#2d6af2]/50 transition-all flex flex-col items-center relative overflow-hidden"
+                  onClick={() => copyToClipboard(roomCode, setCopiedRoom)}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#2d6af2]/5 to-transparent opacity-0 group-hover/code:opacity-100 transition-opacity"></div>
+                  <span className="text-white/40 text-[10px] font-display uppercase tracking-[0.4em] mb-2">{t('host_lobby.join_code')}</span>
+                  <h1 className="font-display text-6xl lg:text-7xl font-black text-white tracking-widest drop-shadow-[0_0_30px_rgba(45,106,242,0.5)]">
+                    {roomCode}
+                  </h1>
+                  <div className="absolute top-4 right-8">
+                    {copiedRoom ? <Check size={20} className="text-[#00ff9d]" /> : <Copy size={20} className="text-white/20 group-hover/code:text-[#2d6af2]" />}
                   </div>
                 </div>
 
-                {/* QR CODE - Balanced width to prevent overlap */}
-                <div className="flex-1 w-full flex items-center justify-center shrink-0 min-h-0 py-3">
-                  <div
-                    className="p-1 rounded-2xl max-w-[280px] w-full aspect-square relative group/qr cursor-pointer transition-transform hover:scale-[1.02]"
+                {/* QR COMPONENT */}
+                <div className="flex items-center justify-center">
+                  <div 
+                    className="p-4 bg-white rounded-[3.5rem] shadow-[0_0_50px_rgba(255,255,255,0.1)] group/qr cursor-pointer transition-transform hover:scale-[1.03] relative"
                     onClick={() => setOpen(true)}
                   >
-                    <QRCode
-                      value={joinLink}
-                      style={{ width: "100%", height: "100%", opacity: 0.95 }}
-                      bgColor="transparent"
-                      fgColor="white"
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/qr:opacity-100 transition-opacity bg-black/40 rounded-2xl backdrop-blur-sm">
-                      <Maximize2 size={32} className="text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]" />
+                    <QRCode value={joinLink} size={260} bgColor="transparent" fgColor="#000000" />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/qr:opacity-100 transition-opacity rounded-[3.5rem] flex items-center justify-center backdrop-blur-sm">
+                      <Maximize2 size={48} className="text-white" />
                     </div>
                   </div>
                 </div>
 
-                {/* JOIN LINK */}
-                <div
-                  className="relative group/link shrink-0 cursor-pointer bg-white/5 py-2.5 px-4 rounded-xl border border-white/10 hover:border-[#2d6af2] transition-all w-full flex flex-col items-center justify-center mb-auto"
+                {/* LINK DISPLAY */}
+                <div 
+                  className="bg-white/5 rounded-[2.5rem] py-5 px-8 border border-white/10 hover:border-[#2d6af2]/30 transition-all cursor-pointer text-center group/link relative overflow-hidden"
                   onClick={() => copyToClipboard(joinLink, setCopiedJoin)}
                 >
-                  <p className="text-center text-white text-xs sm:text-sm font-display tracking-wider truncate w-full pr-6">
-                    {formatUrlBreakable(joinLink)}
-                  </p>
-                  <div className="absolute top-1/2 -translate-y-1/2 right-4">
-                    {copiedJoin ? (
-                      <Check size={14} className="text-[#00ff9d]" />
-                    ) : (
-                      <Copy size={14} className="text-gray-500 group-hover/link:text-[#2d6af2]" />
-                    )}
+                  <p className="text-white/30 text-[9px] uppercase tracking-[0.3em] font-display mb-1">{t('host_lobby.join_url')}</p>
+                  <p className="text-white text-base font-display font-medium tracking-wide truncate">{formatUrlBreakable(joinLink)}</p>
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                    {copiedJoin ? <Check size={16} className="text-[#00ff9d]" /> : <Copy size={16} className="text-white/10 group-hover/link:text-[#2d6af2]" />}
                   </div>
                 </div>
               </div>
+            </div>
 
-              {/* ACTION BUTTONS (Bottom part) */}
-              <div className="flex flex-col gap-2 mt-3 relative z-10 shrink-0">
-                <Button
+            {/* Bottom Actions */}
+            <div className="p-10 lg:p-12 pt-0 shrink-0 relative z-10 bg-gradient-to-t from-black/40 to-transparent">
+              <div className="flex flex-col gap-4">
+                <Button 
                   onClick={startGame}
                   disabled={participants.length === 0 || countdown !== null}
-                  className="w-full bg-gradient-to-r from-[#2d6af2] to-[#00ff9d] hover:from-[#3b7bf5] hover:to-[#33ffb0] text-black font-display text-base py-4 rounded-xl shadow-[0_0_25px_rgba(45,106,242,0.5)] hover:shadow-[0_0_40px_rgba(45,106,242,0.7)] transition-all uppercase tracking-widest transform active:scale-[0.98] disabled:from-gray-800 disabled:to-gray-800 disabled:text-gray-500 disabled:shadow-none border-none relative overflow-hidden"
+                  className="w-full bg-gradient-to-r from-[#2d6af2] to-[#00ff9d] hover:brightness-110 text-black font-display text-xl font-black py-8 rounded-[2rem] shadow-[0_20px_40px_rgba(45,106,242,0.3)] tracking-[0.2em] uppercase"
                 >
-                  <div className="absolute inset-0 bg-[#00ff9d]/20 blur-xl opacity-0 hover:opacity-100 transition-opacity"></div>
-                  <span className="relative z-10 flex items-center justify-center gap-2">
-                    <Play className="fill-current w-5 h-5" />
-                    {countdown !== null ? t("host_lobby.starting") : t("host_lobby.start")}
-                  </span>
+                  <Play className="fill-current w-6 h-6 mr-3" />
+                  {countdown !== null ? t('host_lobby.starting') : t('host_lobby.start')}
                 </Button>
-
-                <div className="flex gap-2">
-                  <Button
-                    onClick={() => router.push("/host/select-quiz")}
-                    className="flex-1 bg-transparent border border-red-500/50 text-red-500 hover:bg-red-500/10 hover:border-red-500 font-display text-[10px] uppercase tracking-wider h-9 rounded-xl transition-all shadow-[0_0_10px_rgba(239,68,68,0.1)]"
-                  >
-                    <LogOut className="mr-1.5 h-3.5 w-3.5" />
-                    {t('host_lobby.exit')}
+                
+                <div className="flex gap-4">
+                  <Button onClick={() => router.push("/host/select-quiz")} className="flex-1 bg-red-500/10 border border-red-500/20 text-red-500 hover:bg-red-500 hover:text-white rounded-[1.5rem] h-14 font-display uppercase tracking-widest text-[11px] transition-all">
+                    <LogOut size={18} className="mr-2" /> {t('host_lobby.exit')}
                   </Button>
-
-                  <Button
-                    onClick={() => setShareOpen(true)}
-                    className="flex-1 bg-[#2d6af2]/10 border border-[#2d6af2]/30 text-[#2d6af2] hover:bg-[#2d6af2]/20 hover:text-white font-display text-[10px] uppercase tracking-wider h-10 rounded-xl transition-all shadow-[0_0_10px_rgba(45,106,242,0.2)]"
-                  >
-                    <Share2 className="mr-1.5 h-3.5 w-3.5" />
-                    {t('host_lobby.invite')}
+                  <Button onClick={() => setShareOpen(true)} className="flex-1 bg-white/5 border border-white/10 text-white hover:bg-white/10 rounded-[1.5rem] h-14 font-display uppercase tracking-widest text-[11px] transition-all">
+                    <Share2 size={18} className="mr-2" /> {t('host_lobby.invite')}
                   </Button>
                 </div>
               </div>
-            </motion.div>
-          </div>
+            </div>
+          </motion.div>
 
-          {/* Right Column: Players (8/12 split) */}
-          <div className="md:col-span-8 flex flex-col min-h-0 overflow-hidden h-full p-2">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, x: 30 }}
-              animate={{ opacity: 1, scale: 1, x: 0 }}
-              transition={{
-                duration: 0.6,
-                delay: 0.2,
-                type: "spring",
-                stiffness: 100,
-                damping: 14,
-              }}
-              className="bg-black/70 backdrop-blur-md rounded-[4rem] p-6 h-full shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/10 relative overflow-hidden flex flex-col min-h-0"
+          {/* Right: Players List */}
+          <motion.div 
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="md:col-span-7 lg:col-span-8 flex flex-col bg-black/60 backdrop-blur-3xl rounded-[4rem] border border-white/10 shadow-[0_40px_80px_rgba(0,0,0,0.5)] overflow-hidden relative"
           >
-              <div className="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-[#00ff9d]/10 to-transparent rounded-br-full pointer-events-none"></div>
+            <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-[#00ff9d]/5 to-transparent rounded-bl-full pointer-events-none"></div>
 
-              <div className="flex items-center justify-between gap-1 relative z-10 border-b border-[#00ff9d]/10 pb-2 mb-2 shrink-0">
-                <div className="flex items-center gap-3">
-                  <div className="p-2.5 bg-[#00ff9d]/5 rounded-xl border border-[#00ff9d]/10">
-                    <Users size={24} className="text-[#00ff9d]" />
-                  </div>
-                  <h2 className="font-display text-2xl text-white tracking-wide">
-                    {t('host_lobby.players_count', { count: participants.length })}
-                  </h2>
+            {/* Header Area */}
+            <div className="px-10 py-8 flex items-center justify-between border-b border-white/5 relative z-10 shrink-0">
+              <div className="flex items-center gap-5">
+                <div className="p-4 bg-[#00ff9d]/10 rounded-[1.5rem] shadow-[0_0_30px_rgba(0,255,157,0.1)]">
+                  <Users size={32} className="text-[#00ff9d]" />
                 </div>
-
-                {/* Add Bot, Select All, Delete & Mute — inside player header */}
-                <div className="flex items-center gap-2">
-                  <Button
-                    onClick={simulateJoin}
-                    variant="outline"
-                    size="sm"
-                    className="bg-[#00ff9d]/5 border-[#00ff9d]/30 text-[#00ff9d] hover:bg-[#00ff9d]/10 font-display text-[10px] uppercase tracking-wider rounded-lg h-8 px-3"
-                  >
-                    <Plus className="mr-1 h-3 w-3" /> {t('host_lobby.bot')}
-                  </Button>
-
-                  {selectedPlayerIds.length > 0 && (
-                    <>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={handleSelectAll}
-                        className="text-[10px] font-display tracking-widest uppercase text-gray-400 hover:text-white h-8 px-2"
-                      >
-                        {selectedPlayerIds.length === participants.length ? (
-                          <>
-                            <CheckSquare className="mr-1 h-3 w-3 text-[#00ff9d]" />{" "}
-                            {t('host_lobby.deselect')}
-                          </>
-                        ) : (
-                          <>
-                            <Square className="mr-1 h-3 w-3" /> {t('host_lobby.all')}
-                          </>
-                        )}
-                      </Button>
-
-                      <Button
-                        size="sm"
-                        onClick={() => {
-                          setIsBulkKickMode(true);
-                          setSelectedPlayer(null);
-                          setKickDialogOpen(true);
-                        }}
-                        className="bg-red-500/20 hover:bg-red-500 text-red-500 hover:text-white font-display text-[10px] tracking-widest uppercase border border-red-500/50 h-8 px-3"
-                      >
-                        <Trash2 className="mr-1 h-3 w-3" />
-                        {selectedPlayerIds.length}
-                      </Button>
-                    </>
-                  )}
-
-                  <button
-                    onClick={() => setIsMuted((p) => !p)}
-                    className={`p-1.5 border rounded-lg transition-all ${
-                      isMuted
-                        ? "bg-red-500/10 border-red-500/30 text-red-400"
-                        : "bg-[#2d6af2]/10 border-[#2d6af2]/30 text-[#2d6af2]"
-                    }`}
-                  >
-                    {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
-                  </button>
+                <div>
+                  <h2 className="font-display text-4xl font-bold text-white tracking-wide">{participants.length}</h2>
+                  <p className="text-[#00ff9d] text-[10px] uppercase font-display tracking-[0.3em] opacity-80">{t('host_lobby.players')}</p>
                 </div>
               </div>
 
-              <div className="flex-1 overflow-y-auto custom-scrollbar relative z-10">
-                {participants.length === 0 ? (
-                  <div className="h-full flex flex-col items-center justify-center text-gray-500 space-y-6 opacity-60">
-                    <div className="w-24 h-24 rounded-full bg-[#00ff9d]/5 border border-[#00ff9d]/20 flex items-center justify-center animate-pulse">
-                      <Users size={40} className="text-[#00ff9d]/50" />
-                    </div>
-                    <div className="text-center">
-                      <p className="font-display tracking-[0.2em] text-sm uppercase text-[#00ff9d]">
-                        {t('host_lobby.waiting')}
-                      </p>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 pb-3 pt-3">
-                    <AnimatePresence>
-                      {participants.map((player) => (
-                        <motion.div
-                          key={player.id}
-                          initial={{ opacity: 0, scale: 0.9 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0, scale: 0.9 }}
-                          className={`group relative bg-white/[0.02] border ${selectedPlayerIds.includes(player.id) ? "border-[#00ff9d] bg-[#00ff9d]/10 shadow-[0_0_15px_rgba(0,255,157,0.3)]" : "border-white/10 hover:border-[#2d6af2]/40 hover:bg-white/[0.04]"} rounded-xl p-3 flex flex-col items-center transition-all hover:-translate-y-1 cursor-pointer overflow-hidden`}
-                          onClick={(e) => toggleSelectPlayer(player.id, e)}
+              <div className="flex items-center gap-4">
+                <Button onClick={simulateJoin} variant="outline" className="bg-[#00ff9d]/5 border-[#00ff9d]/20 text-[#00ff9d] rounded-2xl px-6 h-12 font-display text-[12px] uppercase tracking-widest hover:bg-[#00ff9d]/15 transition-all">
+                  <Plus size={18} className="mr-2" /> {t('host_lobby.bot')}
+                </Button>
+                <button onClick={() => setIsMuted(!isMuted)} className={`w-12 h-12 flex items-center justify-center rounded-2xl border transition-all ${isMuted ? "bg-red-500/10 border-red-500/30 text-red-500" : "bg-[#2d6af2]/10 border-[#2d6af2]/30 text-[#2d6af2]"}`}>
+                  {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+                </button>
+              </div>
+            </div>
+
+            {/* Players Grid Area */}
+            <div className="flex-1 overflow-y-auto custom-scrollbar p-10 relative z-10">
+              {participants.length === 0 ? (
+                <div className="h-full flex flex-col items-center justify-center opacity-30">
+                  <Users size={120} className="text-white mb-10 animate-pulse" />
+                  <p className="font-display tracking-[0.5em] text-lg uppercase text-white">{t('host_lobby.waiting')}</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  <AnimatePresence>
+                    {participants.map((player) => (
+                      <motion.div
+                        key={player.id}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        className="group relative bg-[#11111a] border border-white/10 rounded-[2.5rem] p-6 flex flex-col items-center justify-center transition-all hover:border-[#2d6af2]/50 hover:bg-[#1a1c2e] hover:shadow-[0_15px_40px_rgba(45,106,242,0.15)] hover:-translate-y-2 overflow-hidden"
+                      >
+                        <div className="w-20 h-20 rounded-full border-[3px] border-[#2d6af2]/30 bg-black/40 overflow-hidden mb-5 items-center justify-center flex shadow-inner">
+                          {player.avatar_url ? (
+                            <img src={player.avatar_url} alt="Ava" className="w-full h-full object-cover" />
+                          ) : (
+                            <InitialsAvatar name={player.nickname} size="lg" />
+                          )}
+                        </div>
+                        <div className="bg-white/5 rounded-2xl px-5 py-2 w-full text-center">
+                          <p className="font-display text-white text-sm font-bold truncate tracking-widest">{player.nickname}</p>
+                        </div>
+                        
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); setSelectedPlayer(player); setKickDialogOpen(true); }}
+                          className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity bg-red-500/20 text-red-500 p-2.5 rounded-full hover:bg-red-500 hover:text-white"
                         >
-                          {/* Selection Checkbox — visible on hover or when selected */}
-                          <div
-                            className={`absolute top-2 left-2 z-20 transition-opacity ${selectedPlayerIds.includes(player.id) ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
-                          >
-                            <div
-                              className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${selectedPlayerIds.includes(player.id) ? "bg-[#00ff9d] border-[#00ff9d] text-black" : "border-[#2d6af2]/50 bg-black/50 text-transparent"}`}
-                            >
-                              <Check className="w-3 h-3" strokeWidth={3} />
-                            </div>
-                          </div>
-
-                          <div className="relative mb-2 w-full flex justify-center">
-                            <div className="w-12 h-12 rounded-full border-2 border-[#2d6af2]/20 bg-black/40 overflow-hidden flex items-center justify-center p-0 shadow-[0_0_15px_rgba(45,106,242,0.1)] relative z-10 transition-transform group-hover:scale-105">
-                              {player.avatar_url ? (
-                                <img
-                                  src={player.avatar_url}
-                                  alt="Avatar"
-                                  className="w-full h-full object-cover"
-                                />
-                              ) : (
-                                <InitialsAvatar name={player.nickname} size="md" />
-                              )}
-                            </div>
-                          </div>
-
-                          <div className="w-full text-center relative z-10 max-w-full">
-                            <div className="bg-[#2d6af2]/10 border border-[#2d6af2]/30 rounded-lg px-2 py-1 mb-1 max-w-full overflow-hidden">
-                              <p
-                                className="font-display text-white text-xs tracking-widest truncate w-full"
-                                title={player.nickname}
-                              >
-                                {player.nickname}
-                              </p>
-                            </div>
-                          </div>
-
-                          <div className="absolute top-2 right-2 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity z-20">
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setIsBulkKickMode(false);
-                                setSelectedPlayer(player);
-                                setKickDialogOpen(true);
-                              }}
-                              className="bg-red-500/10 border border-red-500/30 p-1.5 rounded-lg hover:bg-red-500/80 hover:text-white text-red-500 transition-colors cursor-pointer"
-                            >
-                              <X size={14} />
-                            </button>
-                          </div>
-                        </motion.div>
-                      ))}
-                    </AnimatePresence>
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          </div>
+                          <X size={16} />
+                        </button>
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </div>
+              )}
+            </div>
+          </motion.div>
         </div>
       </div>
 
-      {/* Kick Dialog */}
+      {/* Dialogs */}
       <Dialog open={kickDialogOpen} onOpenChange={setKickDialogOpen}>
-        <DialogOverlay className="bg-black/80 backdrop-blur-sm" />
-        <DialogContent className="bg-[#0a101f] border border-[#2d6af2]/50 text-white p-0 gap-0 overflow-hidden rounded-2xl max-w-sm shadow-[0_0_30px_rgba(45,106,242,0.15)]">
-          <div className="h-1.5 bg-gradient-to-r from-[#2d6af2] to-[#00ff9d] w-full"></div>
-          <DialogHeader className="flex p-6 justify-center text-center">
-            <p className="text-6xl text-center pb-5">🏎️</p>
-            <DialogTitle className="font-display text-xl uppercase tracking-widest text-white text-center drop-shadow-[0_0_10px_rgba(45,106,242,0.5)]">
-              {isBulkKickMode ? (
-                <>
-                  {t('host_lobby.kick')}{" "}
-                  <span className="text-[#00ff9d] font-bold text-xl font-display tracking-wider drop-shadow-[0_0_8px_rgba(0,255,157,0.5)]">
-                    {selectedPlayerIds.length} {t('host_lobby.players')}
-                  </span>
-                  ?
-                </>
-              ) : (
-                <>
-                  {t('host_lobby.kick')}{" "}
-                  <span className="text-[#00ff9d] font-bold text-xl font-display tracking-wider drop-shadow-[0_0_8px_rgba(0,255,157,0.5)]">
-                    {selectedPlayer?.nickname}
-                  </span>
-                  ?
-                </>
-              )}
-            </DialogTitle>
-          </DialogHeader>
-          <div className="p-6 pt-2 text-center">
-            <div className="flex gap-3">
-              <Button
-                onClick={() => setKickDialogOpen(false)}
-                variant="ghost"
-                className="flex-1 bg-transparent border border-white/10 text-gray-400 hover:bg-white/5 hover:text-white font-display text-xs uppercase tracking-wider h-12 rounded-xl transition-all"
-              >
-                {t('host_lobby.cancel')}
-              </Button>
-              <Button
-                onClick={confirmKick}
-                className="flex-1 bg-gradient-to-r from-[#2d6af2] to-[#00ff9d] hover:from-[#3b7bf5] hover:to-[#33ffb0] text-black border-none font-display text-xs uppercase tracking-wider shadow-[0_0_15px_rgba(45,106,242,0.4)] h-12 rounded-xl transition-all"
-              >
-                {t('host_lobby.kick_button')}
-              </Button>
-            </div>
+        <DialogOverlay className="bg-black/90 backdrop-blur-md" />
+        <DialogContent className="bg-[#11111a] border border-red-500/30 text-white p-10 max-w-md rounded-[3rem] shadow-[0_0_100px_rgba(239,68,68,0.2)]">
+          <DialogTitle className="text-3xl font-display uppercase tracking-[0.2em] text-center mb-8">{t('host_lobby.kick')} {selectedPlayer?.nickname}?</DialogTitle>
+          <div className="flex gap-5">
+            <Button onClick={() => setKickDialogOpen(false)} variant="ghost" className="flex-1 border border-white/10 h-16 rounded-2xl font-display uppercase text-xs tracking-widest text-gray-400">Cancel</Button>
+            <Button onClick={confirmKick} className="flex-1 bg-red-500 hover:bg-red-600 text-white h-16 rounded-2xl font-display uppercase text-xs tracking-widest">KICK</Button>
           </div>
         </DialogContent>
       </Dialog>
 
-      {/* QR Dialog */}
       <Dialog open={open} onOpenChange={setOpen}>
-        {/* Slightly lighter but still dark blurred background */}
-        <DialogOverlay className="bg-black/80 backdrop-blur-xl transition-all duration-300" />
-        <DialogContent className="bg-transparent border-none p-0 flex flex-col items-center justify-center shadow-none max-w-none w-auto h-screen outline-none [&>button]:top-4 [&>button]:right-4 [&>button]:bg-white/10 [&>button]:hover:bg-white/20 [&>button]:text-white [&>button]:rounded-full [&>button]:w-14 [&>button]:h-14 [&>button>svg]:w-6 [&>button>svg]:h-6">
-          <VisuallyHidden>
-            <DialogTitle>QR Code Invitation</DialogTitle>
-          </VisuallyHidden>
-          
-          <div className="flex flex-col items-center justify-center h-full">
-            <div className="bg-white p-8 md:p-12 rounded-[3rem] shadow-[0_0_100px_rgba(45,106,242,0.6)] transform transition-transform duration-300 border-4 border-[#2d6af2]/30 flex items-center justify-center m-auto">
-              {/* Centered Large QR Code */}
-              <QRCode value={joinLink} size={Math.min(typeof window !== 'undefined' ? window.innerWidth * 0.8 : 700, 700)} />
-            </div>
-          </div>
+        <DialogOverlay className="bg-black/95 backdrop-blur-2xl" />
+        <DialogContent className="bg-white p-12 md:p-20 rounded-[4rem] shadow-[0_0_150px_rgba(255,255,255,0.2)] max-w-none w-auto outline-none">
+          <VisuallyHidden><DialogTitle>QR</DialogTitle></VisuallyHidden>
+          <QRCode value={joinLink} size={600} />
         </DialogContent>
       </Dialog>
-      {/* Share Dialog */}
+
       <Dialog open={shareOpen} onOpenChange={setShareOpen}>
-        <DialogContent className="bg-black/80 border border-[#2d6af2]/30 backdrop-blur-xl w-11/12 max-w-md rounded-2xl overflow-hidden p-0 shadow-[0_0_50px_rgba(45,106,242,0.2)]">
-          <VisuallyHidden>
-            <DialogTitle>Invite Players</DialogTitle>
-          </VisuallyHidden>
-
-          <div className="absolute top-0 right-0 w-32 h-32 bg-[#2d6af2]/10 blur-[50px] pointer-events-none"></div>
-
-          <div className="p-6 relative z-10">
-            <div className="flex justify-between items-start mb-6">
-              <div>
-                <h3 className="text-xl font-display text-white tracking-widest uppercase">
-                  {t('host_lobby.invite_title')}
-                </h3>
-                <p className="text-sm text-gray-400 font-body">
-                  {t('host_lobby.invite_desc')}
-                </p>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setShareOpen(false)}
-                className="text-gray-400 hover:text-white hover:bg-white/10 rounded-full"
-              >
-                <X size={20} />
-              </Button>
-            </div>
-
-            <div className="grid grid-cols-3 gap-4 mb-6">
-              <a
-                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(t('host_lobby.share_text1') + joinLink)}`}
-                target="_blank"
-                rel="noreferrer"
-                className="flex flex-col items-center justify-center p-4 bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/30 rounded-xl transition-all group"
-              >
-                <div className="w-10 h-10 mb-2 rounded-full bg-[#25D366] flex items-center justify-center text-white font-bold text-xl group-hover:scale-110 transition-transform">
-                  W
-                </div>
-                <span className="text-[#25D366] text-xs font-display tracking-wider">
-                  WhatsApp
-                </span>
-              </a>
-
-              <a
-                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(t('host_lobby.share_text2', { code: roomCode }) + joinLink)}`}
-                target="_blank"
-                rel="noreferrer"
-                className="flex flex-col items-center justify-center p-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all group"
-              >
-                <div className="w-10 h-10 mb-2 rounded-full bg-black flex items-center justify-center text-white font-bold text-xl group-hover:scale-110 transition-transform border border-white/20">
-                  X
-                </div>
-                <span className="text-white text-xs font-display tracking-wider">
-                  X (Twitter)
-                </span>
-              </a>
-
-              <a
-                href={`https://t.me/share/url?url=${encodeURIComponent(joinLink)}&text=${encodeURIComponent(t('host_lobby.share_text3'))}`}
-                target="_blank"
-                rel="noreferrer"
-                className="flex flex-col items-center justify-center p-4 bg-[#0088cc]/10 hover:bg-[#0088cc]/20 border border-[#0088cc]/30 rounded-xl transition-all group"
-              >
-                <div className="w-10 h-10 mb-2 rounded-full bg-[#0088cc] flex items-center justify-center text-white font-bold text-xl group-hover:scale-110 transition-transform">
-                  T
-                </div>
-                <span className="text-[#0088cc] text-xs font-display tracking-wider">
-                  Telegram
-                </span>
-              </a>
-            </div>
-
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Share2 className="text-gray-500 w-4 h-4" />
-              </div>
-              <input
-                readOnly
-                value={joinLink}
-                className="w-full bg-black/40 border border-white/10 text-white text-sm py-3 pl-10 pr-24 rounded-lg outline-none font-mono focus:border-[#2d6af2] transition-colors"
-              />
-              <div className="absolute inset-y-1 right-1">
-                <Button
-                  onClick={() => copyToClipboard(joinLink, setCopiedJoin)}
-                  className="h-full bg-[#2d6af2] hover:bg-[#4da6ff] text-white font-display text-xs px-4 rounded-md uppercase tracking-wider"
-                >
-                  {copiedJoin ? t('host_lobby.copied') : t('host_lobby.copy')}
+        <DialogContent className="bg-[#11111a] border border-white/10 backdrop-blur-3xl rounded-[3rem] p-10 max-w-lg">
+           <DialogHeader className="mb-8">
+             <DialogTitle className="text-2xl font-display uppercase tracking-[0.3em] font-black">{t('host_lobby.invite_title')}</DialogTitle>
+           </DialogHeader>
+           <div className="flex flex-col gap-6">
+             <div className="flex gap-4">
+                <input readOnly value={joinLink} className="flex-1 bg-white/5 border border-white/10 p-4 rounded-xl font-mono text-sm outline-none focus:border-[#2d6af2]" />
+                <Button onClick={() => copyToClipboard(joinLink, setCopiedJoin)} className="bg-[#2d6af2] px-8 rounded-xl font-display uppercase text-xs tracking-widest">
+                  {copiedJoin ? "COPIED" : "COPY"}
                 </Button>
-              </div>
-            </div>
-          </div>
+             </div>
+             <p className="text-gray-500 text-[10px] text-center uppercase tracking-widest">{t('host_lobby.invite_desc')}</p>
+           </div>
         </DialogContent>
       </Dialog>
 
-      {/* Countdown Overlay — dark bg, smooth CSS transitions */}
+      {/* Styles & Animation */}
       {countdown !== null && (
-        <div
-          className="fixed inset-0 z-[200] bg-black flex flex-col items-center justify-center"
-          style={{ willChange: "opacity", animation: "fadeIn 0.3s ease-out" }}
-        >
-          {/* 3 traffic light dots: Red, Yellow, Green */}
-          <div className="flex gap-4 mb-10">
-            {[
-              { color: "#ef4444", activeAt: 3 },
-              { color: "#facc15", activeAt: 2 },
-              { color: "#00ff9d", activeAt: 1 },
-            ].map((light, i) => {
-              const isGo = countdown <= 0;
-              const isLit = isGo || countdown <= light.activeAt;
-              const displayColor = isGo ? "#00ff9d" : light.color;
-              return (
-                <div
-                  key={i}
-                  className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2"
-                  style={{
-                    borderColor: isLit ? displayColor : "#374151",
-                    backgroundColor: isLit ? displayColor : "rgba(55, 65, 81, 0.3)",
-                    boxShadow: isLit ? `0 0 25px ${displayColor}` : "none",
-                    transform: isLit ? "scale(1.15)" : "scale(1)",
-                    transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-                  }}
-                />
-              );
-            })}
-          </div>
-
-          {/* Countdown number */}
-          <span
-            key={countdown}
-            className={`font-display text-[150px] md:text-[220px] font-black leading-none tracking-tighter ${
-              countdown === 3
-                ? "text-red-500"
-                : countdown === 2
-                  ? "text-yellow-400"
-                  : "text-[#00ff9d]"
-            } drop-shadow-[0_0_50px_currentColor]`}
-            style={{
-              animation: "countdown-pop 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)",
-              willChange: "transform, opacity",
-            }}
-          >
-            {countdown > 0 ? countdown : t('host_lobby.go')}
-          </span>
-
-            {countdown > 0 && (
-            <p className="font-display text-xl md:text-2xl text-gray-500 mt-6 animate-pulse" style={{ letterSpacing: '0.1em' }}>
-                {countdown === 3 ? t('host_lobby.ready') : countdown === 2 ? t('host_lobby.steady') : t('host_lobby.go_race')}
-              </p>
-            )}
-            {countdown === 0 && (
-              <p className="font-display text-xl md:text-2xl text-[#00ff9d] mt-6">
-                {t('host_lobby.launching')}
-              </p>
-            )}
-
-          <style>{`
-                        @keyframes fadeIn {
-                            from { opacity: 0; }
-                            to { opacity: 1; }
-                        }
-                        @keyframes countdown-pop {
-                            0% { transform: scale(1.5); opacity: 0; }
-                            60% { transform: scale(0.95); opacity: 1; }
-                            100% { transform: scale(1); opacity: 1; }
-                        }
-                    `}</style>
+        <div className="fixed inset-0 z-[300] bg-black flex flex-col items-center justify-center animate-in fade-in duration-300">
+           <div className="flex gap-6 mb-16">
+              {[3, 2, 1].map(v => (
+                <div key={v} className={`w-14 h-14 rounded-full border-2 transition-all duration-500 ${countdown <= v ? "bg-white scale-125 shadow-[0_0_40px_white]" : "bg-white/10 opacity-20"}`} />
+              ))}
+           </div>
+           <motion.span key={countdown} initial={{ scale: 2, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-[250px] font-display font-black text-white glow-text">
+             {countdown > 0 ? countdown : "GO!"}
+           </motion.span>
         </div>
       )}
+
+      <style jsx>{`
+        .glow-text {
+          text-shadow: 0 0 50px rgba(45,100,242,0.8), 0 0 100px rgba(45,106,242,0.4);
+        }
+        .city-silhouette {
+          background: url('/assets/bg/city_silhouette.png') bottom center no-repeat;
+          background-size: cover;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(255,255,255,0.05);
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(255,255,255,0.1);
+        }
+      `}</style>
     </div>
   );
 }
