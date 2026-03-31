@@ -241,8 +241,8 @@ export default function SelectQuizPage() {
                         className="max-w-4xl mx-auto w-full bg-[#080d1a]/80 border border-[#2d6af2]/30 rounded-2xl overflow-hidden mb-3 backdrop-blur-2xl shadow-[0_0_50px_rgba(45,106,242,0.12),inset_0_1px_0_rgba(255,255,255,0.06)] flex-shrink-0">
                         {/* ── Cyan accent bar ── */}
                         <div className="h-[2px] w-full" style={{ background: 'linear-gradient(90deg,#1a45c4,#2d6af2,#00ff9d,#2d6af2,#1a45c4)' }} />
-                        <div className="p-2 sm:p-3">
-                        <div className="flex flex-col sm:flex-row gap-2.5 mb-3 relative">
+                        <div className="p-4 sm:p-6">
+                        <div className="flex flex-col sm:flex-row gap-4 mb-6 relative">
                             <div className="flex-1">
                                 <div className="relative group/search">
                                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5 group-focus-within/search:text-[#00ff9d] transition-colors" />
@@ -264,7 +264,7 @@ export default function SelectQuizPage() {
                                 </SelectContent>
                             </Select>
                         </div>
-                        <div className="flex items-center justify-center gap-2">
+                        <div className="flex items-center justify-center gap-4">
                             <button onClick={() => setActiveTab('all')}
                                 className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-display text-xs tracking-wider uppercase transition-all duration-200 ${activeTab === 'all' ? 'bg-[#2d6af2] text-white shadow-[0_0_15px_rgba(45,106,242,0.5)]' : 'bg-white/[0.03] border border-white/[0.07] text-gray-400 hover:text-white hover:border-[#00ff9d]/50'}`}>
                                 <Search size={14} />{t('select_quiz.tabs.quizzes')}
