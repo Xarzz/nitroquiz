@@ -164,7 +164,12 @@
     "copy": "Copy",
     "share_text1": "Let's race quizzes together on NitroQuiz! Join room: ",
     "share_text2": "Let's race quizzes together on NitroQuiz! Join room {{code}} now: ",
-    "share_text3": "Let's race quizzes together on NitroQuiz!"
+    "share_text3": "Let's race quizzes together on NitroQuiz!",
+    "ready": "READY",
+    "steady": "STEADY",
+    "go_race": "GO RACE",
+    "go": "GO!",
+    "launching": "LAUNCHING RACE..."
   },
   "host_monitor": {
     "new": "NEW",
@@ -238,5 +243,22 @@
     "champion": "🏆 CHAMPION",
     "finished": "FINISHED",
     "wait_for_host": "WAIT FOR HOST"
+  },
+  "player_game": {
+    "establishing_signal": "ESTABLISHING SIGNAL...",
+    "race_starting": "RACE STARTING",
+    "go": "GO!",
+    "race_finished": "RACE FINISHED!",
+    "redirecting": "Preparing standings and redirecting...",
+    "select_view": "SELECT VIEW",
+    "choose_perspective": "Choose your racing perspective",
+    "portrait": "Portrait",
+    "swipe_to_steer": "SWIPE TO STEER",
+    "landscape": "Landscape",
+    "button_controls": "BUTTON CONTROLS",
+    "speedometer": "SPEEDOMETER",
+    "nos": "NOS",
+    "lap": "LAP",
+    "pov_hint": "POV (T)"
   }
 }

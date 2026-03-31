@@ -971,19 +971,19 @@ export default function HostRoomPage() {
               willChange: "transform, opacity",
             }}
           >
-            {countdown > 0 ? countdown : "GO!"}
+            {countdown > 0 ? countdown : t('host_lobby.go')}
           </span>
 
-          {countdown > 0 && (
-            <p className="font-display text-xl md:text-2xl tracking-[0.3em] uppercase text-gray-500 mt-6 animate-pulse">
-              {countdown === 3 ? "READY" : countdown === 2 ? "STEADY" : "GO RACE"}
-            </p>
-          )}
-          {countdown === 0 && (
-            <p className="font-display text-xl md:text-2xl tracking-[0.3em] uppercase text-[#00ff9d] mt-6">
-              GO!
-            </p>
-          )}
+            {countdown > 0 && (
+            <p className="font-display text-xl md:text-2xl text-gray-500 mt-6 animate-pulse" style={{ letterSpacing: '0.1em' }}>
+                {countdown === 3 ? t('host_lobby.ready') : countdown === 2 ? t('host_lobby.steady') : t('host_lobby.go_race')}
+              </p>
+            )}
+            {countdown === 0 && (
+              <p className="font-display text-xl md:text-2xl text-[#00ff9d] mt-6">
+                {t('host_lobby.launching')}
+              </p>
+            )}
 
           <style>{`
                         @keyframes fadeIn {
