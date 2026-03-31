@@ -493,14 +493,14 @@ export default function HostRoomPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-stretch relative flex-1 min-h-0 overflow-hidden">
           {/* Left Column: Room Details (4/12 split) */}
-          <div className="md:col-span-4 flex flex-col min-h-0 h-full">
+          <div className="md:col-span-4 flex flex-col min-h-0 h-full p-2">
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 30 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="flex flex-col bg-black/65 backdrop-blur-md rounded-[4rem] p-6 lg:p-8 shadow-[0_0_60px_rgba(45,106,242,0.15)] border border-white/10 relative group h-full justify-between overflow-hidden"
+              className="flex flex-col bg-black/70 backdrop-blur-md rounded-[4rem] p-6 lg:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/10 relative group h-full justify-between overflow-hidden"
             >
-              <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-bl from-[#2d6af2]/15 to-transparent rounded-bl-full pointer-events-none"></div>
+              <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-bl from-[#2d6af2]/10 to-transparent rounded-bl-full pointer-events-none"></div>
 
               <div className="flex flex-col gap-2 relative z-10 flex-1 px-1 overflow-y-auto custom-scrollbar">
                 {/* ROOM CODE */}
@@ -594,7 +594,7 @@ export default function HostRoomPage() {
           </div>
 
           {/* Right Column: Players (8/12 split) */}
-          <div className="md:col-span-8 flex flex-col min-h-0 overflow-hidden h-full">
+          <div className="md:col-span-8 flex flex-col min-h-0 overflow-hidden h-full p-2">
             <motion.div
               initial={{ opacity: 0, scale: 0.95, x: 30 }}
               animate={{ opacity: 1, scale: 1, x: 0 }}
@@ -605,7 +605,7 @@ export default function HostRoomPage() {
                 stiffness: 100,
                 damping: 14,
               }}
-              className="bg-black/65 backdrop-blur-md rounded-[4rem] p-6 h-full shadow-[0_0_60px_rgba(0,255,157,0.1)] border border-white/10 relative overflow-hidden flex flex-col min-h-0"
+              className="bg-black/70 backdrop-blur-md rounded-[4rem] p-6 h-full shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/10 relative overflow-hidden flex flex-col min-h-0"
           >
               <div className="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-[#00ff9d]/10 to-transparent rounded-br-full pointer-events-none"></div>
 
