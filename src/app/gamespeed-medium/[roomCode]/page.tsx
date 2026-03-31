@@ -894,10 +894,10 @@ export default function GameSpeedPage() {
         const FRAME_DURATION = 5; // ULTRA FAST: 5ms per frame (approx 200fps playback speed)
         state.current.nosFrameTimer += 16;
 
-        // Define frame sequences for the new 1-83 sequence
-        // Startup: 1-30, Loop: 31-83
-        const STARTUP_FRAMES = Array.from({ length: 30 }, (_, i) => i + 1);
-        const LOOP_FRAMES = Array.from({ length: 53 }, (_, i) => i + 31);
+        // Define frame sequences for the new 1-28 sequence
+        // Startup: 1-21, Loop: 22-28
+        const STARTUP_FRAMES = Array.from({ length: 21 }, (_, i) => i + 1);
+        const LOOP_FRAMES = Array.from({ length: 7 }, (_, i) => i + 22);
 
         let currentNosSprite: any = null;
 
@@ -906,12 +906,12 @@ export default function GameSpeedPage() {
             if (!wasPressed) {
                 // If we were reversing (ending), try to resume from current frame
                 if (state.current.nosPhase === 'ending') {
-                    // Current frame is absolute 1-83
+                    // Current frame is absolute 1-28
                     const currentAbsolute = state.current.nosFrame;
-                    if (currentAbsolute > 30) {
+                    if (currentAbsolute >= 22) {
                         // Resume in loop
                         state.current.nosPhase = 'loop';
-                        // Find index in LOOP_FRAMES (31-83)
+                        // Find index in LOOP_FRAMES (22-28)
                         const idx = LOOP_FRAMES.indexOf(currentAbsolute);
                         state.current.nosFrame = idx >= 0 ? idx : 0;
                     } else {
@@ -962,7 +962,7 @@ export default function GameSpeedPage() {
                 if (state.current.nosPhase === 'startup') {
                     startReverseFrame = STARTUP_FRAMES[state.current.nosFrame] || 1;
                 } else if (state.current.nosPhase === 'loop') {
-                    startReverseFrame = LOOP_FRAMES[state.current.nosFrame] || 31;
+                    startReverseFrame = LOOP_FRAMES[state.current.nosFrame] || 22;
                 } else if (state.current.nosPhase === 'ending') {
                     startReverseFrame = state.current.nosFrame;
                 }
@@ -987,7 +987,7 @@ export default function GameSpeedPage() {
 
                 if (state.current.nosPhase === 'ending') {
                     const frameNum = state.current.nosFrame;
-                    // Ensure we have a valid frame number (1-83)
+                    // Ensure we have a valid frame number (1-28)
                     if (frameNum >= 1) {
                         currentNosSprite = sprites[`nos_${frameNum}`];
                     }
