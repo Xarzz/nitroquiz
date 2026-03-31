@@ -523,14 +523,14 @@ export default function HostRoomPage() {
                 </div>
 
                 {/* QR CODE - Take up remaining space gracefully */}
-                <div className="flex-1 w-full flex items-center justify-center shrink-0 min-h-0 py-2">
+                <div className="flex-1 w-full flex items-center justify-center shrink-0 min-h-0 py-1">
                   <div
-                    className="bg-white/[0.02] p-3 rounded-2xl max-w-[200px] w-full aspect-square shadow-[0_0_40px_rgba(45,106,242,0.3)] relative group/qr cursor-pointer border border-white/10 backdrop-blur-sm transition-transform hover:scale-[1.02] hover:bg-white/[0.04]"
+                    className="p-2.5 rounded-xl max-w-[160px] w-full aspect-square relative group/qr cursor-pointer border border-white/10 backdrop-blur-sm transition-transform hover:scale-[1.02]"
                     onClick={() => setOpen(true)}
                   >
                     <QRCode
                       value={joinLink}
-                      style={{ width: "100%", height: "100%", opacity: 0.9 }}
+                      style={{ width: "100%", height: "100%", opacity: 0.95 }}
                       bgColor="transparent"
                       fgColor="white"
                     />
@@ -699,7 +699,7 @@ export default function HostRoomPage() {
                           initial={{ opacity: 0, scale: 0.9 }}
                           animate={{ opacity: 1, scale: 1 }}
                           exit={{ opacity: 0, scale: 0.9 }}
-                          className={`group relative bg-[#0a101f] border ${selectedPlayerIds.includes(player.id) ? "border-[#00ff9d] bg-[#00ff9d]/15 shadow-[0_0_20px_rgba(0,255,157,0.4)]" : "border-[#2d6af2]/25 hover:border-[#2d6af2] hover:shadow-[0_0_25px_rgba(45,106,242,0.4)]"} rounded-2xl p-3 flex flex-col items-center transition-all hover:-translate-y-1 cursor-pointer overflow-hidden`}
+                          className={`group relative bg-white/[0.02] border ${selectedPlayerIds.includes(player.id) ? "border-[#00ff9d] bg-[#00ff9d]/10 shadow-[0_0_15px_rgba(0,255,157,0.3)]" : "border-white/10 hover:border-[#2d6af2]/40 hover:bg-white/[0.04]"} rounded-xl p-3 flex flex-col items-center transition-all hover:-translate-y-1 cursor-pointer overflow-hidden`}
                           onClick={(e) => toggleSelectPlayer(player.id, e)}
                         >
                           {/* Selection Checkbox — visible on hover or when selected */}
@@ -713,11 +713,8 @@ export default function HostRoomPage() {
                             </div>
                           </div>
 
-                          <div className="absolute inset-0 bg-gradient-to-t from-[#2d6af2]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-
                           <div className="relative mb-2 w-full flex justify-center">
-                            <div className="absolute inset-0 bg-[#2d6af2]/20 blur-xl rounded-full scale-50 group-hover:scale-100 transition-transform duration-500"></div>
-                            <div className="w-12 h-12 rounded-full border-2 border-[#2d6af2]/40 bg-black/40 overflow-hidden flex items-center justify-center p-0 shadow-[0_0_15px_rgba(45,106,242,0.2)] relative z-10 transition-transform group-hover:scale-105">
+                            <div className="w-12 h-12 rounded-full border-2 border-[#2d6af2]/20 bg-black/40 overflow-hidden flex items-center justify-center p-0 shadow-[0_0_15px_rgba(45,106,242,0.1)] relative z-10 transition-transform group-hover:scale-105">
                               {player.avatar_url ? (
                                 <img
                                   src={player.avatar_url}
