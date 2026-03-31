@@ -512,6 +512,7 @@ export default function PlayerResultPage() {
                     <div className="bg-black/60 border border-slate-300/40 backdrop-blur-md px-2 py-0.5 rounded-lg">
                       <p
                         className={`font-display text-[9px] tracking-wider truncate max-w-[68px] ${secondPlace.nickname === currentUser?.username ? "text-[#00ff9d] font-bold" : "text-slate-200"}`}
+                        title={secondPlace.nickname}
                       >
                         {secondPlace.nickname}
                         {secondPlace.nickname === currentUser?.username &&
@@ -564,6 +565,7 @@ export default function PlayerResultPage() {
                     <div className="bg-[#1a1500]/80 border border-yellow-500/60 backdrop-blur-md px-2.5 py-1 rounded-xl">
                       <p
                         className={`font-display text-[9px] font-bold tracking-widest uppercase truncate max-w-[88px] ${firstPlace.nickname === currentUser?.username ? "text-[#00ff9d]" : "text-yellow-500"}`}
+                        title={firstPlace.nickname}
                       >
                         {firstPlace.nickname}
                         {firstPlace.nickname === currentUser?.username &&
@@ -610,6 +612,7 @@ export default function PlayerResultPage() {
                     <div className="bg-black/60 border border-orange-700/40 backdrop-blur-md px-2 py-0.5 rounded-lg">
                       <p
                         className={`font-display text-[9px] tracking-wider truncate max-w-[68px] ${thirdPlace.nickname === currentUser?.username ? "text-[#00ff9d] font-bold" : "text-orange-200"}`}
+                        title={thirdPlace.nickname}
                       >
                         {thirdPlace.nickname}
                         {thirdPlace.nickname === currentUser?.username &&
@@ -675,6 +678,7 @@ export default function PlayerResultPage() {
                       <div className="flex-1 min-w-0">
                         <p
                           className={`font-display text-[10px] tracking-wider uppercase truncate ${isMe ? "text-[#00ff9d] font-bold" : index === 0 ? "text-yellow-400" : "text-gray-300"}`}
+                          title={player.nickname}
                         >
                           {player.nickname} {isMe && t("player_result.you")}
                         </p>
@@ -838,7 +842,7 @@ export default function PlayerResultPage() {
                 </div>
                 {/* Player name + Status — transparent, no divider between them */}
                 <div className="flex flex-col items-center justify-center gap-6 px-6 py-10 flex-1">
-                  <p className="font-display text-white text-xl font-bold uppercase tracking-widest text-center leading-tight">
+                  <p className="font-display text-white text-xl font-bold uppercase tracking-widest text-center leading-tight" title={currentUser?.username || ""}>
                     {currentUser?.username || t("player_result.player_fallback")}
                   </p>
                   {currentPlayerData?.eliminated ? (

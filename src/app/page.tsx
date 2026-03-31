@@ -211,28 +211,16 @@ export default function Home() {
       <div className="fixed inset-0 z-0 bg-gradient-to-t from-[#04060f] via-[#04060f]/60 to-[#2d6af2]/10 pointer-events-none"></div>
       <div className="scanlines"></div>
 
-      {/* Top Bar: Corner Logos */}
+      {/* Top Bar: Corner Logo */}
       <div className="fixed top-0 left-0 right-0 z-[90] px-4 md:px-8 py-5 flex items-start justify-between pointer-events-none">
-        {/* Logo 1 (Top Left) */}
+        {/* Logo (Top Left) */}
         <div className="pointer-events-auto">
           <Image
-            src="/assets/logo/logo1.png"
-            alt="Logo"
+            src="/assets/logo/logo2.png"
+            alt="GameForSmart"
             width={180}
             height={50}
-            className="h-10 md:h-12 w-auto object-contain drop-shadow-[0_0_15px_rgba(45,106,242,0.4)]"
-            priority
-          />
-        </div>
-        
-        {/* Logo 2 (Top Right) - positioned to left of the menu button */}
-        <div className="pointer-events-auto mr-14 md:mr-16">
-          <Image
-            src="/assets/logo/logo2.png"
-            alt="NitroQuiz"
-            width={160}
-            height={40}
-            className="h-7 md:h-9 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]"
+            className="h-10 md:h-12 w-auto object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]"
             priority
           />
         </div>
