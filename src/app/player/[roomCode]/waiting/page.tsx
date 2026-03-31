@@ -12,7 +12,7 @@ export const PLAYER_CHARACTERS = [
     {
         id: 'rico',
         name: 'SCHLOSKI RACER',
-        imageSrc: '/assets/characters/rico/showroom/showroom1.png',
+        imageSrc: '/assets/characters/rico/showroom/pose/0.png',
         sequenceFolder: '/assets/characters/rico/showroom/pose',
         sequenceCount: 120,
         stats: { speed: 80, accel: 60, handling: 70 }
@@ -501,9 +501,20 @@ export default function PlayerWaitingPage() {
                                                             boxShadow: isSel ? '0 0 25px rgba(120,240,255,0.4), inset 0 0 20px rgba(120,240,255,0.15)' : 'none'
                                                         }}>
 
-                                                        {/* Car Image */}
-                                                        <img src={c.imageSrc} alt={c.name}
-                                                            className="w-full aspect-[4/3] object-contain drop-shadow-[0_15px_15px_rgba(0,0,0,0.8)] mb-8" />
+                                                        {/* Car Image - Use sequence player if available for live preview */}
+                                                        <div className="w-full aspect-[4/3] mb-8 relative flex items-center justify-center">
+                                                            {c.sequenceFolder ? (
+                                                                <SequencePlayer 
+                                                                    folder={c.sequenceFolder} 
+                                                                    count={c.sequenceCount} 
+                                                                    isLoading={false} 
+                                                                    onLoad={() => {}} 
+                                                                />
+                                                            ) : (
+                                                                <img src={isSel && c.gifSrc ? c.gifSrc : c.imageSrc} alt={c.name}
+                                                                    className="w-full h-full object-contain drop-shadow-[0_15px_15px_rgba(0,0,0,0.8)]" />
+                                                            )}
+                                                        </div>
 
                                                         {/* Name */}
                                                         <h3 className="font-display text-[15px] font-bold text-white uppercase tracking-[0.1em] text-center mb-auto">
