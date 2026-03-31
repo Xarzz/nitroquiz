@@ -29,12 +29,34 @@ const carImageMap: Record<string, string> = {
   blue: "/assets/characters/rico/showroom/showroom1.png",
 };
 
-const logoImageMap: Record<string, string> = {
-  purple: "/assets/characters/rico/logo/logo1.png",
-  white: "/assets/characters/rico/logo/logo1.png",
-  black: "/assets/characters/rico/logo/logo1.png",
-  aqua: "/assets/characters/rico/logo/logo1.png",
-  blue: "/assets/characters/rico/logo/logo1.png",
+
+// Helper: Generate initials from a name
+const getInitials = (name: string): string => {
+  if (!name) return "?";
+  const parts = name.trim().split(/\s+/);
+  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+  return name.slice(0, 2).toUpperCase();
+};
+
+// Initials avatar colors based on nickname hash
+const AVATAR_COLORS = ['#3b82f6', '#ef4444', '#f59e0b', '#8b5cf6', '#10b981', '#ec4899', '#06b6d4', '#f97316'];
+const getAvatarColor = (name: string): string => {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+};
+
+// Reusable InitialsAvatar component
+const InitialsAvatar = ({ name, size = 'md' }: { name: string; size?: 'sm' | 'md' | 'lg' }) => {
+  const fontSize = size === 'lg' ? 'text-2xl' : size === 'md' ? 'text-base' : 'text-xs';
+  return (
+    <div
+      className={`w-full h-full rounded-full flex items-center justify-center ${fontSize} font-black text-white select-none`}
+      style={{ backgroundColor: getAvatarColor(name) }}
+    >
+      {getInitials(name)}
+    </div>
+  );
 };
 
 interface Participant {
@@ -254,9 +276,6 @@ export default function LeaderboardPage() {
                     <p className="font-display text-slate-200 text-xs sm:text-sm tracking-wider truncate max-w-[100px]">
                       {secondPlace.nickname}
                     </p>
-                    <p className="font-mono text-slate-400 text-[10px] mt-0.5">
-                      {secondPlace.score.toLocaleString()}
-                    </p>
                   </div>
                 </div>
                 <div className="w-[85px] sm:w-[120px] h-[110px] sm:h-[140px] bg-gradient-to-b from-[#1a2235] to-[#0a0f1a] border-t-4 border-l border-r border-[#64748b] rounded-t-xl flex flex-col items-center justify-between py-2 sm:py-3">
@@ -269,37 +288,12 @@ export default function LeaderboardPage() {
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <img
-                          src={
-                            logoImageMap[
-                              (secondPlace.car_character || "white").replace(
-                                "-bot",
-                                "",
-                              )
-                            ] || "/assets/characters/rico/logo/logo1.png"
-                          }
-                          alt="Logo"
-                          className="w-full h-full object-contain p-0 scale-[2.1]"
-                        />
+                        <InitialsAvatar name={secondPlace.nickname} size="sm" />
                       )}
                     </div>
-                    <div className="absolute -right-2 -bottom-1 w-10 h-10 bg-black/60 rounded-full border border-white/20 p-1 flex items-center justify-center z-20 shadow-xl">
-                      <img
-                        src={
-                          carImageMap[
-                            (secondPlace.car_character || "white").replace(
-                              "-bot",
-                              "",
-                            )
-                          ] || carImageMap["white"]
-                        }
-                        alt="Car"
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
                   </div>
-                  <span className="font-display text-3xl sm:text-5xl text-slate-600/50 font-bold mb-1">
-                    2
+                  <span className="font-display text-2xl sm:text-4xl text-slate-300 font-bold mb-1 drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]">
+                    {secondPlace.score.toLocaleString()}
                   </span>
                 </div>
               </motion.div>
@@ -326,9 +320,6 @@ export default function LeaderboardPage() {
                     <p className="font-display text-yellow-500 text-sm sm:text-lg font-bold tracking-widest uppercase truncate max-w-[130px]">
                       {firstPlace.nickname}
                     </p>
-                    <p className="font-mono text-white text-xs sm:text-sm mt-0.5 font-bold">
-                      {firstPlace.score.toLocaleString()}
-                    </p>
                   </div>
                 </div>
                 <div className="w-[100px] sm:w-[140px] h-[160px] sm:h-[200px] bg-gradient-to-b from-[#2a1f0a] to-[#0a0f1a] border-t-8 border-l-2 border-r-2 border-[#eab308] rounded-t-xl relative overflow-hidden flex flex-col items-center justify-between py-3 sm:py-5">
@@ -343,37 +334,12 @@ export default function LeaderboardPage() {
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <img
-                          src={
-                            logoImageMap[
-                              (firstPlace.car_character || "purple").replace(
-                                "-bot",
-                                "",
-                              )
-                            ] || "/assets/characters/rico/logo/logo1.png"
-                          }
-                          alt="Logo"
-                          className="w-full h-full object-contain p-0 scale-[2.1]"
-                        />
+                        <InitialsAvatar name={firstPlace.nickname} size="md" />
                       )}
                     </div>
-                    <div className="absolute -right-3 -bottom-1 w-12 h-12 bg-black/60 rounded-full border border-yellow-500/40 p-1.5 flex items-center justify-center z-20 shadow-xl">
-                      <img
-                        src={
-                          carImageMap[
-                            (firstPlace.car_character || "purple").replace(
-                              "-bot",
-                              "",
-                            )
-                          ] || carImageMap["purple"]
-                        }
-                        alt="Car"
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
                   </div>
-                  <span className="font-display text-5xl sm:text-7xl text-yellow-600/40 font-bold relative z-10 pb-0">
-                    1
+                  <span className="font-display text-3xl sm:text-5xl text-yellow-400 font-bold relative z-10 pb-0 drop-shadow-[0_0_15px_rgba(250,204,21,0.8)]">
+                    {firstPlace.score.toLocaleString()}
                   </span>
                 </div>
               </motion.div>
@@ -393,9 +359,6 @@ export default function LeaderboardPage() {
                     <p className="font-display text-orange-200 text-xs sm:text-sm tracking-wider truncate max-w-[100px]">
                       {thirdPlace.nickname}
                     </p>
-                    <p className="font-mono text-orange-400 text-[10px] mt-0.5">
-                      {thirdPlace.score.toLocaleString()}
-                    </p>
                   </div>
                 </div>
                 <div className="w-[75px] sm:w-[110px] h-[80px] sm:h-[110px] bg-gradient-to-b from-[#25140b] to-[#0a0f1a] border-t-4 border-l border-r border-[#c2410c] rounded-t-xl flex flex-col items-center justify-between py-2 sm:py-3">
@@ -408,37 +371,12 @@ export default function LeaderboardPage() {
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <img
-                          src={
-                            logoImageMap[
-                              (thirdPlace.car_character || "black").replace(
-                                "-bot",
-                                "",
-                              )
-                            ] || "/assets/characters/rico/logo/logo1.png"
-                          }
-                          alt="Logo"
-                          className="w-full h-full object-contain p-0 scale-[2.1]"
-                        />
+                        <InitialsAvatar name={thirdPlace.nickname} size="sm" />
                       )}
                     </div>
-                    <div className="absolute -right-2 -bottom-1 w-9 h-9 bg-black/60 rounded-full border border-white/20 p-1 flex items-center justify-center z-20 shadow-xl">
-                      <img
-                        src={
-                          carImageMap[
-                            (thirdPlace.car_character || "black").replace(
-                              "-bot",
-                              "",
-                            )
-                          ] || carImageMap["black"]
-                        }
-                        alt="Car"
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
                   </div>
-                  <span className="font-display text-2xl sm:text-4xl text-orange-700/40 font-bold mb-1">
-                    3
+                  <span className="font-display text-xl sm:text-3xl text-orange-300 font-bold mb-1 drop-shadow-[0_0_10px_rgba(251,146,60,0.4)]">
+                    {thirdPlace.score.toLocaleString()}
                   </span>
                 </div>
               </motion.div>
@@ -513,30 +451,15 @@ export default function LeaderboardPage() {
                               <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/50 border border-white/10 flex items-center justify-center text-lg shadow-inner overflow-hidden flex-shrink-0">
                                 {player.eliminated
                                   ? "💀"
-                                  : (() => {
-                                      if (player.avatar_url) {
-                                        return (
-                                          <img
-                                            src={player.avatar_url}
-                                            alt="Avatar"
-                                            className="w-full h-full object-cover"
-                                          />
-                                        );
-                                      }
-                                      const baseCar = (
-                                        player.car_character || "purple"
-                                      ).replace("-bot", "");
-                                      const logoSrc =
-                                        logoImageMap[baseCar] ||
-                                        "/assets/logo/logo1.png";
-                                      return (
-                                        <img
-                                          src={logoSrc}
-                                          alt="car"
-                                          className="w-full h-full object-contain p-0 scale-[2.1]"
-                                        />
-                                      );
-                                    })()}
+                                  : player.avatar_url ? (
+                                      <img
+                                        src={player.avatar_url}
+                                        alt="Avatar"
+                                        className="w-full h-full object-cover"
+                                      />
+                                    ) : (
+                                      <InitialsAvatar name={player.nickname} size="sm" />
+                                    )}
                               </div>
                               <p
                                 className={`font-display tracking-wider uppercase text-xs sm:text-sm truncate ${isTop3 ? "text-white" : "text-gray-300"} ${index === 0 && "text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]"}`}

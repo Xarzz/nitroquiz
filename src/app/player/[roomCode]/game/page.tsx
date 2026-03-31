@@ -92,10 +92,7 @@ const ROAD_WIDTH = 2000;
 const SEGMENT_LENGTH = 200;
 const RUMBLE_LENGTH = 3;
 const LANES = 4;
-const FIELD_OF_VIEW = 85;        // Slightly narrower for elevated perspective
-const CAMERA_HEIGHT = 1000;      // Higher camera - more top-down city view
 const DRAW_DISTANCE = 300;
-const FOG_DENSITY = 3;           // Less fog to see the city further
 const MAX_SPEED = SEGMENT_LENGTH / STEP;
 const ACCEL = MAX_SPEED / 5;
 const BREAKING = -MAX_SPEED * 2.5; // Stronger braking for mobile
@@ -103,12 +100,47 @@ const DECEL = -MAX_SPEED / 5;
 const OFF_ROAD_DECEL = -MAX_SPEED / 2;
 const OFF_ROAD_LIMIT = MAX_SPEED / 4;
 
+// --- Difficulty-based config helper ---
+function getDifficultyConfig(difficulty: string) {
+    if (difficulty === 'hard') {
+        // Hard: high camera (top-down drone feel), more NPCs, all obstacles
+        return {
+            fieldOfView: 85,
+            cameraHeight: 1000,
+            fogDensity: 3,
+            npcCount: 30,
+            obstacleCount: 25,
+            trackType: 'complex', // twisty S-curves + bumps like medium
+        };
+    } else if (difficulty === 'normal' || difficulty === 'medium') {
+        // Normal/Medium: standard camera, twisty track, obstacles
+        return {
+            fieldOfView: 100,
+            cameraHeight: 500,
+            fogDensity: 5,
+            npcCount: 20,
+            obstacleCount: 25,
+            trackType: 'complex',
+        };
+    } else {
+        // Easy: standard everything, simple track, no obstacles
+        return {
+            fieldOfView: 100,
+            cameraHeight: 500,
+            fogDensity: 5,
+            npcCount: 20,
+            obstacleCount: 0,
+            trackType: 'simple',
+        };
+    }
+}
+
 const COLORS = {
-    SKY: '#070b1e',  // Deep city night
+    SKY: '#020617', // Deep Midnight Blue/Black
     TREE: '#064e3b',
-    FOG: '#070b1e',
-    LIGHT: { road: '#1c2030', grass: '#0e1225', rumble: '#2a2145', strip: '#fbbf24', sidewalk: '#45404a', curb: '#7a7085' },
-    DARK: { road: '#161a28', grass: '#0a0e1c', rumble: '#201838', strip: '', sidewalk: '#38343e', curb: '#5e5570' },
+    FOG: '#020617',
+    LIGHT: { road: '#0a0d14', grass: '#1e293b', rumble: '#111827', strip: '#fbbf24', sidewalk: '#334155', curb: '#475569' },
+    DARK: { road: '#05070a', grass: '#0f172a', rumble: '#0d1117', strip: '', sidewalk: '#1e293b', curb: '#334155' },
     START: { road: '#ffffff', grass: '#334155', rumble: '#ffffff', strip: '', sidewalk: '#ffffff', curb: '#ffffff' },
     FINISH: { road: '#000000', grass: '#111827', rumble: '#000000', strip: '', sidewalk: '#000000', curb: '#000000' }
 };
@@ -158,7 +190,7 @@ export default function GameSpeedPage() {
 
     // Quiz Integration State
     const [allQuizQuestions, setAllQuizQuestions] = useState<QuizQuestion[]>([]);
-    const [quizQuestionIndex, setQuizQuestionIndex] = useState(0);
+    const [quizQuestionIndex, setQuizQuestionIndex] = useState(0); 
     const [totalQuizScore, setTotalQuizScore] = useState(0);
     const QUESTIONS_PER_ROUND = 3;
 
@@ -211,7 +243,7 @@ export default function GameSpeedPage() {
         currentLap: 1,
         totalLaps: 1,
         countdown: 5,
-        cameraDepth: 1 / Math.tan((FIELD_OF_VIEW / 2) * Math.PI / 180),
+        cameraDepth: 1 / Math.tan((100 / 2) * Math.PI / 180), // will be recalculated on mount
         viewMode: 'third' as 'first' | 'third',
         bgOffset: 0,
         analogSteer: 0, // -1 to 1 for smoother mobile steering
@@ -239,56 +271,88 @@ export default function GameSpeedPage() {
 
     // --- Loading Assets ---
     useEffect(() => {
-        // Ensure difficulty is stored for quiz return flow
-        localStorage.setItem('nitroquiz_game_difficulty', 'coba');
+        // Read difficulty from localStorage (set by the waiting room when game starts)
+        const difficulty = localStorage.getItem('nitroquiz_game_difficulty') || 'easy';
+        const diffConfig = getDifficultyConfig(difficulty);
+
+        // Apply camera depth based on difficulty
+        state.current.cameraDepth = 1 / Math.tan((diffConfig.fieldOfView / 2) * Math.PI / 180);
 
         // Pre-fetch quiz page in background so transition is instant
-        router.prefetch('/quiz');
+        router.prefetch(`/player/${roomCode}/quiz`);
 
         // Reset sprites to force reload on mount/remount
         state.current.sprites = { ...state.current.sprites };
 
         const loadAssets = async () => {
             console.log("Starting asset load...");
-            let character = null;
+            
+            // Determine selected character ID for dynamic sprite loading
+            let selectedCharId = 'rico'; // Default fallback
             try {
                 const stored = localStorage.getItem('edurace_selected_character');
                 if (stored) {
-                    character = JSON.parse(stored);
+                    const character = JSON.parse(stored);
+                    if (character?.id) selectedCharId = character.id;
                 }
             } catch (e) {
                 console.error("Failed to load character", e);
             }
 
-            const assetList = ASSET_LIST;
-
             const promises: Promise<void>[] = [];
 
-            // Load from ASSET_LIST (named assets)
-            ASSET_LIST.forEach(item => {
+            // Load obstacle assets for medium/hard difficulty
+            const obstacles = (difficulty === 'normal' || difficulty === 'medium' || difficulty === 'hard') ? [
+                { name: 'obstacle1', src: '/assets/material/pembatas_jalan/1penghalang.webp' },
+                { name: 'obstacle2', src: '/assets/material/pembatas_jalan/1roadbarrier.webp' }
+            ] : [];
+
+            // Load from ASSET_LIST + obstacles (named assets)
+            // Dynamically replace 'rico' with selected character in asset paths
+            [...ASSET_LIST, ...obstacles].forEach(item => {
                 promises.push(new Promise<void>((resolve) => {
                     const img = new Image();
+                    // Replace character path if this is a character asset
+                    let srcPath = item.src;
+                    if (srcPath.includes('/characters/rico/')) {
+                        srcPath = srcPath.replace('/characters/rico/', `/characters/${selectedCharId}/`);
+                    }
                     img.onload = () => {
                         (img as any).assetName = item.name;
-                        // Simpan dengan key 'name' (untuk akses global)
                         state.current.sprites[item.name] = img;
                         resolve();
                     };
                     img.onerror = () => {
-                        // Fallback logic
-                        const cvs = document.createElement('canvas');
-                        cvs.width = 128; cvs.height = 128;
-                        const ctx = cvs.getContext('2d');
-                        if (ctx) {
-                            ctx.fillStyle = '#444';
-                            ctx.fillRect(0, 0, 128, 128);
-                            const finalCvs = cvs as any;
-                            finalCvs.assetName = item.name;
-                            state.current.sprites[item.name] = finalCvs;
+                        // If selected character doesn't have this sprite, fall back to rico
+                        if (selectedCharId !== 'rico' && item.src.includes('/characters/')) {
+                            const fallbackImg = new Image();
+                            fallbackImg.onload = () => {
+                                (fallbackImg as any).assetName = item.name;
+                                state.current.sprites[item.name] = fallbackImg;
+                                resolve();
+                            };
+                            fallbackImg.onerror = () => {
+                                // Final fallback: gray placeholder
+                                const cvs = document.createElement('canvas');
+                                cvs.width = 128; cvs.height = 128;
+                                const ctx = cvs.getContext('2d');
+                                if (ctx) { ctx.fillStyle = '#444'; ctx.fillRect(0, 0, 128, 128); }
+                                (cvs as any).assetName = item.name;
+                                state.current.sprites[item.name] = cvs;
+                                resolve();
+                            };
+                            fallbackImg.src = item.src; // Original rico path
+                        } else {
+                            const cvs = document.createElement('canvas');
+                            cvs.width = 128; cvs.height = 128;
+                            const ctx = cvs.getContext('2d');
+                            if (ctx) { ctx.fillStyle = '#444'; ctx.fillRect(0, 0, 128, 128); }
+                            (cvs as any).assetName = item.name;
+                            state.current.sprites[item.name] = cvs;
+                            resolve();
                         }
-                        resolve();
                     };
-                    img.src = item.src;
+                    img.src = srcPath;
                 }));
             });
 
@@ -299,7 +363,7 @@ export default function GameSpeedPage() {
 
             // To properly support the new direct 'src' usage in TRACK_ASSETS without re-defining them in ASSET_LIST:
             const uniqueSources = Array.from(new Set(TRACK_ASSETS.map(item => item.src))).filter(Boolean);
-
+            
             uniqueSources.forEach(src => {
                 promises.push(new Promise<void>((resolve) => {
                     const img = new Image();
@@ -426,49 +490,57 @@ export default function GameSpeedPage() {
     };
 
     const resetRoad = () => {
+        const difficulty = localStorage.getItem('nitroquiz_game_difficulty') || 'easy';
+        const diffConfig = getDifficultyConfig(difficulty);
+
         state.current.segments = [];
-        // A cleaner, less "messy" track layout (Simplified Circuit)
-        addStraight(ROAD_CONF.LENGTH.SHORT);
-        addCurve(ROAD_CONF.LENGTH.MEDIUM, ROAD_CONF.CURVE.MEDIUM, ROAD_CONF.HILL.LOW);
-        addStraight(ROAD_CONF.LENGTH.LONG);
-        addCurve(ROAD_CONF.LENGTH.MEDIUM, -ROAD_CONF.CURVE.MEDIUM, ROAD_CONF.HILL.NONE);
-        addStraight(ROAD_CONF.LENGTH.MEDIUM);
-        addCurve(ROAD_CONF.LENGTH.LONG, ROAD_CONF.CURVE.EASY, ROAD_CONF.HILL.MEDIUM);
-        addStraight(ROAD_CONF.LENGTH.LONG);
-        addCurve(ROAD_CONF.LENGTH.MEDIUM, ROAD_CONF.CURVE.MEDIUM, -ROAD_CONF.HILL.LOW);
-        addStraight(ROAD_CONF.LENGTH.SHORT);
-        addDownhillToEnd(200);
+
+        if (diffConfig.trackType === 'complex') {
+            // --- MEDIUM / HARD: Twisty track with S-Curves and Bumps ---
+            addStraight(ROAD_CONF.LENGTH.SHORT);
+            addCurve(ROAD_CONF.LENGTH.MEDIUM, ROAD_CONF.CURVE.EASY, ROAD_CONF.HILL.NONE);
+            addStraight(ROAD_CONF.LENGTH.SHORT);
+            addSCurves();
+            addBumps();
+            addCurve(ROAD_CONF.LENGTH.LONG, -ROAD_CONF.CURVE.MEDIUM, ROAD_CONF.HILL.MEDIUM);
+            addStraight(ROAD_CONF.LENGTH.MEDIUM);
+            addSCurves();
+            addCurve(ROAD_CONF.LENGTH.LONG, ROAD_CONF.CURVE.HARD, -ROAD_CONF.HILL.MEDIUM);
+            addCurve(ROAD_CONF.LENGTH.LONG, -ROAD_CONF.CURVE.HARD, ROAD_CONF.HILL.HIGH);
+            addBumps();
+            addStraight(ROAD_CONF.LENGTH.MEDIUM);
+            addDownhillToEnd(250);
+        } else {
+            // --- EASY: Simple track ---
+            addStraight(ROAD_CONF.LENGTH.SHORT);
+            addCurve(ROAD_CONF.LENGTH.MEDIUM, ROAD_CONF.CURVE.MEDIUM, ROAD_CONF.HILL.LOW);
+            addStraight(ROAD_CONF.LENGTH.LONG);
+            addCurve(ROAD_CONF.LENGTH.MEDIUM, -ROAD_CONF.CURVE.MEDIUM, ROAD_CONF.HILL.NONE);
+            addStraight(ROAD_CONF.LENGTH.MEDIUM);
+            addCurve(ROAD_CONF.LENGTH.LONG, ROAD_CONF.CURVE.EASY, ROAD_CONF.HILL.MEDIUM);
+            addStraight(ROAD_CONF.LENGTH.LONG);
+            addCurve(ROAD_CONF.LENGTH.MEDIUM, ROAD_CONF.CURVE.MEDIUM, -ROAD_CONF.HILL.LOW);
+            addStraight(ROAD_CONF.LENGTH.SHORT);
+            addDownhillToEnd(200);
+        }
 
         const len = state.current.segments.length;
 
         // --- HYBRID ASSET PLACEMENT ---
-        // 1. Manual Placement (Prioritas Utama)
-        // Load manual configuration from TRACK_ASSETS
-
-        // Map to keep track of occupied spots to avoid overlap
-        // Keys: "segmentIndex_side" (e.g., "150_left")
         const occupied: { [key: string]: boolean } = {};
 
         TRACK_ASSETS.forEach(item => {
             const segIdx = item.z;
             if (segIdx < len) {
                 if (item.src) {
-                    // Try to get sprite by direct src key first
                     let sprite = state.current.sprites[item.src];
-
                     if (sprite) {
-                        // Use item.src for keyword matching (e.g. 'pohon')
                         const offset = item.offset !== undefined ? item.offset : getAssetOffset(item.side, item.src);
                         state.current.segments[segIdx].sprites.push({ source: sprite, offset: offset, offsetY: -1 });
-
-                        // Mark occupied (give some buffer space)
                         occupied[`${segIdx}_${item.side}`] = true;
                         occupied[`${segIdx + 1}_${item.side}`] = true;
                         occupied[`${segIdx + 2}_${item.side}`] = true;
-
-                        // Special logic: Zebra Crossing for Traffic Lights
                         if (item.src.includes('lampulalulintas')) {
-                            // Add zebra cross for next 10 segments
                             for (let z = 0; z < 10; z++) {
                                 if (state.current.segments[segIdx + z]) {
                                     state.current.segments[segIdx + z].zebra = true;
@@ -480,17 +552,15 @@ export default function GameSpeedPage() {
             }
         });
 
-
         state.current.trackLength = len * SEGMENT_LENGTH;
 
-        // Initial NPCs Spawning (Now using Trucks)
+        // --- NPC Spawning (count based on difficulty) ---
         state.current.cars = [];
-        for (let n = 0; n < 20; n++) {
-            const z = (n + 1) * (len * SEGMENT_LENGTH / 20);
+        for (let n = 0; n < diffConfig.npcCount; n++) {
+            const z = (n + 1) * (len * SEGMENT_LENGTH / diffConfig.npcCount);
             const offset = Util.randomChoice([-0.8, -0.4, 0.4, 0.8]);
             const speed = MAX_SPEED / 4 + Math.random() * (MAX_SPEED / 2);
 
-            // Random choice: 0=Truck, 1=JNE, 2=Odong, 3=Taxi
             const vehicleTypeRnd = Math.random();
             let vehicleType: 'truck' | 'jne' | 'odong' | 'taxi' = 'truck';
             let vehicleSprite = state.current.sprites.truck2;
@@ -507,7 +577,6 @@ export default function GameSpeedPage() {
             } else {
                 vehicleType = 'taxi';
                 vehicleSprite = state.current.sprites.taxi_straight || state.current.sprites.truck2;
-                console.log("Spawning TAXI - sprite exists:", !!state.current.sprites.taxi_straight);
             }
 
             const car: Car = {
@@ -517,26 +586,48 @@ export default function GameSpeedPage() {
                 speed: speed,
                 percent: 0,
                 type: vehicleType,
-                animTimer: (vehicleType === 'jne' || vehicleType === 'odong' || vehicleType === 'taxi' || vehicleType === 'truck') ? Math.random() * 100 : 0,
+                animTimer: Math.random() * 100,
                 animFrame: 0
             };
             state.current.cars.push(car);
             findSegment(z).cars.push(car);
         }
 
-        // Spawn Rival Opponent
+        // --- Stationary Obstacles (medium + hard only) ---
+        if (diffConfig.obstacleCount > 0) {
+            for (let n = 0; n < diffConfig.obstacleCount; n++) {
+                const zLength = len * SEGMENT_LENGTH;
+                const startOffset = 20 * SEGMENT_LENGTH;
+                const z = startOffset + Math.random() * (zLength - startOffset - 1000);
+                const offset = (Math.random() * 1.6) - 0.8;
+                const isBarrier = Math.random() > 0.5;
+                const obstacleSprite = isBarrier ? state.current.sprites.obstacle2 : state.current.sprites.obstacle1;
+                const obstacle: Car = {
+                    offset: offset,
+                    z: z,
+                    sprite: obstacleSprite || state.current.sprites.truck2,
+                    speed: 0,
+                    percent: 0,
+                    type: 'obstacle' as any
+                };
+                state.current.cars.push(obstacle);
+                findSegment(z).cars.push(obstacle);
+            }
+        }
+
+        // --- Rival NPC ---
         const rivalCar: Car = {
             offset: -0.4,
-            z: 200 * SEGMENT_LENGTH, // Start ahead of player bit
+            z: 200 * SEGMENT_LENGTH,
             sprite: state.current.sprites.car_rival || state.current.sprites.npc_car,
-            speed: MAX_SPEED * 0.7, // Stable speed, like a normal NPC
+            speed: MAX_SPEED * 0.7,
             percent: 0,
             isRival: true
         };
         state.current.cars.push(rivalCar);
         findSegment(rivalCar.z).cars.push(rivalCar);
 
-        // Color finish line only (START line removed as per request)
+        // Color finish line
         for (let n = 0; n < RUMBLE_LENGTH; n++) {
             if (len - 1 - n >= 0) state.current.segments[len - 1 - n].color = COLORS.FINISH;
         }
@@ -579,13 +670,13 @@ export default function GameSpeedPage() {
         ctx.closePath();
         ctx.fill();
 
-        // Sidewalk (Wide city sidewalk)
-        const sw1 = w1 * 1.0; // Wide sidewalk
-        const sw2 = w2 * 1.0;
-        const cw1 = w1 * 0.07; // Thick curb edge
-        const cw2 = w2 * 0.07;
+        // Sidewalk (Detailed gray tiles)
+        const sw1 = w1 * 0.5; // Sidewalk width relative to road
+        const sw2 = w2 * 0.5;
+        const cw1 = w1 * 0.05; // Curb width
+        const cw2 = w2 * 0.05;
 
-        // Draw Left Sidewalk
+        // Draw Left Sidewalk (Base)
         ctx.fillStyle = color.sidewalk;
         ctx.beginPath();
         ctx.moveTo(x1 - w1 - r1 - sw1, y1);
@@ -595,7 +686,7 @@ export default function GameSpeedPage() {
         ctx.closePath();
         ctx.fill();
 
-        // Draw Right Sidewalk
+        // Draw Right Sidewalk (Base)
         ctx.beginPath();
         ctx.moveTo(x1 + w1 + r1 + sw1, y1);
         ctx.lineTo(x1 + w1 + r1, y1);
@@ -675,7 +766,6 @@ export default function GameSpeedPage() {
 
         const name = (sprite as any).assetName;
 
-        // Use a fixed reference width so asset sizes stay consistent regardless of player sprite dimensions
         // Use a fixed reference width so asset sizes stay consistent regardless of player sprite dimensions
         const playerRefWidth = 450;
         const carWorldWidth = playerRefWidth * 1.5; // Larger base for vehicles to match character size
@@ -965,7 +1055,7 @@ export default function GameSpeedPage() {
         // For now, we trust the assets have reasonable relative resolutions.
 
         const finalX = width / 2 - finalW / 2 + (steer * 50);
-        const finalY = height - finalH - 15; // Slightly lower for elevated camera
+        const finalY = height - finalH - 35;
 
         // Render sprite apa adanya tanpa tilt - gambar sudah memiliki posisi miring sendiri
         ctx.drawImage(finalSprite, finalX, finalY, finalW, finalH);
@@ -1104,7 +1194,7 @@ export default function GameSpeedPage() {
                         // "Mental ke belakang" — kurangi kecepatan tapi jangan 0, biar bisa langsung gas lagi
                         nextSpeed = nextSpeed * 0.3;
                         position = Util.increase(position, -200, trackLength); // "duk" mundur sedikit
-
+                        
                         // Mild horizontal push
                         const dir = nextPlayerX > car.offset ? 1 : -1;
                         nextPlayerX += dir * 0.15;
@@ -1230,14 +1320,16 @@ export default function GameSpeedPage() {
         // --- Dynamic FOV / Tunnel Vision Effect when NOS is active ---
         // Narrower FOV/Higher Depth for mobile portrait to make road look bigger
         const mobileDepthFactor = (isMobile && aspectRatio < 1) ? 1.4 : 1.0;
-        const baseDepth = (1 / Math.tan((FIELD_OF_VIEW / 2) * Math.PI / 180)) * mobileDepthFactor;
+        const activeDiff = localStorage.getItem('nitroquiz_game_difficulty') || 'easy';
+        const activeDiffConfig = getDifficultyConfig(activeDiff);
+        const baseDepth = (1 / Math.tan((activeDiffConfig.fieldOfView / 2) * Math.PI / 180)) * mobileDepthFactor;
         const targetDepth = (keyBoost && nextNos > 0) ? baseDepth * 1.5 : baseDepth; // 50% more depth = Narrower road
 
         // Smoothly interpolate cameraDepth (lerp)
         state.current.cameraDepth = state.current.cameraDepth + (targetDepth - state.current.cameraDepth) * dt * 5;
 
         // Update playerZ as it depends on cameraDepth
-        state.current.playerZ = (CAMERA_HEIGHT * state.current.cameraDepth);
+        state.current.playerZ = (activeDiffConfig.cameraHeight * state.current.cameraDepth);
         playerZ = state.current.playerZ;
 
         const currentRound = Math.floor(state.current.quizQuestionIndex / QUESTIONS_PER_ROUND) + 1;
@@ -1277,7 +1369,7 @@ export default function GameSpeedPage() {
                 // Save current state to localStorage before redirect
                 localStorage.setItem('nitroquiz_game_questionIndex', state.current.quizQuestionIndex.toString());
                 localStorage.setItem('nitroquiz_game_score', state.current.totalQuizScore.toString());
-                router.push(`/quiz/${roomCode}`);
+                router.push(`/player/${roomCode}/quiz`);
             } else {
                 setGameState('finished');
                 endGame();
@@ -1324,6 +1416,7 @@ export default function GameSpeedPage() {
             const bgW = bg.width;
             const bgH = bg.height;
 
+            // 1. Scale to cover screen with extra width for movement
             const extraParallax = isMobile ? 1.5 : 1.3;
             const scaleX = (width / bgW) * extraParallax;
             const scaleY = (height / bgH);
@@ -1332,11 +1425,15 @@ export default function GameSpeedPage() {
             const scaledW = bgW * layerScale;
             const scaledH = bgH * layerScale;
 
+            // 2. Parallax Positioning (Offset calculated in update())
             state.current.bgOffset = state.current.bgOffset || 0;
+
+            // 3. Dynamic Clamping to prevent black bars
             const maxOverflowX = (scaledW - width) / 2;
             const maxAllowedFactor = maxOverflowX / scaledW;
             state.current.bgOffset = Util.limit(state.current.bgOffset, -maxAllowedFactor, maxAllowedFactor);
 
+            // 4. Position and Render
             const finalScrollX = ((width - scaledW) / 2) - (state.current.bgOffset * scaledW);
             const finalScrollY = (height - scaledH) / 2;
 
@@ -1345,93 +1442,20 @@ export default function GameSpeedPage() {
             ctx.restore();
         }
 
-        // === PROCEDURAL CITY SKYLINE ===
-        // Draw silhouette buildings with lit windows above the road horizon
-        const skylineY = height * 0.25; // Horizon line for skyline
-        const skylineH = height * 0.35; // Height range of skyline
-        const buildingColors = ['#0a0e1e', '#0c1020', '#0e1225', '#101428', '#121630'];
-        const windowColors = ['#fbbf24', '#f59e0b', '#60a5fa', '#c084fc', '#f472b6', '#ffffff'];
-
-        // Seed random per position to keep consistent
-        const seed = Math.floor(state.current.bgOffset * 100);
-        const pseudoRand = (i: number) => {
-            const x = Math.sin(i * 127.1 + seed * 311.7) * 43758.5453;
-            return x - Math.floor(x);
-        };
-
-        // Far background - tall skyscrapers (silhouettes)
-        for (let i = 0; i < 30; i++) {
-            const bx = (i / 30) * width - (state.current.bgOffset * width * 0.3);
-            const bw = 15 + pseudoRand(i) * 40;
-            const bh = 40 + pseudoRand(i + 100) * skylineH * 0.8;
-            const by = skylineY + skylineH - bh;
-
-            ctx.fillStyle = buildingColors[i % buildingColors.length];
-            ctx.fillRect(bx, by, bw, bh);
-
-            // Lit windows
-            for (let wy = by + 4; wy < by + bh - 4; wy += 8) {
-                for (let wx = bx + 3; wx < bx + bw - 3; wx += 6) {
-                    if (pseudoRand(wx * 7 + wy * 13 + i) > 0.4) {
-                        ctx.fillStyle = windowColors[Math.floor(pseudoRand(wx + wy * 3) * windowColors.length)];
-                        ctx.globalAlpha = 0.3 + pseudoRand(wx * 3 + wy) * 0.5;
-                        ctx.fillRect(wx, wy, 3, 3);
-                    }
-                }
-            }
-            ctx.globalAlpha = 1.0;
-        }
-
-        // Mid buildings - medium height
-        for (let i = 0; i < 20; i++) {
-            const bx = (i / 20) * width - (state.current.bgOffset * width * 0.5);
-            const bw = 25 + pseudoRand(i + 200) * 50;
-            const bh = 30 + pseudoRand(i + 300) * skylineH * 0.5;
-            const by = skylineY + skylineH - bh;
-
-            ctx.fillStyle = buildingColors[(i + 2) % buildingColors.length];
-            ctx.fillRect(bx, by, bw, bh);
-
-            // Lit windows (bigger)
-            for (let wy = by + 5; wy < by + bh - 5; wy += 10) {
-                for (let wx = bx + 4; wx < bx + bw - 4; wx += 8) {
-                    if (pseudoRand(wx * 11 + wy * 17 + i + 500) > 0.45) {
-                        ctx.fillStyle = windowColors[Math.floor(pseudoRand(wx + wy * 5 + 999) * windowColors.length)];
-                        ctx.globalAlpha = 0.4 + pseudoRand(wx * 5 + wy + 777) * 0.5;
-                        ctx.fillRect(wx, wy, 4, 4);
-                    }
-                }
-            }
-            ctx.globalAlpha = 1.0;
-        }
-
-        // Crescent moon
-        ctx.save();
-        ctx.fillStyle = '#e2e8f0';
-        ctx.globalAlpha = 0.8;
-        ctx.beginPath();
-        ctx.arc(width * 0.8, height * 0.08, 12, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = COLORS.SKY;
-        ctx.beginPath();
-        ctx.arc(width * 0.8 + 5, height * 0.08 - 3, 10, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-        ctx.globalAlpha = 1.0;
-
         let maxy = height;
         let x = 0;
         let dx = - (baseSegment.curve * basePercent);
 
-        // Camera Height based on POV
-        // Higher camera (850) for 1st person to see over the dashboard
-        const currentCameraHeight = state.current.viewMode === 'first' ? 850 : CAMERA_HEIGHT;
+        // Camera Height based on POV and difficulty
+        const _diff = localStorage.getItem('nitroquiz_game_difficulty') || 'easy';
+        const _diffCfg = getDifficultyConfig(_diff);
+        const currentCameraHeight = state.current.viewMode === 'first' ? 850 : _diffCfg.cameraHeight;
 
         // Render Segments
         for (let n = 0; n < DRAW_DISTANCE; n++) {
             const segment = segments[(baseSegment.index + n) % segments.length];
             segment.looped = segment.index < baseSegment.index;
-            segment.fog = Util.exponentialFog(n / DRAW_DISTANCE, FOG_DENSITY);
+            segment.fog = Util.exponentialFog(n / DRAW_DISTANCE, _diffCfg.fogDensity);
             segment.clip = maxy;
 
             Util.project(segment.p1, (playerX * ROAD_WIDTH) - x, playerY + currentCameraHeight, position - (segment.looped ? state.current.trackLength : 0), state.current.cameraDepth, width, height, ROAD_WIDTH);
@@ -1504,7 +1528,9 @@ export default function GameSpeedPage() {
         setMounted(true);
         if (!assetsLoaded) return;
 
-        state.current.playerZ = (CAMERA_HEIGHT * state.current.cameraDepth);
+        const _initDiff = localStorage.getItem('nitroquiz_game_difficulty') || 'easy';
+        const _initDiffCfg = getDifficultyConfig(_initDiff);
+        state.current.playerZ = (_initDiffCfg.cameraHeight * state.current.cameraDepth);
 
         // Start game loop
         let lastTime = performance.now();
@@ -2091,20 +2117,20 @@ export default function GameSpeedPage() {
                     fontFamily: 'var(--font-rajdhani)'
                 }}>
                     <div style={{ textAlign: 'center' }}>
-                        <div style={{
-                            width: '64px', height: '64px',
-                            border: '4px solid rgba(45, 106, 242, 0.3)',
-                            borderTopColor: '#2d6af2',
-                            borderRadius: '50%',
+                        <div style={{ 
+                            width: '64px', height: '64px', 
+                            border: '4px solid rgba(45, 106, 242, 0.3)', 
+                            borderTopColor: '#2d6af2', 
+                            borderRadius: '50%', 
                             margin: '0 auto 1.5rem auto',
-                            animation: 'spin 1s linear infinite'
+                            animation: 'spin 1s linear infinite' 
                         }} />
-                        <p style={{
-                            marginTop: '1rem',
-                            color: '#2d6af2',
-                            fontSize: '1.25rem',
-                            letterSpacing: '0.2em',
-                            textTransform: 'uppercase',
+                        <p style={{ 
+                            marginTop: '1rem', 
+                            color: '#2d6af2', 
+                            fontSize: '1.25rem', 
+                            letterSpacing: '0.2em', 
+                            textTransform: 'uppercase', 
                             fontWeight: 700,
                             animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
                         }}>
@@ -2590,8 +2616,8 @@ export default function GameSpeedPage() {
             {/* Loading Overlay - show while assets load */}
             {mounted && !assetsLoaded && (
                 <div style={{ position: 'fixed', inset: 0, zIndex: 2000, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#020617', color: 'white', fontFamily: 'var(--font-rajdhani)' }}>
-                    <div style={{ width: '40px', height: '40px', border: '4px solid rgba(59,130,246,0.3)', borderTopColor: '#3b82f6', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
-                    <p style={{ marginTop: '1.5rem', fontSize: '0.875rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em', color: '#3b82f6', animation: 'pulse 2s ease-in-out infinite' }}>LOADING TRACK...</p>
+                    <div style={{ width: '64px', height: '64px', border: '4px solid rgba(59,130,246,0.1)', borderTopColor: '#3b82f6', borderRadius: '50%', animation: 'spin 1s linear infinite', boxShadow: '0 0 20px rgba(59,130,246,0.2)' }} />
+                    <p style={{ marginTop: '2rem', fontSize: '1rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.4em', color: '#3b82f6', animation: 'pulse 2s ease-in-out infinite' }}>ESTABLISHING SIGNAL...</p>
                     <style>{`@keyframes spin{to{transform:rotate(360deg)}} @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}`}</style>
                 </div>
             )}

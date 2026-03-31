@@ -36,17 +36,6 @@ const carImageMap: Record<string, string> = {
   blue: "/assets/characters/rico/showroom/showroom1.png",
 };
 
-const logoImageMap: Record<string, string> = {
-  rico: "/assets/characters/rico/showroom/showroom1.png",
-  gecho: "/assets/characters/gecho/showroom/showroom1.png",
-  roadhog: "/assets/characters/roadhog/showroom/showroom1.png",
-  // Legacy fallbacks
-  purple: "/assets/characters/rico/showroom/showroom1.png",
-  white: "/assets/characters/rico/showroom/showroom1.png",
-  black: "/assets/characters/rico/showroom/showroom1.png",
-  aqua: "/assets/characters/rico/showroom/showroom1.png",
-  blue: "/assets/characters/rico/showroom/showroom1.png",
-};
 
 interface Participant {
   id: string;
@@ -175,15 +164,6 @@ export default function PlayerResultPage() {
       "",
     );
     return carImageMap[base] || carImageMap["purple"];
-  })();
-  const currentPlayerAvatar = (() => {
-    if (!currentPlayerData) return logoImageMap["purple"];
-    if (currentPlayerData.avatar_url) return currentPlayerData.avatar_url;
-    const base = (currentPlayerData.car_character || "purple").replace(
-      "-bot",
-      "",
-    );
-    return logoImageMap[base] || logoImageMap["purple"];
   })();
   const getRankSuffix = (rank: number) => {
     if (rank === 1) return "st";
