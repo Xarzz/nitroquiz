@@ -105,11 +105,21 @@ export default function SelectQuizPage() {
             const fetchProfile = async () => {
                 try {
                     if (user.id && user.id.includes('-') && user.id.length > 20) {
-                        const { data } = await supabaseCentral.from('profiles').select('id').eq('auth_user_id', user.id).single();
-                        if (data) setCurrentProfileId(data.id);
+                        const { data } = await supabaseCentral.from('profiles').select('id, favorite_quiz').eq('auth_user_id', user.id).single();
+                        if (data) {
+                            setCurrentProfileId(data.id);
+                            if (data.favorite_quiz && (data.favorite_quiz as any).favorites) {
+                                setFavorites((data.favorite_quiz as any).favorites);
+                            }
+                        }
                     } else if (user.username) {
-                        const { data } = await supabaseCentral.from('profiles').select('id').eq('username', user.username).single();
-                        if (data) setCurrentProfileId(data.id);
+                        const { data } = await supabaseCentral.from('profiles').select('id, favorite_quiz').eq('username', user.username).single();
+                        if (data) {
+                            setCurrentProfileId(data.id);
+                            if (data.favorite_quiz && (data.favorite_quiz as any).favorites) {
+                                setFavorites((data.favorite_quiz as any).favorites);
+                            }
+                        }
                     }
                 } catch (err) { console.error('Failed to map profile id', err); }
             };
@@ -122,13 +132,31 @@ export default function SelectQuizPage() {
         if (savedFavorites) { try { setFavorites(JSON.parse(savedFavorites)); } catch { } }
     }, []);
 
-    const toggleFavorite = (quizId: string, e: React.MouseEvent) => {
+    const toggleFavorite = async (quizId: string, e: React.MouseEvent) => {
         e.stopPropagation();
-        setFavorites(prev => {
-            const updated = prev.includes(quizId) ? prev.filter(id => id !== quizId) : [...prev, quizId];
-            localStorage.setItem('quiz_favorites', JSON.stringify(updated));
-            return updated;
-        });
+        
+        const isFav = favorites.includes(quizId);
+        const newFavs = isFav ? favorites.filter(id => id !== quizId) : [...favorites, quizId];
+        
+        // 1. Update local state & localStorage immediately
+        setFavorites(newFavs);
+        localStorage.setItem('quiz_favorites', JSON.stringify(newFavs));
+
+        // 2. Sync to Database profile
+        if (currentProfileId) {
+            try {
+                const { error } = await supabaseCentral
+                    .from('profiles')
+                    .update({ 
+                        favorite_quiz: { favorites: newFavs } 
+                    })
+                    .eq('id', currentProfileId);
+                
+                if (error) throw error;
+            } catch (err) {
+                console.error("Failed to sync favorites to profile database", err);
+            }
+        }
     };
 
     const fetchQuizzes = async () => {
@@ -162,15 +190,38 @@ export default function SelectQuizPage() {
 
     useEffect(() => {
         let filtered = allItems;
-        filtered = filtered.filter(q => q.isPublic || (currentProfileId && q.creatorId === currentProfileId) || (currentUserId && (q.creatorId === currentUserId || q.creatorId === currentUsername)));
-        if (activeTab === 'favorites') filtered = filtered.filter(q => favorites.includes(q.id));
-        if (activeTab === 'myquiz') {
-            if (currentProfileId) { filtered = filtered.filter(q => q.creatorId === currentProfileId); }
-            else if (currentUserId || currentUsername) { filtered = filtered.filter(q => q.creatorId === currentUserId || q.creatorId === currentUsername); }
-            else { filtered = []; }
+        
+        // Visibility gate: What kuis are searchable/visible?
+        // Must be PUBLIC OR owned by current user (check profile ID, auth ID, or username)
+        filtered = filtered.filter(q => {
+            const isOwner = (currentProfileId && q.creatorId === currentProfileId) || 
+                            (currentUserId && (q.creatorId === currentUserId || q.creatorId === currentUsername));
+            return q.isPublic || isOwner;
+        });
+
+        // Tab-specific filtering
+        if (activeTab === 'favorites') {
+            // Show only kuis that are in the user's favorite list
+            filtered = filtered.filter(q => favorites.includes(q.id));
+        } else if (activeTab === 'myquiz') {
+            // Show only kuis owned by the user
+            filtered = filtered.filter(q => 
+                (currentProfileId && q.creatorId === currentProfileId) || 
+                (currentUserId && (q.creatorId === currentUserId || q.creatorId === currentUsername))
+            );
         }
-        if (searchQuery) { filtered = filtered.filter(q => q.title.toLowerCase().includes(searchQuery.toLowerCase()) || q.description.toLowerCase().includes(searchQuery.toLowerCase())); }
-        if (selectedCategory !== "All") { filtered = filtered.filter(q => q.category.toLowerCase() === selectedCategory.toLowerCase()); }
+        
+        if (searchQuery) { 
+            filtered = filtered.filter(q => 
+                q.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                q.description.toLowerCase().includes(searchQuery.toLowerCase())
+            ); 
+        }
+        
+        if (selectedCategory !== "All") { 
+            filtered = filtered.filter(q => q.category.toLowerCase() === selectedCategory.toLowerCase()); 
+        }
+        
         setQuizzes(filtered);
         setCurrentPage(1);
     }, [allItems, searchQuery, selectedCategory, activeTab, favorites, currentUserId, currentUsername, currentProfileId]);
@@ -241,18 +292,18 @@ export default function SelectQuizPage() {
                         className="max-w-4xl mx-auto w-full bg-[#080d1a]/80 border border-[#2d6af2]/30 rounded-2xl overflow-hidden mb-3 backdrop-blur-2xl shadow-[0_0_50px_rgba(45,106,242,0.12),inset_0_1px_0_rgba(255,255,255,0.06)] flex-shrink-0">
                         {/* ── Cyan accent bar ── */}
                         <div className="h-[2px] w-full" style={{ background: 'linear-gradient(90deg,#1a45c4,#2d6af2,#00ff9d,#2d6af2,#1a45c4)' }} />
-                        <div className="p-4 sm:p-6">
-                        <div className="flex flex-col sm:flex-row gap-4 mb-6 relative">
+                        <div className="p-2 sm:p-3">
+                        <div className="flex flex-col sm:flex-row gap-2.5 mb-3 relative">
                             <div className="flex-1">
                                 <div className="relative group/search">
-                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-3.5 h-3.5 group-focus-within/search:text-[#00ff9d] transition-colors" />
+                                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5 group-focus-within/search:text-[#00ff9d] transition-colors" />
                                     <Input type="text" placeholder={t('select_quiz.search_placeholder')} value={searchInput}
                                         onChange={(e) => { setSearchInput(e.target.value); setSearchQuery(e.target.value); setCurrentPage(1); }}
-                                        className="w-full bg-white/[0.03] border border-white/[0.07] pl-8 h-8 text-white font-display text-[9px] uppercase tracking-widest placeholder:text-gray-600 rounded-lg focus-visible:ring-1 focus-visible:ring-[#00ff9d]/50 focus-visible:border-[#00ff9d]/50 focus-visible:bg-white/[0.05] transition-all" />
+                                        className="w-full bg-white/[0.03] border border-white/[0.07] pl-10 h-9 text-white font-display text-[10px] uppercase tracking-widest placeholder:text-gray-600 rounded-lg focus-visible:ring-1 focus-visible:ring-[#00ff9d]/50 focus-visible:border-[#00ff9d]/50 focus-visible:bg-white/[0.05] transition-all" />
                                 </div>
                             </div>
                             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                                <SelectTrigger className="w-full sm:w-44 h-8 bg-white/[0.03] border border-white/[0.07] text-white focus:border-[#00ff9d]/50 focus:ring-1 focus:ring-[#00ff9d]/50 rounded-lg font-display text-[9px] tracking-wider uppercase">
+                                <SelectTrigger className="w-full sm:w-52 h-12 bg-white/[0.03] border border-white/[0.07] text-white focus:border-[#00ff9d]/50 focus:ring-1 focus:ring-[#00ff9d]/50 rounded-xl font-display text-xs tracking-wider uppercase">
                                     <SelectValue placeholder={t('select_quiz.category_placeholder')} />
                                 </SelectTrigger>
                                 <SelectContent className="bg-[#04060f] border border-[#2d6af2]/30 text-white font-display text-[10px] uppercase tracking-wider backdrop-blur-3xl">
@@ -264,22 +315,19 @@ export default function SelectQuizPage() {
                                 </SelectContent>
                             </Select>
                         </div>
-                        <div className="flex items-center justify-center gap-4">
+                        <div className="flex items-center justify-center gap-2">
                             <button onClick={() => setActiveTab('all')}
-                                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg font-display text-[10px] tracking-wider uppercase transition-all duration-200 ${activeTab === 'all' ? 'bg-[#2d6af2] text-white shadow-[0_0_15px_rgba(45,106,242,0.5)]' : 'bg-white/[0.03] border border-white/[0.07] text-gray-400 hover:text-white hover:border-[#00ff9d]/50'}`}>
-                                <Search size={12} />{t('select_quiz.tabs.quizzes')}
+                                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-display text-xs tracking-wider uppercase transition-all duration-200 ${activeTab === 'all' ? 'bg-[#2d6af2] text-white shadow-[0_0_15px_rgba(45,106,242,0.5)]' : 'bg-white/[0.03] border border-white/[0.07] text-gray-400 hover:text-white hover:border-[#00ff9d]/50'}`}>
+                                <Search size={14} />{t('select_quiz.tabs.quizzes')}
                             </button>
                             <button onClick={() => setActiveTab('favorites')}
-                                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg font-display text-[10px] tracking-wider uppercase transition-all duration-200 ${activeTab === 'favorites' ? 'bg-gradient-to-r from-pink-600 to-red-500 text-white shadow-[0_0_15px_rgba(236,72,153,0.4)]' : 'bg-black/40 border border-pink-500/20 text-gray-400 hover:text-pink-400 hover:border-pink-500/50'}`}>
-                                <Heart size={12} className={activeTab === 'favorites' ? 'fill-white' : ''} />
+                                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-display text-xs tracking-wider uppercase transition-all duration-200 ${activeTab === 'favorites' ? 'bg-gradient-to-r from-pink-600 to-red-500 text-white shadow-[0_0_15px_rgba(236,72,153,0.4)]' : 'bg-black/40 border border-pink-500/20 text-gray-400 hover:text-pink-400 hover:border-pink-500/50'}`}>
+                                <Heart size={14} className={activeTab === 'favorites' ? 'fill-white' : ''} />
                                 {t('select_quiz.tabs.favorites')}
-                                {favorites.length > 0 && (
-                                    <span className={`ml-1 px-1.5 py-0.5 rounded-full text-[9px] font-bold ${activeTab === 'favorites' ? 'bg-white/20' : 'bg-pink-500/20 text-pink-400'}`}>{favorites.length}</span>
-                                )}
                             </button>
                             <button onClick={() => setActiveTab('myquiz')}
-                                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg font-display text-[10px] tracking-wider uppercase transition-all duration-200 ${activeTab === 'myquiz' ? 'bg-gradient-to-r from-[#00ff9d] to-[#04060f] text-white font-bold shadow-[0_0_15px_rgba(0,255,157,0.5)]' : 'bg-white/[0.03] border border-white/[0.07] text-gray-400 hover:text-[#00ff9d] hover:border-[#00ff9d]/50'}`}>
-                                <FileText size={12} />{t('select_quiz.tabs.my_quiz')}
+                                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-display text-xs tracking-wider uppercase transition-all duration-200 ${activeTab === 'myquiz' ? 'bg-gradient-to-r from-[#00ff9d] to-[#04060f] text-white font-bold shadow-[0_0_15px_rgba(0,255,157,0.5)]' : 'bg-white/[0.03] border border-white/[0.07] text-gray-400 hover:text-[#00ff9d] hover:border-[#00ff9d]/50'}`}>
+                                <FileText size={14} />{t('select_quiz.tabs.my_quiz')}
                             </button>
                         </div>
                         </div>
@@ -343,7 +391,7 @@ export default function SelectQuizPage() {
 
                                                 {/* Favorite button */}
                                                 <button onClick={(e) => toggleFavorite(quiz.id, e)}
-                                                    className={`absolute top-4 right-3 z-20 p-2 rounded-full transition-all duration-200 backdrop-blur-sm ${isFavorited ? 'bg-pink-500/30 border border-pink-500/50 text-pink-400 shadow-[0_0_12px_rgba(236,72,153,0.4)] hover:bg-pink-500/50' : 'bg-black/50 border border-white/10 text-gray-500 hover:text-pink-400 hover:border-pink-500/30 hover:bg-pink-500/10'}`}>
+                                                    className={`absolute top-4 right-3 z-30 p-2 rounded-full transition-all duration-200 backdrop-blur-sm ${isFavorited ? 'bg-pink-500/30 border border-pink-500/50 text-pink-400 shadow-[0_0_12px_rgba(236,72,153,0.4)] hover:bg-pink-500/50' : 'bg-black/50 border border-white/10 text-gray-500 hover:text-pink-400 hover:border-pink-500/30 hover:bg-pink-500/10'}`}>
                                                     <Heart size={14} className={isFavorited ? 'fill-pink-400' : ''} />
                                                 </button>
 

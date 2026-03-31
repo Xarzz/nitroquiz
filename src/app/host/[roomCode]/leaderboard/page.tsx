@@ -223,8 +223,8 @@ export default function LeaderboardPage() {
       </div>
 
       <div className="w-full max-w-5xl z-20 px-4 sm:px-6">
-        {/* Floating Side Buttons */}
-        <div className="fixed left-3 md:left-6 top-1/2 -translate-y-1/2 flex flex-col gap-4 z-50">
+        {/* Floating Side Buttons - Desktop only */}
+        <div className="fixed left-6 top-1/2 -translate-y-1/2 flex flex-col gap-4 z-50 hidden md:flex">
           <Button
             onClick={() => router.push("/")}
             className="w-12 h-12 rounded-full p-0 bg-black/60 backdrop-blur-md border border-[#2d6af2]/50 hover:bg-[#2d6af2]/20 hover:scale-110 flex items-center justify-center text-[#2d6af2] shadow-[0_0_15px_rgba(45,106,242,0.4)] transition-all"
@@ -241,7 +241,8 @@ export default function LeaderboardPage() {
           </Button>
         </div>
 
-        <div className="fixed right-3 md:right-6 top-1/2 -translate-y-1/2 flex flex-col gap-4 z-50">
+        {/* Floating Side Buttons - Desktop only */}
+        <div className="fixed right-6 top-1/2 -translate-y-1/2 flex flex-col gap-4 z-50 hidden md:flex">
           <Button
             onClick={() =>
               sessionId &&
@@ -490,7 +491,41 @@ export default function LeaderboardPage() {
             </div>
           </motion.div>
         )}
-        {/* Back Buttons completely removed and moved to floating sidebar */}
+        {/* Actions Mobile (sm ke bawah) */}
+        <div className="md:hidden bg-black/40 backdrop-blur-md w-full text-center py-4 fixed bottom-0 left-0 z-50 flex items-center justify-center space-x-4 border-t border-white/5 px-4 shadow-[0_-10px_20px_rgba(0,0,0,0.5)]">
+          {/* Tombol Home */}
+          <button
+            onClick={() => router.push("/")}
+            className="flex-1 bg-black/40 border border-[#2d6af2]/50 rounded-xl text-[#2d6af2] py-3.5 text-xs font-display font-bold tracking-widest uppercase hover:bg-[#2d6af2]/10 transition-all flex items-center justify-center gap-2"
+          >
+            <House size={16} />
+            {t("host_leaderboard.home_tooltip")}
+          </button>
+
+          {/* Tombol Play Again (Restart) */}
+          <button
+            onClick={() => router.push(`/host/${roomCode}/lobby`)}
+            className="flex-1 bg-[#00ff9d] border border-white/20 rounded-xl text-black py-3.5 text-xs font-display font-bold tracking-widest uppercase hover:bg-[#00ff9d]/80 transition-all flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(0,255,157,0.3)]"
+          >
+            <RotateCcw size={16} />
+            {t("host_leaderboard.play_again_tooltip")}
+          </button>
+
+          {/* Tombol Statistics */}
+          <button
+            onClick={() =>
+              sessionId &&
+              window.open(
+                `https://gameforsmartnewui.vercel.app/stat/${sessionId}`,
+                "_blank",
+              )
+            }
+            className="flex-1 bg-black/40 border border-[#f59e0b]/50 rounded-xl text-[#f59e0b] py-3.5 text-xs font-display font-bold tracking-widest uppercase hover:bg-[#f59e0b]/10 transition-all flex items-center justify-center gap-2"
+          >
+            <BarChart2 size={16} />
+            {t("host_leaderboard.stats_tooltip")}
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -189,7 +189,7 @@
     "home_tooltip": "Beranda",
     "play_again_tooltip": "Main Lagi",
     "stats_tooltip": "Statistik",
-    "rank": "PERINGKAT",
+    "rank": "JUARA",
     "player": "PEMAIN",
     "score": "SKOR",
     "time": "WAKTU"
@@ -227,7 +227,7 @@
   "player_result": {
     "establishing_signal": "Memantapkan Sinyal...",
     "waiting_others": "Menunggu pemain lain...",
-    "rank": "PERINGKAT",
+    "rank": "JUARA",
     "score": "SKOR",
     "correct": "BENAR",
     "time": "WAKTU",
