@@ -29,12 +29,34 @@ const carImageMap: Record<string, string> = {
   blue: "/assets/characters/rico/showroom/showroom1.png",
 };
 
-const logoImageMap: Record<string, string> = {
-  purple: "/assets/characters/rico/logo/logo1.png",
-  white: "/assets/characters/rico/logo/logo1.png",
-  black: "/assets/characters/rico/logo/logo1.png",
-  aqua: "/assets/characters/rico/logo/logo1.png",
-  blue: "/assets/characters/rico/logo/logo1.png",
+
+// Helper: Generate initials from a name
+const getInitials = (name: string): string => {
+  if (!name) return "?";
+  const parts = name.trim().split(/\s+/);
+  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+  return name.slice(0, 2).toUpperCase();
+};
+
+// Initials avatar colors based on nickname hash
+const AVATAR_COLORS = ['#3b82f6', '#ef4444', '#f59e0b', '#8b5cf6', '#10b981', '#ec4899', '#06b6d4', '#f97316'];
+const getAvatarColor = (name: string): string => {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+};
+
+// Reusable InitialsAvatar component
+const InitialsAvatar = ({ name, size = 'md' }: { name: string; size?: 'sm' | 'md' | 'lg' }) => {
+  const fontSize = size === 'lg' ? 'text-2xl' : size === 'md' ? 'text-base' : 'text-xs';
+  return (
+    <div
+      className={`w-full h-full rounded-full flex items-center justify-center ${fontSize} font-black text-white select-none`}
+      style={{ backgroundColor: getAvatarColor(name) }}
+    >
+      {getInitials(name)}
+    </div>
+  );
 };
 
 interface Participant {
@@ -266,18 +288,7 @@ export default function LeaderboardPage() {
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <img
-                          src={
-                            logoImageMap[
-                              (secondPlace.car_character || "white").replace(
-                                "-bot",
-                                "",
-                              )
-                            ] || "/assets/characters/rico/logo/logo1.png"
-                          }
-                          alt="Logo"
-                          className="w-full h-full object-contain p-0 scale-[2.1]"
-                        />
+                        <InitialsAvatar name={secondPlace.nickname} size="sm" />
                       )}
                     </div>
                   </div>
@@ -323,18 +334,7 @@ export default function LeaderboardPage() {
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <img
-                          src={
-                            logoImageMap[
-                              (firstPlace.car_character || "purple").replace(
-                                "-bot",
-                                "",
-                              )
-                            ] || "/assets/characters/rico/logo/logo1.png"
-                          }
-                          alt="Logo"
-                          className="w-full h-full object-contain p-0 scale-[2.1]"
-                        />
+                        <InitialsAvatar name={firstPlace.nickname} size="md" />
                       )}
                     </div>
                   </div>
@@ -371,18 +371,7 @@ export default function LeaderboardPage() {
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <img
-                          src={
-                            logoImageMap[
-                              (thirdPlace.car_character || "black").replace(
-                                "-bot",
-                                "",
-                              )
-                            ] || "/assets/characters/rico/logo/logo1.png"
-                          }
-                          alt="Logo"
-                          className="w-full h-full object-contain p-0 scale-[2.1]"
-                        />
+                        <InitialsAvatar name={thirdPlace.nickname} size="sm" />
                       )}
                     </div>
                   </div>
@@ -462,30 +451,15 @@ export default function LeaderboardPage() {
                               <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/50 border border-white/10 flex items-center justify-center text-lg shadow-inner overflow-hidden flex-shrink-0">
                                 {player.eliminated
                                   ? "💀"
-                                  : (() => {
-                                      if (player.avatar_url) {
-                                        return (
-                                          <img
-                                            src={player.avatar_url}
-                                            alt="Avatar"
-                                            className="w-full h-full object-cover"
-                                          />
-                                        );
-                                      }
-                                      const baseCar = (
-                                        player.car_character || "purple"
-                                      ).replace("-bot", "");
-                                      const logoSrc =
-                                        logoImageMap[baseCar] ||
-                                        "/assets/logo/logo1.png";
-                                      return (
-                                        <img
-                                          src={logoSrc}
-                                          alt="car"
-                                          className="w-full h-full object-contain p-0 scale-[2.1]"
-                                        />
-                                      );
-                                    })()}
+                                  : player.avatar_url ? (
+                                      <img
+                                        src={player.avatar_url}
+                                        alt="Avatar"
+                                        className="w-full h-full object-cover"
+                                      />
+                                    ) : (
+                                      <InitialsAvatar name={player.nickname} size="sm" />
+                                    )}
                               </div>
                               <p
                                 className={`font-display tracking-wider uppercase text-xs sm:text-sm truncate ${isTop3 ? "text-white" : "text-gray-300"} ${index === 0 && "text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]"}`}

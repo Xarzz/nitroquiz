@@ -270,7 +270,7 @@ export default function Home() {
                 {/* User Header */}
                 <div className="p-6 bg-gradient-to-br from-white/[0.05] to-transparent border-b border-white/5">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-[#2d6af2]/20 flex items-center justify-center border border-[#2d6af2]/30 overflow-hidden">
+                    <div className="w-12 h-12 rounded-full overflow-hidden border border-[#2d6af2]/30">
                       {user.avatar ? (
                         <Image
                           src={user.avatar}
@@ -280,7 +280,21 @@ export default function Home() {
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <UserIcon className="w-6 h-6 text-[#2d6af2]" />
+                        <div
+                          className="w-full h-full flex items-center justify-center text-sm font-black text-white select-none"
+                          style={{
+                            backgroundColor: (() => {
+                              const colors = ['#3b82f6','#ef4444','#f59e0b','#8b5cf6','#10b981','#ec4899','#06b6d4','#f97316'];
+                              let hash = 0;
+                              for (let i = 0; i < user.username.length; i++) hash = user.username.charCodeAt(i) + ((hash << 5) - hash);
+                              return colors[Math.abs(hash) % colors.length];
+                            })()
+                          }}
+                        >
+                          {user.username.trim().split(/\s+/).length >= 2
+                            ? (user.username.trim().split(/\s+/)[0][0] + user.username.trim().split(/\s+/)[1][0]).toUpperCase()
+                            : user.username.slice(0, 2).toUpperCase()}
+                        </div>
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
