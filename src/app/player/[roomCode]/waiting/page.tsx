@@ -415,7 +415,7 @@ export default function PlayerWaitingPage() {
                                             </div>
                                             {/* Name */}
                                             <div className="text-center pb-3 px-3">
-                                                <p className="font-display text-white text-xs font-bold uppercase tracking-[0.18em] truncate">{username}</p>
+                                                <p className="font-display text-white text-xs font-bold uppercase tracking-[0.18em] truncate" title={username}>{username}</p>
                                                 <p className="font-display text-[#00ff9d] text-[9px] uppercase tracking-widest mt-1 opacity-80">{assignedChar.name}</p>
                                             </div>
                                         </div>
@@ -443,7 +443,7 @@ export default function PlayerWaitingPage() {
                                                         <img src={carSrc} alt="car" className="w-full max-h-[110px] object-contain drop-shadow-[0_6px_20px_rgba(0,0,0,0.8)]" />
                                                     </div>
                                                     <div className="text-center pb-3 px-3">
-                                                        <p className="font-display text-white text-xs font-bold uppercase tracking-[0.18em] truncate">{p.nickname}</p>
+                                                        <p className="font-display text-white text-xs font-bold uppercase tracking-[0.18em] truncate" title={p.nickname}>{p.nickname}</p>
                                                         <p className="font-display text-[#00d4ff] text-[9px] uppercase tracking-widest mt-1 opacity-80">{pCarName}</p>
                                                     </div>
                                                 </div>

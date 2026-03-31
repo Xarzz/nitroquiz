@@ -280,6 +280,7 @@ function PlayerCard({
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
             }}
+            title={player.nickname}
           >
             {player.nickname}
           </span>

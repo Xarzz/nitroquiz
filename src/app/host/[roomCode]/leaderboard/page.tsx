@@ -226,7 +226,7 @@ export default function LeaderboardPage() {
         {/* Floating Side Buttons */}
         <div className="fixed left-3 md:left-6 top-1/2 -translate-y-1/2 flex flex-col gap-4 z-50">
           <Button
-            onClick={() => router.push("/host/select-quiz")}
+            onClick={() => router.push("/")}
             className="w-12 h-12 rounded-full p-0 bg-black/60 backdrop-blur-md border border-[#2d6af2]/50 hover:bg-[#2d6af2]/20 hover:scale-110 flex items-center justify-center text-[#2d6af2] shadow-[0_0_15px_rgba(45,106,242,0.4)] transition-all"
             title={t("host_leaderboard.home_tooltip")}
           >
@@ -273,7 +273,7 @@ export default function LeaderboardPage() {
               >
                 <div className="mb-2 text-center">
                   <div className="bg-black/60 border border-slate-300/40 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-[0_4px_15px_rgba(0,0,0,0.5)]">
-                    <p className="font-display text-slate-200 text-xs sm:text-sm tracking-wider truncate max-w-[100px]">
+                    <p className="font-display text-slate-200 text-xs sm:text-sm tracking-wider truncate max-w-[100px]" title={secondPlace.nickname}>
                       {secondPlace.nickname}
                     </p>
                   </div>
@@ -317,7 +317,7 @@ export default function LeaderboardPage() {
                 </motion.div>
                 <div className="mb-2 text-center">
                   <div className="bg-[#1a1500]/80 border border-yellow-500/60 backdrop-blur-md px-4 sm:px-5 py-2 rounded-xl shadow-[0_0_25px_rgba(250,204,21,0.3)]">
-                    <p className="font-display text-yellow-500 text-sm sm:text-lg font-bold tracking-widest uppercase truncate max-w-[130px]">
+                    <p className="font-display text-yellow-500 text-sm sm:text-lg font-bold tracking-widest uppercase truncate max-w-[130px]" title={firstPlace.nickname}>
                       {firstPlace.nickname}
                     </p>
                   </div>
@@ -356,7 +356,7 @@ export default function LeaderboardPage() {
               >
                 <div className="mb-2 text-center">
                   <div className="bg-black/60 border border-orange-700/40 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-[0_4px_15px_rgba(0,0,0,0.5)]">
-                    <p className="font-display text-orange-200 text-xs sm:text-sm tracking-wider truncate max-w-[100px]">
+                    <p className="font-display text-orange-200 text-xs sm:text-sm tracking-wider truncate max-w-[100px]" title={thirdPlace.nickname}>
                       {thirdPlace.nickname}
                     </p>
                   </div>
@@ -463,6 +463,7 @@ export default function LeaderboardPage() {
                               </div>
                               <p
                                 className={`font-display tracking-wider uppercase text-xs sm:text-sm truncate ${isTop3 ? "text-white" : "text-gray-300"} ${index === 0 && "text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]"}`}
+                                title={player.nickname}
                               >
                                 {player.nickname}
                               </p>
