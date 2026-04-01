@@ -172,7 +172,10 @@
     "launching": "LAUNCHING RACE...",
     "invite_friends": "Invite Friends",
     "invite_groups": "Invite Groups",
-    "share_link": "Share Link"
+    "share_link": "Share Link",
+    "exit_dialog_title": "Exit Lobby?",
+    "exit_dialog_desc": "Are you sure you want to exit?",
+    "confirm_exit": "EXIT"
   },
   "host_monitor": {
     "new": "NEW",
@@ -185,7 +188,10 @@
     "ending": "ENDING...",
     "end_race": "END RACE",
     "leaderboard": "LEADERBOARD",
-    "waiting": "Waiting for Grid..."
+    "waiting": "Waiting for Grid...",
+    "end_game_title": "End Race?",
+    "end_game_desc": "Are you sure you want to end?",
+    "confirm_end": "END"
   },
   "host_leaderboard": {
     "loading": "Establishing Signal...",

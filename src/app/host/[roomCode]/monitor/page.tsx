@@ -5,6 +5,14 @@ import { Users, Skull } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { useTranslation } from "react-i18next";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogTitle, 
+  DialogOverlay 
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { LogOut, Flag } from "lucide-react";
 
 const logoImageMap: Record<string, string> = {
   purple: "/assets/characters/rico/logo/logo1.png",
@@ -421,6 +429,7 @@ export default function GameMonitorPage() {
   const [totalQuestions, setTotalQuestions] = useState(5);
   const [timeLeft, setTimeLeft] = useState(300);
   const [isEnding, setIsEnding] = useState(false);
+  const [endGameDialogOpen, setEndGameDialogOpen] = useState(false);
 
   const participantsRef = useRef(participants);
   useEffect(() => {
@@ -673,7 +682,7 @@ export default function GameMonitorPage() {
             style={{ height: "36px", objectFit: "contain", opacity: 0.75 }}
           />
           <button
-            onClick={handleEndRace}
+            onClick={() => setEndGameDialogOpen(true)}
             disabled={isEnding}
             style={{
               padding: "9px 22px",
@@ -745,6 +754,38 @@ export default function GameMonitorPage() {
           )}
         </div>
       </div>
+
+      {/* ═══ END GAME CONFIRMATION DIALOG ═══ */}
+      <Dialog open={endGameDialogOpen} onOpenChange={setEndGameDialogOpen}>
+        <DialogOverlay className="bg-black/90 backdrop-blur-md" />
+        <DialogContent className="bg-[#11111a] border border-red-500/30 text-white p-8 max-w-sm rounded-[2rem] shadow-[0_0_100px_rgba(239,68,68,0.2)]">
+          <div className="flex flex-col items-center">
+            <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mb-6 border border-red-500/20">
+              <Flag size={32} className="text-red-500" />
+            </div>
+            <DialogTitle className="text-xl font-display uppercase tracking-[0.2em] text-center mb-2">
+              {t('host_monitor.end_game_title')}
+            </DialogTitle>
+            <p className="text-white/40 text-[11px] text-center font-display tracking-widest uppercase mb-8">
+              {t('host_monitor.end_game_desc')}
+            </p>
+            <div className="flex gap-4 w-full">
+              <Button onClick={() => setEndGameDialogOpen(false)} variant="ghost" className="flex-1 border border-white/10 h-12 rounded-xl font-display uppercase text-[10px] tracking-widest text-gray-400 hover:bg-white/5 hover:text-white">
+                {t('host_lobby.cancel')}
+              </Button>
+              <Button 
+                onClick={() => {
+                  setEndGameDialogOpen(false);
+                  handleEndRace();
+                }}
+                className="flex-1 bg-red-500 hover:bg-red-600 text-white h-12 rounded-xl font-display uppercase text-[10px] tracking-widest shadow-[0_5px_15px_rgba(239,68,68,0.3)] transition-all hover:scale-105 active:scale-95"
+              >
+                {t('host_monitor.confirm_end')}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <style>{`
         .leaderboard-grid {

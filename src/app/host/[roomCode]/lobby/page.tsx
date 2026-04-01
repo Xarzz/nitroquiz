@@ -64,6 +64,7 @@ export default function HostLobby() {
   const [isMuted, setIsMuted] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState<any>(null);
   const [kickDialogOpen, setKickDialogOpen] = useState(false);
+  const [exitDialogOpen, setExitDialogOpen] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -255,7 +256,7 @@ export default function HostLobby() {
               <div className="shrink-0 border-t border-white/5 bg-gradient-to-t from-black/40 to-transparent relative z-10">
                 <div className="flex gap-2">
                   <Button
-                    onClick={() => router.push("/host/select-quiz")}
+                    onClick={() => setExitDialogOpen(true)}
                     className="bg-red-500/10 border border-red-500/20 text-red-500 hover:bg-red-500 hover:text-white rounded-xl h-12 px-3 sm:px-4 font-display text-sm font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 shrink-0"
                   >
                     <LogOut size={16} className="rtl:rotate-180" />
@@ -385,6 +386,35 @@ export default function HostLobby() {
             <Button onClick={confirmKick} className="flex-1 bg-red-500 hover:bg-red-600 text-white h-12 rounded-xl font-display uppercase text-[10px] tracking-widest">
               KICK
             </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* ═══ EXIT CONFIRMATION DIALOG ═══ */}
+      <Dialog open={exitDialogOpen} onOpenChange={setExitDialogOpen}>
+        <DialogOverlay className="bg-black/90 backdrop-blur-md" />
+        <DialogContent className="bg-[#11111a] border border-red-500/30 text-white p-8 max-w-sm rounded-[2rem] shadow-[0_0_100px_rgba(239,68,68,0.2)]">
+          <div className="flex flex-col items-center">
+            <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mb-6 border border-red-500/20">
+              <LogOut size={32} className="text-red-500" />
+            </div>
+            <DialogTitle className="text-xl font-display uppercase tracking-[0.2em] text-center mb-2">
+              {t('host_lobby.exit_dialog_title')}
+            </DialogTitle>
+            <p className="text-white/40 text-[11px] text-center font-display tracking-widest uppercase mb-8">
+              {t('host_lobby.exit_dialog_desc')}
+            </p>
+            <div className="flex gap-4 w-full">
+              <Button onClick={() => setExitDialogOpen(false)} variant="ghost" className="flex-1 border border-white/10 h-12 rounded-xl font-display uppercase text-[10px] tracking-widest text-gray-400 hover:bg-white/5 hover:text-white">
+                {t('host_lobby.cancel')}
+              </Button>
+              <Button 
+                onClick={() => router.push("/host/select-quiz")} 
+                className="flex-1 bg-red-500 hover:bg-red-600 text-white h-12 rounded-xl font-display uppercase text-[10px] tracking-widest shadow-[0_5px_15px_rgba(239,68,68,0.3)] transition-all hover:scale-105 active:scale-95"
+              >
+                {t('host_lobby.confirm_exit')}
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
