@@ -211,7 +211,7 @@ export default function Home() {
       <div className="scanlines"></div>
 
       {/* Top Bar: Corner Logo */}
-      <div className="fixed top-0 left-0 right-0 z-[90] px-4 md:px-8 py-5 flex items-start justify-between pointer-events-none">
+      <div className="fixed top-0 left-0 z-[90] px-4 md:px-8 py-5 pointer-events-none flex items-start">
         {/* Logo (Top Left) */}
         <div className="pointer-events-auto">
           <Image
@@ -343,10 +343,10 @@ export default function Home() {
                       <div className="p-2 rounded-xl bg-gray-500/10 group-hover:bg-[#2d6af2]/20 transition-colors">
                         <Globe className="w-4 h-4 text-[#2d6af2]" />
                       </div>
-                      <span className="text-sm font-medium tracking-wide flex-1 text-left">
+                      <span className="text-sm font-medium tracking-wide flex-1 text-start">
                         {t('homepage.menu.language')}
                       </span>
-                      <ChevronRight className={`w-4 h-4 transition-transform ${isLanguageOpen ? 'rotate-90' : ''}`} />
+                      <ChevronRight className={`w-4 h-4 transition-transform rtl:scale-x-[-1] ${isLanguageOpen ? 'rotate-90' : ''}`} />
                     </button>
 
                     <AnimatePresence>
@@ -375,7 +375,7 @@ export default function Home() {
                                 : "hover:bg-white/5 text-gray-500 hover:text-gray-300"
                                 }`}
                             >
-                              <div className="flex flex-col items-start translate-x-1">
+                              <div className="flex flex-col items-start translate-x-1 rtl:-translate-x-1">
                                 <span className="text-xs font-bold uppercase tracking-widest">{lang.label}</span>
                               </div>
                               {i18n.language.startsWith(lang.code) && (
@@ -482,7 +482,7 @@ export default function Home() {
                 ].map((step, i) => (
                   <motion.div
                     key={i}
-                    initial={{ opacity: 0, x: -10 }}
+                    initial={{ opacity: 0, x: i18n.language === 'ar' ? 10 : -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.1 }}
                     className={`flex items-start gap-4 p-4 rounded-2xl border ${step.bg} transition-all`}
@@ -573,7 +573,7 @@ export default function Home() {
         <div className="flex flex-col md:flex-row gap-5 lg:gap-8 w-full justify-center items-stretch max-w-4xl px-4 md:px-0">
           {/* Host Card */}
           <div className="host-card rounded-[2rem] p-5 md:p-6 lg:p-7 flex-1 flex flex-col items-center justify-between gap-6 relative overflow-hidden group transition-all duration-300">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-[#00ff9d]/20 to-transparent rounded-bl-full pointer-events-none"></div>
+            <div className="absolute top-0 end-0 w-24 h-24 bg-gradient-to-bl rtl:bg-gradient-to-br from-[#00ff9d]/20 to-transparent rounded-bl-full rtl:rounded-br-full pointer-events-none"></div>
             <div className="w-full text-center">
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#000000]/50 border border-white/10 mb-3 shadow-[0_4px_15px_rgba(0,0,0,0.5)]">
                 <Gamepad2 className="w-6 h-6 text-[#00ff9d]" />
@@ -597,7 +597,7 @@ export default function Home() {
 
           {/* Join Card */}
           <div className="join-card rounded-[2rem] p-5 md:p-6 lg:p-7 flex-1 flex flex-col items-center justify-center gap-6 relative overflow-hidden group transition-all duration-300">
-            <div className="absolute top-0 left-0 w-20 h-20 bg-gradient-to-br from-[#2d6af2]/20 to-transparent rounded-br-full pointer-events-none"></div>
+            <div className="absolute top-0 start-0 w-20 h-20 bg-gradient-to-br rtl:bg-gradient-to-bl from-[#2d6af2]/20 to-transparent rounded-br-full rtl:rounded-bl-full pointer-events-none"></div>
             <div className="w-full text-center">
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#000000]/50 border border-white/10 mb-3 shadow-[0_4px_15px_rgba(0,0,0,0.5)]">
                 <LogIn className="w-6 h-6 text-[#2d6af2]" />

@@ -543,3 +543,37 @@ h6 {
     transform: translateZ(0);
   }
 }
+
+/* RTL Support */
+[dir="rtl"] {
+  .gradient-text,
+  .btn-primary,
+  .btn-primary:hover,
+  .progress-fill {
+    background-image: linear-gradient(to left, var(--tw-gradient-stops, #7C3AED, #EC4899)) !important;
+  }
+
+  /* Specific gradient overrides since they don't use --tw-gradient-stops */
+  .gradient-text {
+    background-image: linear-gradient(to left, #a78bfa, #f472b6) !important;
+  }
+  
+  .btn-primary {
+    background: linear-gradient(to left, #7C3AED, #EC4899) !important;
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(to left, #6d28d9, #db2777) !important;
+  }
+
+  .progress-fill {
+    background: linear-gradient(to left, #7C3AED, #EC4899) !important;
+  }
+
+  /* Mirroring utilities that are physical but should be logical */
+  .border-r { border-right-width: 0; border-left-width: 1px; }
+  .border-l { border-left-width: 0; border-right-width: 1px; }
+  
+  /* Mirroring Framer Motion physical transforms if they aren't handled by language checks */
+  /* (Done in component level for better control) */
+}

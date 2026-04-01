@@ -169,7 +169,10 @@
     "steady": "تأهب",
     "go_race": "انطلق",
     "go": "انطلق!",
-    "launching": "إطلاق السباق..."
+    "launching": "إطلاق السباق...",
+    "invite_friends": "دعوة الأصدقاء",
+    "invite_groups": "دعوة المجموعات",
+    "share_link": "مشاركة الرابط"
   },
   "host_monitor": {
     "new": "جديد",

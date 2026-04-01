@@ -169,7 +169,10 @@
     "steady": "STEADY",
     "go_race": "GO RACE",
     "go": "GO!",
-    "launching": "LAUNCHING RACE..."
+    "launching": "LAUNCHING RACE...",
+    "invite_friends": "Invite Friends",
+    "invite_groups": "Invite Groups",
+    "share_link": "Share Link"
   },
   "host_monitor": {
     "new": "NEW",

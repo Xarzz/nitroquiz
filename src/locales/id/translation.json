@@ -169,7 +169,10 @@
     "steady": "SIAP",
     "go_race": "BALAP",
     "go": "GAS!",
-    "launching": "MELUNCURKAN BALAPAN..."
+    "launching": "MELUNCURKAN BALAPAN...",
+    "invite_friends": "Undang Teman",
+    "invite_groups": "Undang Grup",
+    "share_link": "Bagikan Tautan"
   },
   "host_monitor": {
     "new": "BARU",
