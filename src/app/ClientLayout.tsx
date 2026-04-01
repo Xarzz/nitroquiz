@@ -45,13 +45,15 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
     if (isClient && currentLang) {
       document.documentElement.lang = currentLang;
 
-      // Update body class for Arabic, but keep document LTR so layout doesn't flip
-      document.documentElement.dir = 'ltr';
+      // Set document direction: RTL for Arabic, LTR for others
+      document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
       
       if (currentLang === 'ar') {
         document.body.classList.add('lang-ar');
+        document.body.classList.add('rtl');
       } else {
         document.body.classList.remove('lang-ar');
+        document.body.classList.remove('rtl');
       }
     }
   }, [currentLang, isClient]);

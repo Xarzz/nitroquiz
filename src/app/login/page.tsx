@@ -177,7 +177,7 @@ export default function LoginPage() {
       <div className="relative z-10 w-full max-w-[380px] mx-4">
 
         {/* Top Bar for Login */}
-        <div className="fixed top-0 left-0 right-0 z-[90] px-4 md:px-8 py-5 flex items-start justify-between pointer-events-none">
+        <div className="fixed top-0 inset-x-0 z-[90] px-4 md:px-8 py-5 flex items-start justify-between pointer-events-none">
           <div className="pointer-events-auto">
             <Image
               src="/assets/logo/logo1.png"
@@ -261,7 +261,7 @@ export default function LoginPage() {
 
               {/* Identifier (Email/Username) */}
               <div className="space-y-1.5">
-                <label className="text-gray-500 text-[10px] font-display tracking-[0.18em] uppercase">{t('login.form.identifier_label')}</label>
+                <label className="block text-gray-500 text-[10px] font-display tracking-[0.18em] uppercase text-start">{t('login.form.identifier_label')}</label>
                 <div className="relative">
                   <input
                     type="text"
@@ -272,16 +272,16 @@ export default function LoginPage() {
                     {...register("identifier")}
                   />
                   {identifierVal && !errors.identifier && (
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-[#00ff9d] shadow-[0_0_6px_#00ff9d]" />
+                    <div className="absolute end-3 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-[#00ff9d] shadow-[0_0_6px_#00ff9d]" />
                   )}
                 </div>
-                {errors.identifier && <p className="text-red-400 text-[10px] pl-1">{t(errors.identifier.message as string)}</p>}
+                {errors.identifier && <p className="text-red-400 text-[10px] ps-1 text-start">{t(errors.identifier.message as string)}</p>}
               </div>
 
               {/* Password */}
               <div className="space-y-1.5">
                 <div className="flex justify-between items-center">
-                  <label className="text-gray-500 text-[10px] font-display tracking-[0.18em] uppercase">{t('login.form.password_label')}</label>
+                  <label className="text-gray-500 text-[10px] font-display tracking-[0.18em] uppercase text-start">{t('login.form.password_label')}</label>
                 </div>
                 <div className="relative">
                   <input
@@ -289,18 +289,18 @@ export default function LoginPage() {
                     placeholder={t('login.form.password_placeholder')}
                     autoComplete="current-password"
                     disabled={isSubmitting}
-                    className={`w-full h-11 bg-white/[0.03] border ${errors.password ? 'border-red-500/40' : 'border-white/[0.07]'} text-white text-sm px-4 pr-11 rounded-xl outline-none transition-all placeholder:text-gray-700 focus:border-[#2d6af2]/60 focus:bg-white/[0.05] focus:shadow-[0_0_0_3px_rgba(45,106,242,0.1)] font-mono`}
+                    className={`w-full h-11 bg-white/[0.03] border ${errors.password ? 'border-red-500/40' : 'border-white/[0.07]'} text-white text-sm ps-4 pe-11 rounded-xl outline-none transition-all placeholder:text-gray-700 focus:border-[#2d6af2]/60 focus:bg-white/[0.05] focus:shadow-[0_0_0_3px_rgba(45,106,242,0.1)] font-mono`}
                     {...register("password")}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-400 transition-colors"
+                    className="absolute end-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-400 transition-colors"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
-                {errors.password && <p className="text-red-400 text-[10px] pl-1">{t(errors.password.message as string)}</p>}
+                {errors.password && <p className="text-red-400 text-[10px] ps-1 text-start">{t(errors.password.message as string)}</p>}
               </div>
 
                             {/* Submit */}
@@ -311,13 +311,13 @@ export default function LoginPage() {
                             >
                                 <div className="absolute inset-0 bg-gradient-to-r from-[#1a45c4] via-[#2d6af2] to-[#1a45c4]" />
                                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-600" />
-                                <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-[#00ff9d] opacity-0 group-hover:opacity-100 transition-opacity shadow-[0_0_8px_#00ff9d]" />
+                                <div className="absolute start-0 top-0 bottom-0 w-0.5 bg-[#00ff9d] opacity-0 group-hover:opacity-100 transition-opacity shadow-[0_0_8px_#00ff9d]" />
                                 <div className="absolute inset-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]" />
                                 <span className="relative flex items-center justify-center gap-2">
                                     {isSubmitting ? (
                                         <><Loader2 className="w-4 h-4 animate-spin" /> {t('login.form.authenticating')}</>
                                     ) : (
-                                        <>{t('login.form.button')} <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" /></>
+                                        <>{t('login.form.button')}</>
                                     )}
                                 </span>
                             </button>
