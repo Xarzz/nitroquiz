@@ -172,7 +172,10 @@
     "launching": "إطلاق السباق...",
     "invite_friends": "دعوة الأصدقاء",
     "invite_groups": "دعوة المجموعات",
-    "share_link": "مشاركة الرابط"
+    "share_link": "مشاركة الرابط",
+    "exit_dialog_title": "الخروج من الغرفة؟",
+    "exit_dialog_desc": "هل أنت متأكد من الخروج؟",
+    "confirm_exit": "خروج"
   },
   "host_monitor": {
     "new": "جديد",
@@ -185,7 +188,10 @@
     "ending": "جاري الإنهاء...",
     "end_race": "إنهاء السباق",
     "leaderboard": "لوحة الصدارة",
-    "waiting": "في انتظار المتسابقين..."
+    "waiting": "في انتظار المتسابقين...",
+    "end_game_title": "إنهاء السباق؟",
+    "end_game_desc": "هل أنت متأكد من الإنهاء؟",
+    "confirm_end": "إنهاء"
   },
   "host_leaderboard": {
     "loading": "جاري إنشاء الإشارة...",

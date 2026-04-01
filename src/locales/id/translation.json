@@ -172,7 +172,10 @@
     "launching": "MELUNCURKAN BALAPAN...",
     "invite_friends": "Undang Teman",
     "invite_groups": "Undang Grup",
-    "share_link": "Bagikan Tautan"
+    "share_link": "Bagikan Tautan",
+    "exit_dialog_title": "Keluar Lobby?",
+    "exit_dialog_desc": "Apakah Anda yakin ingin keluar?",
+    "confirm_exit": "KELUAR"
   },
   "host_monitor": {
     "new": "BARU",
@@ -185,7 +188,10 @@
     "ending": "MENGAKHIRI...",
     "end_race": "AKHIRI BALAPAN",
     "leaderboard": "PAPAN PERINGKAT",
-    "waiting": "Menunggu Pembalap..."
+    "waiting": "Menunggu Pembalap...",
+    "end_game_title": "Akhiri Balapan?",
+    "end_game_desc": "Apakah Anda yakin ingin mengakhiri?",
+    "confirm_end": "AKHIRI"
   },
   "host_leaderboard": {
     "loading": "Memantapkan Sinyal...",
