@@ -286,17 +286,17 @@ export default function SelectQuizPage() {
                             {/* ── Cyan accent bar ── */}
                             <div className="h-[2px] w-full" style={{ background: 'linear-gradient(90deg,#1a45c4,#2d6af2,#00ff9d,#2d6af2,#1a45c4)' }} />
                             <div className="p-2 sm:p-3">
-                            <div className="flex flex-col sm:flex-row gap-2.5 mb-3 relative">
+                            <div className="flex flex-col sm:flex-row gap-3 mb-3 relative">
                                 <div className="flex-1">
                                     <div className="relative group/search">
                                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4 group-focus-within/search:text-[#00ff9d] transition-colors" />
                                         <Input type="text" placeholder={t('select_quiz.search_placeholder')} value={searchInput}
                                             onChange={(e) => { setSearchInput(e.target.value); setSearchQuery(e.target.value); setCurrentPage(1); }}
-                                            className="w-full bg-white/[0.03] border border-white/[0.07] pl-9 h-10 sm:h-9 text-white font-display text-[9px] sm:text-[10px] uppercase tracking-widest placeholder:text-[8px] sm:placeholder:text-gray-600 rounded-lg focus-visible:ring-1 focus-visible:ring-[#00ff9d]/50 focus-visible:border-[#00ff9d]/50 focus-visible:bg-white/[0.05] transition-all" />
+                                            className="w-full bg-white/[0.03] border border-white/[0.07] h-10 text-white font-display text-center text-[9px] sm:text-[10px] uppercase tracking-widest placeholder:text-[8px] sm:placeholder:text-gray-600 rounded-lg focus-visible:ring-1 focus-visible:ring-[#00ff9d]/50 focus-visible:border-[#00ff9d]/50 focus-visible:bg-white/[0.05] transition-all" />
                                     </div>
                                 </div>
                                 <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                                    <SelectTrigger className="w-full sm:w-52 h-12 bg-white/[0.03] border border-white/[0.07] text-white focus:border-[#00ff9d]/50 focus:ring-1 focus:ring-[#00ff9d]/50 rounded-xl font-display text-xs tracking-wider uppercase">
+                                    <SelectTrigger className="w-full sm:w-52 h-10 bg-white/[0.03] border border-white/[0.07] text-white focus:border-[#00ff9d]/50 focus:ring-1 focus:ring-[#00ff9d]/50 rounded-xl font-display text-xs tracking-wider uppercase">
                                         <SelectValue placeholder={t('select_quiz.category_placeholder')} />
                                     </SelectTrigger>
                                     <SelectContent className="bg-[#04060f] border border-[#2d6af2]/30 text-white font-display text-[10px] uppercase tracking-wider backdrop-blur-3xl">
@@ -308,18 +308,18 @@ export default function SelectQuizPage() {
                                     </SelectContent>
                                 </Select>
                             </div>
-                            <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar pb-1 w-full relative">
+                            <div className="flex items-center sm:justify-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar pb-1 w-full relative">
                                 <button onClick={() => setActiveTab('all')}
-                                    className={`flex items-center justify-center flex-1 sm:flex-none min-w-max gap-1.5 sm:gap-2 px-3 sm:px-4 py-2.5 rounded-xl font-display text-[8px] sm:text-xs tracking-wider uppercase transition-all duration-200 ${activeTab === 'all' ? 'bg-[#2d6af2] text-white shadow-[0_0_15px_rgba(45,106,242,0.5)]' : 'bg-white/[0.03] border border-white/[0.07] text-gray-400 hover:text-white hover:border-[#00ff9d]/50'}`}>
+                                    className={`flex items-center justify-center flex-1 sm:flex-none min-w-max gap-1.5 sm:gap-2 px-3 sm:px-4 py-2.5 rounded-xl font-display text-[8px] sm:text-xs tracking-wider uppercase transition-all duration-200 ${activeTab === 'all' ? 'bg-[#2d6af2] text-white' : 'bg-white/[0.03] border border-white/[0.07] text-gray-400 hover:text-white hover:border-[#00ff9d]/50'}`}>
                                     <Search size={12} className="sm:w-3.5 sm:h-3.5" />{t('select_quiz.tabs.quizzes')}
                                 </button>
                                 <button onClick={() => setActiveTab('favorites')}
-                                    className={`flex items-center justify-center flex-1 sm:flex-none min-w-max gap-1.5 sm:gap-2 px-3 sm:px-4 py-2.5 rounded-xl font-display text-[8px] sm:text-xs tracking-wider uppercase transition-all duration-200 ${activeTab === 'favorites' ? 'bg-gradient-to-r from-pink-600 to-red-500 text-white shadow-[0_0_15px_rgba(236,72,153,0.4)]' : 'bg-black/40 border border-pink-500/20 text-gray-400 hover:text-pink-400 hover:border-pink-500/50'}`}>
+                                    className={`flex items-center justify-center flex-1 sm:flex-none min-w-max gap-1.5 sm:gap-2 px-3 sm:px-4 py-2.5 rounded-xl font-display text-[8px] sm:text-xs tracking-wider uppercase transition-all duration-200 ${activeTab === 'favorites' ? 'bg-gradient-to-r from-pink-600 to-red-500 text-white' : 'bg-black/40 border border-pink-500/20 text-gray-400 hover:text-pink-400 hover:border-pink-500/50'}`}>
                                     <Heart size={12} className={`sm:w-3.5 sm:h-3.5 ${activeTab === 'favorites' ? 'fill-white' : ''}`} />
                                     {t('select_quiz.tabs.favorites')}
                                 </button>
                                 <button onClick={() => setActiveTab('myquiz')}
-                                    className={`flex items-center justify-center flex-1 sm:flex-none min-w-max gap-1.5 sm:gap-2 px-3 sm:px-4 py-2.5 rounded-xl font-display text-[8px] sm:text-xs tracking-wider uppercase transition-all duration-200 ${activeTab === 'myquiz' ? 'bg-gradient-to-r from-[#00ff9d] to-[#04060f] text-white font-bold shadow-[0_0_15px_rgba(0,255,157,0.5)]' : 'bg-white/[0.03] border border-white/[0.07] text-gray-400 hover:text-[#00ff9d] hover:border-[#00ff9d]/50'}`}>
+                                    className={`flex items-center justify-center flex-1 sm:flex-none min-w-max gap-1.5 sm:gap-2 px-3 sm:px-4 py-2.5 rounded-xl font-display text-[8px] sm:text-xs tracking-wider uppercase transition-all duration-200 ${activeTab === 'myquiz' ? 'bg-[#00ff9d] text-[#04060f] font-bold' : 'bg-white/[0.03] border border-white/[0.07] text-gray-400 hover:text-[#00ff9d] hover:border-[#00ff9d]/50'}`}>
                                     <FileText size={12} className="sm:w-3.5 sm:h-3.5" />{t('select_quiz.tabs.my_quiz')}
                                 </button>
                             </div>
@@ -411,7 +411,7 @@ export default function SelectQuizPage() {
                                                             {quiz.description}
                                                         </div>
                                                     </CardHeader>
-                                                    <CardFooter className="mt-auto pt-1.5 pb-1.5 px-3 border-t border-white/5 flex justify-between items-center text-[8px] text-gray-400 font-display tracking-wider relative z-20 bg-black/40 backdrop-blur-sm">
+                                                    <CardFooter className="mt-auto !pt-2 !pb-2 px-3 border-t border-white/5 flex justify-between items-center text-[8px] text-gray-400 font-display tracking-wider relative z-20 bg-black/40 backdrop-blur-sm">
                                                         <div className="flex items-center gap-4 drop-shadow-md">
                                                             <div className="flex items-center gap-1.5">
                                                                 <HelpCircle size={14} style={{ color: colors.bar }} />

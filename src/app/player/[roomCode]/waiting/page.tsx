@@ -350,8 +350,8 @@ export default function PlayerWaitingPage() {
                                                 <div key={i} className="w-1.5 h-1.5 rounded-full bg-[#4a7cdc]" />
                                             ))}
                                         </div>
-                                        <div className="flex flex-col text-left">
-                                            <span className="font-display text-white text-sm font-bold tracking-widest leading-none mt-1">
+                                        <div className="flex flex-col text-left justify-center">
+                                            <span className="font-display text-white text-sm font-bold tracking-widest leading-none block">
                                                 {t("player_waiting.player", { count: participantCount })}
                                             </span>
                                         </div>
@@ -511,11 +511,11 @@ export default function PlayerWaitingPage() {
                             ) : (
                                 <>
                                     <div className="absolute z-10 text-left md:left-[360px] lg:left-[520px] xl:left-[720px]"
-                                        style={{ top: '80px' }}>
+                                        style={{ top: '85px' }}>
                                         <h2 className="font-display text-2xl font-black text-white uppercase tracking-wider leading-none">
                                             {assignedChar.name}
                                         </h2>
-                                        <p className="text-[#8899bb] text-xs font-mono mt-1 tracking-widest">{assignedChar.name}</p>
+                                        <p className="text-[#8899bb] text-xs font-mono tracking-widest">{assignedChar.name}</p>
                                     </div>
 
                                     <div className="absolute z-10 flex flex-col gap-6 items-center justify-center right-0 md:left-[340px] lg:left-[500px] xl:left-[700px]"
