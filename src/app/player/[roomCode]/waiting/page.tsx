@@ -12,7 +12,7 @@ export const PLAYER_CHARACTERS = [
     {
         id: 'rico',
         name: 'SCHLOSKI RACER',
-        imageSrc: '/assets/characters/rico/showroom/pose/0.png',
+        imageSrc: '/assets/characters/rico/showroom/showroom1.png',
         gifSrc: '/assets/characters/rico/showroom/pose1.gif',
         stats: { speed: 80, accel: 60, handling: 70 }
     },
@@ -271,7 +271,7 @@ export default function PlayerWaitingPage() {
                                         <div className="absolute -top-3 right-0 z-10 bg-[#00ff9d] text-black text-xs font-display font-black px-3 py-1 rounded-md tracking-widest shadow-[0_0_15px_rgba(0,255,157,0.5)]">{t("player_waiting.you")}</div>
                                         <div className="bg-[#080e1a] border border-[#00ff9d]/40 rounded-2xl p-4 flex flex-col items-center" style={{ minHeight: '220px' }}>
                                             <div className="flex-1 flex items-center justify-center w-full py-6">
-                                                <img src={assignedChar.gifSrc || assignedChar.imageSrc} alt="Your Car" className="w-[130px] object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.6)]" />
+                                                <img src={assignedChar.imageSrc} alt="Your Car" className="w-[130px] object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.6)]" />
                                             </div>
                                             <p className="font-display text-white text-sm uppercase tracking-widest font-bold mt-1">{username}</p>
                                         </div>
@@ -387,7 +387,7 @@ export default function PlayerWaitingPage() {
                                             {/* Car image */}
                                             <div className="flex items-center justify-center px-6 py-5"
                                                 style={{ minHeight: '150px' }}>
-                                                <img src={assignedChar.gifSrc || assignedChar.imageSrc} alt="car"
+                                                <img src={assignedChar.imageSrc} alt="car"
                                                     className="w-full max-h-[110px] object-contain drop-shadow-[0_6px_20px_rgba(0,0,0,0.8)]" />
                                             </div>
                                             {/* Name */}
@@ -417,7 +417,7 @@ export default function PlayerWaitingPage() {
                                                         )}
                                                     </div>
                                                     <div className="flex items-center justify-center px-6 py-5" style={{ minHeight: '150px' }}>
-                                                        <img src={charObj.gifSrc || carSrc} alt="car" className="w-full max-h-[110px] object-contain drop-shadow-[0_6px_20px_rgba(0,0,0,0.8)]" />
+                                                        <img src={carSrc} alt="car" className="w-full max-h-[110px] object-contain drop-shadow-[0_6px_20px_rgba(0,0,0,0.8)]" />
                                                     </div>
                                                     <div className="text-center pb-3 px-3">
                                                         <p className="font-display text-white text-xs font-bold uppercase tracking-[0.18em] truncate" title={p.nickname}>{p.nickname}</p>
@@ -480,7 +480,7 @@ export default function PlayerWaitingPage() {
 
                                                         {/* Car Image */}
                                                         <div className="w-full mb-3 relative flex items-center justify-center" style={{ height: '120px' }}>
-                                                            <img src={isSel && c.gifSrc ? c.gifSrc : c.imageSrc} alt={c.name}
+                                                            <img src={c.imageSrc} alt={c.name}
                                                                 className="w-full h-full object-contain drop-shadow-[0_15px_15px_rgba(0,0,0,0.8)]" />
                                                         </div>
 
