@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 export const PLAYER_CHARACTERS = [
     {
         id: 'rico',
-        name: 'SCHLOSKI RACER',
+        name: 'RICO',
         imageSrc: '/assets/characters/rico/showroom/showroom1.png',
         gifSrc: '/assets/characters/rico/showroom/pose1.gif',
         stats: { speed: 80, accel: 60, handling: 70 }
@@ -25,7 +25,7 @@ export const PLAYER_CHARACTERS = [
     },
     {
         id: 'roadhog',
-        name: 'TUSK CHOPPER',
+        name: 'ROADHOG',
         imageSrc: '/assets/characters/roadhog/showroom/showroom1.png',
         gifSrc: '/assets/characters/roadhog/showroom/pose1.gif',
         stats: { speed: 60, accel: 80, handling: 50 }
@@ -351,11 +351,8 @@ export default function PlayerWaitingPage() {
                                             ))}
                                         </div>
                                         <div className="flex flex-col text-left">
-                                            <span className="font-display text-white text-sm font-bold tracking-widest">
+                                            <span className="font-display text-white text-sm font-bold tracking-widest leading-none mt-1">
                                                 {t("player_waiting.player", { count: participantCount })}
-                                            </span>
-                                            <span className="font-display text-blue-300 text-[9px] uppercase tracking-[0.2em] opacity-80">
-                                                {t("player_waiting.connected_info")}
                                             </span>
                                         </div>
                                     </div>
