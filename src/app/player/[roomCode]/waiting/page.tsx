@@ -331,9 +331,9 @@ export default function PlayerWaitingPage() {
                             </div>
 
                             {/* ── Left panel — floats over the showroom ── */}
-                            <div className="absolute top-[60px] left-5 bottom-[64px] z-10 flex flex-col min-h-0 w-[320px] lg:w-[480px] xl:w-[680px]">
+                            <div className="absolute top-[85px] left-6 bottom-[85px] z-10 flex flex-col min-h-0 w-[320px] lg:w-[480px] xl:w-[680px]">
                                 {/* Outer panel */}
-                                <div className="flex-1 flex flex-col min-h-0 rounded-2xl overflow-hidden"
+                                <div className="flex-1 flex flex-col min-h-0 rounded-2xl overflow-hidden shadow-2xl"
                                     style={{
                                         background: 'rgba(30,38,62,0.72)',
                                         border: '1px solid rgba(80,110,180,0.3)',
@@ -358,7 +358,7 @@ export default function PlayerWaitingPage() {
                                     </div>
 
                                     {/* Scrollable cards */}
-                                    <div className="flex-1 overflow-y-auto p-3 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3 auto-rows-max"
+                                    <div className="flex-1 overflow-y-auto p-4 md:p-5 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 auto-rows-max"
                                         style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(45,106,242,0.25) transparent' }}>
 
                                         {/* YOU card */}
