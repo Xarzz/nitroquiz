@@ -190,7 +190,13 @@ export default function GameSpeedPage() {
     const [miniMapMinimized, setMiniMapMinimized] = useState(false);
     const [isBraking, setIsBraking] = useState(false);
     const [isBoosting, setIsBoosting] = useState(false);
-    const [mobileOrientationChoice, setMobileOrientationChoice] = useState<'portrait' | 'landscape' | null>(null);
+    const [mobileOrientationChoice, setMobileOrientationChoice] = useState<'portrait' | 'landscape' | null>(() => {
+        if (typeof window !== 'undefined') {
+            const saved = localStorage.getItem('nitroquiz_orientation');
+            if (saved === 'portrait' || saved === 'landscape') return saved;
+        }
+        return null;
+    });
 
     // Quiz Integration State
     const [allQuizQuestions, setAllQuizQuestions] = useState<QuizQuestion[]>([]);
@@ -2189,7 +2195,10 @@ export default function GameSpeedPage() {
                     <div style={{ display: 'flex', gap: '1rem', width: '100%', maxWidth: '340px', position: 'relative', zIndex: 1 }}>
                         {/* Portrait Card */}
                         <button
-                            onClick={() => setMobileOrientationChoice('portrait')}
+                            onClick={() => {
+                                setMobileOrientationChoice('portrait');
+                                localStorage.setItem('nitroquiz_orientation', 'portrait');
+                            }}
                             style={{
                                 flex: 1, padding: '1.5rem 1rem',
                                 background: 'linear-gradient(135deg, rgba(45,106,242,0.15) 0%, rgba(45,106,242,0.05) 100%)',
@@ -2217,6 +2226,7 @@ export default function GameSpeedPage() {
                         <button
                             onClick={() => {
                                 setMobileOrientationChoice('landscape');
+                                localStorage.setItem('nitroquiz_orientation', 'landscape');
                                 if (document.documentElement.requestFullscreen) {
                                     document.documentElement.requestFullscreen().catch(() => { });
                                 }

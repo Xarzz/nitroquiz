@@ -234,13 +234,13 @@ export default function QuizPage() {
     const OPTION_COLORS = ['#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6']; // A=blue, B=amber, C=red, D=purple
 
     return (
-        <div className="min-h-[100dvh] w-full bg-[#04060f] text-white font-rajdhani overflow-hidden relative flex flex-col items-center justify-center p-3 sm:p-5">
+        <div className="min-h-[100dvh] w-full bg-[#04060f] text-white font-rajdhani overflow-hidden relative flex flex-col items-center justify-center p-2 sm:p-5">
             {/* Background Effects */}
             <div className="absolute inset-0 z-0 bg-transparent blur-[120px] pointer-events-none" />
             
-            <div className="w-full max-w-3xl mx-auto relative z-10 flex flex-col items-center justify-center min-h-[50vh]">
+            <div className="w-full max-w-3xl mx-auto relative z-10 flex flex-col items-center justify-center">
                 {/* Main Card */}
-                <div className="w-full bg-[#0c1225]/80 backdrop-blur-3xl border border-[#1e2d4d]/50 rounded-2xl md:rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+                <div className="w-full bg-[#0c1225]/80 backdrop-blur-3xl border border-[#1e2d4d]/50 rounded-xl md:rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
                     
                     {/* Progress Bar Top */}
                     <div className="w-full h-1.5 bg-[#0a0f1e]">
@@ -254,10 +254,10 @@ export default function QuizPage() {
                     </div>
 
                     {/* Card Header: Question X/Y | SCORE */}
-                    <div className="flex items-center justify-between px-5 md:px-7 pt-5 md:pt-6 pb-2">
+                    <div className="flex items-center justify-between px-3 md:px-7 pt-3 md:pt-6 pb-1 md:pb-2">
                         <div className="flex items-center gap-2">
-                            <span className="text-[#00ff9d] text-lg md:text-xl font-black uppercase tracking-widest">{t("player_quiz.question", { current: currentIndex + 1 })}</span>
-                            <span className="text-gray-500 text-sm md:text-base font-bold">/ {questions.length}</span>
+                            <span className="text-[#00ff9d] text-sm md:text-xl font-black uppercase tracking-widest">{t("player_quiz.question", { current: currentIndex + 1 })}</span>
+                            <span className="text-gray-500 text-xs md:text-base font-bold">/ {questions.length}</span>
                         </div>
 
                         <div className="flex items-baseline gap-1.5 px-3 py-1 bg-white/5 rounded-full border border-white/10">
@@ -266,7 +266,7 @@ export default function QuizPage() {
                         </div>
                     </div>
 
-                    <div className="px-5 md:px-7 pb-6 md:pb-8 pt-3">
+                    <div className="px-3 md:px-7 pb-3 md:pb-8 pt-2 md:pt-3">
                         {/* Question Text & Image */}
                         <AnimatePresence mode="wait">
                             <motion.div 
@@ -274,21 +274,21 @@ export default function QuizPage() {
                                 initial={{ y: 15, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
                                 exit={{ y: -15, opacity: 0 }}
-                                className="mb-6"
+                                className="mb-3 md:mb-6"
                             >
                                 {currentQ.imageUrl && (
-                                    <div className="w-full rounded-xl overflow-hidden mb-5 border border-white/10 relative pb-[56.25%]">
+                                    <div className="w-full rounded-xl overflow-hidden mb-3 md:mb-5 border border-white/10 relative pb-[40%] md:pb-[56.25%]">
                                         <img src={currentQ.imageUrl} alt="Quiz visual" className="absolute inset-0 w-full h-full object-cover" />
                                     </div>
                                 )}
-                                <h3 className="text-lg md:text-xl font-bold leading-snug text-gray-100 text-center text-balance">
+                                <h3 className="text-sm md:text-xl font-bold leading-snug text-gray-100 text-center text-balance">
                                     {currentQ.question}
                                 </h3>
                             </motion.div>
                         </AnimatePresence>
 
-                        {/* Options Grid */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {/* Options Grid - always 2 columns on all screens */}
+                        <div className="grid grid-cols-2 gap-2 md:gap-3">
                             {currentQ.options.map((option, idx) => {
                                 const isSelected = selectedOption === idx;
                                 const optionColor = OPTION_COLORS[idx] || OPTION_COLORS[0];
@@ -301,7 +301,7 @@ export default function QuizPage() {
                                         whileTap={!isAnswered ? { scale: 0.98 } : {}}
                                         onClick={() => handleAnswer(idx)}
                                         disabled={isAnswered}
-                                        className={`w-full group relative py-4 px-5 rounded-xl border text-left flex items-center gap-4 transition-all duration-200 ${
+                                        className={`w-full group relative py-2 md:py-4 px-3 md:px-5 rounded-lg md:rounded-xl border text-left flex items-center gap-2 md:gap-4 transition-all duration-200 ${
                                             isSelected 
                                             ? 'bg-[#1a2744] border-white/30 shadow-[0_0_20px_rgba(255,255,255,0.1)] scale-[1.02]' 
                                             : 'bg-black/40 border-white/5 hover:border-white/10 hover:bg-white/5'
@@ -309,14 +309,14 @@ export default function QuizPage() {
                                     >
                                         {/* Letter Badge */}
                                         <div 
-                                            className="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center font-black text-lg flex-shrink-0 text-white shadow-lg"
+                                            className="w-8 h-8 md:w-12 md:h-12 rounded-lg md:rounded-xl flex items-center justify-center font-black text-sm md:text-lg flex-shrink-0 text-white shadow-lg"
                                             style={{ backgroundColor: optionColor }}
                                         >
                                             {letter}
                                         </div>
                                         
                                         {/* Option Text */}
-                                        <span className={`text-base font-medium flex-1 ${isSelected ? 'text-white' : 'text-gray-300'}`}>
+                                        <span className={`text-xs md:text-base font-medium flex-1 ${isSelected ? 'text-white' : 'text-gray-300'}`}>
                                             {option}
                                         </span>
                                     </motion.button>

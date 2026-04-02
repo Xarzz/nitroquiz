@@ -256,38 +256,113 @@ export default function PlayerWaitingPage() {
                         {/* ===== MOBILE ===== */}
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                             className="md:hidden fixed inset-0 z-30 bg-[#0b101a] flex flex-col">
-                            <div className="flex items-center justify-center pt-10 pb-4 flex-shrink-0">
-                                <img src="/assets/logo/logo1.png" alt="NitroQuiz" className="h-14 object-contain drop-shadow-[0_0_20px_rgba(45,106,242,0.7)]" />
-                            </div>
-                            <div className="flex-1 flex flex-col items-center justify-center px-5">
-                                <div className="w-full bg-[#0d1526]/80 border border-[#2d6af2]/50 rounded-3xl p-5 shadow-[0_0_40px_rgba(45,106,242,0.15)]">
-                                    <div className="flex justify-center mb-5">
-                                        <div className="flex items-center gap-2 bg-[#1a2540] border border-[#2d6af2]/40 px-6 py-2 rounded-full">
-                                            <Users className="w-5 h-5 text-[#2d6af2]" />
-                                            <span className="font-display text-white text-xl font-bold">{participantCount}</span>
-                                        </div>
-                                    </div>
-                                    <div className="relative mx-auto" style={{ width: '200px' }}>
-                                        <div className="absolute -top-3 right-0 z-10 bg-[#00ff9d] text-black text-xs font-display font-black px-3 py-1 rounded-md tracking-widest shadow-[0_0_15px_rgba(0,255,157,0.5)]">{t("player_waiting.you")}</div>
-                                        <div className="bg-[#080e1a] border border-[#00ff9d]/40 rounded-2xl p-4 flex flex-col items-center" style={{ minHeight: '220px' }}>
-                                            <div className="flex-1 flex items-center justify-center w-full py-6">
-                                                <img src={assignedChar.imageSrc} alt="Your Car" className="w-[130px] object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.6)]" />
-                                            </div>
-                                            <p className="font-display text-white text-sm uppercase tracking-widest font-bold mt-1">{username}</p>
-                                        </div>
-                                    </div>
-                                    <div className="mt-5 w-full h-0.5 bg-[#2d6af2]/20 rounded-full overflow-hidden">
-                                        <motion.div className="h-full bg-gradient-to-r from-[#2d6af2] to-[#00ff9d]"
-                                            animate={{ x: ['-100%', '100%'] }} transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }} />
-                                    </div>
-                                    <p className="font-display text-[#00ff9d]/60 text-[10px] uppercase tracking-[0.2em] mt-2 animate-pulse">{t("player_waiting.waiting_host")}</p>
+                            {/* Top bar */}
+                            <div className="flex items-center justify-between px-4 pt-6 pb-3 flex-shrink-0"
+                                style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                                <img src="/assets/logo/logo1.png" alt="Logo" className="h-9 object-contain" />
+                                <div className="flex items-center gap-2">
+                                    <Loader2 className="w-3 h-3 text-gray-500 animate-spin" />
+                                    <span className="font-display text-[9px] text-gray-400 uppercase tracking-[0.2em]">{t("player_waiting.waiting_host")}</span>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-3 px-5 pb-10 pt-4 flex-shrink-0">
-                                <button onClick={() => router.push('/')} className="w-14 h-14 flex items-center justify-center rounded-full bg-[#1a0a12] border border-red-500/50 text-red-400 hover:bg-red-500/20 active:scale-95 transition-all flex-shrink-0 shadow-[0_0_15px_rgba(239,68,68,0.2)]">
-                                    <LogOut className="w-5 h-5" />
+
+                            {/* Players header */}
+                            <div className="flex items-center gap-2 px-4 py-3 flex-shrink-0" style={{ borderBottom: '1px solid rgba(80,110,180,0.15)' }}>
+                                <div className="grid grid-cols-3 gap-0.5 flex-shrink-0">
+                                    {Array.from({ length: 9 }).map((_, i) => (
+                                        <div key={i} className="w-1 h-1 rounded-full bg-[#4a7cdc]" />
+                                    ))}
+                                </div>
+                                <span className="font-display text-white text-xs font-bold tracking-widest">
+                                    {t("player_waiting.player", { count: participantCount })}
+                                </span>
+                            </div>
+
+                            {/* Scrollable player cards grid */}
+                            <div className="flex-1 overflow-y-auto p-3 grid grid-cols-2 gap-3 auto-rows-max"
+                                style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(45,106,242,0.25) transparent' }}>
+
+                                {/* YOU card */}
+                                <div className="relative rounded-xl overflow-hidden w-full"
+                                    style={{
+                                        background: 'linear-gradient(160deg, rgba(28,42,80,0.95), rgba(22,34,68,0.98))',
+                                        border: '1.5px solid rgba(60,110,220,0.6)',
+                                        boxShadow: 'inset 0 0 24px rgba(40,80,180,0.1)',
+                                        aspectRatio: '1/1.1',
+                                    }}>
+                                    <div className="absolute top-1.5 left-1.5 z-10 w-6 h-6 rounded-full border border-white/20 overflow-hidden bg-black/40">
+                                        {userAvatar ? (
+                                            <img src={userAvatar} alt="Avatar" className="w-full h-full object-cover" />
+                                        ) : (
+                                            <InitialsAvatar name={username} size="sm" />
+                                        )}
+                                    </div>
+                                    <div className="absolute top-1.5 right-1.5 z-10 font-display font-black text-[8px] tracking-widest px-1.5 py-0.5 rounded"
+                                        style={{ background: '#00d4ff', color: '#000' }}>
+                                        {t("player_waiting.you")}
+                                    </div>
+                                    <div className="flex items-center justify-center px-4 py-3" style={{ minHeight: '100px' }}>
+                                        <img src={assignedChar.imageSrc} alt="car" className="w-full max-h-[80px] object-contain drop-shadow-[0_6px_20px_rgba(0,0,0,0.8)]" />
+                                    </div>
+                                    <div className="text-center pb-2 px-2">
+                                        <p className="font-display text-white text-[10px] font-bold uppercase tracking-[0.18em] truncate">{username}</p>
+                                        <p className="font-display text-[#00ff9d] text-[8px] uppercase tracking-widest mt-0.5 opacity-80">{assignedChar.name}</p>
+                                    </div>
+                                </div>
+
+                                {/* Other players */}
+                                {allParticipants.filter(p => p.nickname !== username).map((p, i) => {
+                                    const charObj = PLAYER_CHARACTERS.find(c => c.id === p.car_character) || PLAYER_CHARACTERS[0];
+                                    return (
+                                        <div key={i} className="relative rounded-xl overflow-hidden w-full"
+                                            style={{
+                                                background: 'linear-gradient(160deg, rgba(24,34,62,0.92), rgba(18,26,50,0.95))',
+                                                border: '1px solid rgba(50,80,160,0.45)',
+                                                aspectRatio: '1/1.1',
+                                            }}>
+                                            <div className="absolute top-1.5 left-1.5 z-10 w-6 h-6 rounded-full border border-white/20 overflow-hidden bg-black/40">
+                                                {p.avatar_url ? (
+                                                    <img src={p.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
+                                                ) : (
+                                                    <InitialsAvatar name={p.nickname} size="sm" />
+                                                )}
+                                            </div>
+                                            <div className="flex items-center justify-center px-4 py-3" style={{ minHeight: '100px' }}>
+                                                <img src={charObj.imageSrc} alt="car" className="w-full max-h-[80px] object-contain drop-shadow-[0_6px_20px_rgba(0,0,0,0.8)]" />
+                                            </div>
+                                            <div className="text-center pb-2 px-2">
+                                                <p className="font-display text-white text-[10px] font-bold uppercase tracking-[0.18em] truncate">{p.nickname}</p>
+                                                <p className="font-display text-[#00d4ff] text-[8px] uppercase tracking-widest mt-0.5 opacity-80">{charObj.name}</p>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+
+                                {/* Empty slot */}
+                                <div className="relative rounded-xl overflow-hidden w-full flex flex-col items-center justify-center"
+                                    style={{
+                                        background: 'rgba(18,26,50,0.5)',
+                                        border: '1px dashed rgba(50,80,160,0.3)',
+                                        aspectRatio: '1/1.1',
+                                    }}>
+                                    <svg viewBox="0 0 180 80" className="w-[80px] h-[35px] opacity-15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect x="8" y="28" width="164" height="34" rx="12" stroke="#7090cc" strokeWidth="2" />
+                                        <rect x="42" y="12" width="96" height="28" rx="9" stroke="#7090cc" strokeWidth="2" />
+                                        <circle cx="42" cy="66" r="11" stroke="#7090cc" strokeWidth="2" />
+                                        <circle cx="138" cy="66" r="11" stroke="#7090cc" strokeWidth="2" />
+                                    </svg>
+                                    <p className="text-[8px] uppercase tracking-widest font-mono mt-1" style={{ color: 'rgba(120,140,180,0.45)' }}>
+                                        {t("player_waiting.waiting_player")}
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Bottom action bar */}
+                            <div className="flex items-center gap-3 px-4 py-3 flex-shrink-0" style={{ borderTop: '1px solid rgba(255,255,255,0.05)', background: 'rgba(14,18,30,0.8)' }}>
+                                <button onClick={() => router.push('/')} className="w-11 h-11 flex items-center justify-center rounded-xl bg-[#1a0a12] border border-red-500/50 text-red-400 hover:bg-red-500/20 active:scale-95 transition-all flex-shrink-0">
+                                    <LogOut className="w-4 h-4" />
                                 </button>
-                                <button onClick={() => setIsSelectingCharacter(true)} className="flex-1 h-14 flex items-center justify-center rounded-full border border-[#00ff9d]/60 text-[#00ff9d] font-display text-sm uppercase tracking-widest hover:bg-[#00ff9d]/10 active:scale-95 transition-all shadow-[0_0_20px_rgba(0,255,157,0.1)]">
+                                <button onClick={() => setIsSelectingCharacter(true)} className="flex-1 h-11 flex items-center justify-center rounded-xl border border-[#00ff9d]/60 text-[#00ff9d] font-display text-xs uppercase tracking-widest hover:bg-[#00ff9d]/10 active:scale-95 transition-all">
                                     {t("player_waiting.choose_character")}
                                 </button>
                             </div>
@@ -563,6 +638,50 @@ export default function PlayerWaitingPage() {
                     </>
                 )}
 
+                {/* ── MOBILE CHARACTER SELECTOR OVERLAY ── */}
+                {isSelectingCharacter && status === "waiting" && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="md:hidden fixed inset-0 z-[100] bg-[#070d1c]/98 backdrop-blur-md flex flex-col items-center justify-center p-4"
+                    >
+                        <h2 className="font-display text-lg font-black text-white uppercase tracking-wider mb-6 drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
+                            {t("player_waiting.choose_racer")}
+                        </h2>
+                        <div className="flex gap-3 w-full max-w-[380px] justify-center">
+                            {PLAYER_CHARACTERS.map((c) => {
+                                const isSel = pendingCharacterId === c.id;
+                                return (
+                                    <div key={c.id} onClick={() => setPendingCharacterId(c.id)}
+                                        className={`relative flex flex-col items-center justify-center p-3 rounded-xl transition-all cursor-pointer flex-1 ${isSel ? 'bg-[#182136] border-2 border-[#e6fdff]' : 'bg-[#111726] border border-[#2d4060]'}`}
+                                        style={{
+                                            boxShadow: isSel ? '0 0 20px rgba(120,240,255,0.3), inset 0 0 15px rgba(120,240,255,0.1)' : 'none'
+                                        }}>
+                                        <div className="w-full mb-2 relative flex items-center justify-center" style={{ height: '80px' }}>
+                                            <img src={c.imageSrc} alt={c.name}
+                                                className="w-full h-full object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.8)]" />
+                                        </div>
+                                        <h3 className="font-display text-[10px] font-bold text-white uppercase tracking-[0.1em] text-center">
+                                            {c.name}
+                                        </h3>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                        <div className="flex gap-4 mt-6 w-full max-w-[320px]">
+                            <button onClick={() => { setIsSelectingCharacter(false); setPendingCharacterId(assignedCarId); }}
+                                className="flex-1 py-3 rounded-xl font-display text-xs font-bold uppercase tracking-widest text-white bg-white/10 border border-white/20 hover:bg-white/20 transition-colors">
+                                {t("player_waiting.back")}
+                            </button>
+                            <button onClick={handleSelectCharacter}
+                                className="flex-1 py-3 rounded-xl font-display text-xs font-bold uppercase tracking-widest text-white bg-[#0fa8c4] hover:bg-[#0880b8] transition-colors shadow-[0_0_15px_rgba(15,168,196,0.4)]">
+                                {t("player_waiting.select")}
+                            </button>
+                        </div>
+                    </motion.div>
+                )}
+
                 {/* COUNTDOWN */}
                 {status === "countdown" && (
                     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/80 backdrop-blur-sm"
@@ -596,6 +715,33 @@ export default function PlayerWaitingPage() {
                         <p className="font-display text-lg text-gray-400 mt-6" style={{ animation: 'fadeInUp 0.3s ease-out' }}>
                             {getCountdownLabel(countdownValue)}
                         </p>
+
+                        {/* Mobile Orientation Picker during countdown */}
+                        <div className="md:hidden mt-6 flex gap-3 w-full max-w-[320px] px-4">
+                            <button
+                                onClick={() => localStorage.setItem('nitroquiz_orientation', 'portrait')}
+                                className={`flex-1 flex flex-col items-center gap-1.5 py-3 rounded-xl border-2 transition-all ${
+                                    (typeof window !== 'undefined' && localStorage.getItem('nitroquiz_orientation') === 'portrait')
+                                    ? 'border-[#2d6af2] bg-[#2d6af2]/15'
+                                    : 'border-white/10 bg-white/5'
+                                }`}
+                            >
+                                <span style={{ fontSize: '1.5rem' }}>📱</span>
+                                <span className="font-display text-[9px] text-white font-bold uppercase tracking-widest">{t('player_game.portrait')}</span>
+                            </button>
+                            <button
+                                onClick={() => localStorage.setItem('nitroquiz_orientation', 'landscape')}
+                                className={`flex-1 flex flex-col items-center gap-1.5 py-3 rounded-xl border-2 transition-all ${
+                                    (typeof window !== 'undefined' && localStorage.getItem('nitroquiz_orientation') === 'landscape')
+                                    ? 'border-[#00ff9d] bg-[#00ff9d]/10'
+                                    : 'border-white/10 bg-white/5'
+                                }`}
+                            >
+                                <span style={{ fontSize: '1.5rem', transform: 'rotate(90deg)', display: 'inline-block' }}>📱</span>
+                                <span className="font-display text-[9px] text-white font-bold uppercase tracking-widest">{t('player_game.landscape')}</span>
+                            </button>
+                        </div>
+
                         <div className="absolute w-64 h-64 rounded-full border border-[#2d6af2]/20" style={{ animation: 'pulseRing 2s ease-in-out infinite' }} />
                         <style>{`
                             @keyframes fadeIn{from{opacity:0}to{opacity:1}}

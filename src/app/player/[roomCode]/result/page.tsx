@@ -209,6 +209,19 @@ export default function PlayerResultPage() {
     }
   }, [isLoading, rankedPlayers.length, allFinished]);
 
+  // Force portrait on result page
+  useEffect(() => {
+    localStorage.removeItem('nitroquiz_orientation');
+    try {
+      if (screen.orientation && (screen.orientation as any).unlock) {
+        (screen.orientation as any).unlock();
+      }
+      if (document.fullscreenElement && document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      }
+    } catch (e) {}
+  }, []);
+
   const podiumVariants: any = {
     hidden: { y: 150, opacity: 0 },
     visible: (custom: number) => ({
@@ -380,13 +393,6 @@ export default function PlayerResultPage() {
                     ) : (
                       <InitialsAvatar name={currentUser?.username || 'P'} size="lg" />
                     )}
-                  </motion.div>
-                  <motion.div
-                    className="absolute -right-4 -bottom-2 w-16 h-16 bg-black/80 rounded-full border-2 border-white/20 p-2 flex items-center justify-center z-20 shadow-2xl"
-                    animate={{ y: [0, -4, 0] }}
-                    transition={{ repeat: Infinity, duration: 3, ease: "easeInOut", delay: 0.2 }}
-                  >
-                    <img src={currentPlayerCarSrc} alt="Car" className="w-full h-full object-contain" />
                   </motion.div>
                 </div>
               </div>
