@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import {
   Users, Play, LogOut, Copy, Check, Maximize2,
-  Volume2, VolumeX, X, UserPlus, Users2
+  Volume2, VolumeX, X, UserPlus, Users2, Bot
 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
@@ -141,6 +141,26 @@ export default function HostLobby() {
     const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
     return () => clearTimeout(timer);
   }, [countdown, session, roomCode, router]);
+
+  const handleAddBot = async () => {
+    if (!session) return;
+    const botCount = participants.filter((p) => p.car_character?.endsWith("-bot")).length;
+    const botNickname = `CPU_${botCount + 1}`;
+    const botCharacters = ['rico-bot', 'roadhog-bot', 'gecho-bot'];
+    const selectedChar = botCharacters[Math.floor(Math.random() * botCharacters.length)];
+    
+    try {
+      await supabase.from("participants").insert({
+          session_id: session.id,
+          nickname: botNickname,
+          car_character: selectedChar,
+          score: 0,
+          current_question: 0
+      });
+    } catch (e) {
+      console.error("Failed to add bot", e);
+    }
+  };
 
   const confirmKick = async () => {
     if (selectedPlayer) {
@@ -305,7 +325,7 @@ export default function HostLobby() {
                   className="flex items-center gap-1.5 h-9 px-3 rounded-xl border bg-[#2d6af2]/10 border-[#2d6af2]/30 text-[#2d6af2] hover:bg-[#2d6af2]/20 transition-all font-display text-[10px] uppercase tracking-wider"
                 >
                   <UserPlus size={14} />
-                  <span>{t('host_lobby.invite_friends') ?? 'Invite Friends'}</span>
+                  <span className="hidden sm:inline">{t('host_lobby.invite_friends') ?? 'Invite Friends'}</span>
                 </button>
 
                 {/* Invite Groups */}
@@ -314,7 +334,16 @@ export default function HostLobby() {
                   className="flex items-center gap-1.5 h-9 px-3 rounded-xl border bg-purple-500/10 border-purple-500/30 text-purple-400 hover:bg-purple-500/20 transition-all font-display text-[10px] uppercase tracking-wider"
                 >
                   <Users2 size={14} />
-                  <span>{t('host_lobby.invite_groups') ?? 'Invite Groups'}</span>
+                  <span className="hidden sm:inline">{t('host_lobby.invite_groups') ?? 'Invite Groups'}</span>
+                </button>
+
+                {/* Add Bot */}
+                <button
+                  onClick={handleAddBot}
+                  className="flex items-center gap-1.5 h-9 px-3 rounded-xl border bg-yellow-500/10 border-yellow-500/30 text-yellow-400 hover:bg-yellow-500/20 transition-all font-display text-[10px] uppercase tracking-wider"
+                >
+                  <Bot size={14} />
+                  <span className="hidden sm:inline">Add Bot</span>
                 </button>
 
                 {/* Sound */}
