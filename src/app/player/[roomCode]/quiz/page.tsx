@@ -108,11 +108,14 @@ export default function QuizPage() {
                 const user = JSON.parse(localStorage.getItem('nitroquiz_user') || '{}');
                 await supabase
                     .from('participants')
-                    .update({ score: newScore })
+                    .update({ 
+                        score: newScore,
+                        current_question: currentIndex + 1
+                    })
                     .eq('session_id', sessionId)
-                    .eq('nickname', user.nickname);
+                    .eq('nickname', user.username || user.nickname);
             } catch (e) {
-                console.error("Failed to update score in DB", e);
+                console.error("Failed to update score/lap in DB", e);
             }
         }
 
@@ -149,6 +152,22 @@ export default function QuizPage() {
         const isRoundEnd = questionsAnsweredInRound >= QUESTIONS_PER_ROUND;
 
         if (isFinished || isRoundEnd) {
+            const finalizeStatus = async () => {
+                if (isFinished && sessionId) {
+                    const participantId = localStorage.getItem('nitroquiz_game_participantId');
+                    if (participantId) {
+                        try {
+                            await supabase.from('participants').update({
+                                finished_at: new Date().toISOString()
+                            }).eq('id', participantId);
+                        } catch (e) {
+                            console.error("Failed to set finished_at", e);
+                        }
+                    }
+                }
+            };
+            finalizeStatus();
+
             const timer = setTimeout(() => {
                 if (isFinished) {
                     router.push(`/player/${roomCode || roomCodeFromParams}/result`);
@@ -241,7 +260,7 @@ export default function QuizPage() {
                         </AnimatePresence>
 
                         {/* Options Grid */}
-                        <div className="grid grid-cols-1 gap-3">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                             {currentQ.options.map((option, idx) => {
                                 const isSelected = selectedOption === idx;
                                 const optionColor = OPTION_COLORS[idx] || OPTION_COLORS[0];

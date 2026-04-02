@@ -292,7 +292,7 @@ export default function SelectQuizPage() {
                                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4 group-focus-within/search:text-[#00ff9d] transition-colors" />
                                         <Input type="text" placeholder={t('select_quiz.search_placeholder')} value={searchInput}
                                             onChange={(e) => { setSearchInput(e.target.value); setSearchQuery(e.target.value); setCurrentPage(1); }}
-                                            className="w-full bg-white/[0.03] border border-white/[0.07] pl-9 h-10 sm:h-9 text-white font-display text-left text-[9px] sm:text-[10px] uppercase tracking-widest placeholder:text-[8px] sm:placeholder:text-gray-600 rounded-lg focus-visible:ring-1 focus-visible:ring-[#00ff9d]/50 focus-visible:border-[#00ff9d]/50 focus-visible:bg-white/[0.05] transition-all" />
+                                            className="w-full bg-white/[0.03] border border-white/[0.07] pl-9 h-10 sm:h-9 text-white font-display text-left text-[9px] sm:text-[10px] uppercase tracking-widest placeholder:text-[8px] sm:placeholder:text-gray-600 rounded-lg focus-visible:ring-1 focus-visible:ring-[#00ff9d]/50 focus-visible:border-[#00ff9d]/50 focus-visible:bg-white/[0.05] transition-all !py-0 leading-normal" />
                                     </div>
                                 </div>
                                 <Select value={selectedCategory} onValueChange={setSelectedCategory}>
