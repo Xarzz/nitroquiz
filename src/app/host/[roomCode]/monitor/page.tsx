@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo, useRef } from "react";
 import { Users, Skull } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { useTranslation } from "react-i18next";
@@ -63,6 +64,7 @@ const InitialsAvatar = ({ name, size = 'md' }: { name: string; size?: 'sm' | 'md
 
 interface Participant {
   id: string;
+  session_id: string;
   nickname: string;
   car_character: string;
   score: number;
@@ -159,6 +161,12 @@ function PlayerCard({
     statusBorder = "rgba(59,130,246,0.5)";
     statusText = "#93c5fd";
     statusPulse = true;
+  } else {
+    // Check if game is active
+    statusLabel = t("host_monitor.racing");
+    statusBg = "rgba(16,185,129,0.05)";
+    statusBorder = "rgba(16,185,129,0.15)";
+    statusText = "#10b981";
   }
 
   return (
@@ -170,8 +178,9 @@ function PlayerCard({
         borderRadius: "12px",
         overflow: "hidden",
         background: "linear-gradient(135deg, rgba(16,26,52,0.97) 0%, rgba(11,16,32,0.97) 100%)",
-        border: "1px solid rgba(255,255,255,0.07)",
-        boxShadow: "0 4px 20px rgba(0,0,0,0.45)",
+        border: `1px solid ${isNew ? 'rgba(59,130,246,0.4)' : 'rgba(255,255,255,0.07)'}`,
+        boxShadow: isNew ? "0 4px 20px rgba(59,130,246,0.2)" : "0 4px 20px rgba(0,0,0,0.45)",
+        transition: "all 0.3s ease",
       }}
     >
       {/* Left rank stripe */}
@@ -479,20 +488,26 @@ export default function GameMonitorPage() {
     if (!sessionId) return;
 
     const channel = supabase
-      .channel("host_game_monitor")
+      .channel(`host_monitor_${roomCode}`)
       .on(
         "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "participants", filter: `session_id=eq.${sessionId}` },
+        { event: "*", schema: "public", table: "participants" },
         (payload) => {
-          const updated = payload.new as Participant;
-          setParticipants((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
-        }
-      )
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "participants", filter: `session_id=eq.${sessionId}` },
-        (payload) => {
-          setParticipants((prev) => [...prev, payload.new as Participant]);
+          if (payload.eventType === "UPDATE") {
+            const updated = payload.new as Participant;
+            if (updated.session_id !== sessionId) return;
+            setParticipants((prev) => prev.map((p) => (String(p.id) === String(updated.id) ? updated : p)));
+          } else if (payload.eventType === "INSERT") {
+            const inserted = payload.new as Participant;
+            if (inserted.session_id !== sessionId) return;
+            setParticipants((prev) => {
+                if (prev.some(p => String(p.id) === String(inserted.id))) return prev;
+                return [...prev, inserted];
+            });
+          } else if (payload.eventType === "DELETE") {
+             const deleted = payload.old as { id: any };
+             setParticipants((prev) => prev.filter(p => String(p.id) !== String(deleted.id)));
+          }
         }
       )
       .subscribe();
@@ -517,23 +532,31 @@ export default function GameMonitorPage() {
     const botInterval = setInterval(() => {
       const currentPlayers = participantsRef.current;
       const activeBots = currentPlayers.filter(
-        (p) => p.car_character?.endsWith("-bot") && !p.eliminated && p.current_question < totalQuestions && p.finished_at === null
+        (p) => String(p.car_character).endsWith("-bot") && !p.eliminated && p.current_question < totalQuestions && p.finished_at === null
       );
+
       activeBots.forEach(async (bot) => {
-        if (Math.random() > 0.4) {
+        if (Math.random() > 0.3) {
           const nextQ = bot.current_question + 1;
-          const scoreAdd = Math.floor(Math.random() * 80) + 20;
+          const pointsPerQ = Math.ceil(100 / totalQuestions);
+          const newScore = Math.min(100, bot.score + Math.floor(Math.random() * 5) + (pointsPerQ - 2));
           const isFinished = nextQ >= totalQuestions;
+          
+          const updates = {
+            current_question: nextQ,
+            score: newScore,
+            finished_at: isFinished ? new Date().toISOString() : null,
+            minigame: Math.random() > 0.5
+          };
+
+          setParticipants(prev => prev.map(p => String(p.id) === String(bot.id) ? { ...p, ...updates } : p));
+
           try {
-            await supabase.from("participants").update({
-              current_question: nextQ,
-              score: bot.score + scoreAdd,
-              finished_at: isFinished ? new Date().toISOString() : null,
-            }).eq("id", bot.id);
+            await supabase.from("participants").update(updates).eq("id", bot.id);
           } catch (e) { console.error("Bot error:", e); }
         }
       });
-    }, 3000);
+    }, 4000);
     return () => clearInterval(botInterval);
   }, [sessionId, isEnding, totalQuestions]);
 
@@ -731,14 +754,25 @@ export default function GameMonitorPage() {
         </div>
 
         <div className="leaderboard-grid" style={{ maxWidth: "1280px", margin: "0 auto", width: "100%" }}>
-          {rankedParticipants.map((player, index) => (
-            <PlayerCard
-              key={player.id}
-              player={player}
-              rank={index}
-              totalQuestions={totalQuestions}
-            />
-          ))}
+          <AnimatePresence>
+            {rankedParticipants.map((player, index) => (
+              <motion.div 
+                key={player.id} 
+                layout 
+                initial={{ opacity: 0, scale: 0.9 }} 
+                animate={{ opacity: 1, scale: 1 }} 
+                exit={{ opacity: 0, scale: 0.9 }} 
+                transition={{ type: "spring", stiffness: 350, damping: 25, mass: 0.8 }}
+                style={{ height: '100%' }}
+              >
+                <PlayerCard
+                  player={player}
+                  rank={index}
+                  totalQuestions={totalQuestions}
+                />
+              </motion.div>
+            ))}
+          </AnimatePresence>
 
           {participants.length === 0 && (
             <div

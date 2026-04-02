@@ -82,6 +82,12 @@ export default function QuizPage() {
 
         const route = `/player/${roomCode || roomCodeFromParams}/game`;
         router.prefetch(route);
+
+        // Notify Monitor that player is in Quiz mode
+        const participantId = localStorage.getItem('nitroquiz_game_participantId');
+        if (participantId) {
+            supabase.from('participants').update({ minigame: true }).eq('id', participantId).then();
+        }
     }, [router]);
 
     useEffect(() => {
@@ -97,23 +103,22 @@ export default function QuizPage() {
         setSelectedOption(optionIndex);
         setIsAnswered(true);
 
-        const earnedPoints = correct ? Math.round(100 / questions.length) : 0;
-        const newScore = score + earnedPoints;
+        const earnedPoints = correct ? Math.ceil(100 / questions.length) : 0;
+        const newScore = Math.min(100, score + earnedPoints);
         setScore(newScore);
         
         localStorage.setItem('nitroquiz_game_score', newScore.toString());
 
-        if (sessionId && localStorage.getItem('nitroquiz_user')) {
+        const participantId = localStorage.getItem('nitroquiz_game_participantId');
+        if (participantId) {
             try {
-                const user = JSON.parse(localStorage.getItem('nitroquiz_user') || '{}');
                 await supabase
                     .from('participants')
                     .update({ 
                         score: newScore,
                         current_question: currentIndex + 1
                     })
-                    .eq('session_id', sessionId)
-                    .eq('nickname', user.username || user.nickname);
+                    .eq('id', participantId);
             } catch (e) {
                 console.error("Failed to update score/lap in DB", e);
             }

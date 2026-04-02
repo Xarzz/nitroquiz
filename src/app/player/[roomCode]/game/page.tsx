@@ -210,13 +210,10 @@ export default function GameSpeedPage() {
 
     // Participant Update Helper - syncs player state to Supabase for host monitor
     const updateParticipantStatus = useCallback(async (updates: Record<string, any>) => {
-        const sessId = typeof window !== 'undefined' ? localStorage.getItem('nitroquiz_game_sessionId') : null;
-        const user = getUser();
-        if (sessId && user) {
+        const participantId = typeof window !== 'undefined' ? localStorage.getItem('nitroquiz_game_participantId') : null;
+        if (participantId) {
             try {
-                await supabase.from('participants').update(updates)
-                    .eq('session_id', sessId)
-                    .eq('nickname', user.username);
+                await supabase.from('participants').update(updates).eq('id', participantId);
             } catch (error) {
                 console.error('Failed to sync participant status:', error);
             }
@@ -1530,6 +1527,8 @@ export default function GameSpeedPage() {
 
     useEffect(() => {
         setMounted(true);
+        updateParticipantStatus({ minigame: false }); // Ensure monitor knows player is Racing
+
         if (!assetsLoaded) return;
 
         const _initDiff = localStorage.getItem('nitroquiz_game_difficulty') || 'easy';
