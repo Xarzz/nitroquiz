@@ -144,6 +144,29 @@ export default function QuizPage() {
         }
     };
 
+    // Listen for Host ending the game
+    useEffect(() => {
+        const sessId = typeof window !== 'undefined' ? localStorage.getItem('nitroquiz_game_sessionId') : null;
+        if (!sessId) return;
+
+        const channel = supabase
+            .channel(`player_quiz_session_${sessId}`)
+            .on(
+                'postgres_changes',
+                { event: 'UPDATE', schema: 'public', table: 'sessions', filter: `id=eq.${sessId}` },
+                (payload) => {
+                    if (payload.new.status === 'finished' || payload.new.status === 'completed') {
+                        router.push(`/player/${roomCode || roomCodeFromParams}/result`);
+                    }
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, [router, roomCode, roomCodeFromParams]);
+
     // Auto-redirect
     useEffect(() => {
         if (!mounted || questions.length === 0) return;
@@ -210,7 +233,7 @@ export default function QuizPage() {
             {/* Background Effects */}
             <div className="absolute inset-0 z-0 bg-transparent blur-[120px] pointer-events-none" />
             
-            <div className="w-full max-w-lg mx-auto relative z-10 flex flex-col items-center justify-center min-h-[50vh]">
+            <div className="w-full max-w-3xl mx-auto relative z-10 flex flex-col items-center justify-center min-h-[50vh]">
                 {/* Main Card */}
                 <div className="w-full bg-[#0c1225]/80 backdrop-blur-3xl border border-[#1e2d4d]/50 rounded-2xl md:rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
                     

@@ -450,7 +450,15 @@ export default function GameMonitorPage() {
         if (sessionData) {
           setSessionId(sessionData.id);
           setTotalQuestions(sessionData.question_limit || 5);
-          setTimeLeft((sessionData.total_time_minutes || 5) * 60);
+          
+          let computedTimeLeft = (sessionData.total_time_minutes || 5) * 60;
+          if (sessionData.started_at) {
+              const startedTime = new Date(sessionData.started_at).getTime();
+              const now = new Date().getTime();
+              const elapsedSeconds = Math.floor((now - startedTime) / 1000);
+              computedTimeLeft = Math.max(0, computedTimeLeft - elapsedSeconds);
+          }
+          setTimeLeft(computedTimeLeft);
 
           const { data: pData } = await supabase
             .from("participants")
