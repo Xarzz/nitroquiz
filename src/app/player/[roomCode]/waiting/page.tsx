@@ -13,8 +13,7 @@ export const PLAYER_CHARACTERS = [
         id: 'rico',
         name: 'SCHLOSKI RACER',
         imageSrc: '/assets/characters/rico/showroom/pose/0.png',
-        sequenceFolder: '/assets/characters/rico/showroom/pose',
-        sequenceCount: 120,
+        gifSrc: '/assets/characters/rico/showroom/pose1.gif',
         stats: { speed: 80, accel: 60, handling: 70 }
     },
     {
@@ -28,7 +27,7 @@ export const PLAYER_CHARACTERS = [
         id: 'roadhog',
         name: 'TUSK CHOPPER',
         imageSrc: '/assets/characters/roadhog/showroom/showroom1.png',
-        gifSrc: '/assets/characters/roadhog/showroom/pose.gif',
+        gifSrc: '/assets/characters/roadhog/showroom/pose1.gif',
         stats: { speed: 60, accel: 80, handling: 50 }
     }
 ];
@@ -62,25 +61,7 @@ const InitialsAvatar = ({ name, size = 'md' }: { name: string; size?: 'sm' | 'md
     );
 };
 
-const SequencePlayer = ({ folder, count, isLoading, onLoad }: { folder: string, count: number, isLoading: boolean, onLoad: () => void }) => {
-    const [frame, setFrame] = useState(0);
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setFrame(f => (f + 1) % count);
-        }, 30);
-        return () => clearInterval(interval);
-    }, [count, folder]);
 
-    return (
-        <img src={`${folder}/${frame}.png`} 
-            alt="Your Car"
-            className={`object-contain drop-shadow-[0_28px_60px_rgba(40,70,200,0.22)] transition-opacity duration-300 relative z-10 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
-            style={{ width: '100%', maxHeight: '100%' }}
-            onLoad={onLoad}
-            onError={onLoad}
-        />
-    );
-};
 
 export default function PlayerWaitingPage() {
     const router = useRouter();
@@ -100,7 +81,6 @@ export default function PlayerWaitingPage() {
     const [username, setUsername] = useState("");
     const [userAvatar, setUserAvatar] = useState<string | null>(null);
     const [allParticipants, setAllParticipants] = useState<{ nickname: string; car_character: string; avatar_url?: string | null }[]>([]);
-    const [isLoadingVisual, setIsLoadingVisual] = useState(true);
 
     useEffect(() => {
         const user = getUser();
@@ -242,10 +222,6 @@ export default function PlayerWaitingPage() {
     const assignedChar = PLAYER_CHARACTERS.find(c => c.id === assignedCarId) || PLAYER_CHARACTERS[0];
     const displayVisual = assignedChar.gifSrc || assignedChar.imageSrc;
 
-    useEffect(() => {
-        setIsLoadingVisual(true);
-    }, [displayVisual]);
-
     return (
         <div className="bg-[#0b101a] text-white min-h-screen relative overflow-hidden font-body flex flex-col items-center justify-center p-4">
             <div className="fixed inset-0 z-0 bg-gradient-to-t from-[#0b101a] via-transparent to-[#2d6af2]/10 pointer-events-none" />
@@ -295,11 +271,7 @@ export default function PlayerWaitingPage() {
                                         <div className="absolute -top-3 right-0 z-10 bg-[#00ff9d] text-black text-xs font-display font-black px-3 py-1 rounded-md tracking-widest shadow-[0_0_15px_rgba(0,255,157,0.5)]">{t("player_waiting.you")}</div>
                                         <div className="bg-[#080e1a] border border-[#00ff9d]/40 rounded-2xl p-4 flex flex-col items-center" style={{ minHeight: '220px' }}>
                                             <div className="flex-1 flex items-center justify-center w-full py-6">
-                                                {assignedChar.sequenceFolder ? (
-                                                    <SequencePlayer folder={assignedChar.sequenceFolder} count={assignedChar.sequenceCount} isLoading={false} onLoad={() => {}} />
-                                                ) : (
-                                                    <img src={assignedChar.imageSrc} alt="Your Car" className="w-[130px] object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.6)]" />
-                                                )}
+                                                <img src={assignedChar.gifSrc || assignedChar.imageSrc} alt="Your Car" className="w-[130px] object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.6)]" />
                                             </div>
                                             <p className="font-display text-white text-sm uppercase tracking-widest font-bold mt-1">{username}</p>
                                         </div>
@@ -415,12 +387,8 @@ export default function PlayerWaitingPage() {
                                             {/* Car image */}
                                             <div className="flex items-center justify-center px-6 py-5"
                                                 style={{ minHeight: '150px' }}>
-                                                {assignedChar.sequenceFolder ? (
-                                                    <SequencePlayer folder={assignedChar.sequenceFolder} count={assignedChar.sequenceCount} isLoading={false} onLoad={() => {}} />
-                                                ) : (
-                                                    <img src={assignedChar.imageSrc} alt="car"
-                                                        className="w-full max-h-[110px] object-contain drop-shadow-[0_6px_20px_rgba(0,0,0,0.8)]" />
-                                                )}
+                                                <img src={assignedChar.gifSrc || assignedChar.imageSrc} alt="car"
+                                                    className="w-full max-h-[110px] object-contain drop-shadow-[0_6px_20px_rgba(0,0,0,0.8)]" />
                                             </div>
                                             {/* Name */}
                                             <div className="text-center pb-3 px-3">
@@ -449,11 +417,7 @@ export default function PlayerWaitingPage() {
                                                         )}
                                                     </div>
                                                     <div className="flex items-center justify-center px-6 py-5" style={{ minHeight: '150px' }}>
-                                                        {charObj.sequenceFolder ? (
-                                                            <SequencePlayer folder={charObj.sequenceFolder} count={charObj.sequenceCount} isLoading={false} onLoad={() => {}} />
-                                                        ) : (
-                                                            <img src={carSrc} alt="car" className="w-full max-h-[110px] object-contain drop-shadow-[0_6px_20px_rgba(0,0,0,0.8)]" />
-                                                        )}
+                                                        <img src={charObj.gifSrc || carSrc} alt="car" className="w-full max-h-[110px] object-contain drop-shadow-[0_6px_20px_rgba(0,0,0,0.8)]" />
                                                     </div>
                                                     <div className="text-center pb-3 px-3">
                                                         <p className="font-display text-white text-xs font-bold uppercase tracking-[0.18em] truncate" title={p.nickname}>{p.nickname}</p>
@@ -507,34 +471,23 @@ export default function PlayerWaitingPage() {
                                                 const isSel = pendingCharacterId === c.id;
                                                 return (
                                                     <div key={c.id} onClick={() => setPendingCharacterId(c.id)}
-                                                        className={`relative flex flex-col items-center pt-10 pb-5 px-5 rounded-[16px] transition-all cursor-pointer ${isSel ? 'bg-[#182136] border-2 border-[#e6fdff]' : 'bg-[#111726] border border-[#2d4060]'}`}
+                                                        className={`relative flex flex-col items-center justify-center p-4 rounded-[16px] transition-all cursor-pointer ${isSel ? 'bg-[#182136] border-2 border-[#e6fdff]' : 'bg-[#111726] border border-[#2d4060]'}`}
                                                         style={{
-                                                            width: '280px',
-                                                            height: '380px',
+                                                            width: '240px',
+                                                            height: '240px',
                                                             boxShadow: isSel ? '0 0 25px rgba(120,240,255,0.4), inset 0 0 20px rgba(120,240,255,0.15)' : 'none'
                                                         }}>
 
-                                                        {/* Car Image - Use sequence player if available for live preview */}
-                                                        <div className="w-full aspect-[4/3] mb-8 relative flex items-center justify-center">
-                                                            {c.sequenceFolder ? (
-                                                                <SequencePlayer 
-                                                                    folder={c.sequenceFolder} 
-                                                                    count={c.sequenceCount} 
-                                                                    isLoading={false} 
-                                                                    onLoad={() => {}} 
-                                                                />
-                                                            ) : (
-                                                                <img src={isSel && c.gifSrc ? c.gifSrc : c.imageSrc} alt={c.name}
-                                                                    className="w-full h-full object-contain drop-shadow-[0_15px_15px_rgba(0,0,0,0.8)]" />
-                                                            )}
+                                                        {/* Car Image */}
+                                                        <div className="w-full mb-3 relative flex items-center justify-center" style={{ height: '120px' }}>
+                                                            <img src={isSel && c.gifSrc ? c.gifSrc : c.imageSrc} alt={c.name}
+                                                                className="w-full h-full object-contain drop-shadow-[0_15px_15px_rgba(0,0,0,0.8)]" />
                                                         </div>
 
                                                         {/* Name */}
-                                                        <h3 className="font-display text-[15px] font-bold text-white uppercase tracking-[0.1em] text-center mb-auto">
+                                                        <h3 className="font-display text-[15px] font-bold text-white uppercase tracking-[0.1em] text-center mt-auto mb-2">
                                                             {c.name}
                                                         </h3>
-
-
                                                     </div>
                                                 );
                                             })}
@@ -574,16 +527,10 @@ export default function PlayerWaitingPage() {
                                             style={{ width: 'clamp(300px, 45vw, 560px)', height: '52vh' }}
                                             animate={{ y: [0, -14, 0] }}
                                             transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut" }}>
-                                            {isLoadingVisual && <Loader2 className="absolute z-0 w-12 h-12 text-[#00ff9d] animate-spin drop-shadow-[0_0_15px_rgba(0,255,157,0.5)]" />}
-                                            {(assignedChar as any).sequenceFolder ? (
-                                                <SequencePlayer folder={(assignedChar as any).sequenceFolder} count={(assignedChar as any).sequenceCount} isLoading={isLoadingVisual} onLoad={() => setIsLoadingVisual(false)} />
-                                            ) : (
-                                                <img src={displayVisual} alt="Your Car"
-                                                    className={`object-contain drop-shadow-[0_28px_60px_rgba(40,70,200,0.22)] transition-opacity duration-300 relative z-10 ${isLoadingVisual ? 'opacity-0' : 'opacity-100'}`}
-                                                    style={{ width: '100%', maxHeight: '100%' }} 
-                                                    onLoad={() => setIsLoadingVisual(false)}
-                                                />
-                                            )}
+                                            <img src={displayVisual} alt="Your Car"
+                                                className="object-contain drop-shadow-[0_28px_60px_rgba(40,70,200,0.22)] relative z-10"
+                                                style={{ width: '100%', maxHeight: '100%' }} 
+                                            />
                                             {/* Ground shadow */}
                                             <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-3/4 h-3 bg-black/40 blur-xl rounded-full" />
                                         </motion.div>
